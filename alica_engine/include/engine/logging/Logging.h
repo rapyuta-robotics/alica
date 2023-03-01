@@ -2,6 +2,9 @@
 
 #include "engine/Output.h"
 #include "engine/logging/AlicaLogger.h"
+
+#include <iostream>
+
 namespace alica
 {
 class LogEntry
@@ -31,6 +34,10 @@ public:
     {
         std::ostringstream oss;
         (oss << ... << std::forward<Args>(args));
+        if (!isInitialized()) {
+            std::cerr << "Logger is not initialized, log message: [" << logSpace << "] " << oss.str() << std::endl;
+            return;
+        }
         AlicaLogger::instance()->log(oss.str(), verbosity, logSpace);
     }
 

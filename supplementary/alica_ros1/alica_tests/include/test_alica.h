@@ -54,7 +54,7 @@ public:
     {
     }
 
-    std::string getTestFolderPath() const { return _testFolderPath; }
+    virtual std::vector<std::string> getTestFolderPaths() const { return {_testFolderPath + "/etc/"}; }
 
 private:
     std::string _testFolderPath;
@@ -79,20 +79,13 @@ private:
 protected:
     AlicaTestFixture() = default;
     virtual bool getDelayStart() { return false; }
-
+    virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
-
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -180,7 +173,7 @@ protected:
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams(getHostName(i), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -213,7 +206,7 @@ protected:
     void SetUp() override
     {
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -238,7 +231,7 @@ protected:
     virtual void SetUp() override
     {
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -272,7 +265,7 @@ protected:
     virtual void SetUp() override
     {
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -309,7 +302,7 @@ protected:
     virtual void SetUp() override
     {
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -353,7 +346,7 @@ protected:
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams(getHostName(i), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();

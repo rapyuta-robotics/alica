@@ -27,7 +27,7 @@ public:
         path = PLANS;
         path += "/src/test";
 #endif
-        _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "TestMasterPlan", true, 1);
+        _tc = std::make_unique<TestContext>("hairy", std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1);
         ASSERT_TRUE(_tc->isValid());
         const YAML::Node& config = _tc->getConfig();
 
