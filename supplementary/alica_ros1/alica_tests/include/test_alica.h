@@ -6,7 +6,6 @@
 #include <alica_tests/LegacyTransitionConditionCreator.h>
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
-#include <alica_tests/TransitionConditionCreator.h>
 #include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
 
@@ -19,6 +18,7 @@
 #include <engine/logging/AlicaDefaultLogger.h>
 
 #include <DynamicBehaviourCreator.h>
+#include <DynamicTransitionConditionCreator.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -80,7 +80,7 @@ protected:
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+                std::make_unique<alica::DynamicTransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
         LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
@@ -163,7 +163,7 @@ protected:
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                    std::make_unique<alica::TransitionConditionCreator>()};
+                    std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
@@ -255,7 +255,7 @@ protected:
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+                std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
@@ -306,7 +306,7 @@ protected:
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+                std::make_unique<alica::DynamicTransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
         manageWorldModel(ac.get());
@@ -398,7 +398,7 @@ protected:
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                    std::make_unique<alica::TransitionConditionCreator>()};
+                    std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));

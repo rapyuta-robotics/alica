@@ -1,11 +1,11 @@
 #include <DynamicBehaviourCreator.h>
+#include <DynamicTransitionConditionCreator.h>
 #include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
-#include <alica_tests/TransitionConditionCreator.h>
 #include <alica_tests/UtilityFunctionCreator.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaDummyCommunication.h>
@@ -35,7 +35,7 @@ public:
         LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
         AlicaCreators creators{std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+                std::make_unique<alica::DynamicTransitionConditionCreator>()};
         _tc->init(std::move(creators));
         _tc->startEngine();
         _spinner->start();

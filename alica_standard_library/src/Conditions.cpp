@@ -69,4 +69,35 @@ bool AllChildFailure(const alica::Blackboard* input, const alica::RunningPlan* r
     return true;
 }
 
+bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return false;
+}
+
+bool AlwaysTrueCond(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return true;
+}
+
+bool DefaultCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return false;
+}
+
+bool IsAnyChildStatus(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    return rp->isAnyChildStatus(bb.get<alica::PlanStatus>("childStatus"));
+}
+
+bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return rp->isAnyChildStatus(alica::PlanStatus::Failed);
+}
+
+bool isAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return rp->isAnyChildTaskSuccessful();
+}
+
 } /* namespace utils */
