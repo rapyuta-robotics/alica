@@ -39,8 +39,8 @@ target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_ut
 
 include_directories(libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
-add_library(alica-tests SHARED ${AlicaTestLibSources})
-target_link_libraries(alica-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
+add_library(alica-tests SHARED ${AlicaTestLibSources} ${autogen_SOURCES})
+target_link_libraries(alica-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
 
 install(TARGETS autogen_code_alica_tests alica-tests
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -97,5 +97,5 @@ if(BUILD_TESTING)
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_alica_tests ${YAML_CPP_LIBRARIES} alica_dynamic_loading alica-tests)
+    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} alica_dynamic_loading alica-tests)
 endif()

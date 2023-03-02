@@ -60,8 +60,8 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 330238006348384830,
-      "libraryName": "alica_standard_library",
-      "name": "isAnyChildTaskSuccessfull",
+      "libraryName": "alica-tests",
+      "name": "IsAnyChildTaskSuccessfull",
       "relativeDirectory": "conditions"
     },
     {
@@ -104,7 +104,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 711536493236439192,
-      "libraryName": "alica_standard_library",
+      "libraryName": "alica-tests",
       "name": "IsAnyChildStatusFailed",
       "relativeDirectory": "conditions"
     },
@@ -121,7 +121,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 843443485857038179,
-      "libraryName": "alica_standard_library",
+      "libraryName": "alica-tests",
       "name": "IsAnyChildStatus",
       "relativeDirectory": "conditions"
     },
@@ -203,7 +203,7 @@
       "conditionRepository": 0,
       "id": 1678986049909129132,
       "libraryName": "alica_standard_library",
-      "name": "DefaultCondition",
+      "name": "AlwaysFalseCondition",
       "relativeDirectory": "conditions"
     },
     {
@@ -301,7 +301,7 @@
       "conditionRepository": 0,
       "id": 2872265442510628524,
       "libraryName": "alica_standard_library",
-      "name": "AlwaysTrueCond",
+      "name": "AlwaysTrueCondition",
       "relativeDirectory": "conditions"
     },
     {
@@ -361,7 +361,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3604374027783683696,
-      "libraryName": "alica_standard_library",
+      "libraryName": "alica-tests",
       "name": "IsAnyChildStatusSuccess",
       "relativeDirectory": "conditions"
     },

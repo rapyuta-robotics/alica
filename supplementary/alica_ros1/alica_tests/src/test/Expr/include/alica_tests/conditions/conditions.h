@@ -1,57 +1,89 @@
 #pragma once
 
-/*PROTECTED REGION ID(conditionHeader) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
+#include <boost/dll/alias.hpp>
 
 namespace alica
 {
 class Blackboard;
 class RunningPlan;
 
-bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionEntry2Wait19871606597697646(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionFailurePlan2FailureHandled190171326790683374(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionisAnyChildTaskSuccessfull330238006348384830(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionTriggerCond593157092542472645(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionPlanB2PlanA655002160731734731(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionPlanA2PlanB682216470625774387(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionIsAnyChildStatusFailed711536493236439192(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionIsAnyChildStatus843443485857038179(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionDefault2EndTest1013158988206959873(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionSecondTaskFirstState2SecondTaskSecondState1221637895518338620(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionSecondCall2FirstCall1237521027685048666(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionInit2Fail1291995818541962959(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStart2Init1311087067347475449(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStateOne2StateTwo1377356708472618789(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionSwitchIsSet1556522827919252115(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStart2Finish1648591654803570403(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionDefaultCondition1678986049909129132(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionFail2Failed1770682125085719690(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStateTwo2NewSuccessStateTwo2019050763618766552(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionCounterClassCalled2163654295690873706(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionFirstTaskFirstState2FirstTaskSecondState2171152220550556375(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionBehaviourSubPlan2ExecuteBehaviour2205566100638019970(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionInit2Start2208457928613785430(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStart2ExecBehaviourTest2452554857659522052(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStart2ExecOrderTest2619422076497988080(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionInit2End2711102114821139213(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionAlwaysTrueCond2872265442510628524(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionCounterCalled2901825906319407673(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionSwitchIsNotSet3016035752801585170(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionWait2Suc3517323109117319233(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionIsAnyChildStatusSuccess3604374027783683696(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionDecision2B3684268241099966909(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStart2Default3726136276355540527(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionSimpleSwitchIsSet3787001793582633602(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionBehaviourInSubPlan2EndTest3828316183435191952(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionStart2ExecOrderedSchedulingTest4108042962123065459(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionExecBehaviour2SubPlan4244459279660861567(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionDecision2A4281647834169813432(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionOther2NewSuccessStateOne4368560569514553226(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionTestTracingMasterCondition4547372457936774346(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Entry2Wait(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool FailurePlan2FailureHandled(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool TriggerCond(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool PlanB2PlanA(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool PlanA2PlanB(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Default2EndTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool SecondTaskFirstState2SecondTaskSecondState(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool SecondCall2FirstCall(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Init2Fail(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Start2Init(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool StateOne2StateTwo(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool SwitchIsSet(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Start2Finish(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Fail2Failed(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool StateTwo2NewSuccessStateTwo(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool CounterClassCalled(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool FirstTaskFirstState2FirstTaskSecondState(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool BehaviourSubPlan2ExecuteBehaviour(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Init2Start(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Start2ExecBehaviourTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Start2ExecOrderTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Init2End(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool CounterCalled(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool SwitchIsNotSet(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Wait2Suc(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool TriggerFromInputCond(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Decision2B(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Start2Default(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool SimpleSwitchIsSet(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool BehaviourInSubPlan2EndTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Start2ExecOrderedSchedulingTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool ExecBehaviour2SubPlan(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Decision2A(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool Other2NewSuccessStateOne(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool TestTracingMasterCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsAnyChildStatus(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+
+BOOST_DLL_ALIAS(alica::Entry2Wait, Entry2Wait)
+BOOST_DLL_ALIAS(alica::FailurePlan2FailureHandled, FailurePlan2FailureHandled)
+BOOST_DLL_ALIAS(alica::TriggerCond, TriggerCond)
+BOOST_DLL_ALIAS(alica::PlanB2PlanA, PlanB2PlanA)
+BOOST_DLL_ALIAS(alica::PlanA2PlanB, PlanA2PlanB)
+BOOST_DLL_ALIAS(alica::Default2EndTest, Default2EndTest)
+BOOST_DLL_ALIAS(alica::SecondTaskFirstState2SecondTaskSecondState, SecondTaskFirstState2SecondTaskSecondState)
+BOOST_DLL_ALIAS(alica::SecondCall2FirstCall, SecondCall2FirstCall)
+BOOST_DLL_ALIAS(alica::Init2Fail, Init2Fail)
+BOOST_DLL_ALIAS(alica::Start2Init, Start2Init)
+BOOST_DLL_ALIAS(alica::StateOne2StateTwo, StateOne2StateTwo)
+BOOST_DLL_ALIAS(alica::SwitchIsSet, SwitchIsSet)
+BOOST_DLL_ALIAS(alica::Start2Finish, Start2Finish)
+BOOST_DLL_ALIAS(alica::Fail2Failed, Fail2Failed)
+BOOST_DLL_ALIAS(alica::StateTwo2NewSuccessStateTwo, StateTwo2NewSuccessStateTwo)
+BOOST_DLL_ALIAS(alica::CounterClassCalled, CounterClassCalled)
+BOOST_DLL_ALIAS(alica::FirstTaskFirstState2FirstTaskSecondState, FirstTaskFirstState2FirstTaskSecondState)
+BOOST_DLL_ALIAS(alica::BehaviourSubPlan2ExecuteBehaviour, BehaviourSubPlan2ExecuteBehaviour)
+BOOST_DLL_ALIAS(alica::Init2Start, Init2Start)
+BOOST_DLL_ALIAS(alica::Start2ExecBehaviourTest, Start2ExecBehaviourTest)
+BOOST_DLL_ALIAS(alica::Start2ExecOrderTest, Start2ExecOrderTest)
+BOOST_DLL_ALIAS(alica::Init2End, Init2End)
+BOOST_DLL_ALIAS(alica::CounterCalled, CounterCalled)
+BOOST_DLL_ALIAS(alica::SwitchIsNotSet, SwitchIsNotSet)
+BOOST_DLL_ALIAS(alica::Wait2Suc, Wait2Suc)
+BOOST_DLL_ALIAS(alica::TriggerFromInputCond, TriggerFromInputCond)
+BOOST_DLL_ALIAS(alica::Decision2B, Decision2B)
+BOOST_DLL_ALIAS(alica::Start2Default, Start2Default)
+BOOST_DLL_ALIAS(alica::SimpleSwitchIsSet, SimpleSwitchIsSet)
+BOOST_DLL_ALIAS(alica::BehaviourInSubPlan2EndTest, BehaviourInSubPlan2EndTest)
+BOOST_DLL_ALIAS(alica::Start2ExecOrderedSchedulingTest, Start2ExecOrderedSchedulingTest)
+BOOST_DLL_ALIAS(alica::ExecBehaviour2SubPlan, ExecBehaviour2SubPlan)
+BOOST_DLL_ALIAS(alica::Decision2A, Decision2A)
+BOOST_DLL_ALIAS(alica::Other2NewSuccessStateOne, Other2NewSuccessStateOne)
+BOOST_DLL_ALIAS(alica::TestTracingMasterCondition, TestTracingMasterCondition)
+BOOST_DLL_ALIAS(alica::IsAnyChildStatusSuccess, IsAnyChildStatusSuccess)
+BOOST_DLL_ALIAS(alica::IsAnyChildTaskSuccessfull, IsAnyChildTaskSuccessfull)
+BOOST_DLL_ALIAS(alica::IsAnyChildStatusFailed, IsAnyChildStatusFailed)
+BOOST_DLL_ALIAS(alica::IsAnyChildStatus, IsAnyChildStatus)
 } /* namespace alica */
