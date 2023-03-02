@@ -42,6 +42,10 @@ bool ExecBehaviour2SubPlan(const Blackboard* input, const RunningPlan* rp, const
 bool Decision2A(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool Other2NewSuccessStateOne(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool TestTracingMasterCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsAnyChildStatus(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 
 BOOST_DLL_ALIAS(alica::Entry2Wait, Entry2Wait)
 BOOST_DLL_ALIAS(alica::FailurePlan2FailureHandled, FailurePlan2FailureHandled)
@@ -78,5 +82,8 @@ BOOST_DLL_ALIAS(alica::ExecBehaviour2SubPlan, ExecBehaviour2SubPlan)
 BOOST_DLL_ALIAS(alica::Decision2A, Decision2A)
 BOOST_DLL_ALIAS(alica::Other2NewSuccessStateOne, Other2NewSuccessStateOne)
 BOOST_DLL_ALIAS(alica::TestTracingMasterCondition, TestTracingMasterCondition)
-
+BOOST_DLL_ALIAS(alica::IsAnyChildStatusSuccess, IsAnyChildStatusSuccess)
+BOOST_DLL_ALIAS(alica::IsAnyChildTaskSuccessfull, IsAnyChildTaskSuccessfull)
+BOOST_DLL_ALIAS(alica::IsAnyChildStatusFailed, IsAnyChildStatusFailed)
+BOOST_DLL_ALIAS(alica::IsAnyChildStatus, IsAnyChildStatus)
 } /* namespace alica */

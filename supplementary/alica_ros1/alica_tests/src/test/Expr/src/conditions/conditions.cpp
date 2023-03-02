@@ -35,6 +35,27 @@ bool isFailure(const alica::RunningPlan* rp)
 
 namespace alica
 {
+bool IsAnyChildStatus(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    return rp->isAnyChildStatus(bb.get<alica::PlanStatus>("childStatus"));
+}
+
+bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return rp->isAnyChildStatus(alica::PlanStatus::Failed);
+}
+
+bool IsAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return rp->isAnyChildTaskSuccessful();
+}
+
+bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return rp->isAnyChildStatus(alica::PlanStatus::Success);
+}
+
 bool Entry2Wait(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
