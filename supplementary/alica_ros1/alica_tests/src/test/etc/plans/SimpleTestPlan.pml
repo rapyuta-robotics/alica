@@ -38,7 +38,7 @@
     "conditionString": "",
     "enabled": true,
     "id": 1412781707952,
-    "name": "NewPreCondition",
+    "name": "SimpleTestPlanPreCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
@@ -49,7 +49,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1412781693884,
-    "name": "NewRuntimeCondition",
+    "name": "SimpleTestPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
