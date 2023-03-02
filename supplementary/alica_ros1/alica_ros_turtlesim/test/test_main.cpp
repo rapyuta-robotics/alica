@@ -10,74 +10,26 @@
 
 class TurtlePosition;
 
-#define RUN_UNTIL_EXPECT_EQ(left, right, ms)                                                                                                                   \
-    do {                                                                                                                                                       \
-        using namespace std::chrono;                                                                                                                           \
-        auto start = system_clock::now();                                                                                                                      \
-        do {                                                                                                                                                   \
-            ros::spinOnce();                                                                                                                                   \
-            if (left == right) {                                                                                                                               \
-                EXPECT_EQ(left, right);                                                                                                                        \
-                break;                                                                                                                                         \
-            }                                                                                                                                                  \
-            ros::Duration(0.01).sleep();                                                                                                                       \
-        } while (duration_cast<milliseconds>(system_clock::now() - start).count() < ms);                                                                       \
-        EXPECT_EQ(left, right);                                                                                                                                \
-    } while (0)
-
-#define RUN_UNTIL_EXPECT_NEAR(value, desired_value, delta, ms)                                                                                                 \
-    do {                                                                                                                                                       \
-        using namespace std::chrono;                                                                                                                           \
-        auto start = system_clock::now();                                                                                                                      \
-        do {                                                                                                                                                   \
-            ros::spinOnce();                                                                                                                                   \
-            if (std::fabs(value - delta) < desired_value) {                                                                                                    \
-                EXPECT_NEAR(value, desired_value, delta);                                                                                                      \
-                break;                                                                                                                                         \
-            }                                                                                                                                                  \
-            ros::Duration(0.01).sleep();                                                                                                                       \
-        } while (duration_cast<milliseconds>(system_clock::now() - start).count() < ms);                                                                       \
-        EXPECT_NEAR(value, desired_value, delta);                                                                                                              \
-    } while (0)
-
 #define EXPECT_POSE_NEAR(curr_pose, desired_pose, delta)                                                                                                       \
     do {                                                                                                                                                       \
         EXPECT_NEAR(curr_pose.x, desired_pose.x, delta.x);                                                                                                     \
         EXPECT_NEAR(curr_pose.y, desired_pose.y, delta.y);                                                                                                     \
     } while (0)
 
-#define RUN_UNTIL_EXPECT_NEAR_POSE(turtle, desired_pose, delta, ms)                                                                                            \
+#define RUN_UNTIL_ROBOT_STOP(turtle, ms)                                                                                                                       \
     do {                                                                                                                                                       \
         using namespace std::chrono;                                                                                                                           \
         auto start = system_clock::now();                                                                                                                      \
-        auto curr_pose = turtle.getPose();                                                                                                                     \
+        auto past_pose = turtle.getPose();                                                                                                                     \
         do {                                                                                                                                                   \
+            ros::Duration(0.5).sleep();                                                                                                                        \
             ros::spinOnce();                                                                                                                                   \
-            curr_pose = turtle.getPose();                                                                                                                      \
-            if (turtle.isNear(desired_pose, delta)) {                                                                                                          \
-                EXPECT_POSE_NEAR(curr_pose, desired_pose, delta);                                                                                              \
+            if (turtle.isPoseEqual(past_pose, 0.01)) {                                                                                                         \
                 break;                                                                                                                                         \
             }                                                                                                                                                  \
-            ros::Duration(0.01).sleep();                                                                                                                       \
+            past_pose = turtle.getPose();                                                                                                                      \
         } while (duration_cast<milliseconds>(system_clock::now() - start).count() < ms);                                                                       \
-        EXPECT_POSE_NEAR(turtle.getPose(), desired_pose, delta);                                                                                               \
-    } while (0)
-
-#define RUN_UNTIL_ROBOT_STOP(turtle)                                                                                                                           \
-    do {                                                                                                                                                       \
-        using namespace std::chrono;                                                                                                                           \
-        auto start = system_clock::now();                                                                                                                      \
-        auto curr_pose = turtle.getPose();                                                                                                                     \
-        do {                                                                                                                                                   \
-            ros::spinOnce();                                                                                                                                   \
-            curr_pose = turtle.getPose();                                                                                                                      \
-            if (turtle.isNear(desired_pose, delta)) {                                                                                                          \
-                EXPECT_POSE_NEAR(curr_pose, desired_pose, delta);                                                                                              \
-                break;                                                                                                                                         \
-            }                                                                                                                                                  \
-            ros::Duration(0.01).sleep();                                                                                                                       \
-        } while (duration_cast<milliseconds>(system_clock::now() - start).count() < ms);                                                                       \
-        EXPECT_POSE_NEAR(turtle.getPose(), desired_pose, delta);                                                                                               \
+        EXPECT_TRUE(turtle.isPoseEqual(past_pose, 0.01));                                                                                                      \
     } while (0)
 
 // class to handle callbacks
@@ -86,16 +38,18 @@ class TurtlePosition
 public:
     TurtlePosition() = default;
 
-    TurtlePosition(double x, double y)
+    TurtlePosition(const double x, const double y, const double theta = 0)
     {
         _pose.x = x;
         _pose.y = y;
+        _pose.theta = theta;
     }
 
     void poseCallback(const turtlesim::Pose::ConstPtr msg)
     {
         _pose.x = msg->x;
         _pose.y = msg->y;
+        _pose.theta = msg->theta;
     }
 
     turtlesim::Pose getPose() const { return _pose; }
@@ -109,6 +63,11 @@ public:
     }
 
     double distance(const TurtlePosition& turtle) { return sqrt(pow(turtle._pose.x - _pose.x, 2) + pow(turtle._pose.y - _pose.y, 2)); }
+
+    bool isPoseEqual(const turtlesim::Pose& other_pose, double tolerance)
+    {
+        return std::fabs(other_pose.x - _pose.x) + std::fabs(other_pose.y - _pose.y) + std::fabs(other_pose.theta - _pose.theta) < tolerance;
+    }
 
 private:
     turtlesim::Pose _pose;
@@ -146,7 +105,8 @@ TEST(AlicaTurtlesimTest, destinationTest)
 
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
-    RUN_UNTIL_EXPECT_NEAR_POSE(turtle1, desired_pose_turtle_1, pose_tolerance, 10000);
+    RUN_UNTIL_ROBOT_STOP(turtle1, 10000);
+    EXPECT_POSE_NEAR(turtle1.getPose(), desired_pose_turtle_1, pose_tolerance);
 
     // Turtle 2 test
     TurtlePosition turtle2;
@@ -158,9 +118,8 @@ TEST(AlicaTurtlesimTest, destinationTest)
 
     join_formation_turtle_2_pub.publish(msg);
 
-    std::this_thread::sleep_for(std::chrono::seconds(10));
-
-    RUN_UNTIL_EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance, 10000);
+    RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
+    EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
 
     // Turtle 3
     TurtlePosition turtle3;
@@ -170,11 +129,11 @@ TEST(AlicaTurtlesimTest, destinationTest)
 
     join_formation_turtle_3_pub.publish(msg);
 
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    RUN_UNTIL_ROBOT_STOP(turtle3, 10000);
 
-    RUN_UNTIL_EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance, 10000);
-    RUN_UNTIL_EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance, 10000);
-    RUN_UNTIL_EXPECT_NEAR(turtle3.distance(turtle2), distance_between_followers, distance_tolerance, 10000);
+    EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+    EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+    EXPECT_NEAR(turtle3.distance(turtle2), distance_between_followers, distance_tolerance);
 
     // Turtle 4
     TurtlePosition turtle4;
@@ -184,14 +143,14 @@ TEST(AlicaTurtlesimTest, destinationTest)
 
     join_formation_turtle_4_pub.publish(msg);
 
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    RUN_UNTIL_ROBOT_STOP(turtle4, 10000);
 
-    RUN_UNTIL_EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance, 10000);
-    RUN_UNTIL_EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance, 10000);
-    RUN_UNTIL_EXPECT_NEAR(turtle4.distance(turtle_center), desired_distance_to_the_center, distance_tolerance, 10000);
-    RUN_UNTIL_EXPECT_NEAR(turtle3.distance(turtle2), distance_between_followers, distance_tolerance, 10000);
-    RUN_UNTIL_EXPECT_NEAR(turtle4.distance(turtle2), distance_between_followers, distance_tolerance, 10000);
-    RUN_UNTIL_EXPECT_NEAR(turtle4.distance(turtle3), distance_between_followers, distance_tolerance, 10000);
+    EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+    EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+    EXPECT_NEAR(turtle4.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+    EXPECT_NEAR(turtle3.distance(turtle2), distance_between_followers, distance_tolerance);
+    EXPECT_NEAR(turtle4.distance(turtle2), distance_between_followers, distance_tolerance);
+    EXPECT_NEAR(turtle4.distance(turtle3), distance_between_followers, distance_tolerance);
 }
 
 int main(int argc, char** argv)
