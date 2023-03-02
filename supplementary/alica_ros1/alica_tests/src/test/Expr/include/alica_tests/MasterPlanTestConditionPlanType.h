@@ -14,11 +14,6 @@ class MasterPlanTestConditionPlanType : public DomainPlan
 public:
     MasterPlanTestConditionPlanType(PlanContext& context);
 };
-class PreCondition1418042683692 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, MasterPlanTestConditionPlanType)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, MasterPlanTestConditionPlanTypeUtilityFunction)

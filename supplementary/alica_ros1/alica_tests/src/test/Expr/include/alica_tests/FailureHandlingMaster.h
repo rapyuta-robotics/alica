@@ -15,12 +15,6 @@ public:
     FailureHandlingMaster(PlanContext& context);
 };
 
-class PreCondition488794245455049811 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-
 BOOST_DLL_ALIAS(alica::BasicPlan::create, FailureHandlingMaster)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, FailureHandlingMasterUtilityFunction)
 } /* namespace alica */

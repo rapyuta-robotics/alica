@@ -14,16 +14,6 @@ class MasterSyncTransition : public DomainPlan
 public:
     MasterSyncTransition(PlanContext& context);
 };
-class PreCondition1418825427317 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition1418825428924 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, MasterSyncTransition)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, MasterSyncTransitionUtilityFunction)

@@ -20,17 +20,6 @@ protected:
     virtual void onTerminate();
 };
 
-class PreCondition1614960055821 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition1614960063843 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-
 BOOST_DLL_ALIAS(alica::SchedulingTestPlan1::create, SchedulingTestPlan1)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SchedulingTestPlan1UtilityFunction)
 } /* namespace alica */

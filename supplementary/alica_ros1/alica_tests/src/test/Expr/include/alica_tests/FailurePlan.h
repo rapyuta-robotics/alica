@@ -19,17 +19,6 @@ protected:
     virtual void onInit() override;
 };
 
-class PreCondition4351457352348187886 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition2038762164340314344 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-
 BOOST_DLL_ALIAS(alica::FailurePlan::create, FailurePlan)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, FailurePlanUtilityFunction)
 } /* namespace alica */

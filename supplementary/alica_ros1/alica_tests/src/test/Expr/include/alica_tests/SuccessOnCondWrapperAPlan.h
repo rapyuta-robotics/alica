@@ -14,11 +14,6 @@ class SuccessOnCondWrapperAPlan : public DomainPlan
 public:
     SuccessOnCondWrapperAPlan(PlanContext& context);
 };
-class PreCondition4605367163774150375 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, SuccessOnCondWrapperAPlan)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SuccessOnCondWrapperAPlanUtilityFunction)
