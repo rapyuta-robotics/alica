@@ -10,19 +10,19 @@
 
 class TurtlePosition;
 
-#define RUN_UNTIL_EXPECT_EQ(left, right, ms)                                                                                                                   \
+#define RUN_UNTIL_ASSERT_EQ(left, right, ms)                                                                                                                   \
     do {                                                                                                                                                       \
         using namespace std::chrono;                                                                                                                           \
         auto start = system_clock::now();                                                                                                                      \
         do {                                                                                                                                                   \
             ros::spinOnce();                                                                                                                                   \
             if (left == right) {                                                                                                                               \
-                EXPECT_EQ(left, right);                                                                                                                        \
+                ASSERT_EQ(left, right);                                                                                                                        \
                 break;                                                                                                                                         \
             }                                                                                                                                                  \
             ros::Duration(0.01).sleep();                                                                                                                       \
         } while (duration_cast<milliseconds>(system_clock::now() - start).count() < ms);                                                                       \
-        EXPECT_EQ(left, right);                                                                                                                                \
+        ASSERT_EQ(left, right);                                                                                                                                \
     } while (0)
 
 #define EXPECT_POSE_NEAR(curr_pose, desired_pose, delta)                                                                                                       \
@@ -97,10 +97,10 @@ TEST(AlicaTurtlesimTest, destinationTest)
     ros::Publisher join_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/join_formation", 10);
 
     // wait for subscribers to latch
-    RUN_UNTIL_EXPECT_EQ(join_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_EXPECT_EQ(join_formation_turtle_2_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_EXPECT_EQ(join_formation_turtle_3_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_EXPECT_EQ(join_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
+    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
+    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_2_pub.getNumSubscribers(), 1U, 10000);
+    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_3_pub.getNumSubscribers(), 1U, 10000);
+    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
 
     turtlesim::Pose pose_tolerance;
     pose_tolerance.x = 0.1;
