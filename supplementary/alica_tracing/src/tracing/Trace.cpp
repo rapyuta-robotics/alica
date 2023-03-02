@@ -77,8 +77,8 @@ void Trace::log(const std::unordered_map<std::string_view, TraceValue>& fields)
 
 void Trace::markError(std::string_view description)
 {
-    _rawTrace->SetTag("error", true);
-    _rawTrace->SetTag("error.description", prepareStringView(description));
+    setTag("error", TraceValue(true));
+    setTag("error.description", TraceValue(description));
 }
 
 std::string Trace::context() const
