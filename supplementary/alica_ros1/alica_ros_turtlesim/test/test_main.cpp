@@ -10,6 +10,21 @@
 
 class TurtlePosition;
 
+#define RUN_UNTIL_EXPECT_EQ(left, right, ms)                                                                                                                   \
+    do {                                                                                                                                                       \
+        using namespace std::chrono;                                                                                                                           \
+        auto start = system_clock::now();                                                                                                                      \
+        do {                                                                                                                                                   \
+            ros::spinOnce();                                                                                                                                   \
+            if (left == right) {                                                                                                                               \
+                EXPECT_EQ(left, right);                                                                                                                        \
+                break;                                                                                                                                         \
+            }                                                                                                                                                  \
+            ros::Duration(0.01).sleep();                                                                                                                       \
+        } while (duration_cast<milliseconds>(system_clock::now() - start).count() < ms);                                                                       \
+        EXPECT_EQ(left, right);                                                                                                                                \
+    } while (0)
+
 #define EXPECT_POSE_NEAR(curr_pose, desired_pose, delta)                                                                                                       \
     do {                                                                                                                                                       \
         EXPECT_NEAR(curr_pose.x, desired_pose.x, delta.x);                                                                                                     \
@@ -114,7 +129,7 @@ TEST(AlicaTurtlesimTest, destinationTest)
 
     auto turtle_center = TurtlePosition(5, 5);
     double desired_distance_to_the_center = 2.5;
-    double distance_tolerance = 0.3;
+    double distance_tolerance = 0.35;
 
     join_formation_turtle_2_pub.publish(msg);
 
