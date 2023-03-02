@@ -26,10 +26,6 @@ include_directories(include)
 
 include_directories(include src/test/Expr/include)
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-# add_library(${PROJECT_NAME}-expr SHARED ${autogen_SOURCES})
-
-# target_link_libraries(${PROJECT_NAME}-expr alica_solver_interface alica_test_utility alica_engine alica_simple_solver alica_dummy_proxy alica_dynamic_loading)
-# target_compile_definitions(${PROJECT_NAME}-expr PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 include_directories(libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
