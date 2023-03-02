@@ -103,16 +103,16 @@ TEST(AlicaTurtlesimTest, destinationTest)
     RUN_UNTIL_EXPECT_EQ(join_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
 
     turtlesim::Pose pose_tolerance;
-    pose_tolerance.x = 0.2;
-    pose_tolerance.y = 0.2;
+    pose_tolerance.x = 0.1;
+    pose_tolerance.y = 0.1;
 
     // Turtle 1 test
     TurtlePosition turtle1;
     ros::Subscriber turtle1_sub = nh.subscribe("turtle1/pose", 10, &TurtlePosition::poseCallback, &turtle1);
 
     turtlesim::Pose desired_pose_turtle_1;
-    desired_pose_turtle_1.x = 4.97;
-    desired_pose_turtle_1.y = 5.033;
+    desired_pose_turtle_1.x = 5;
+    desired_pose_turtle_1.y = 5;
 
     // send init message to turtles
     std_msgs::Empty msg;
