@@ -32,7 +32,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1418042967134,
-    "name": "NewRuntimeCondition",
+    "name": "RuntimeConditionPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []

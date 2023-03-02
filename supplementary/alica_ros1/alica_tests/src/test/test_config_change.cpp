@@ -17,9 +17,9 @@ protected:
 
 TEST_F(AlicaNotInitialized, TestUpdatingComponents_001)
 {
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-            std::make_unique<alica::DynamicTransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+            std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+            std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
     EXPECT_EQ(0, ac->init(std::move(creators), true));
@@ -29,9 +29,9 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_001)
 }
 TEST_F(AlicaNotInitialized, TestUpdatingComponents_002)
 {
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-            std::make_unique<alica::DynamicTransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+            std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+            std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", true));
     EXPECT_EQ(0, ac->init(std::move(creators), true));
@@ -49,9 +49,9 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));
     EXPECT_FALSE(PartialAssignment::isIdlingAllowed());
 
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-            std::make_unique<alica::DynamicTransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+            std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+            std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
     EXPECT_EQ(0, ac->init(std::move(creators), true));
     ae = AlicaTestsEngineGetter::getEngine(ac.get());
 
@@ -60,9 +60,9 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
 
 TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
 {
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-            std::make_unique<alica::DynamicTransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+            std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+            std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
     EXPECT_EQ(0, ac->init(std::move(creators), true));

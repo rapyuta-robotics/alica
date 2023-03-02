@@ -1,7 +1,6 @@
 #include "test_alica.h"
 
 #include <alica/test/CounterClass.h>
-#include <alica_tests/LegacyTransitionConditionCreator.h>
 #include <libalica-tests/behaviours/Attack.h>
 #include <libalica-tests/behaviours/MidFieldStandard.h>
 
