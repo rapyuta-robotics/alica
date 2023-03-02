@@ -44,7 +44,7 @@
   "frequency": 0,
   "id": 1614963946725,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "SchedulingTestSequencePlan1",
   "preCondition": null,

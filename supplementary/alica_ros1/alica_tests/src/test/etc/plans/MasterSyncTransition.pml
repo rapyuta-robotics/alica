@@ -38,7 +38,7 @@
   "frequency": 0,
   "id": 1418825395939,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "MasterSyncTransition",
   "preCondition": null,

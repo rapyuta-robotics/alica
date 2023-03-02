@@ -69,4 +69,13 @@ bool AllChildFailure(const alica::Blackboard* input, const alica::RunningPlan* r
     return true;
 }
 
+bool AlwaysTrueCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return true;
+}
+
+bool AlwaysFalseCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return false;
+}
 } /* namespace alica_standard_library */

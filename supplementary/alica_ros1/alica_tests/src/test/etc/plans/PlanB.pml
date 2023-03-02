@@ -22,7 +22,7 @@
   "frequency": 50,
   "id": 1629895853508,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PlanB",
   "preCondition": null,

@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1418042796751,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PreConditionPlan",
   "preCondition": {
@@ -30,7 +30,7 @@
     "conditionString": "Test",
     "enabled": true,
     "id": 1418042929966,
-    "name": "NewPreCondition",
+    "name": "PreConditionPlanPreCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []

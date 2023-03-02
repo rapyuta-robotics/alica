@@ -44,7 +44,7 @@
   "frequency": 0,
   "id": 2521443078354411465,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "TestMasterPlan",
   "preCondition": null,

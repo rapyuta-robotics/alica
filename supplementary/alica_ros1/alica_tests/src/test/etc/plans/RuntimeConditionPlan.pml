@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1418042806575,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "RuntimeConditionPlan",
   "preCondition": null,
@@ -32,7 +32,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1418042967134,
-    "name": "NewRuntimeCondition",
+    "name": "RuntimeConditionPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []

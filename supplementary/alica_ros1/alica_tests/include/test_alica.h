@@ -1,13 +1,7 @@
 #pragma once
 
-#include <alica_tests/ConditionCreator.h>
-#include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
-#include <alica_tests/LegacyTransitionConditionCreator.h>
-#include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
-#include <alica_tests/TransitionConditionCreator.h>
-#include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
 
 #include <alica_tests/TestTracing.h>
@@ -19,6 +13,11 @@
 #include <engine/logging/AlicaDefaultLogger.h>
 
 #include <DynamicBehaviourCreator.h>
+#include <DynamicConditionCreator.h>
+#include <DynamicConstraintCreator.h>
+#include <DynamicPlanCreator.h>
+#include <DynamicTransitionConditionCreator.h>
+#include <DynamicUtilityFunctionCreator.h>
 
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
@@ -92,10 +91,9 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
-
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+        creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
 
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
@@ -168,9 +166,9 @@ protected:
     void SetUp() override
     {
         for (int i = 0; i < getAgentCount(); ++i) {
-            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                    std::make_unique<alica::TransitionConditionCreator>()};
+            creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                    std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                    std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
                     alica::AlicaContextParams(getHostName(i), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
@@ -238,9 +236,10 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+        creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
+
         ac->init(std::move(creators), true);
         manageWorldModel(ac.get());
 
@@ -273,9 +272,9 @@ protected:
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
         ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+        creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         manageWorldModel(ac.get());
 
@@ -309,9 +308,9 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::LegacyTransitionConditionCreator>()};
+        creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
         manageWorldModel(ac.get());
@@ -341,9 +340,9 @@ protected:
     void SetUp() override
     {
         for (int i = 0; i < getAgentCount(); ++i) {
-            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                    std::make_unique<alica::TransitionConditionCreator>()};
+            creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                    std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                    std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
                     alica::AlicaContextParams(getHostName(i), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));

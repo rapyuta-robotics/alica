@@ -30,7 +30,7 @@
   "frequency": 0,
   "id": 1179066429431332055,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "TestParameterPassingMaster",
   "preCondition": null,

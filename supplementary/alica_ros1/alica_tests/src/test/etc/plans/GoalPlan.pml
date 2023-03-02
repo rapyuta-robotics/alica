@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1402488870347,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "GoalPlan",
   "preCondition": {
@@ -30,7 +30,7 @@
     "conditionString": "",
     "enabled": true,
     "id": 1402489131988,
-    "name": "PreCondition",
+    "name": "GoalPlanPreCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
@@ -41,7 +41,7 @@
     "conditionString": "test",
     "enabled": false,
     "id": 1403773741874,
-    "name": "NewRuntimeCondition",
+    "name": "GoalPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [
       {

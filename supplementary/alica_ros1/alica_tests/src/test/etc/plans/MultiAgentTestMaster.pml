@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1413200842973,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "MultiAgentTestMaster",
   "preCondition": null,

@@ -38,7 +38,7 @@
   "frequency": 0,
   "id": 1402488770050,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "MidFieldPlayPlan",
   "preCondition": null,
@@ -48,7 +48,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1402489260911,
-    "name": "NewRuntimeCondition",
+    "name": "MidFieldPlayPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []

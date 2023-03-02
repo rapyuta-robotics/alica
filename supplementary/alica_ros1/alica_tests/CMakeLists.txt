@@ -26,18 +26,22 @@ include_directories(include)
 
 include_directories(include src/test/Expr/include)
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-add_library(${PROJECT_NAME}-expr SHARED ${autogen_SOURCES})
-target_include_directories(${PROJECT_NAME}-expr PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
-)
-target_link_libraries(${PROJECT_NAME}-expr alica_solver_interface alica_test_utility alica_engine alica_simple_solver alica_dummy_proxy alica_dynamic_loading)
-target_compile_definitions(${PROJECT_NAME}-expr PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 include_directories(libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
-add_library(alica-tests SHARED ${AlicaTestLibSources})
-target_link_libraries(alica-tests ${PROJECT_NAME}-expr alica_solver_interface alica_simple_solver alica_engine alica_test_utility alica_dummy_proxy alica_dynamic_loading)
+add_library(alica-tests SHARED ${AlicaTestLibSources} ${autogen_SOURCES})
+target_include_directories(alica-tests PUBLIC
+$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+$<INSTALL_INTERFACE:include>
+)
+target_link_libraries(alica-tests alica_solver_interface alica_simple_solver alica_engine ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
+target_compile_definitions(alica-tests PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
+
+install(TARGETS alica-tests
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
 
 if(BUILD_TESTING)
     find_package(GTest)
@@ -91,12 +95,12 @@ if(BUILD_TESTING)
     )
 
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME}-expr alica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads alica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
     gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
 
 # Install
-install(TARGETS alica-tests ${PROJECT_NAME}-expr
+install(TARGETS alica-tests
 EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

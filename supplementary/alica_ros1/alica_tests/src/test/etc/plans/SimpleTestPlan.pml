@@ -30,7 +30,7 @@
   "frequency": 0,
   "id": 1412252439925,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "SimpleTestPlan",
   "preCondition": {
@@ -38,7 +38,7 @@
     "conditionString": "",
     "enabled": true,
     "id": 1412781707952,
-    "name": "NewPreCondition",
+    "name": "SimpleTestPlanPreCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
@@ -49,7 +49,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1412781693884,
-    "name": "NewRuntimeCondition",
+    "name": "SimpleTestPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
