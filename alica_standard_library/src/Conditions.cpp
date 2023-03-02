@@ -1,6 +1,6 @@
 #include "Conditions.h"
 
-namespace utils
+namespace alica_standard_library
 {
 
 bool isSuccess(const alica::RunningPlan* rp)
@@ -78,4 +78,4 @@ bool AlwaysFalseCondition(const alica::Blackboard* input, const alica::RunningPl
 {
     return false;
 }
-} /* namespace utils */
+} /* namespace alica_standard_library */

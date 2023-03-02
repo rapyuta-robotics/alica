@@ -31,14 +31,7 @@ protected:
     const char* getRoleSetName() const override { return "RolesetTA"; }
     const char* getMasterPlanName() const override { return "RealMasterPlanForSyncTest"; }
     int getAgentCount() const override { return agentCount; }
-    const char* getHostName(int agentNumber) const override
-    {
-        if (agentNumber) {
-            return "nase";
-        } else {
-            return "hairy";
-        }
-    }
+    const char* getHostName(int agentNumber) const override { return agentNumber ? "nase" : "hairy"; }
 };
 
 /**

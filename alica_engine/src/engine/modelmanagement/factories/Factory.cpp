@@ -45,28 +45,22 @@ int64_t Factory::getReferencedId(const std::string& idString)
     if (idxOfHashtag == std::string::npos) {
         return stoll(idString);
     }
-    std::string locator = idString.substr(0, idxOfHashtag);
-    if (!locator.empty()) {
-        std::string fileReferenced;
-        if (essentials::FileSystem::endsWith(locator, alica::Strings::plan_extension) ||
-                essentials::FileSystem::endsWith(locator, alica::Strings::behaviour_extension) ||
-                essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension) ||
-                essentials::FileSystem::endsWith(locator, alica::Strings::condition_extension)) {
-            fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
-        } else if (essentials::FileSystem::endsWith(locator, alica::Strings::taskrepository_extension)) {
-            fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);
-        } else if (essentials::FileSystem::endsWith(locator, alica::Strings::roleset_extension)) {
-            fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseRolePath, locator);
-        } else if (essentials::FileSystem::endsWith(locator, alica::Strings::configuration_extension)) {
-            fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
-        } else {
-            Logging::logDebug("Factory") << "Unknown file extension: " << locator;
-        }
-
-        if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileReferenced) == std::end(modelManager->filesParsed) &&
-                std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileReferenced) ==
-                        std::end(modelManager->filesToParse)) {
-            modelManager->filesToParse.push_back(fileReferenced);
+    std::string fileName = idString.substr(0, idxOfHashtag);
+    if (auto pathSeparatorPos = fileName.find_last_of(essentials::FileSystem::PATH_SEPARATOR); pathSeparatorPos != std::string::npos) {
+        Logging::logWarn(LOGNAME) << "File name expected, however path is specified, path: " << fileName << ", will only consider the file name instead";
+        fileName = fileName.substr(pathSeparatorPos + 1);
+    }
+    if (!fileName.empty()) {
+        if (!essentials::FileSystem::endsWith(fileName, alica::Strings::plan_extension) &&
+                !essentials::FileSystem::endsWith(fileName, alica::Strings::behaviour_extension) &&
+                !essentials::FileSystem::endsWith(fileName, alica::Strings::plantype_extension) &&
+                !essentials::FileSystem::endsWith(fileName, alica::Strings::condition_extension) &&
+                !essentials::FileSystem::endsWith(fileName, alica::Strings::taskrepository_extension) &&
+                !essentials::FileSystem::endsWith(fileName, alica::Strings::roleset_extension)) {
+            Logging::logWarn(LOGNAME) << "Unknown file extension: " << fileName;
+        } else if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileName) == std::end(modelManager->filesParsed) &&
+                   std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileName) == std::end(modelManager->filesToParse)) {
+            modelManager->filesToParse.push_back(fileName);
         }
     }
     return stoll(idString.substr(idxOfHashtag + 1, idString.size() - idxOfHashtag));

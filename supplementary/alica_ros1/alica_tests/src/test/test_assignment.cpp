@@ -7,7 +7,6 @@
 #include <engine/modelmanagement/ModelManager.h>
 
 #include <gtest/gtest.h>
-#include <ros/ros.h>
 #include <vector>
 
 #include "test_alica.h"
@@ -21,10 +20,12 @@ using alica::State;
 
 TEST(Assignment, RobotsInserted)
 {
-    // determine the path to the test config
-    ros::NodeHandle nh;
+    // Path to test configs set by CMake
     std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
+#if defined(PLANS)
+    path = PLANS;
+    path += "/src/test";
+#endif
 
     alica::AgentId robot1 = 2;
     alica::AgentId robot2 = 1;
@@ -33,11 +34,11 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(robot1 > robot2);
     ASSERT_TRUE(robot1 < robot3);
 
-    auto ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+    auto ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", {path + "/etc/"}, "Roleset", "MasterPlan", true));
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-    ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+    ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
 
     alica::AlicaCreators creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
             std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
@@ -48,7 +49,7 @@ TEST(Assignment, RobotsInserted)
 
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac.get());
-    ModelManager modelManager(ae->getConfigChangeListener(), path + "/etc/", repo);
+    ModelManager modelManager(ae->getConfigChangeListener(), {path + "/etc/"}, repo);
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 

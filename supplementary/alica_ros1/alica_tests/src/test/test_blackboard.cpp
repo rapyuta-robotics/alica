@@ -66,7 +66,7 @@ TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
 {
     // Two parent values mapped to same behavior input value to differentiate call contexts
     ae->start();
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
+    // ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
 
     std::shared_ptr<alicaTests::TestWorldModel> wm =
             LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");

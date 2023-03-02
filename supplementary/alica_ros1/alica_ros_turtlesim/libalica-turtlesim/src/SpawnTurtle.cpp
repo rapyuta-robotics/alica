@@ -1,10 +1,14 @@
 #include "SpawnTurtle.h"
 
 #include <ros/ros.h>
-#include <turtlesim/Spawn.h>
 
 #include <memory>
 #include <random>
+
+#include "turtle_interfaces.hpp"
+#include <engine/logging/Logging.h>
+
+using Logging = alica::Logging;
 
 namespace turtlesim
 {
@@ -14,21 +18,30 @@ SpawnTurtle::SpawnTurtle(alica::BehaviourContext& context)
 {
 }
 
-void SpawnTurtle::run()
+void SpawnTurtle::initialiseParameters()
 {
-    ros::ServiceClient spawnSrvClient = ros::NodeHandle("~").serviceClient<turtlesim::Spawn>("/spawn");
-    turtlesim::Spawn spawnSrv;
-    spawnSrv.request.x = 1;
-    spawnSrv.request.y = 1;
-    spawnSrv.request.theta = 0;
-    spawnSrv.request.name = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::string>("agentName");
-    if (spawnSrvClient.waitForExistence() && spawnSrvClient.call(spawnSrv)) {
-        ROS_INFO_STREAM_NAMED(__func__, spawnSrv.request.name << " was spawned");
-    } else {
-        ROS_ERROR_STREAM_NAMED(__func__, "Failed to spawn " << spawnSrv.request.name);
+    // When we spawn the turtle, instantiate turtle interface into the global blackboard
+    // These interface will be retrieved from global blackboard and used by other plans using the turtle
+
+    // TODO: Detect and fail if this behavior is called twice
+    alica::LockedBlackboardRW g_bb(*getGlobalBlackboard());
+    auto name = g_bb.get<std::string>("agentName");
+    if (g_bb.hasValue("turtle")) {
+        Logging::logWarn("SpawnTurtle") << name << " was already spawned";
         setFailure();
+        return;
     }
-    setSuccess();
+    g_bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleInterfaces>(name));
+
+    auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
+
+    if (turtleInterfaces->spawn()) {
+        Logging::logInfo("SpawnTurtle") << name << " was spawned";
+        setSuccess();
+    } else {
+        Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";
+        setSuccess();
+    }
 }
 
 std::unique_ptr<SpawnTurtle> SpawnTurtle::create(alica::BehaviourContext& context)
