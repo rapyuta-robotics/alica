@@ -65,7 +65,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Go2RandomPosition.beh#4085572422059465423",
+          "abstractPlan": "Go2RandomPosition.beh#4085572422059465423",
           "comment": "",
           "configuration": null,
           "id": 586073573470828748,
@@ -98,7 +98,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#974606107671315045",
+      "condition": "ConditionRepository.cnd#974606107671315045",
       "id": 635844345274619238,
       "inState": 2405597980801916441,
       "keyMapping": {
@@ -127,7 +127,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#748720375848597116",
+      "condition": "ConditionRepository.cnd#748720375848597116",
       "id": 3486027875296378577,
       "inState": 3997532517592149463,
       "keyMapping": {

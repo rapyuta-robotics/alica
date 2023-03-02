@@ -123,7 +123,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2",
+      "condition": "ConditionRepository.cnd#2",
       "id": 602472383731208509,
       "inState": 1413250009777584468,
       "keyMapping": {
@@ -147,7 +147,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
       "id": 4409408749212342883,
       "inState": 1899337663064771436,
       "keyMapping": {

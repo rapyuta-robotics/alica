@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SuccessSpam.beh#1522377401286",
+          "abstractPlan": "SuccessSpam.beh#1522377401286",
           "comment": "",
           "configuration": null,
           "id": 1587718663016,
@@ -65,7 +65,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SuccessSpam.beh#1522377401286",
+          "abstractPlan": "SuccessSpam.beh#1522377401286",
           "comment": "",
           "configuration": null,
           "id": 1587718663020,
@@ -98,7 +98,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3604374027783683696",
+      "condition": "ConditionRepository.cnd#3604374027783683696",
       "id": 1522377944058,
       "inState": 1522377375149,
       "keyMapping": {
@@ -127,7 +127,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3604374027783683696",
+      "condition": "ConditionRepository.cnd#3604374027783683696",
       "id": 1522377945069,
       "inState": 1522377929290,
       "keyMapping": {

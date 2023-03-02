@@ -41,7 +41,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/ReadConfigurationBehaviour.beh#1588061129360",
+          "abstractPlan": "ReadConfigurationBehaviour.beh#1588061129360",
           "comment": "",
           "configuration": "configurations/ConfigA.cfg#1588061188681",
           "id": 1588061141112,
@@ -52,7 +52,7 @@
           "name": "1588061141112"
         },
         {
-          "abstractPlan": "behaviours/ReadConfigurationBehaviour.beh#1588061129360",
+          "abstractPlan": "ReadConfigurationBehaviour.beh#1588061129360",
           "comment": "",
           "configuration": "configurations/ConfigB.cfg#1588061200689",
           "id": 1588061144175,
@@ -146,7 +146,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2163654295690873706",
+      "condition": "ConditionRepository.cnd#2163654295690873706",
       "id": 1588253347211,
       "inState": 1588060991102,
       "keyMapping": {

@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/AttackOpp.beh#1402489351885",
+          "abstractPlan": "AttackOpp.beh#1402489351885",
           "comment": "",
           "configuration": null,
           "id": 1587718662873,

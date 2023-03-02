@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Tackle.beh#1402488939130",
+          "abstractPlan": "Tackle.beh#1402488939130",
           "comment": "",
           "configuration": null,
           "id": 1587718662824,
@@ -150,7 +150,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402488990761,
       "inState": 1402488959965,
       "keyMapping": {
@@ -179,7 +179,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402488991762,
       "inState": 1402488903549,
       "keyMapping": {
@@ -208,7 +208,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489064693,
       "inState": 1402488959965,
       "keyMapping": {
@@ -237,7 +237,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489071510,
       "inState": 1402489037735,
       "keyMapping": {

@@ -76,7 +76,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TestParameterPassingBehaviour.beh#831400441334251602",
+          "abstractPlan": "TestParameterPassingBehaviour.beh#831400441334251602",
           "comment": "",
           "configuration": null,
           "id": 445396005944825226,
@@ -114,7 +114,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TestParameterPassingBehaviour.beh#831400441334251602",
+          "abstractPlan": "TestParameterPassingBehaviour.beh#831400441334251602",
           "comment": "",
           "configuration": null,
           "id": 445396005944825225,
@@ -158,7 +158,7 @@
   "transitions": [
     {
       "comment": "Forth",
-      "condition": "conditions/ConditionRepository.cnd#843443485857038179",
+      "condition": "ConditionRepository.cnd#843443485857038179",
       "id": 1129456609900,
       "inState": 1092447442809556626,
       "keyMapping": {
@@ -193,7 +193,7 @@
     },
     {
       "comment": "Back",
-      "condition": "conditions/ConditionRepository.cnd#1237521027685048666",
+      "condition": "ConditionRepository.cnd#1237521027685048666",
       "id": 2229456609900,
       "inState": 1529456591400,
       "keyMapping": {

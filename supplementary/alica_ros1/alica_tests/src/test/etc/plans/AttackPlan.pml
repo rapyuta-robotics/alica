@@ -44,7 +44,7 @@
           "name": "1587718663068"
         },
         {
-          "abstractPlan": "behaviours/AttackOpp.beh#1402489351885",
+          "abstractPlan": "AttackOpp.beh#1402489351885",
           "comment": "",
           "configuration": null,
           "id": 1587718663070,
@@ -76,7 +76,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718663073,
@@ -109,7 +109,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489459382,
       "inState": 1402488646220,
       "keyMapping": {
@@ -181,7 +181,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489460694,
       "inState": 1402489396914,
       "keyMapping": {

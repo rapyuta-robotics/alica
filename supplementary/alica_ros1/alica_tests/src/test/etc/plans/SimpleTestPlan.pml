@@ -59,7 +59,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/MidFieldStandard.beh#1402488696205",
+          "abstractPlan": "MidFieldStandard.beh#1402488696205",
           "comment": "",
           "configuration": null,
           "id": 1587718662588,
@@ -89,7 +89,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662591,
@@ -120,7 +120,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#843443485857038179",
+      "condition": "ConditionRepository.cnd#843443485857038179",
       "id": 1412761925032,
       "inState": 1412252439926,
       "keyMapping": {

@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TriggerA.beh#1428508297492",
+          "abstractPlan": "TriggerA.beh#1428508297492",
           "comment": "",
           "configuration": null,
           "id": 1587718662751,
@@ -44,7 +44,7 @@
           "name": "1587718662751"
         },
         {
-          "abstractPlan": "behaviours/TriggerB.beh#1428508316905",
+          "abstractPlan": "TriggerB.beh#1428508316905",
           "comment": "",
           "configuration": null,
           "id": 1587718662753,
@@ -55,7 +55,7 @@
           "name": "1587718662753"
         },
         {
-          "abstractPlan": "behaviours/TriggerC.beh#1428508355209",
+          "abstractPlan": "TriggerC.beh#1428508355209",
           "comment": "",
           "configuration": null,
           "id": 1587718662755,
@@ -66,7 +66,7 @@
           "name": "1587718662755"
         },
         {
-          "abstractPlan": "behaviours/NotToTrigger.beh#1429017274116",
+          "abstractPlan": "NotToTrigger.beh#1429017274116",
           "comment": "",
           "configuration": null,
           "id": 1587718662758,

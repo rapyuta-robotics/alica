@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/QueryBehaviour1.beh#1479556104511",
+          "abstractPlan": "QueryBehaviour1.beh#1479556104511",
           "comment": "",
           "configuration": null,
           "id": 1597658636425,

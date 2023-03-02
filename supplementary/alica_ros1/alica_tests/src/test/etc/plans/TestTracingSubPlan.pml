@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/EmptyBehaviour.beh#1625610857563",
+          "abstractPlan": "EmptyBehaviour.beh#1625610857563",
           "comment": "",
           "configuration": null,
           "id": 626074692772114453,

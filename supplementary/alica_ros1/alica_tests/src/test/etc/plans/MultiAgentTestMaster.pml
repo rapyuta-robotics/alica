@@ -83,7 +83,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662952,
@@ -114,7 +114,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2208457928613785430",
+      "condition": "ConditionRepository.cnd#2208457928613785430",
       "id": 1413201226246,
       "inState": 1413200842974,
       "keyMapping": {
@@ -138,7 +138,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1648591654803570403",
+      "condition": "ConditionRepository.cnd#1648591654803570403",
       "id": 1413201388722,
       "inState": 1413201213955,
       "keyMapping": {

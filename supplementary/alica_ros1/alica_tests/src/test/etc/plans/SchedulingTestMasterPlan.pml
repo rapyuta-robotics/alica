@@ -171,7 +171,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TestBehaviour.beh#55178365253414982",
+          "abstractPlan": "TestBehaviour.beh#55178365253414982",
           "comment": "",
           "configuration": null,
           "id": 923638215106179740,
@@ -238,7 +238,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2711102114821139213",
+      "condition": "ConditionRepository.cnd#2711102114821139213",
       "id": 1613530643879,
       "inState": 1613378474109,
       "keyMapping": {
@@ -267,7 +267,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#1311087067347475449",
+      "condition": "ConditionRepository.cnd#1311087067347475449",
       "id": 1615797316170,
       "inState": 1615797271229,
       "keyMapping": {
@@ -304,7 +304,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#3726136276355540527",
+      "condition": "ConditionRepository.cnd#3726136276355540527",
       "id": 1615797327076,
       "inState": 1615797271229,
       "keyMapping": {
@@ -341,7 +341,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#1013158988206959873",
+      "condition": "ConditionRepository.cnd#1013158988206959873",
       "id": 1615797365363,
       "inState": 1615797319003,
       "keyMapping": {
@@ -370,7 +370,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2619422076497988080",
+      "condition": "ConditionRepository.cnd#2619422076497988080",
       "id": 1629895598464,
       "inState": 1615797271229,
       "keyMapping": {
@@ -407,7 +407,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1629895607017,
       "inState": 1629895593451,
       "keyMapping": {
@@ -436,7 +436,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#4244459279660861567",
+      "condition": "ConditionRepository.cnd#4244459279660861567",
       "id": 383854659955639601,
       "inState": 1206766322278521913,
       "keyMapping": {
@@ -465,7 +465,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1506708037135242126,
       "inState": 3802371674214346622,
       "keyMapping": {
@@ -494,7 +494,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2205566100638019970",
+      "condition": "ConditionRepository.cnd#2205566100638019970",
       "id": 1773144683253207826,
       "inState": 3802371674214346622,
       "keyMapping": {
@@ -523,7 +523,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2452554857659522052",
+      "condition": "ConditionRepository.cnd#2452554857659522052",
       "id": 3351673290341906102,
       "inState": 1615797271229,
       "keyMapping": {

@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TestInheritBlackboardBehaviour.beh#831400441334251600",
+          "abstractPlan": "TestInheritBlackboardBehaviour.beh#831400441334251600",
           "comment": "",
           "configuration": null,
           "id": 445396005944825200,

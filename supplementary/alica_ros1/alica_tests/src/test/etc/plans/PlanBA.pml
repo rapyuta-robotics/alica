@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/BehBAA.beh#1629895911592",
+          "abstractPlan": "BehBAA.beh#1629895911592",
           "comment": "",
           "configuration": null,
           "id": 1629896123291,

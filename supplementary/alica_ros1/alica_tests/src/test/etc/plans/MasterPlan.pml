@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662710,
@@ -126,7 +126,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/MidFieldStandard.beh#1402488696205",
+          "abstractPlan": "MidFieldStandard.beh#1402488696205",
           "comment": "",
           "configuration": null,
           "id": 1587718662719,
@@ -137,7 +137,7 @@
           "name": "1587718662719"
         },
         {
-          "abstractPlan": "behaviours/DefendMid.beh#1402488730695",
+          "abstractPlan": "DefendMid.beh#1402488730695",
           "comment": "",
           "configuration": null,
           "id": 1587718662721,
@@ -201,7 +201,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402488517667,
       "inState": 1402488437261,
       "keyMapping": {
@@ -225,7 +225,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402488519757,
       "inState": 1402488477650,
       "keyMapping": {
@@ -249,7 +249,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402488557864,
       "inState": 1402488470615,
       "keyMapping": {
@@ -273,7 +273,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1409218318661,
       "inState": 1402488437261,
       "keyMapping": {
