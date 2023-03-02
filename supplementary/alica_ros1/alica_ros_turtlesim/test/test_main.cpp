@@ -118,8 +118,6 @@ TEST(AlicaTurtlesimTest, destinationTest)
     std_msgs::Empty msg;
     join_formation_turtle_1_pub.publish(msg);
 
-    std::this_thread::sleep_for(std::chrono::seconds(10));
-
     RUN_UNTIL_ROBOT_STOP(turtle1, 10000);
     EXPECT_POSE_NEAR(turtle1.getPose(), desired_pose_turtle_1, pose_tolerance);
 
@@ -129,7 +127,7 @@ TEST(AlicaTurtlesimTest, destinationTest)
 
     auto turtle_center = TurtlePosition(5, 5);
     double desired_distance_to_the_center = 2.5;
-    double distance_tolerance = 0.35;
+    double distance_tolerance = 0.1;
 
     join_formation_turtle_2_pub.publish(msg);
 
@@ -140,32 +138,39 @@ TEST(AlicaTurtlesimTest, destinationTest)
     TurtlePosition turtle3;
     ros::Subscriber turtle3_sub = nh.subscribe("turtle3/pose", 10, &TurtlePosition::poseCallback, &turtle3);
 
-    double distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / (double) (2)) - distance_tolerance;
-
     join_formation_turtle_3_pub.publish(msg);
 
+    RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
     RUN_UNTIL_ROBOT_STOP(turtle3, 10000);
 
     EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
     EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
-    EXPECT_NEAR(turtle3.distance(turtle2), distance_between_followers, distance_tolerance);
+
+    // auto actual_distance_from_the_center = turtle2.distance(turtle_center);
+    auto distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / 2.0) - distance_tolerance;
+
+    EXPECT_GE(turtle3.distance(turtle2), distance_between_followers);
 
     // Turtle 4
     TurtlePosition turtle4;
     ros::Subscriber turtle4_sub = nh.subscribe("turtle4/pose", 10, &TurtlePosition::poseCallback, &turtle4);
 
-    distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / (double) (3));
-
     join_formation_turtle_4_pub.publish(msg);
 
+    RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
+    RUN_UNTIL_ROBOT_STOP(turtle3, 10000);
     RUN_UNTIL_ROBOT_STOP(turtle4, 10000);
 
     EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
     EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
     EXPECT_NEAR(turtle4.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
-    EXPECT_NEAR(turtle3.distance(turtle2), distance_between_followers, distance_tolerance);
-    EXPECT_NEAR(turtle4.distance(turtle2), distance_between_followers, distance_tolerance);
-    EXPECT_NEAR(turtle4.distance(turtle3), distance_between_followers, distance_tolerance);
+
+    // actual_distance_from_the_center = turtle2.distance(turtle_center);
+    distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / 3.0) - distance_tolerance;
+
+    EXPECT_GE(turtle3.distance(turtle2), distance_between_followers);
+    EXPECT_GE(turtle4.distance(turtle2), distance_between_followers);
+    EXPECT_GE(turtle4.distance(turtle3), distance_between_followers);
 }
 
 int main(int argc, char** argv)

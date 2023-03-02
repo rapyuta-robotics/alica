@@ -3,7 +3,7 @@
     <arg name="use_gdb" default="$(optenv GDB false)"/>
     <arg name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" if="$(arg use_gdb)"/>
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
-    <arg name="master_plan"    default="Master" />
+    <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find alica_ros_turtlesim)" />
 
