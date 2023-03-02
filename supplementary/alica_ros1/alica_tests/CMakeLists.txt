@@ -62,38 +62,38 @@ if(BUILD_TESTING)
         src/TestWorldModel.cpp
         src/test_alica.cpp
         src/test/test_main.cpp
-        # src/test/test_alica_authority.cpp
-        # src/test/test_alica_behaviourtrigger.cpp
-        # src/test/test_alica_condition_plan.cpp
-        # src/test/test_alica_condition_plantype.cpp
+        src/test/test_alica_authority.cpp
+        src/test/test_alica_behaviourtrigger.cpp
+        src/test/test_alica_condition_plan.cpp
+        src/test/test_alica_condition_plantype.cpp
         src/test/test_alica_engine_plan_parser.cpp
-        # src/test/test_alica_init_shutdown.cpp
-        # src/test/test_alica_multi_agent_plan.cpp
-        # src/test/test_alica_simple_plan.cpp
-        # src/test/test_alica_sync_transition.cpp
-        # src/test/test_alica_time.cpp
-        # src/test/test_assignment.cpp
-        # src/test/test_back_forth.cpp
-        # src/test/test_continue_on_fail.cpp
-        # src/test/test_success_spam.cpp
-        # src/test/test_task_assignment.cpp
-        # src/test/test_variant.cpp
-        # src/test/test_varsync.cpp
-        # src/test/test_agent_dies.cpp
-        # src/test/test_agent_discovery.cpp
-        # src/test/test_yaml_cfg.cpp
-        # src/test/test_path_parser.cpp
-        # src/test/test_config_change.cpp
-        # src/test/test_alica_scheduling.cpp
-        # src/test/test_adjacent_plans_success.cpp
-        # src/test/test_alica_tracing.cpp
-        # src/test/test_blackboard.cpp
-        # src/test/test_inherit_blackboard.cpp
-        # src/test/test_failure_handling.cpp
-        # src/test/test_alica_logger.cpp
-        # src/test/test_alica_engine_worldmodel.cpp
-        # src/test/test_legacy_conditions.cpp
-        # src/test/test_success.cpp
+        src/test/test_alica_init_shutdown.cpp
+        src/test/test_alica_multi_agent_plan.cpp
+        src/test/test_alica_simple_plan.cpp
+        src/test/test_alica_sync_transition.cpp
+        src/test/test_alica_time.cpp
+        src/test/test_assignment.cpp
+        src/test/test_back_forth.cpp
+        src/test/test_continue_on_fail.cpp
+        src/test/test_success_spam.cpp
+        src/test/test_task_assignment.cpp
+        src/test/test_variant.cpp
+        src/test/test_varsync.cpp
+        src/test/test_agent_dies.cpp
+        src/test/test_agent_discovery.cpp
+        src/test/test_yaml_cfg.cpp
+        src/test/test_path_parser.cpp
+        src/test/test_config_change.cpp
+        src/test/test_alica_scheduling.cpp
+        src/test/test_adjacent_plans_success.cpp
+        src/test/test_alica_tracing.cpp
+        src/test/test_blackboard.cpp
+        src/test/test_inherit_blackboard.cpp
+        src/test/test_failure_handling.cpp
+        src/test/test_alica_logger.cpp
+        src/test/test_alica_engine_worldmodel.cpp
+        src/test/test_legacy_conditions.cpp
+        src/test/test_success.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
