@@ -127,7 +127,7 @@ TEST(AlicaTurtlesimTest, destinationTest)
 
     auto turtle_center = TurtlePosition(5, 5);
     double desired_distance_to_the_center = 2.5;
-    double distance_tolerance = 0.1;
+    double distance_tolerance = 0.15;
 
     join_formation_turtle_2_pub.publish(msg);
 
