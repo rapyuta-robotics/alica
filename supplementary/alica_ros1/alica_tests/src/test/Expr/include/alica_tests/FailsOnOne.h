@@ -15,11 +15,16 @@ public:
     FailsOnOne(PlanContext& context);
 };
 
-class RunTimeCondition1530069251117 : public DomainCondition
+class FailsOnOneRuntimeCondition : public DomainCondition
 {
+public:
+    FailsOnOneRuntimeCondition(ConditionContext& context)
+            : DomainCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
+    static std::unique_ptr<FailsOnOneRuntimeCondition> create(ConditionContext& context) { return std::make_unique<FailsOnOneRuntimeCondition>(context); };
 };
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, FailsOnOne)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, FailsOnOneUtilityFunction)
+BOOST_DLL_ALIAS(alica::FailsOnOneRuntimeCondition::create, FailsOnOneRuntimeCondition)
 } /* namespace alica */

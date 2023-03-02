@@ -15,12 +15,6 @@ public:
     ExecuteBehaviourInSubPlan(PlanContext& context);
 };
 
-class PreCondition1943478533524176732 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-
 BOOST_DLL_ALIAS(alica::BasicPlan::create, ExecuteBehaviourInSubPlan)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, ExecuteBehaviourInSubPlanUtilityFunction)
 } /* namespace alica */

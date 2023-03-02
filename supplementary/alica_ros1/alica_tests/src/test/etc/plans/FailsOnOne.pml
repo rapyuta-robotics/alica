@@ -32,7 +32,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1530069251117,
-    "name": "NewRuntimeCondition",
+    "name": "FailsOnOneRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []

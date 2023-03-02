@@ -14,26 +14,19 @@ class MidFieldPlayPlan : public DomainPlan
 public:
     MidFieldPlayPlan(PlanContext& context);
 };
-class RunTimeCondition1402489260911 : public DomainCondition
-{
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition1402489258509 : public DomainCondition
+class MidFieldPlayPlanRuntimeCondition : public DomainCondition
 {
 public:
+    MidFieldPlayPlanRuntimeCondition(ConditionContext& context)
+            : DomainCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition1402489278408 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition1402500844446 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
+    static std::unique_ptr<MidFieldPlayPlanRuntimeCondition> create(ConditionContext& context)
+    {
+        return std::make_unique<MidFieldPlayPlanRuntimeCondition>(context);
+    };
 };
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, MidFieldPlayPlan)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, MidFieldPlayPlanUtilityFunction)
+BOOST_DLL_ALIAS(alica::MidFieldPlayPlanRuntimeCondition::create, MidFieldPlayPlanRuntimeCondition)
 } /* namespace alica */

@@ -32,7 +32,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1414068566297,
-    "name": "NewRuntimeCondition",
+    "name": "ConstraintTestPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": [

@@ -10,7 +10,7 @@ PreConditionPlan::PreConditionPlan(PlanContext& context)
 {
 }
 
-bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool PreConditionPlanPreCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     return worldModel->isPreCondition1418042929966();
