@@ -2,14 +2,14 @@
 
 #include <alica/test/Util.h>
 #include <alica_tests/TestWorldModel.h>
+#include <alica_tests/behaviours/NotToTrigger.h>
+#include <alica_tests/behaviours/TriggerA.h>
+#include <alica_tests/behaviours/TriggerB.h>
+#include <alica_tests/behaviours/TriggerC.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
-#include <libalica-tests/behaviours/NotToTrigger.h>
-#include <libalica-tests/behaviours/TriggerA.h>
-#include <libalica-tests/behaviours/TriggerB.h>
-#include <libalica-tests/behaviours/TriggerC.h>
 
 #include <condition_variable>
 #include <mutex>

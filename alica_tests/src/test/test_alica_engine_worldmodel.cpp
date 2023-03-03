@@ -1,7 +1,7 @@
 #include "test_alica.h"
 
-#include <libalica-tests/behaviours/Attack.h>
-#include <libalica-tests/behaviours/MidFieldStandard.h>
+#include <alica_tests/behaviours/Attack.h>
+#include <alica_tests/behaviours/MidFieldStandard.h>
 
 #include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/TestWorldModel.h>
