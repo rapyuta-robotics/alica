@@ -36,7 +36,7 @@ void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb
 {
     LockedBlackboardRW lockedParentBb(*parent_bb);
     const auto& childBb = child_bb->_impl; // Child is terminated, no other users exists, don't use lock
-    for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
+    for (const auto& [childKey, parentKey] : keyMapping->getOutputMapping()) {
         try {
             parent_bb->_impl.map(childKey, parentKey, childBb);
             Logging::logDebug("BlackboardUtil") << "passing " << childKey << " into " << parentKey;
