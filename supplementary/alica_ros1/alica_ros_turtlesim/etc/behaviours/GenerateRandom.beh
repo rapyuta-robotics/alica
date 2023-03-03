@@ -3,15 +3,15 @@
     {
       "access": "input",
       "comment": "",
-      "id": 117244649116123551,
-      "key": "min",
+      "id": 3735569316629395206,
+      "key": "max",
       "type": "double"
     },
     {
       "access": "input",
       "comment": "",
-      "id": 3735569316629395206,
-      "key": "max",
+      "id": 117244649116123551,
+      "key": "min",
       "type": "double"
     },
     {

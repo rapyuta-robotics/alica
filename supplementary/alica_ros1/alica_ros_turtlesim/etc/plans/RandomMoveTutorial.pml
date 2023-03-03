@@ -3,29 +3,8 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 110523600591030675,
-      "key": "xmin",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 3518934415848973217,
-      "key": "xmax",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 181181142658587283,
-      "key": "ymin",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 3833947625034180743,
-      "key": "ymax",
+      "id": 3595251136493112330,
+      "key": "idletime",
       "type": "double"
     },
     {
@@ -38,6 +17,20 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 3518934415848973217,
+      "key": "xmax",
+      "type": "double"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 110523600591030675,
+      "key": "xmin",
+      "type": "double"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 268368693041806104,
       "key": "y",
       "type": "double"
@@ -45,8 +38,15 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 3595251136493112330,
-      "key": "idletime",
+      "id": 3833947625034180743,
+      "key": "ymax",
+      "type": "double"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 181181142658587283,
+      "key": "ymin",
       "type": "double"
     }
   ],
