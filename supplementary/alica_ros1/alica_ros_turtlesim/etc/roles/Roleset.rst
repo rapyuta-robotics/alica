@@ -3,7 +3,7 @@
   "defaultPriority": 0.5,
   "defaultRoleSet": true,
   "id": 3075243963029859927,
-  "name": "RoleSet",
+  "name": "Roleset",
   "relativeDirectory": "",
   "roles": [
     {
