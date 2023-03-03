@@ -13,10 +13,4 @@ namespace turtlesim
 BOOST_DLL_ALIAS(alica::BasicPlan::create, SurroundLeaderTutorial)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SurroundLeaderTutorialUtilityFunction)
 
-struct TransitionConditions
-{
-    static bool CustomAnyChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
-};
-BOOST_DLL_ALIAS(turtlesim::TransitionConditions::CustomAnyChildSuccess, CustomAnyChildSuccess)
-
 } // namespace turtlesim
