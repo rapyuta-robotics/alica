@@ -36,6 +36,7 @@
   ],
   "frequency": 0,
   "id": 1613378406860,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -128,7 +129,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2901825906319407673",
+      "condition": "ConditionRepository.cnd#2901825906319407673",
       "id": 1614960055819,
       "inState": 1613378543512,
       "keyMapping": {
@@ -143,12 +144,7 @@
       },
       "name": "FromDefault NameTo Default Name",
       "outState": 1614960038398,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -163,7 +159,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2901825906319407673",
+      "condition": "ConditionRepository.cnd#2901825906319407673",
       "id": 1614960063842,
       "inState": 1614960038398,
       "keyMapping": {
@@ -178,12 +174,7 @@
       },
       "name": "FromDefault NameTo Default Name",
       "outState": 1613977406218,
-      "pointsWeb": [
-        {
-          "x": 844,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": null,

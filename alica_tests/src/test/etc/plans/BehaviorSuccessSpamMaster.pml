@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1522377375148,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
@@ -33,7 +34,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SuccessSpam.beh#1522377401286",
+          "abstractPlan": "SuccessSpam.beh#1522377401286",
           "comment": "",
           "configuration": null,
           "id": 1587718663016,
@@ -65,7 +66,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SuccessSpam.beh#1522377401286",
+          "abstractPlan": "SuccessSpam.beh#1522377401286",
           "comment": "",
           "configuration": null,
           "id": 1587718663020,
@@ -98,7 +99,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3604374027783683696",
+      "condition": "ConditionRepository.cnd#3604374027783683696",
       "id": 1522377944058,
       "inState": 1522377375149,
       "keyMapping": {
@@ -107,12 +108,7 @@
       },
       "name": "MISSING_NAME",
       "outState": 1522377929290,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 29
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -127,7 +123,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3604374027783683696",
+      "condition": "ConditionRepository.cnd#3604374027783683696",
       "id": 1522377945069,
       "inState": 1522377929290,
       "keyMapping": {
@@ -136,12 +132,7 @@
       },
       "name": "MISSING_NAME",
       "outState": 1522377375149,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",

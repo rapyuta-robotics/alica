@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1417423757243,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
@@ -45,7 +46,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SolverTestBehaviour.beh#1417424455986",
+          "abstractPlan": "SolverTestBehaviour.beh#1417424455986",
           "comment": "",
           "configuration": null,
           "id": 1597658636404,
@@ -72,16 +73,16 @@
           "comment": "",
           "id": 1417444715623,
           "name": "MISSING_NAME",
-          "subPlan": "behaviours/SolverTestBehaviour.beh#1417424455986",
-          "subVariable": "behaviours/SolverTestBehaviour.beh#1417444710642",
+          "subPlan": "SolverTestBehaviour.beh#1417424455986",
+          "subVariable": "SolverTestBehaviour.beh#1417444710642",
           "variable": 1417444593509
         },
         {
           "comment": "",
           "id": 1417444720874,
           "name": "MISSING_NAME",
-          "subPlan": "behaviours/SolverTestBehaviour.beh#1417424455986",
-          "subVariable": "behaviours/SolverTestBehaviour.beh#1417444707321",
+          "subPlan": "SolverTestBehaviour.beh#1417424455986",
+          "subVariable": "SolverTestBehaviour.beh#1417444707321",
           "variable": 1417444589341
         }
       ]

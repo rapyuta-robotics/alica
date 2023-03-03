@@ -36,6 +36,7 @@
   ],
   "frequency": 0,
   "id": 1530004915640,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -118,7 +119,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/AlwaysFail.beh#1532424188199",
+          "abstractPlan": "AlwaysFail.beh#1532424188199",
           "comment": "",
           "configuration": null,
           "id": 1587718662553,
@@ -169,7 +170,7 @@
   "transitions": [
     {
       "comment": "From A to B, isset(0)",
-      "condition": "conditions/ConditionRepository.cnd#3787001793582633602",
+      "condition": "ConditionRepository.cnd#3787001793582633602",
       "id": 1530004992551,
       "inState": 1530004915641,
       "keyMapping": {
@@ -199,7 +200,7 @@
     },
     {
       "comment": "AnyChildFail",
-      "condition": "conditions/ConditionRepository.cnd#711536493236439192",
+      "condition": "ConditionRepository.cnd#711536493236439192",
       "id": 1530004993680,
       "inState": 1530004973591,
       "keyMapping": {
@@ -223,7 +224,7 @@
     },
     {
       "comment": "C to D, isset(2)",
-      "condition": "conditions/ConditionRepository.cnd#3787001793582633602",
+      "condition": "ConditionRepository.cnd#3787001793582633602",
       "id": 1532424092280,
       "inState": 1530004975275,
       "keyMapping": {
@@ -253,7 +254,7 @@
     },
     {
       "comment": "AnyChildFail",
-      "condition": "conditions/ConditionRepository.cnd#711536493236439192",
+      "condition": "ConditionRepository.cnd#711536493236439192",
       "id": 1532424112331,
       "inState": 1532424087894,
       "keyMapping": {

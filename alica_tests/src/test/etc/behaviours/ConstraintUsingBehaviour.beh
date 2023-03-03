@@ -4,27 +4,27 @@
   "deferring": 0,
   "eventDriven": false,
   "frequency": 30,
-  "id": 1417424455986,
+  "id": 1414068597716,
+  "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "supplementary-tests",
-  "name": "SolverTestBehaviour",
+  "libraryName": "alica-tests",
+  "name": "ConstraintUsingBehaviour",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "GSolver",
+  "relativeDirectory": "Behaviour",
   "runtimeCondition": null,
   "variables": [
     {
       "comment": "",
-      "id": 1417444707321,
+      "id": 1416487733086,
       "name": "X",
       "variableType": ""
     },
     {
       "comment": "",
-      "id": 1417444710642,
+      "id": 1416488161203,
       "name": "Y",
       "variableType": ""
     }
-  ],
-  "libraryName": "supplementary-tests"
+  ]
 }

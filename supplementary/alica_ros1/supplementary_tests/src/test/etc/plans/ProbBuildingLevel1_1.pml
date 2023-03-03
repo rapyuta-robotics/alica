@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1479557664989,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,

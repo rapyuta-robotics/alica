@@ -53,6 +53,7 @@
   ],
   "frequency": 0,
   "id": 1413200862180,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -65,7 +66,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662849,
@@ -95,7 +96,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662852,
@@ -125,7 +126,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662855,
@@ -197,7 +198,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/AttackOpp.beh#1402489351885",
+          "abstractPlan": "AttackOpp.beh#1402489351885",
           "comment": "",
           "configuration": null,
           "id": 1587718662860,
@@ -226,7 +227,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1377356708472618789",
+      "condition": "ConditionRepository.cnd#1377356708472618789",
       "id": 1413201050743,
       "inState": 1413200910490,
       "keyMapping": {
@@ -250,7 +251,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2019050763618766552",
+      "condition": "ConditionRepository.cnd#2019050763618766552",
       "id": 1413201367062,
       "inState": 1413201030936,
       "keyMapping": {
@@ -274,7 +275,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#4368560569514553226",
+      "condition": "ConditionRepository.cnd#4368560569514553226",
       "id": 1413201368286,
       "inState": 1413200877336,
       "keyMapping": {

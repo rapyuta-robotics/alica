@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1414068524245,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -45,7 +46,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/ConstraintUsingBehaviour.beh#1414068597716",
+          "abstractPlan": "ConstraintUsingBehaviour.beh#1414068597716",
           "comment": "",
           "configuration": null,
           "id": 1587718663002,
@@ -72,16 +73,16 @@
           "comment": "",
           "id": 1416488166139,
           "name": "MISSING_NAME",
-          "subPlan": "behaviours/ConstraintUsingBehaviour.beh#1414068597716",
-          "subVariable": "behaviours/ConstraintUsingBehaviour.beh#1416488161203",
+          "subPlan": "ConstraintUsingBehaviour.beh#1414068597716",
+          "subVariable": "ConstraintUsingBehaviour.beh#1416488161203",
           "variable": 1414068576620
         },
         {
           "comment": "",
           "id": 1416488172649,
           "name": "MISSING_NAME",
-          "subPlan": "behaviours/ConstraintUsingBehaviour.beh#1414068597716",
-          "subVariable": "behaviours/ConstraintUsingBehaviour.beh#1416487733086",
+          "subPlan": "ConstraintUsingBehaviour.beh#1414068597716",
+          "subVariable": "ConstraintUsingBehaviour.beh#1416487733086",
           "variable": 1414068572540
         }
       ]

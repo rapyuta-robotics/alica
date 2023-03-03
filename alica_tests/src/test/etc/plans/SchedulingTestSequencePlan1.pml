@@ -3,15 +3,15 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 1998335174749558241,
-      "key": "Sequenze2SubPlan",
+      "id": 620992452739501207,
+      "key": "SubOne2SubTwo",
       "type": "int64"
     },
     {
       "access": "protected",
       "comment": "",
-      "id": 620992452739501207,
-      "key": "SubOne2SubTwo",
+      "id": 1998335174749558241,
+      "key": "Sequenze2SubPlan",
       "type": "int64"
     },
     {
@@ -43,6 +43,7 @@
   ],
   "frequency": 0,
   "id": 1614963946725,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -188,7 +189,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2901825906319407673",
+      "condition": "ConditionRepository.cnd#2901825906319407673",
       "id": 1614964566530,
       "inState": 1614963979424,
       "keyMapping": {
@@ -218,7 +219,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2901825906319407673",
+      "condition": "ConditionRepository.cnd#2901825906319407673",
       "id": 1614964572494,
       "inState": 1614964540694,
       "keyMapping": {
@@ -248,7 +249,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2872265442510628524",
+      "condition": "ConditionRepository.cnd#2872265442510628524",
       "id": 1614964575552,
       "inState": 1614964541828,
       "keyMapping": {
@@ -272,7 +273,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2901825906319407673",
+      "condition": "ConditionRepository.cnd#2901825906319407673",
       "id": 1614964578015,
       "inState": 1614964542678,
       "keyMapping": {

@@ -29,6 +29,7 @@
   ],
   "frequency": 0,
   "id": 673160616613514188,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -92,7 +93,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
       "id": 1123795990168202938,
       "inState": 2511956906797886911,
       "keyMapping": {

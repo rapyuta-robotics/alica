@@ -4,6 +4,7 @@
   "entryPoints": [],
   "frequency": 0,
   "id": 2338431421577856715,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
@@ -18,8 +19,7 @@
     "name": "AcmeRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
-    "variables": [],
-    "libraryName": "supplementary-tests"
+    "variables": []
   },
   "states": [],
   "synchronisations": [],
