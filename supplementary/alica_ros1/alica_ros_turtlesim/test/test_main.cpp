@@ -125,9 +125,9 @@ TEST(AlicaTurtlesimTest, destinationTest)
     TurtlePosition turtle2;
     ros::Subscriber turtle2_sub = nh.subscribe("turtle2/pose", 10, &TurtlePosition::poseCallback, &turtle2);
 
-    auto turtle_center = TurtlePosition(5, 5);
-    double desired_distance_to_the_center = 2.5;
-    double distance_tolerance = 0.15;
+    const auto turtle_center = TurtlePosition(5, 5);
+    const double desired_distance_to_the_center = 2.5;
+    const double distance_tolerance = 0.15;
 
     join_formation_turtle_2_pub.publish(msg);
 
