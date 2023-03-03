@@ -1,6 +1,6 @@
 #include "test_alica.h"
-#include <libalica-tests/behaviours/Attack.h>
-#include <libalica-tests/behaviours/ConstraintUsingBehaviour.h>
+#include <alica_tests/behaviours/Attack.h>
+#include <alica_tests/behaviours/ConstraintUsingBehaviour.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaClock.h>
