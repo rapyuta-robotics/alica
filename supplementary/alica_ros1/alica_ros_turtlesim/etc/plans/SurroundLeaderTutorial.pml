@@ -21,8 +21,9 @@
   ],
   "frequency": 0,
   "id": 1449843163261594615,
+  "implementationName": "TracedPlan",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica_standard_library",
   "masterPlan": true,
   "name": "SurroundLeaderTutorial",
   "preCondition": null,
@@ -94,7 +95,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#2190266318562141841",
+      "condition": "ConditionRepository.cnd#1",
       "id": 1701344904592867727,
       "inState": 1256477521278293720,
       "keyMapping": {

@@ -20,6 +20,7 @@
   "eventDriven": false,
   "frequency": 30,
   "id": 2797939494274869075,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "libalica-turtlesim",
   "name": "GoTo",

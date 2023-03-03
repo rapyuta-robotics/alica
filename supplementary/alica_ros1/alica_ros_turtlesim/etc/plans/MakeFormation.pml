@@ -37,6 +37,7 @@
   ],
   "frequency": 0,
   "id": 1889749086610694100,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "libalica-turtlesim",
   "masterPlan": false,
