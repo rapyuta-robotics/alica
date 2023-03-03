@@ -24,12 +24,9 @@ find_package(alica_test_utility REQUIRED)
 find_package(alica_dynamic_loading REQUIRED)
 include_directories(include)
 
-include_directories(include src/test/Expr/include)
-file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-
-include_directories(libalica-tests/include)
+include_directories(include libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
-add_library(alica-tests SHARED ${AlicaTestLibSources} ${autogen_SOURCES})
+add_library(alica-tests SHARED ${AlicaTestLibSources})
 target_include_directories(alica-tests PUBLIC
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 $<INSTALL_INTERFACE:include>
