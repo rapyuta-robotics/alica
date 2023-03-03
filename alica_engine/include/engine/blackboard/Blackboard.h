@@ -158,7 +158,7 @@ public:
                 srcBb._vals.at(srcKey));
     }
 
-    void mapConst(const std::string& key, const std::string& value)
+    void mapValue(const std::string& key, const std::string& value)
     {
         const std::string errorPrefix = stringify("mapConst() failure, key: ", key, ", value: ", value, ", details: ");
         try {
