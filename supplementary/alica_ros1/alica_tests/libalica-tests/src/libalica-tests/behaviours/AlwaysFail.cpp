@@ -5,7 +5,7 @@ namespace alica
 {
 
 AlwaysFail::AlwaysFail(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 AlwaysFail::~AlwaysFail() {}

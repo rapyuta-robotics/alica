@@ -5,7 +5,7 @@ namespace alica
 {
 
 MidFieldStandard::MidFieldStandard(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
     this->callCounter = 0;
 }

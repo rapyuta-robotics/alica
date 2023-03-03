@@ -1,8 +1,8 @@
 #pragma once
 
-#include <alica_tests/DomainBehaviour.h>
 #include <atomic>
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 
 namespace alica_test
 {
@@ -11,7 +11,7 @@ class SchedWM;
 
 namespace alica
 {
-class BehAAA : public DomainBehaviour
+class BehAAA : public BasicBehaviour
 {
 public:
     BehAAA(BehaviourContext& context);

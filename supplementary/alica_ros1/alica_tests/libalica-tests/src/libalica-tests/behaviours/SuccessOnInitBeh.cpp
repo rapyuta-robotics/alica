@@ -5,7 +5,7 @@ namespace alica
 {
 
 SuccessOnInitBeh::SuccessOnInitBeh(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 SuccessOnInitBeh::~SuccessOnInitBeh() {}

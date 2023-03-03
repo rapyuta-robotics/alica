@@ -7,7 +7,7 @@ namespace alica
 {
 
 CountIndefinitely::CountIndefinitely(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 CountIndefinitely::~CountIndefinitely() {}

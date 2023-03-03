@@ -6,7 +6,7 @@
 namespace alica
 {
 EmptyBehaviour::EmptyBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 EmptyBehaviour::~EmptyBehaviour() {}

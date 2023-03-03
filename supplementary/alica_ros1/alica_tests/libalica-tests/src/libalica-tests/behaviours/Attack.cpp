@@ -4,7 +4,7 @@
 namespace alica
 {
 Attack::Attack(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
     this->callCounter = 0;
     this->initCounter = 0;

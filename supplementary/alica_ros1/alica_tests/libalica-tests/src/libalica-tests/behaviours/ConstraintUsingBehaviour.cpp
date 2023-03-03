@@ -9,7 +9,7 @@ namespace alica
 std::vector<int64_t> ConstraintUsingBehaviour::result;
 
 ConstraintUsingBehaviour::ConstraintUsingBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
     _callCounter = 0;
 }

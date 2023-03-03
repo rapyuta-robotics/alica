@@ -1,12 +1,12 @@
 #pragma once
 
-#include <alica_tests/DomainBehaviour.h>
 #include <alica_tests/TestWorldModel.h>
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 
 namespace alica
 {
-class TriggerA : public DomainBehaviour
+class TriggerA : public BasicBehaviour
 {
 public:
     TriggerA(BehaviourContext& context);

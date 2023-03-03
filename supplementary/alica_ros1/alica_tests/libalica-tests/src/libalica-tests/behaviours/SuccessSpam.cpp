@@ -9,7 +9,7 @@ namespace alica
 {
 
 SuccessSpam::SuccessSpam(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 SuccessSpam::~SuccessSpam() {}

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <alica_tests/DomainBehaviour.h>
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 #include <engine/constraintmodul/Query.h>
 #include <vector>
 
 namespace alica
 {
-class ConstraintUsingBehaviour : public DomainBehaviour
+class ConstraintUsingBehaviour : public BasicBehaviour
 {
 public:
     ConstraintUsingBehaviour(BehaviourContext& context);

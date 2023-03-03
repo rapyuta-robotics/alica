@@ -7,7 +7,7 @@ namespace alica
 {
 
 TestParameterPassingBehaviour::TestParameterPassingBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 TestParameterPassingBehaviour::~TestParameterPassingBehaviour() {}

@@ -8,7 +8,7 @@ namespace alica
 int BehAAA::runCount;
 
 BehAAA::BehAAA(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 BehAAA::~BehAAA() {}

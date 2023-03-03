@@ -5,7 +5,7 @@ namespace alica
 {
 
 DefendMid::DefendMid(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 DefendMid::~DefendMid() {}

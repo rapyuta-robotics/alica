@@ -1,11 +1,11 @@
 #pragma once
 
-#include <alica_tests/DomainBehaviour.h>
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 
 namespace alica
 {
-class DefendMid : public DomainBehaviour
+class DefendMid : public BasicBehaviour
 {
 public:
     DefendMid(BehaviourContext& context);

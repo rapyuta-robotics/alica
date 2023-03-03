@@ -4,7 +4,7 @@
 namespace alica
 {
 Tackle::Tackle(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 Tackle::~Tackle() {}

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <alica_tests/DomainBehaviour.h>
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 
 namespace alica
 {
-class CountIndefinitely : public DomainBehaviour
+class CountIndefinitely : public BasicBehaviour
 {
 public:
     CountIndefinitely(BehaviourContext& context);

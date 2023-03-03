@@ -5,7 +5,7 @@
 namespace alica
 {
 TestBehaviour::TestBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 TestBehaviour::~TestBehaviour() {}

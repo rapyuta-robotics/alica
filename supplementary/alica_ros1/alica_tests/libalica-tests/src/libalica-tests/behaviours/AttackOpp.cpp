@@ -5,7 +5,7 @@ namespace alica
 {
 
 AttackOpp::AttackOpp(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 AttackOpp::~AttackOpp() {}

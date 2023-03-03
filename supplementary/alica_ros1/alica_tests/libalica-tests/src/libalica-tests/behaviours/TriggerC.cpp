@@ -5,7 +5,7 @@ namespace alica
 {
 
 TriggerC::TriggerC(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
     this->callCounter = 0;
     this->initCounter = 0;

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <alica_tests/DomainBehaviour.h>
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 
 namespace alica
 {
-class AttackOpp : public DomainBehaviour
+class AttackOpp : public BasicBehaviour
 {
 public:
     AttackOpp(BehaviourContext& context);

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <alica_tests/DomainBehaviour.h>
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 
 namespace alica
 {
-class SuccessOnInitBeh : public DomainBehaviour
+class SuccessOnInitBeh : public BasicBehaviour
 {
 public:
     SuccessOnInitBeh(BehaviourContext& context);

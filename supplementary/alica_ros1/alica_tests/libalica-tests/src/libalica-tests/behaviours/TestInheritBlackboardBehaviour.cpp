@@ -7,7 +7,7 @@ namespace alica
 {
 
 TestInheritBlackboardBehaviour::TestInheritBlackboardBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 TestInheritBlackboardBehaviour::~TestInheritBlackboardBehaviour() {}

@@ -8,7 +8,7 @@ namespace alica
 {
 
 ReadConfigurationBehaviour::ReadConfigurationBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
 ReadConfigurationBehaviour::~ReadConfigurationBehaviour() {}
