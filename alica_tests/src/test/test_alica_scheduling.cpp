@@ -1,7 +1,7 @@
 #include "test_alica.h"
 #include <alica/test/CounterClass.h>
-#include <libalica-tests/behaviours/BehAAA.h>
-#include <libalica-tests/behaviours/BehBAA.h>
+#include <alica_tests/behaviours/BehAAA.h>
+#include <alica_tests/behaviours/BehBAA.h>
 
 #include <alica/test/Util.h>
 #include <alica_tests/test_sched_world_model.h>
