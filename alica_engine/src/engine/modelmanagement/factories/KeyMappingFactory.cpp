@@ -12,8 +12,13 @@ std::unique_ptr<KeyMapping> KeyMappingFactory::create(const YAML::Node& node)
     if (Factory::isValid(node[alica::Strings::input])) {
         const auto& inputList = node[alica::Strings::input];
         for (const auto& entry : inputList) {
-            keyMapping->addInputMapping(
-                    Factory::getValue<std::string>(entry, alica::Strings::parentKey), Factory::getValue<std::string>(entry, alica::Strings::childKey));
+            if (Factory::isValid(node[alica::Strings::parentKey])) {
+                keyMapping->addInputMapping(
+                        Factory::getValue<std::string>(entry, alica::Strings::parentKey), Factory::getValue<std::string>(entry, alica::Strings::childKey));
+            } else {
+                keyMapping->addInputValueMapping(
+                        Factory::getValue<std::string>(entry, alica::Strings::value), Factory::getValue<std::string>(entry, alica::Strings::childKey));
+            }
         }
     }
     if (Factory::isValid(node[alica::Strings::output])) {
