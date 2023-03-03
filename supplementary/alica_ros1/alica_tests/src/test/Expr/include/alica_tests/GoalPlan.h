@@ -1,6 +1,6 @@
 #pragma once
 
-#include <alica_tests/DomainCondition.h>
+#include <engine/BasicCondition.h>
 
 #include <boost/dll/alias.hpp>
 #include <engine/BasicConstraint.h>
@@ -19,27 +19,27 @@ public:
     GoalPlan(PlanContext& context);
 };
 
-class GoalPlanPreCondition : public DomainCondition
+class GoalPlanPreCondition : public BasicCondition
 {
 public:
     GoalPlanPreCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<GoalPlanPreCondition> create(ConditionContext& context) { return std::make_unique<GoalPlanPreCondition>(context); };
 };
-class GoalPlanRuntimeCondition : public DomainCondition
+class GoalPlanRuntimeCondition : public BasicCondition
 {
 public:
     GoalPlanRuntimeCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<GoalPlanRuntimeCondition> create(ConditionContext& context) { return std::make_unique<GoalPlanRuntimeCondition>(context); };
 };
-class GoalPlanPostCondition : public DomainCondition
+class GoalPlanPostCondition : public BasicCondition
 {
 public:
     GoalPlanPostCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<GoalPlanPostCondition> create(ConditionContext& context) { return std::make_unique<GoalPlanPostCondition>(context); };
 };

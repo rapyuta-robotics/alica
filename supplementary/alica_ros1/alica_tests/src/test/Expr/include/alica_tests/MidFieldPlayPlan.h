@@ -1,6 +1,6 @@
 #pragma once
 
-#include <alica_tests/DomainCondition.h>
+#include <engine/BasicCondition.h>
 
 #include <boost/dll/alias.hpp>
 #include <engine/BasicPlan.h>
@@ -15,11 +15,11 @@ class MidFieldPlayPlan : public BasicPlan
 public:
     MidFieldPlayPlan(PlanContext& context);
 };
-class MidFieldPlayPlanRuntimeCondition : public DomainCondition
+class MidFieldPlayPlanRuntimeCondition : public BasicCondition
 {
 public:
     MidFieldPlayPlanRuntimeCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<MidFieldPlayPlanRuntimeCondition> create(ConditionContext& context)
     {

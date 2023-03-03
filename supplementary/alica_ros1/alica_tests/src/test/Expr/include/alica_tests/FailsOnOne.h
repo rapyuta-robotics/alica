@@ -1,6 +1,6 @@
 #pragma once
 
-#include <alica_tests/DomainCondition.h>
+#include <engine/BasicCondition.h>
 
 #include <boost/dll/alias.hpp>
 #include <engine/BasicPlan.h>
@@ -16,11 +16,11 @@ public:
     FailsOnOne(PlanContext& context);
 };
 
-class FailsOnOneRuntimeCondition : public DomainCondition
+class FailsOnOneRuntimeCondition : public BasicCondition
 {
 public:
     FailsOnOneRuntimeCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<FailsOnOneRuntimeCondition> create(ConditionContext& context) { return std::make_unique<FailsOnOneRuntimeCondition>(context); };
 };

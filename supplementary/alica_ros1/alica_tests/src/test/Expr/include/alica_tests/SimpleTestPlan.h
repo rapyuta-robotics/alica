@@ -1,6 +1,6 @@
 #pragma once
 
-#include <alica_tests/DomainCondition.h>
+#include <engine/BasicCondition.h>
 
 #include <boost/dll/alias.hpp>
 #include <engine/BasicUtilityFunction.h>
@@ -18,19 +18,19 @@ public:
 protected:
     virtual void onInit() override;
 };
-class SimpleTestPlanPreCondition : public DomainCondition
+class SimpleTestPlanPreCondition : public BasicCondition
 {
 public:
     SimpleTestPlanPreCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<SimpleTestPlanPreCondition> create(ConditionContext& context) { return std::make_unique<SimpleTestPlanPreCondition>(context); };
 };
-class SimpleTestPlanRuntimeCondition : public DomainCondition
+class SimpleTestPlanRuntimeCondition : public BasicCondition
 {
 public:
     SimpleTestPlanRuntimeCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<SimpleTestPlanRuntimeCondition> create(ConditionContext& context)
     {

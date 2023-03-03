@@ -1,6 +1,6 @@
 #pragma once
 
-#include <alica_tests/DomainCondition.h>
+#include <engine/BasicCondition.h>
 
 #include <boost/dll/alias.hpp>
 #include <engine/BasicConstraint.h>
@@ -19,11 +19,11 @@ public:
     ConstraintTestPlan(PlanContext& context);
 };
 
-class ConstraintTestPlanRuntimeCondition : public DomainCondition
+class ConstraintTestPlanRuntimeCondition : public BasicCondition
 {
 public:
     ConstraintTestPlanRuntimeCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<ConstraintTestPlanRuntimeCondition> create(ConditionContext& context)
     {

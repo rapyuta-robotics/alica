@@ -1,6 +1,6 @@
 #pragma once
 
-#include <alica_tests/DomainCondition.h>
+#include <engine/BasicCondition.h>
 
 #include <boost/dll/alias.hpp>
 #include <engine/BasicPlan.h>
@@ -24,11 +24,11 @@ public:
             : AlicaTestsUtilityFunction(context){};
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
-class RuntimeConditionPlanRuntimeCondition : public DomainCondition
+class RuntimeConditionPlanRuntimeCondition : public BasicCondition
 {
 public:
     RuntimeConditionPlanRuntimeCondition(ConditionContext& context)
-            : DomainCondition(){};
+            : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
     static std::unique_ptr<RuntimeConditionPlanRuntimeCondition> create(ConditionContext& context)
     {

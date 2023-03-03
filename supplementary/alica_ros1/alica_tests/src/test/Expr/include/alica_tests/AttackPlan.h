@@ -1,7 +1,5 @@
 #pragma once
 
-#include <alica_tests/DomainCondition.h>
-
 #include <boost/dll/alias.hpp>
 #include <engine/BasicConstraint.h>
 #include <engine/BasicPlan.h>
