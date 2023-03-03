@@ -9,6 +9,12 @@
 namespace alica
 {
 
+KeyMapping::Mapping::Mapping(const std::string& src_, const std::string& target_)
+        : src(src_)
+        , target(target_)
+{
+}
+
 const KeyMapping::KeyMappingList& KeyMapping::getInputMapping() const
 {
     return _inputMapping;
