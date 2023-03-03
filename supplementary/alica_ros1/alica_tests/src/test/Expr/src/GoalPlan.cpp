@@ -3,7 +3,7 @@
 namespace alica
 {
 GoalPlan::GoalPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 

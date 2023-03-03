@@ -3,7 +3,7 @@
 namespace alica
 {
 PlanFive::PlanFive(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

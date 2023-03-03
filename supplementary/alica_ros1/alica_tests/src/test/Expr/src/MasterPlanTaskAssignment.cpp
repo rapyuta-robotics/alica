@@ -4,7 +4,7 @@
 namespace alica
 {
 MasterPlanTaskAssignment::MasterPlanTaskAssignment(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 

@@ -3,7 +3,7 @@
 namespace alica
 {
 FrequencyTestPlan::FrequencyTestPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

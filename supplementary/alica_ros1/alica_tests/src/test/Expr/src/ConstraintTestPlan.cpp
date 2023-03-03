@@ -4,7 +4,7 @@
 namespace alica
 {
 ConstraintTestPlan::ConstraintTestPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 bool ConstraintTestPlanRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)

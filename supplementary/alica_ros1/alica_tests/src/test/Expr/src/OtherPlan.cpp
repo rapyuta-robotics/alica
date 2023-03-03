@@ -5,7 +5,7 @@
 namespace alica
 {
 OtherPlan::OtherPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 

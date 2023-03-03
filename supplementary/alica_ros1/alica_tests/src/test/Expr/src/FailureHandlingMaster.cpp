@@ -4,7 +4,7 @@
 namespace alica
 {
 FailureHandlingMaster::FailureHandlingMaster(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

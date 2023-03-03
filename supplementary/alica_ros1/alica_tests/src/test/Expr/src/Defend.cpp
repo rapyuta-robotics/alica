@@ -3,7 +3,7 @@
 namespace alica
 {
 Defend::Defend(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

@@ -3,7 +3,7 @@
 namespace alica
 {
 BehaviourTriggerTestPlan::BehaviourTriggerTestPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

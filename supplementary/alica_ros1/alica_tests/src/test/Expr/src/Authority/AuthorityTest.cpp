@@ -5,7 +5,7 @@
 namespace alica
 {
 AuthorityTest::AuthorityTest(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 

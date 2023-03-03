@@ -1,7 +1,7 @@
 #pragma once
 
 #include <alica_tests/DomainCondition.h>
-#include <alica_tests/DomainPlan.h>
+
 #include <boost/dll/alias.hpp>
 #include <engine/BasicPlan.h>
 #include <engine/BasicUtilityFunction.h>
@@ -10,7 +10,7 @@
 
 namespace alica
 {
-class BehaviorSuccessSpamMaster : public DomainPlan
+class BehaviorSuccessSpamMaster : public BasicPlan
 {
 public:
     BehaviorSuccessSpamMaster(PlanContext& context);

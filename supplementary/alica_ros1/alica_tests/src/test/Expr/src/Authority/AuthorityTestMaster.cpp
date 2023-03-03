@@ -5,7 +5,7 @@ using namespace std;
 namespace alica
 {
 AuthorityTestMaster::AuthorityTestMaster(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 

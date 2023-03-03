@@ -2,7 +2,7 @@
 namespace alica
 {
 HandleFailExplicitMaster::HandleFailExplicitMaster(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

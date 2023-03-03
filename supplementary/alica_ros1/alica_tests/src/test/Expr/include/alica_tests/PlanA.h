@@ -1,7 +1,7 @@
 #pragma once
 
 #include <alica_tests/DomainCondition.h>
-#include <alica_tests/DomainPlan.h>
+
 #include <atomic>
 #include <boost/dll/alias.hpp>
 #include <engine/BasicUtilityFunction.h>

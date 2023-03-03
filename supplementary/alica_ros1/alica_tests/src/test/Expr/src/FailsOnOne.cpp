@@ -4,7 +4,7 @@
 namespace alica
 {
 FailsOnOne::FailsOnOne(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 bool FailsOnOneRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)

@@ -2,7 +2,7 @@
 namespace alica
 {
 SuccessOnInitPlan::SuccessOnInitPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

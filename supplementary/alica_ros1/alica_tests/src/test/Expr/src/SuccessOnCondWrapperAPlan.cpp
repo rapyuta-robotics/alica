@@ -4,7 +4,7 @@
 namespace alica
 {
 SuccessOnCondWrapperAPlan::SuccessOnCondWrapperAPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

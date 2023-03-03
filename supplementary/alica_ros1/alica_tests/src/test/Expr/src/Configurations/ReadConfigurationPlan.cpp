@@ -3,7 +3,7 @@
 namespace alica
 {
 ReadConfigurationPlan::ReadConfigurationPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

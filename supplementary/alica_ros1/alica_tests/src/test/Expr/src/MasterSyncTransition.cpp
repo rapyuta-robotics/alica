@@ -5,7 +5,7 @@
 namespace alica
 {
 MasterSyncTransition::MasterSyncTransition(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

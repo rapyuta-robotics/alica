@@ -3,7 +3,7 @@
 namespace alica
 {
 MasterPlanTestConditionPlanType::MasterPlanTestConditionPlanType(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

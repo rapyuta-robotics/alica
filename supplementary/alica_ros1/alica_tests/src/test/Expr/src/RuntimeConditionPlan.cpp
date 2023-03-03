@@ -6,7 +6,7 @@
 namespace alica
 {
 RuntimeConditionPlan::RuntimeConditionPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 bool RuntimeConditionPlanRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)

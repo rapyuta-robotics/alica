@@ -5,7 +5,7 @@
 namespace alica
 {
 SchedulingTestSequenceSubPlan1::SchedulingTestSequenceSubPlan1(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

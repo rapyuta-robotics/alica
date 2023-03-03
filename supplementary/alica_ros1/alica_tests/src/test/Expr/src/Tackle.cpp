@@ -3,7 +3,7 @@
 namespace alica
 {
 Tackle::Tackle(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

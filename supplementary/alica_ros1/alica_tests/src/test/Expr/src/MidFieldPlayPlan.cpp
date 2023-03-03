@@ -3,7 +3,7 @@
 namespace alica
 {
 MidFieldPlayPlan::MidFieldPlayPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 bool MidFieldPlayPlanRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)

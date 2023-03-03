@@ -3,7 +3,7 @@
 namespace alica
 {
 PlanSuccessTestPlan::PlanSuccessTestPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

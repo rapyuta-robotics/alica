@@ -3,7 +3,7 @@
 namespace alica
 {
 RealMasterPlanForSyncTest::RealMasterPlanForSyncTest(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

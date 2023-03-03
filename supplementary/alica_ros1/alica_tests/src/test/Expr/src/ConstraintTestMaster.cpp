@@ -3,7 +3,7 @@
 namespace alica
 {
 ConstraintTestMaster::ConstraintTestMaster(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

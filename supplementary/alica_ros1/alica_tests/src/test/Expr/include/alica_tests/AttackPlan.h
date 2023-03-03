@@ -1,9 +1,10 @@
 #pragma once
 
 #include <alica_tests/DomainCondition.h>
-#include <alica_tests/DomainPlan.h>
+
 #include <boost/dll/alias.hpp>
 #include <engine/BasicConstraint.h>
+#include <engine/BasicPlan.h>
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
@@ -11,7 +12,7 @@
 namespace alica
 {
 class ProblemDescriptor;
-class AttackPlan : public DomainPlan
+class AttackPlan : public BasicPlan
 {
 public:
     AttackPlan(PlanContext& context);

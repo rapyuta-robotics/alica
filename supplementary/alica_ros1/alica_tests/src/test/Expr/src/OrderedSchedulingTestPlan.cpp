@@ -4,7 +4,7 @@
 namespace alica
 {
 OrderedSchedulingTestPlan::OrderedSchedulingTestPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

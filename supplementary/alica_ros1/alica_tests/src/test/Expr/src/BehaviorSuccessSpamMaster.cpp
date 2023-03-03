@@ -3,7 +3,7 @@
 namespace alica
 {
 BehaviorSuccessSpamMaster::BehaviorSuccessSpamMaster(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

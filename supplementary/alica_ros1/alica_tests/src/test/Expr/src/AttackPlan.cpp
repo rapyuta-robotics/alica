@@ -3,7 +3,7 @@
 namespace alica
 {
 AttackPlan::AttackPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 void Constraint1402489460549::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {}

@@ -3,7 +3,7 @@
 namespace alica
 {
 ExecuteBehaviourInSubPlan::ExecuteBehaviourInSubPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

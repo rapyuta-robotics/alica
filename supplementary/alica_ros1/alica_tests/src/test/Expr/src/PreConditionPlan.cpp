@@ -6,7 +6,7 @@
 namespace alica
 {
 PreConditionPlan::PreConditionPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 

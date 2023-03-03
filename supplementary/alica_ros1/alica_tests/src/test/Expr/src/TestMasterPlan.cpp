@@ -4,7 +4,7 @@
 namespace alica
 {
 TestMasterPlan::TestMasterPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

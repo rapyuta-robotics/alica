@@ -3,7 +3,7 @@
 namespace alica
 {
 TestTracingSubPlan::TestTracingSubPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

@@ -3,7 +3,7 @@
 namespace alica
 {
 MasterPlan::MasterPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

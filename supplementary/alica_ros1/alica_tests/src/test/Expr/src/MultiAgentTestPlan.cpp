@@ -5,7 +5,7 @@
 namespace alica
 {
 MultiAgentTestPlan::MultiAgentTestPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

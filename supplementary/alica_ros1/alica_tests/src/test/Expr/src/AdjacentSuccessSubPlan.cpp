@@ -4,7 +4,7 @@
 namespace alica
 {
 AdjacentSuccessSubPlan::AdjacentSuccessSubPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

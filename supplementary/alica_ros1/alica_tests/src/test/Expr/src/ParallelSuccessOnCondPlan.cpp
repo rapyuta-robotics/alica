@@ -4,7 +4,7 @@
 namespace alica
 {
 ParallelSuccessOnCondPlan::ParallelSuccessOnCondPlan(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

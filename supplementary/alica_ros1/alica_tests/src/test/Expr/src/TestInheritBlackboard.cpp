@@ -3,7 +3,7 @@
 namespace alica
 {
 TestInheritBlackboard::TestInheritBlackboard(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica

@@ -4,7 +4,7 @@
 namespace alica
 {
 BackForth::BackForth(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
 }
 } // namespace alica
