@@ -158,6 +158,20 @@ public:
                 srcBb._vals.at(srcKey));
     }
 
+    void mapConst(const std::string& key, const std::string& value)
+    {
+        const std::string errorPrefix = stringify("mapConst() failure, key: ", key, ", value: ", value, ", details: ");
+        try {
+            _vals.at(key) = makeBBValueForIndex<true>::make(getTypeIndex(_yamlType.at(key)).value(), value);
+        } catch (const std::out_of_range&) {
+            throw BlackboardException(stringify(errorPrefix, "key not found in yaml file"));
+        } catch (const std::bad_optional_access&) {
+            throw BlackboardException(stringify(errorPrefix, "type not supported for constant mapping"));
+        } catch (const BlackboardException& ex) {
+            throw BlackboardException(stringify(errorPrefix, ex.what()));
+        }
+    }
+
     bool hasValue(const std::string& key) const { return _vals.count(key); }
     void removeValue(const std::string& key) { _vals.erase(key); }
 
