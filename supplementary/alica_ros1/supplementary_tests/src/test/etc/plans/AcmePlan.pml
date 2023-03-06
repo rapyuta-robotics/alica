@@ -18,6 +18,7 @@
     "id": 4341705583387040,
     "name": "AcmeRuntimeCondition",
     "pluginName": "DefaultPlugin",
+    "libraryName": "supplementary-tests",
     "quantifiers": [],
     "variables": []
   },
