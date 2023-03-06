@@ -1,0 +1,461 @@
+{
+  "comment": "",
+  "conditions": [
+    {
+      "blackboard": [],
+      "comment": "AnyChildSuccess",
+      "conditionRepository": 0,
+      "id": 1,
+      "libraryName": "alica_standard_library",
+      "name": "AnyChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildSuccess",
+      "conditionRepository": 0,
+      "id": 2,
+      "libraryName": "alica_standard_library",
+      "name": "AllChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AnyChildFailure",
+      "conditionRepository": 0,
+      "id": 3,
+      "libraryName": "alica_standard_library",
+      "name": "AnyChildFailure",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildFailure",
+      "conditionRepository": 0,
+      "id": 4,
+      "libraryName": "alica_standard_library",
+      "name": "AllChildFailure",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 19871606597697646,
+      "libraryName": "alica-tests",
+      "name": "Entry2Wait",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 190171326790683374,
+      "libraryName": "alica-tests",
+      "name": "FailurePlan2FailureHandled",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 330238006348384830,
+      "libraryName": "alica-tests",
+      "name": "IsAnyChildTaskSuccessfull",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "If set to true the transition will evaluate to true",
+          "id": 2436156389323048245,
+          "key": "trigger",
+          "type": "std::any"
+        }
+      ],
+      "comment": "Is true only when the blackboard key `trigger` is set to true",
+      "conditionRepository": 0,
+      "id": 593157092542472645,
+      "libraryName": "alica-tests",
+      "name": "TriggerCond",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 655002160731734731,
+      "libraryName": "alica-tests",
+      "name": "PlanB2PlanA",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 682216470625774387,
+      "libraryName": "alica-tests",
+      "name": "PlanA2PlanB",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 711536493236439192,
+      "libraryName": "alica-tests",
+      "name": "IsAnyChildStatusFailed",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2966214154645332430,
+          "key": "childStatus",
+          "type": "std::any"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 843443485857038179,
+      "libraryName": "alica-tests",
+      "name": "IsAnyChildStatus",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1013158988206959873,
+      "libraryName": "alica-tests",
+      "name": "Default2EndTest",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1221637895518338620,
+      "libraryName": "alica-tests",
+      "name": "SecondTaskFirstState2SecondTaskSecondState",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1237521027685048666,
+      "libraryName": "alica-tests",
+      "name": "SecondCall2FirstCall",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1291995818541962959,
+      "libraryName": "alica-tests",
+      "name": "Init2Fail",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1311087067347475449,
+      "libraryName": "alica-tests",
+      "name": "Start2Init",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1377356708472618789,
+      "libraryName": "alica-tests",
+      "name": "StateOne2StateTwo",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1556522827919252115,
+      "libraryName": "alica-tests",
+      "name": "SwitchIsSet",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1648591654803570403,
+      "libraryName": "alica-tests",
+      "name": "Start2Finish",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1678986049909129132,
+      "libraryName": "alica_standard_library",
+      "name": "AlwaysFalseCondition",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1770682125085719690,
+      "libraryName": "alica-tests",
+      "name": "Fail2Failed",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2019050763618766552,
+      "libraryName": "alica-tests",
+      "name": "StateTwo2NewSuccessStateTwo",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 4032224399589857774,
+          "key": "numberOfCalls",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2163654295690873706,
+      "libraryName": "alica-tests",
+      "name": "CounterClassCalled",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2171152220550556375,
+      "libraryName": "alica-tests",
+      "name": "FirstTaskFirstState2FirstTaskSecondState",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2205566100638019970,
+      "libraryName": "alica-tests",
+      "name": "BehaviourSubPlan2ExecuteBehaviour",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2208457928613785430,
+      "libraryName": "alica-tests",
+      "name": "Init2Start",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2452554857659522052,
+      "libraryName": "alica-tests",
+      "name": "Start2ExecBehaviourTest",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2619422076497988080,
+      "libraryName": "alica-tests",
+      "name": "Start2ExecOrderTest",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2711102114821139213,
+      "libraryName": "alica-tests",
+      "name": "Init2End",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "A condition that is always true",
+      "conditionRepository": 0,
+      "id": 2872265442510628524,
+      "libraryName": "alica_standard_library",
+      "name": "AlwaysTrueCondition",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2902028793069019089,
+          "key": "numberOfCalls",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2901825906319407673,
+      "libraryName": "alica-tests",
+      "name": "CounterCalled",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3016035752801585170,
+      "libraryName": "alica-tests",
+      "name": "SwitchIsNotSet",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3517323109117319233,
+      "libraryName": "alica-tests",
+      "name": "Wait2Suc",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 924760096646037639,
+          "key": "result",
+          "type": "bool"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3592699233854318376,
+      "libraryName": "alica-tests",
+      "name": "TriggerFromInputCond",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3604374027783683696,
+      "libraryName": "alica-tests",
+      "name": "IsAnyChildStatusSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3684268241099966909,
+      "libraryName": "alica-tests",
+      "name": "Decision2B",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3726136276355540527,
+      "libraryName": "alica-tests",
+      "name": "Start2Default",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 4313717753229417761,
+          "key": "idx",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3787001793582633602,
+      "libraryName": "alica-tests",
+      "name": "SimpleSwitchIsSet",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3828316183435191952,
+      "libraryName": "alica-tests",
+      "name": "BehaviourInSubPlan2EndTest",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4108042962123065459,
+      "libraryName": "alica-tests",
+      "name": "Start2ExecOrderedSchedulingTest",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4244459279660861567,
+      "libraryName": "alica-tests",
+      "name": "ExecBehaviour2SubPlan",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4281647834169813432,
+      "libraryName": "alica-tests",
+      "name": "Decision2A",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4368560569514553226,
+      "libraryName": "alica-tests",
+      "name": "Other2NewSuccessStateOne",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4547372457936774346,
+      "libraryName": "alica-tests",
+      "name": "TestTracingMasterCondition",
+      "relativeDirectory": "conditions"
+    }
+  ],
+  "id": 0,
+  "name": "ConditionRepository",
+  "relativeDirectory": ""
+}

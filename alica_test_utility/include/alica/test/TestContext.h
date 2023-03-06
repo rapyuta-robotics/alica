@@ -15,6 +15,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace alica::test
 {
@@ -22,8 +23,11 @@ class TestBehaviourCreator;
 class TestContext : public alica::AlicaContext
 {
 public:
-    TestContext(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-            const AgentId agentID = InvalidAgentID);
+    [[deprecated("Use TestContext(agentName, configPaths, ...) instead")]] TestContext(const std::string& agentName, const std::string& configPath,
+            const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const AgentId agentID = InvalidAgentID);
+
+    TestContext(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName, const std::string& masterPlanName,
+            bool stepEngine, const AgentId agentID = InvalidAgentID);
 
     /**
      * Initialize alica framework and related modules. Note that this

@@ -27,6 +27,7 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <vector>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -95,12 +96,37 @@ struct AlicaContextParams
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
      *
-     * @note The configPath is the path containing the plans, roles and tasks folder.
+     * @note The configPaths are the paths containing the plans, roles and tasks.
      */
-    AlicaContextParams(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
-            bool stepEngine = false, const AgentId agentID = InvalidAgentID)
+    [[deprecated("Use AlicaContextParams(agentName, configPaths, ...) instead")]] AlicaContextParams(const std::string& agentName,
+            const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine = false,
+            const AgentId agentID = InvalidAgentID)
             : agentName(agentName)
-            , configPath(configPath)
+            , configPaths{configPath}
+            , roleSetName(roleSetName)
+            , masterPlanName(masterPlanName)
+            , stepEngine(stepEngine)
+            , agentID(agentID)
+    {
+    }
+
+    /**
+     * @param agentName Name of the local agent.
+     * @param configPaths Paths to the configuration folders.
+     * @param roleSetName Name of the roleSet.
+     * @param masterPlanName Name of the masterPlan
+     * @param stepEngine Signify engine is trigger based. Defaults to false.
+     * @param agentID Identifier of the local Agent. If no identifier is given,
+     * the engine will try to read the local agent's identifier from the
+     * Alica.yaml config instead. If no identifier is specified in the
+     * config as well, the engine will generate a random identifier.
+     *
+     * @note The configPaths are the paths containing the plans, roles and tasks.
+     */
+    AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName,
+            const std::string& masterPlanName, bool stepEngine = false, const AgentId agentID = InvalidAgentID)
+            : agentName(agentName)
+            , configPaths(configPaths)
             , roleSetName(roleSetName)
             , masterPlanName(masterPlanName)
             , stepEngine(stepEngine)
@@ -116,11 +142,11 @@ struct AlicaContextParams
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
      *
-     * @note The configPath is the path containing the plans, roles and tasks folder.
+     * @note The configPaths are the paths containing the plans, roles and tasks.
      */
-    AlicaContextParams(const std::string& agentName, const std::string& configPath, const AgentId agentID = InvalidAgentID)
+    AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const AgentId agentID = InvalidAgentID)
             : agentName(agentName)
-            , configPath(configPath)
+            , configPaths(configPaths)
             , roleSetName("RoleSet")
             , masterPlanName("MasterPlan")
             , stepEngine(false)
@@ -129,7 +155,7 @@ struct AlicaContextParams
     }
 
     std::string agentName;
-    std::string configPath;
+    std::vector<std::string> configPaths;
     std::string roleSetName;
     std::string masterPlanName;
     bool stepEngine;
@@ -441,12 +467,12 @@ private:
 
     /**
      * Initializes yaml configuration.
-     * @param configPath Relative path to the yaml configuration file.
+     * @param configPath Relative paths to search for the yaml configuration file.
      * @param agentName Name of the local agent.
      *
      * @return The agents config.
      */
-    YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
+    YAML::Node initConfig(const std::vector<std::string>& configPaths, const std::string& agentName);
 
     /**
      * Reload alica components with updated configuration.
@@ -578,12 +604,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         }
         currentNode = value;
     } catch (const YAML::Exception& e) {
-        if (!Logging::isInitialized()) {
-            std::cerr << LOGNAME << ": Could not set config value: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
-        } else {
-            Logging::logWarn(LOGNAME) << "Could not set config value: " << e.msg;
-        }
-
+        Logging::logWarn(LOGNAME) << "Could not set config value: " << e.msg;
         return false;
     }
     if (reload && _initialized) {
@@ -615,12 +636,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
             oldKeyValuePairs.push_back(oldKeyValuePair);
         }
     } catch (const YAML::Exception& e) {
-        if (!Logging::isInitialized()) {
-            std::cerr << LOGNAME << ": Could not set config values: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
-        } else {
-            Logging::logWarn(LOGNAME) << "Could not set config values: " << e.msg;
-        }
-
+        Logging::logWarn(LOGNAME) << "Could not set config values: " << e.msg;
         // revert changes
         for (const auto& keyValuePair : oldKeyValuePairs) {
             setOption<T>(keyValuePair.first, keyValuePair.second, false);

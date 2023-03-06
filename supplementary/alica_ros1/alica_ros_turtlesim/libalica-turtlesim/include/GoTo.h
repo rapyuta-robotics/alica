@@ -5,6 +5,8 @@
 
 #include <boost/dll/alias.hpp>
 
+#include "turtle_interfaces.hpp"
+
 namespace turtlesim
 {
 
@@ -14,13 +16,14 @@ public:
     GoTo(alica::BehaviourContext& context);
     void initialiseParameters() override;
     void run() override;
-    void onTermination() override;
     static std::unique_ptr<GoTo> create(alica::BehaviourContext& context);
 
 private:
-    alica::Query _query;
-    std::vector<double> _results;
+    std::shared_ptr<turtlesim::TurtleInterfaces> _turtle;
+    double _goal_x;
+    double _goal_y;
 };
+
 BOOST_DLL_ALIAS(turtlesim::GoTo::create, GoTo)
 
 } /* namespace turtlesim */
