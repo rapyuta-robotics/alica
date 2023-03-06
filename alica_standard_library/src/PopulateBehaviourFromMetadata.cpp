@@ -1,4 +1,4 @@
-#include "behaviours/PopulateBlackboardFromMetadata.h"
+#include "PopulateBlackboardFromMetadata.h"
 #include <yaml-cpp/yaml.h>
 
 namespace utils
