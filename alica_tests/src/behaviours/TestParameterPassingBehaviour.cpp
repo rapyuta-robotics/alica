@@ -13,20 +13,26 @@ TestParameterPassingBehaviour::TestParameterPassingBehaviour(BehaviourContext& c
 TestParameterPassingBehaviour::~TestParameterPassingBehaviour() {}
 void TestParameterPassingBehaviour::run()
 {
-    setSuccess();
+    if (isSuccess()) {
+        return;
+    }
+
+    LockedBlackboardRO gb(*getGlobalBlackboard());
+    if (gb.get<int64_t>("param1") == 5 && gb.get<int64_t>("param2") == 7) {
+        setSuccess();
+    }
 }
 void TestParameterPassingBehaviour::initialiseParameters()
 {
-    auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
-    LockedBlackboardRW bb(*(getBlackboard()));
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    LockedBlackboardRW bb(*getBlackboard());
     bb.set<int64_t>("behaviorKey", 2);
-    wm->passedParameters["behaviorKey"] = bb.get<int64_t>("behaviorKey");
 
     auto value = bb.get<int64_t>("behaviorInputKey");
     if (value == 5) {
-        wm->passedParameters["behaviorInputKey"] = value;
+        gb.set("param1", value);
     } else if (value == 7) {
-        wm->passedParameters["behaviorSecondInputKey"] = value;
+        gb.set("param2", value);
     }
 
     bb.set<int64_t>("behaviorOutputKey", 6);

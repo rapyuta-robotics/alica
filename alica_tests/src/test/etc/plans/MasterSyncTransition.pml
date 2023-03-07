@@ -37,6 +37,7 @@
   ],
   "frequency": 0,
   "id": 1418825395939,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -85,7 +86,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662770,
@@ -115,7 +116,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662773,
@@ -164,7 +165,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2171152220550556375",
+      "condition": "ConditionRepository.cnd#2171152220550556375",
       "id": 1418825425833,
       "inState": 1418825395940,
       "keyMapping": {
@@ -188,7 +189,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1221637895518338620",
+      "condition": "ConditionRepository.cnd#1221637895518338620",
       "id": 1418825427469,
       "inState": 1418825404963,
       "keyMapping": {

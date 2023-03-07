@@ -1,0 +1,53 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 370960197962327006,
+      "key": "inputDouble",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 383605819788360160,
+      "key": "inputString",
+      "type": "std::string"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 1186055466918583945,
+      "key": "inputUint",
+      "type": "uint64"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 2108757241049487052,
+      "key": "inputInt",
+      "type": "int64"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 3145058280082663201,
+      "key": "inputBool",
+      "type": "bool"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 1771333734085898056,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-tests",
+  "name": "ValueMappingTestBeh",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "variables": []
+}

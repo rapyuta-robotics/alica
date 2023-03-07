@@ -1,11 +1,13 @@
 #include "alica_tests/TestWorldModel.h"
-#include "test_alica.h"
 #include <alica/test/Util.h>
 #include <engine/PlanStatus.h>
 #include <engine/Types.h>
+#include <test_alica.h>
 #include <variant>
 
-namespace alica
+#include <gtest/gtest.h>
+
+namespace alica::test
 {
 
 struct BBType
@@ -34,68 +36,161 @@ public:
     NonConstructable() = delete;
 };
 
-class TestBlackboard : public AlicaTestFixture
+template <class SrcType, class TargetType>
+bool checkMapping(const std::string& srcTypeName, const SrcType& srcValue, const std::string& targetTypeName, const TargetType& targetValue)
 {
-protected:
-    const char* getRoleSetName() const override { return "Roleset"; }
-    const char* getMasterPlanName() const override { return "TestParameterPassingMaster"; }
-    bool stepEngine() const override { return false; }
-
-    template <class SrcType, class TargetType>
-    bool checkMapping(const std::string& srcTypeName, const SrcType& srcValue, const std::string& targetTypeName, const TargetType& targetValue)
-    {
-        BlackboardBlueprint srcBlueprint;
-        srcBlueprint.addKey("srcKey", srcTypeName);
-        BlackboardBlueprint targetBlueprint;
-        targetBlueprint.addKey("targetKey", targetTypeName);
-        Blackboard srcBB(&srcBlueprint);
-        Blackboard targetBB(&targetBlueprint);
-        srcBB._impl.set("srcKey", srcValue);
-        targetBB._impl.map("srcKey", "targetKey", srcBB._impl);
-        if constexpr (std::is_same_v<TargetType, std::any>) {
-            return std::any_cast<SrcType>(targetBB._impl.get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
-        } else {
-            return targetBB._impl.get<TargetType>("targetKey") == targetValue;
-        }
+    BlackboardBlueprint srcBlueprint;
+    srcBlueprint.addKey("srcKey", srcTypeName);
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", targetTypeName);
+    Blackboard srcBB(&srcBlueprint);
+    Blackboard targetBB(&targetBlueprint);
+    srcBB.impl().set("srcKey", srcValue);
+    targetBB.impl().map("srcKey", "targetKey", srcBB.impl());
+    if constexpr (std::is_same_v<TargetType, std::any>) {
+        return std::any_cast<SrcType>(targetBB.impl().get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
+    } else {
+        return targetBB.impl().get<TargetType>("targetKey") == targetValue;
     }
+}
 
-    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb._impl; }
-};
+template <class SrcType, class TargetType>
+bool checkValueMapping(const std::string& targetTypeName, const TargetType& targetValue, const std::string& keyToMapTo, const std::string targetKey)
+{
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", targetTypeName);
+}
 
-TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
+alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb)
+{
+    return bb.impl();
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingBehaviours)
+{
+    // Checks if value mapping for behaviours succeeds
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("TestBlackboardPlan"));
+    auto plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("TestBlackboardPlan", "SelectBlackboardTestState", "ValueMappingBehaviourTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingConditions)
+{
+    // Checks if value mapping for conditions succeeds
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("TestBlackboardPlan"));
+    auto plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("TestBlackboardPlan", "SelectBlackboardTestState", "ValueMappingConditionsTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingPlans)
+{
+    // Checks if value mapping for conditions succeeds
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("TestBlackboardPlan"));
+    auto plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("TestBlackboardPlan", "SelectBlackboardTestState", "ValueMappingPlansTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingKeyNotFound)
+{
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", BBType::BOOL);
+
+    Blackboard targetBB(&targetBlueprint);
+    EXPECT_THROW({ targetBB.impl().mapValue("wrongTargetKey", "true"); }, BlackboardException);
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingUnknownType)
+{
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", BBType::ANY);
+
+    Blackboard targetBB(&targetBlueprint);
+    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, BlackboardException);
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingCantParseValue)
+{
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", BBType::BOOL);
+
+    Blackboard targetBB(&targetBlueprint);
+    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, BlackboardException);
+}
+
+TEST_F(SingleAgentTestFixture, testJsonTwoBehaviorKeyMapping)
 {
     // Two parent values mapped to same behavior input value to differentiate call contexts
-    ae->start();
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
 
-    std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
-    EXPECT_EQ(wm->passedParameters["behaviorInputKey"], 5);       // Value set in first behavior call
-    EXPECT_EQ(wm->passedParameters["behaviorSecondInputKey"], 7); // Value set in second behavior call
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("TestBlackboardPlan"));
+    auto plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("TestBlackboardPlan", "SelectBlackboardTestState", "JsonTwoBehaviorKeyMappingTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
 }
 
-TEST_F(TestBlackboard, testJsonPlanKeyMapping)
+TEST_F(SingleAgentTestFixture, testJsonPlanKeyMapping)
 {
     // Pass values of mapped keys form a plan into another plan
-    ae->start();
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
-    EXPECT_EQ(wm->passedParameters["planInputFromMaster"], 8);
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("TestBlackboardPlan"));
+    auto plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("TestBlackboardPlan", "SelectBlackboardTestState", "JsonPlanKeyMappingTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("TestBlackboardPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
 }
 
-TEST_F(TestBlackboard, testJsonBehaviorKeyMapping)
+TEST_F(SingleAgentTestFixture, testJsonBehaviorKeyMapping)
 {
     // Pass values of mapped keys form a plan into a behavior and out of a bahavior into a plan
-    ae->start();
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["behaviorInputKey"], 5); // Value set in plan init -> read in behavior
     EXPECT_EQ(wm->passedParameters["planInputKey"], 6);     // Value set in behavior -> read in plan termination
 }
 
-TEST_F(TestBlackboard, testJsonBlackboardPlan)
+TEST_F(SingleAgentTestFixture, testJsonBlackboardPlan)
 {
     // Check if a key defined in json of a plan is accessible
     ae->start();
@@ -105,7 +200,7 @@ TEST_F(TestBlackboard, testJsonBlackboardPlan)
     EXPECT_EQ(wm->passedParameters["planKey"], 1);
 }
 
-TEST_F(TestBlackboard, testJsonBlackboardBehavior)
+TEST_F(SingleAgentTestFixture, testJsonBlackboardBehavior)
 {
     // Check if a key defined in json of a behavior is accessible
     ae->start();
@@ -115,7 +210,7 @@ TEST_F(TestBlackboard, testJsonBlackboardBehavior)
     EXPECT_EQ(wm->passedParameters["behaviorKey"], 2);
 }
 
-TEST_F(TestBlackboard, testNotInheritBlackboardFlag)
+TEST_F(SingleAgentTestFixture, testNotInheritBlackboardFlag)
 {
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
@@ -125,10 +220,10 @@ TEST_F(TestBlackboard, testNotInheritBlackboardFlag)
     EXPECT_FALSE(alica::test::Util::getBasicPlan(ae, 1692837668719979457, 0)->getInheritBlackboard());
 }
 
-TEST_F(TestBlackboard, testWithoutPlan)
+TEST_F(SingleAgentTestFixture, testWithoutPlan)
 {
     Blackboard bb;
-    LockedBlackboardRW bbrw = LockedBlackboardRW(bb);
+    alica::LockedBlackboardRW bbrw(bb);
 
     // set default types
     bbrw.set<int64_t>("val1", 14l);
@@ -147,7 +242,7 @@ TEST_F(TestBlackboard, testWithoutPlan)
     EXPECT_EQ(bbrw.get<PlanStatus>("val5"), PlanStatus::Success);
 }
 
-TEST_F(TestBlackboard, testMappingFromBool)
+TEST_F(SingleAgentTestFixture, testMappingFromBool)
 {
     EXPECT_TRUE((checkMapping<bool, bool>(BBType::BOOL, true, BBType::BOOL, true)));
     EXPECT_THROW((checkMapping<bool, int64_t>(BBType::BOOL, true, BBType::INT64, 1)), BlackboardException);
@@ -157,7 +252,7 @@ TEST_F(TestBlackboard, testMappingFromBool)
     EXPECT_TRUE((checkMapping<bool, std::any>(BBType::BOOL, true, BBType::ANY, std::any{true})));
 }
 
-TEST_F(TestBlackboard, testMappingFromInt64)
+TEST_F(SingleAgentTestFixture, testMappingFromInt64)
 {
     EXPECT_THROW((checkMapping<int64_t, bool>(BBType::INT64, 1, BBType::BOOL, true)), BlackboardException);
     EXPECT_TRUE((checkMapping<int64_t, int64_t>(BBType::INT64, 1, BBType::INT64, 1)));
@@ -167,7 +262,7 @@ TEST_F(TestBlackboard, testMappingFromInt64)
     EXPECT_TRUE((checkMapping<int64_t, std::any>(BBType::INT64, 1, BBType::ANY, std::any{(int64_t) 1})));
 }
 
-TEST_F(TestBlackboard, testMappingFromUnsignedInt64)
+TEST_F(SingleAgentTestFixture, testMappingFromUnsignedInt64)
 {
     EXPECT_THROW((checkMapping<uint64_t, bool>(BBType::UINT64, 1, BBType::BOOL, true)), BlackboardException);
     EXPECT_THROW((checkMapping<uint64_t, int64_t>(BBType::UINT64, 1, BBType::INT64, 1)), BlackboardException);
@@ -177,7 +272,7 @@ TEST_F(TestBlackboard, testMappingFromUnsignedInt64)
     EXPECT_TRUE((checkMapping<uint64_t, std::any>(BBType::UINT64, 1, BBType::ANY, std::any{(uint64_t) 1u})));
 }
 
-TEST_F(TestBlackboard, testMappingFromDouble)
+TEST_F(SingleAgentTestFixture, testMappingFromDouble)
 {
     EXPECT_THROW((checkMapping<double, bool>(BBType::DOUBLE, 1.0, BBType::BOOL, true)), BlackboardException);
     EXPECT_THROW((checkMapping<double, int64_t>(BBType::DOUBLE, 1.0, BBType::INT64, 1)), BlackboardException);
@@ -187,7 +282,7 @@ TEST_F(TestBlackboard, testMappingFromDouble)
     EXPECT_TRUE((checkMapping<double, std::any>(BBType::DOUBLE, 1.0, BBType::ANY, std::any{1.0})));
 }
 
-TEST_F(TestBlackboard, testMappingFromString)
+TEST_F(SingleAgentTestFixture, testMappingFromString)
 {
     EXPECT_THROW((checkMapping<std::string, bool>(BBType::STRING, "1", BBType::BOOL, true)), BlackboardException);
     EXPECT_THROW((checkMapping<std::string, int64_t>(BBType::STRING, "1", BBType::INT64, 1)), BlackboardException);
@@ -197,10 +292,10 @@ TEST_F(TestBlackboard, testMappingFromString)
     EXPECT_TRUE((checkMapping<std::string, std::any>(BBType::STRING, "1", BBType::ANY, std::any{std::string{"1"}})));
 }
 
-TEST_F(TestBlackboard, testAccessingWithWrongType)
+TEST_F(SingleAgentTestFixture, testAccessingWithWrongType)
 {
     Blackboard bb;
-    auto bb_locked = LockedBlackboardRW(bb);
+    alica::LockedBlackboardRW bb_locked(bb);
     bb_locked.set<int64_t>("value", 1);
 
     // throw exception because double does not match int64, even though we can cast int to double
@@ -213,36 +308,36 @@ TEST_F(TestBlackboard, testAccessingWithWrongType)
     EXPECT_THROW({ bb_locked.get<uint64_t>("value"); }, BlackboardException);
 }
 
-TEST_F(TestBlackboard, testAccessingWithNonExistingKey)
+TEST_F(SingleAgentTestFixture, testAccessingWithNonExistingKey)
 {
     Blackboard bb;
-    auto bb_locked = LockedBlackboardRW(bb);
+    alica::LockedBlackboardRW bb_locked(bb);
 
     // throw exception because key does not exist
     EXPECT_THROW({ bb_locked.get<double>("value"); }, BlackboardException);
 }
 
-TEST_F(TestBlackboard, testAccessUnknownTypeWithKnownWrongType)
+TEST_F(SingleAgentTestFixture, testAccessUnknownTypeWithKnownWrongType)
 {
     Blackboard bb;
-    auto bb_locked = LockedBlackboardRW(bb);
+    alica::LockedBlackboardRW bb_locked(bb);
     bb_locked.set<PlanStatus>("value", PlanStatus::Success);
 
     // throw exception because type double doesnt match PlanStatus
     EXPECT_THROW({ bb_locked.get<double>("value"); }, BlackboardException);
 }
 
-TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
+TEST_F(SingleAgentTestFixture, testAccessUnknownTypeWithUnknownWrongType)
 {
     Blackboard bb;
-    auto bb_locked = LockedBlackboardRW(bb);
+    alica::LockedBlackboardRW bb_locked(bb);
     bb_locked.set<PlanStatus>("value", PlanStatus::Success);
 
     // throw exception because UnknownType does not match PlanStatus
     EXPECT_THROW({ bb_locked.get<UnknownType>("value"); }, BlackboardException);
 }
 
-TEST_F(TestBlackboard, testSetNotMatchingKnownType)
+TEST_F(SingleAgentTestFixture, testSetNotMatchingKnownType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     blueprint->addKey("intVal", BBType::INT64);
@@ -250,8 +345,8 @@ TEST_F(TestBlackboard, testSetNotMatchingKnownType)
     blueprint->addKey("doubleVal", BBType::DOUBLE);
     blueprint->addKey("boolVal", BBType::BOOL);
     blueprint->addKey("stringVal", BBType::STRING);
-    alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
-    alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
+    alica::Blackboard blackboard(blueprint.get());
+    alica::LockedBlackboardRW bb(blackboard);
 
     bb.set<int64_t>("intVal", 14);
     bb.set<uint64_t>("uintVal", 15u);
@@ -284,10 +379,10 @@ TEST_F(TestBlackboard, testSetNotMatchingKnownType)
     EXPECT_THROW({ bb.set<uint64_t>("intVal", 0); }, BlackboardException);
 }
 
-TEST_F(TestBlackboard, testSetNotMatchingUnknownType)
+TEST_F(SingleAgentTestFixture, testSetNotMatchingUnknownType)
 {
     Blackboard bb;
-    auto bb_locked = LockedBlackboardRW(bb);
+    auto bb_locked = alica::LockedBlackboardRW(bb);
     bb_locked.set<PlanStatus>("value", PlanStatus::Success);
     EXPECT_EQ(bb_locked.get<PlanStatus>("value"), PlanStatus::Success);
 
@@ -295,10 +390,10 @@ TEST_F(TestBlackboard, testSetNotMatchingUnknownType)
     EXPECT_EQ(185, bb_locked.get<UnknownType>("value").value);
 }
 
-TEST_F(TestBlackboard, testSetWithDifferentTypeNotInPML)
+TEST_F(SingleAgentTestFixture, testSetWithDifferentTypeNotInPML)
 {
     Blackboard bb;
-    auto bb_locked = LockedBlackboardRW(bb);
+    auto bb_locked = alica::LockedBlackboardRW(bb);
     bb_locked.set<int64_t>("value", 1);
     EXPECT_EQ(bb_locked.get<int64_t>("value"), 1);
 
@@ -306,10 +401,10 @@ TEST_F(TestBlackboard, testSetWithDifferentTypeNotInPML)
     EXPECT_EQ(bb_locked.get<double>("value"), 2.0);
 }
 
-TEST_F(TestBlackboard, testSetAnyWithDifferentType)
+TEST_F(SingleAgentTestFixture, testSetAnyWithDifferentType)
 {
     Blackboard bb;
-    auto bb_locked = LockedBlackboardRW(bb);
+    auto bb_locked = alica::LockedBlackboardRW(bb);
     bb_locked.set<alica::PlanStatus>("value", alica::PlanStatus::Success);
     EXPECT_EQ(bb_locked.get<alica::PlanStatus>("value"), alica::PlanStatus::Success);
 
@@ -320,14 +415,14 @@ TEST_F(TestBlackboard, testSetAnyWithDifferentType)
     EXPECT_EQ(bb_locked.get<int64_t>("value"), 2);
 }
 
-TEST_F(TestBlackboard, testAnyWithDifferentTypes)
+TEST_F(SingleAgentTestFixture, testAnyWithDifferentTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     blueprint->addKey("anyType", BBType::ANY);
     blueprint->addKey("knownType", BBType::ANY);
     blueprint->addKey("unknownType", BBType::ANY);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
-    LockedBlackboardRW bb_locked = LockedBlackboardRW(blackboard);
+    LockedBlackboardRW bb_locked(blackboard);
 
     bb_locked.set<double>("knownType", 17.3);
     bb_locked.set<UnknownType>("unknownType", UnknownType(7198));
@@ -346,7 +441,7 @@ TEST_F(TestBlackboard, testAnyWithDifferentTypes)
     EXPECT_EQ(std::any_cast<bool>(bb_locked.get<std::any>("anyType")), true);
 }
 
-TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
+TEST_F(SingleAgentTestFixture, testMappingWithDifferentPMLTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprintSrc = std::make_unique<alica::BlackboardBlueprint>();
     blueprintSrc->addKey("anyTypeSrc", BBType::ANY);
@@ -377,14 +472,14 @@ TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
     EXPECT_EQ(targetBb.get<int64_t>("anyTypeTarget"), 19L);
 }
 
-TEST_F(TestBlackboard, setWithConvertibleType)
+TEST_F(SingleAgentTestFixture, setWithConvertibleType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     blueprint->addKey("intVal", BBType::INT64);
     blueprint->addKey("uintVal", BBType::UINT64);
     blueprint->addKey("decimal", BBType::DOUBLE);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
-    alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
+    alica::LockedBlackboardRW bb(blackboard);
 
     bb.set<int8_t>("intVal", 1);
     EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
@@ -400,11 +495,11 @@ TEST_F(TestBlackboard, setWithConvertibleType)
     EXPECT_EQ(bb.get<double>("decimal"), 2.0);
 }
 
-TEST_F(TestBlackboard, setWithoutSpecifyingType)
+TEST_F(SingleAgentTestFixture, setWithoutSpecifyingType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     alica::Blackboard blackboard = alica::Blackboard();
-    alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
+    alica::LockedBlackboardRW bb(blackboard);
 
     // set using r values
     bb.set("intVal", 19);
@@ -451,7 +546,7 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 1234);
 }
 
-TEST_F(TestBlackboard, TestUnlockedBB)
+TEST_F(SingleAgentTestFixture, TestUnlockedBB)
 {
     // Test all basic operations on an unlocked blackboard
     Blackboard blackboard;
@@ -464,4 +559,4 @@ TEST_F(TestBlackboard, TestUnlockedBB)
     EXPECT_FALSE(bb.empty());
 }
 
-} // namespace alica
+} // namespace alica::test
