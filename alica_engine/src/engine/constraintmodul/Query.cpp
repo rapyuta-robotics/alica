@@ -92,20 +92,14 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
     // insert _queried_ variables of this query into the _relevant_ variables
     fillBufferFromQuery();
 
-    Logging::logDebug("Query") << "Initial static buffer Size: " << _staticVars.getCurrent().size();
-    Logging::logDebug("Query") << "Initial domain buffer Size: " << _domainVars.getCurrent().size();
-    Logging::logDebug("Query") << "Starting Query with static Vars:\n" << _uniqueVarStore;
     {
         const RunningPlan* rp = pi;
         // Goes recursive upwards in the plan tree and does three steps on each level.
         while (rp && (_staticVars.hasCurrentlyAny() || _domainVars.hasCurrentlyAny())) {
-            Logging::logDebug("Query") << "Plantree-LVL of " << rp->getActivePlan()->getName() << "\n" << _uniqueVarStore;
 
             // 1. fill the query's static and domain variables, as well as its problem parts
             rp->getConstraintStore().acceptQuery(*this, rp);
             // next should be empty, current full
-
-            Logging::logDebug("Query") << "Size of problemParts is " << _problemParts.size();
 
             // 2. process bindings for plantype
             if (rp->getPlanType() != nullptr) {
@@ -145,14 +139,12 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
         }
     }
 
-    Logging::logDebug("Query") << "" << _uniqueVarStore;
     // now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
     if (_problemParts.empty()) {
         Logging::logDebug("Query") << "Empty Query!";
         return false;
     }
 
-    Logging::logDebug("Query") << "Size of problemParts is " << _problemParts.size();
     if (_context.get() == nullptr) {
         _context = solver.createSolverContext();
     } else {
@@ -176,11 +168,6 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
         _relevantVariables.insert(_relevantVariables.end(), _domainVars.getCurrent().begin(), _domainVars.getCurrent().end());
     }
 
-    Logging::logDebug("Query") << "Number of relevant static variables: " << domOffset;
-    Logging::logDebug("Query") << "Number of relevant domain variables: " << _domainVars.getCurrent().size();
-    Logging::logDebug("Query") << "Total number of relevant variables: " << _relevantVariables.size();
-    Logging::logDebug("Query") << "PrepTime: " << (pi->getAlicaClock().now() - time).inMicroseconds() << "us";
-
     return true;
 }
 
@@ -192,7 +179,6 @@ void Query::addProblemPart(ProblemPart&& pp)
     for (const AgentVariables& avars : pp.getAllVariables()) {
         for (const DomainVariable* domainvariable : avars.getVars()) {
             if (!_domainVars.has(domainvariable)) {
-                Logging::logDebug("Query") << "Adding DomVar: " << *domainvariable;
                 _domainVars.editCurrent().push_back(domainvariable);
             }
         }
