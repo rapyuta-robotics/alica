@@ -5,6 +5,7 @@
   "eventDriven": false,
   "frequency": 30,
   "id": 1414068597716,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "name": "ConstraintUsingBehaviour",

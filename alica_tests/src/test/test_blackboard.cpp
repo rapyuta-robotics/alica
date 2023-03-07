@@ -1,11 +1,13 @@
 #include "alica_tests/TestWorldModel.h"
-#include "test_alica.h"
 #include <alica/test/Util.h>
 #include <engine/PlanStatus.h>
 #include <engine/Types.h>
+#include <test_alica.h>
 #include <variant>
 
-namespace alica
+#include <gtest/gtest.h>
+
+namespace alica::test
 {
 
 struct BBType
@@ -50,17 +52,98 @@ protected:
         targetBlueprint.addKey("targetKey", targetTypeName);
         Blackboard srcBB(&srcBlueprint);
         Blackboard targetBB(&targetBlueprint);
-        srcBB._impl.set("srcKey", srcValue);
-        targetBB._impl.map("srcKey", "targetKey", srcBB._impl);
+        srcBB.impl().set("srcKey", srcValue);
+        targetBB.impl().map("srcKey", "targetKey", srcBB.impl());
         if constexpr (std::is_same_v<TargetType, std::any>) {
-            return std::any_cast<SrcType>(targetBB._impl.get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
+            return std::any_cast<SrcType>(targetBB.impl().get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
         } else {
-            return targetBB._impl.get<TargetType>("targetKey") == targetValue;
+            return targetBB.impl().get<TargetType>("targetKey") == targetValue;
         }
     }
 
-    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb._impl; }
+    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb.impl(); }
 };
+
+TEST_F(SingleAgentTestFixture, testValueMappingBehaviours)
+{
+    // Checks if value mapping for behaviours succeeds
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("BlackboardTestPlan"));
+    auto plan = _tc->getActivePlan("BlackboardTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingBehaviourTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("BlackboardTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingConditions)
+{
+    // Checks if value mapping for conditions succeeds
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("BlackboardTestPlan"));
+    auto plan = _tc->getActivePlan("BlackboardTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingConditionTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("BlackboardTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingPlans)
+{
+    // Checks if value mapping for conditions succeeds
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("BlackboardTestPlan"));
+    auto plan = _tc->getActivePlan("BlackboardTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingPlanTestState")) << _tc->getLastFailure();
+    plan = _tc->getActivePlan("BlackboardTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingKeyNotFound)
+{
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", BBType::BOOL);
+
+    Blackboard targetBB(&targetBlueprint);
+    EXPECT_THROW({ targetBB.impl().mapValue("wrongTargetKey", "true"); }, BlackboardException);
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingUnknownType)
+{
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", BBType::ANY);
+
+    Blackboard targetBB(&targetBlueprint);
+    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, BlackboardException);
+}
+
+TEST_F(SingleAgentTestFixture, testValueMappingCantParseValue)
+{
+    BlackboardBlueprint targetBlueprint;
+    targetBlueprint.addKey("targetKey", BBType::BOOL);
+
+    Blackboard targetBB(&targetBlueprint);
+    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, BlackboardException);
+}
 
 TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
 {
@@ -464,4 +547,4 @@ TEST_F(TestBlackboard, TestUnlockedBB)
     EXPECT_FALSE(bb.empty());
 }
 
-} // namespace alica
+} // namespace alica::test

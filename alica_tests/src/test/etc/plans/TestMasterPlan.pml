@@ -20,6 +20,13 @@
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
       "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 2321498751406550734,
+      "key": "ChooseTestState2BlackboardTestState",
+      "type": "bool"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -43,6 +50,7 @@
   ],
   "frequency": 0,
   "id": 2521443078354411465,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
@@ -121,7 +129,8 @@
       "outTransitions": [
         846865468084822174,
         2841206023261337744,
-        4120890224163547783
+        4120890224163547783,
+        978339276131155715
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -160,13 +169,43 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "BlackboardTestPlan.pml#1633245244310547016",
+          "comment": "",
+          "configuration": null,
+          "id": 1158711423955439419,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 2132957861522514570,
+      "inTransitions": [
+        978339276131155715
+      ],
+      "name": "BlackboardTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 755.5035894355964,
+        "y": -37.89486045527353
+      },
+      "type": "State",
+      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
       "id": 846865468084822174,
       "inState": 4098979167613947533,
       "keyMapping": {
@@ -196,7 +235,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
       "id": 2841206023261337744,
       "inState": 4098979167613947533,
       "keyMapping": {
@@ -226,7 +265,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
       "id": 4120890224163547783,
       "inState": 4098979167613947533,
       "keyMapping": {
@@ -247,6 +286,36 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 978339276131155715,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2BlackboardTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 2132957861522514570,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3320726945359323759,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

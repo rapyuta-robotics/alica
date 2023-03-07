@@ -5,6 +5,7 @@
   "eventDriven": false,
   "frequency": 30,
   "id": 1402488939130,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "name": "Tackle",

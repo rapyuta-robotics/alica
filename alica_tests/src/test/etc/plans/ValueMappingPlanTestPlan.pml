@@ -1,31 +1,67 @@
 {
-  "blackboard": [],
-  "comment": "A plan that immediately transitions to success state on init",
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 2933912270549461002,
+      "key": "mappedUintValue",
+      "type": "uint64"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 4434332895838233306,
+      "key": "mappedStringValue",
+      "type": "std::string"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 1234313196608957375,
+      "key": "mappedDoubleValue",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 54989083355939699,
+      "key": "mappedBoolValue",
+      "type": "bool"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 1535353035896902577,
+      "key": "mappedIntValue",
+      "type": "int64"
+    }
+  ],
+  "comment": "",
   "entryPoints": [
     {
       "comment": "",
-      "id": 3588095671831141137,
+      "id": 953921531708941324,
       "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "",
-      "plan": 1863216812678266511,
+      "plan": 3938799313883693450,
       "positionWeb": {
-        "x": 336,
-        "y": 196
+        "x": 213,
+        "y": 353
       },
-      "state": 250474402398721721,
+      "state": 2157045678929644274,
       "successRequired": false,
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 1863216812678266511,
+  "id": 3938799313883693450,
   "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
-  "name": "SuccessOnInitPlan",
+  "name": "ValueMappingPlanTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
@@ -34,16 +70,16 @@
       "comment": "",
       "confAbstractPlanWrappers": [],
       "entryPoint": null,
-      "id": 66024355821713834,
+      "id": 1483412031843812599,
       "inTransitions": [
-        4061633193878470475
+        3424784027493766968
       ],
-      "name": "SuccessOnInitSuccessState",
+      "name": "SuccessState",
       "outTransitions": [],
-      "parentPlan": 1863216812678266511,
+      "parentPlan": 3938799313883693450,
       "positionWeb": {
-        "x": 728,
-        "y": 328
+        "x": 710.9755368364055,
+        "y": 385.3326214187521
       },
       "postCondition": null,
       "success": true,
@@ -53,17 +89,17 @@
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
-      "entryPoint": 3588095671831141137,
-      "id": 250474402398721721,
+      "entryPoint": 953921531708941324,
+      "id": 2157045678929644274,
       "inTransitions": [],
-      "name": "DummyInitState",
+      "name": "EntryState",
       "outTransitions": [
-        4061633193878470475
+        3424784027493766968
       ],
-      "parentPlan": 1863216812678266511,
+      "parentPlan": 3938799313883693450,
       "positionWeb": {
-        "x": 520,
-        "y": 185
+        "x": 446.152015679996,
+        "y": 368.9127210608825
       },
       "type": "State",
       "variableBindings": []
@@ -74,20 +110,20 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#2872265442510628524",
-      "id": 4061633193878470475,
-      "inState": 250474402398721721,
+      "id": 3424784027493766968,
+      "inState": 2157045678929644274,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 66024355821713834,
+      "outState": 1483412031843812599,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 4197030928062612573,
+        "id": 2746271972957018702,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

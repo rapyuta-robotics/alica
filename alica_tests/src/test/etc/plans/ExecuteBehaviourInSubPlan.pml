@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 3172561495666303184,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -53,7 +54,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TestBehaviour.beh#55178365253414982",
+          "abstractPlan": "TestBehaviour.beh#55178365253414982",
           "comment": "",
           "configuration": null,
           "id": 2313243829564670249,
@@ -84,7 +85,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 2330492839242485043,
       "inState": 4459593820134418510,
       "keyMapping": {
