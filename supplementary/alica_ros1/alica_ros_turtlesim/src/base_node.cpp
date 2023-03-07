@@ -52,14 +52,8 @@ int main(int argc, char** argv)
     ROS_INFO("Starting ALICA turtle Base.......");
     base.start();
 
-    // Wait for ctrl+c
-    sigset_t signalSet;
-    sigemptyset(&signalSet);
-    sigaddset(&signalSet, SIGINT);
-    int sigNumber;
-    if (sigwait(&signalSet, &sigNumber) != 0) {
-        ROS_ERROR_STREAM("<main> Error sigwait()");
-        exit(1);
+    while (ros::ok()) {
+        ros::Rate(10).sleep();
     }
 
     // Ensure turtle is no longer visible
