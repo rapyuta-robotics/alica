@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1402488893641,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -33,7 +34,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Tackle.beh#1402488939130",
+          "abstractPlan": "Tackle.beh#1402488939130",
           "comment": "",
           "configuration": null,
           "id": 1587718662824,
@@ -150,7 +151,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402488990761,
       "inState": 1402488959965,
       "keyMapping": {
@@ -159,12 +160,7 @@
       },
       "name": "TackleToGetBall",
       "outState": 1402488903549,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 29
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -179,7 +175,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402488991762,
       "inState": 1402488903549,
       "keyMapping": {
@@ -188,12 +184,7 @@
       },
       "name": "TackleToGetBall",
       "outState": 1402488959965,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -208,7 +199,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489064693,
       "inState": 1402488959965,
       "keyMapping": {
@@ -217,12 +208,7 @@
       },
       "name": "GetBallToTryToDefendGoal",
       "outState": 1402489037735,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 429
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -237,7 +223,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489071510,
       "inState": 1402489037735,
       "keyMapping": {
@@ -246,12 +232,7 @@
       },
       "name": "TryToDefendGoalToGetGoal",
       "outState": 1402488910751,
-      "pointsWeb": [
-        {
-          "x": 844,
-          "y": 429
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",

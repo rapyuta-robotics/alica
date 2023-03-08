@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1402489318663,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -33,7 +34,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/AttackOpp.beh#1402489351885",
+          "abstractPlan": "AttackOpp.beh#1402489351885",
           "comment": "",
           "configuration": null,
           "id": 1587718662873,

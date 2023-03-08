@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1479556022226,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
@@ -111,7 +112,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2011598442725310989",
+      "condition": "ConditionRepository.cnd#2011598442725310989",
       "id": 1479557591331,
       "inState": 1479556022227,
       "keyMapping": {
