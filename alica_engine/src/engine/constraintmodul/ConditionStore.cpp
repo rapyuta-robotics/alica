@@ -58,8 +58,7 @@ void ConditionStore::addCondition(const Condition* con)
         }
     }
 
-    Logging::logDebug("CS") << "Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size()
-                            << " variables. CS: " << this;
+    Logging::logDebug("CS") << "Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables.";
 }
 
 /**
@@ -101,7 +100,6 @@ void ConditionStore::removeCondition(const Condition* con)
  */
 void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
 {
-    Logging::logDebug("CS") << "Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this;
     if (_activeConditions.empty()) {
         return;
     }
@@ -111,8 +109,6 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
     if (!staticVarBuffer.hasCurrentlyAny() && !domainVarBuffer.hasCurrentlyAny()) {
         return; // nothing to do
     }
-
-    Logging::logDebug("CS") << "Query contains static variables: " << staticVarBuffer.getCurrent();
 
     const int previousPartCount = query.getPartCount();
 
