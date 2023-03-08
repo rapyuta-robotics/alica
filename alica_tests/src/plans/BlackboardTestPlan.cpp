@@ -10,7 +10,7 @@ BlackboardTestPlan::BlackboardTestPlan(PlanContext& context)
 bool ValueMappingCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     LockedBlackboardRO bb(*input);
-    if (bb.get<int>("mappedIntValue") == -3 && bb.get<uint64_t>("mappedUintValue") == 17 && bb.get<bool>("mappedBoolValue") == true &&
+    if (bb.get<int64_t>("mappedIntValue") == -3 && bb.get<uint64_t>("mappedUintValue") == 17 && bb.get<bool>("mappedBoolValue") == true &&
             bb.get<std::string>("mappedStringValue") == "test" && bb.get<double>("mappedDoubleValue") == 3.7) {
         return true;
     } else {

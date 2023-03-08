@@ -11,7 +11,7 @@ void ValueMappingPlanTestPlan::onInit()
 {
     try {
         LockedBlackboardRO bb(*getBlackboard());
-        assert(bb.get<int>("inputInt") == -8 && "ValueMappingTestPlan: wrong inputInt value");
+        assert(bb.get<int64_t>("inputInt") == -8 && "ValueMappingTestPlan: wrong inputInt value");
         assert(bb.get<uint64_t>("inputUint") == 19 && "ValueMappingTestPlan: wrong inputUint value");
         assert(bb.get<bool>("inputBool") == true && "ValueMappingTestPlan: wrong inputBool value");
         assert(bb.get<std::string>("inputString") == "test" && "ValueMappingTestPlan: wrong inputString value");
