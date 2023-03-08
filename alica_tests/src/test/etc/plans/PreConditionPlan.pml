@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1418042796751,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,

@@ -5,6 +5,7 @@
   "eventDriven": false,
   "frequency": 30,
   "id": 1479556104511,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "name": "QueryBehaviour1",
@@ -25,6 +26,5 @@
       "name": "QBY",
       "variableType": ""
     }
-  ],
-  "libraryName": "supplementary-tests"
+  ]
 }

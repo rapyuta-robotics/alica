@@ -586,7 +586,8 @@ protected:
         path += "/etc";
 
         // Use the sub-folders in the etc folder as separate config folders
-        return std::vector<std::string>{path + "/hairy", path + "/nase", path + "/plans", path + "/roles", path + "/tasks"};
+        return std::vector<std::string>{path + "/hairy", path + "/nase", path + "/plans", path + "/roles", path + "/tasks", path + "/behaviours",
+                path + "/conditions", path + "/configurations"};
     }
 };
 

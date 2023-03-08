@@ -21,6 +21,7 @@
   ],
   "frequency": 40,
   "id": 1629895864090,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -33,7 +34,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/BehAAA.beh#1629895901559",
+          "abstractPlan": "BehAAA.beh#1629895901559",
           "comment": "",
           "configuration": null,
           "id": 1629896034213,

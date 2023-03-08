@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1482512794732634139,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -33,7 +34,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/EmptyBehaviour.beh#1625610857563",
+          "abstractPlan": "EmptyBehaviour.beh#1625610857563",
           "comment": "",
           "configuration": null,
           "id": 626074692772114453,

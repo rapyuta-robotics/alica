@@ -37,6 +37,7 @@
   ],
   "frequency": 0,
   "id": 1402488770050,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -58,7 +59,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/MidFieldStandard.beh#1402488696205",
+          "abstractPlan": "MidFieldStandard.beh#1402488696205",
           "comment": "",
           "configuration": null,
           "id": 1587718662682,
@@ -100,7 +101,7 @@
           "name": "1587718662685"
         },
         {
-          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "abstractPlan": "Attack.beh#1402488848841",
           "comment": "",
           "configuration": null,
           "id": 1587718662687,
@@ -141,7 +142,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Tackle.beh#1402488939130",
+          "abstractPlan": "Tackle.beh#1402488939130",
           "comment": "",
           "configuration": null,
           "id": 1587718662692,
@@ -226,7 +227,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489257607,
       "inState": 1402488787818,
       "keyMapping": {
@@ -250,7 +251,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402489276995,
       "inState": 1402488787818,
       "keyMapping": {
@@ -274,7 +275,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
+      "condition": "ConditionRepository.cnd#1678986049909129132",
       "id": 1402500843072,
       "inState": 1402500830885,
       "keyMapping": {
