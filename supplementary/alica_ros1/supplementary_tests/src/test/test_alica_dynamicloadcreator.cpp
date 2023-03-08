@@ -146,7 +146,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
     }
 
     ASSERT_EQ(conditionModel->getName(), "VariableHandlingStart");
-    TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0, 0};
+    TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
 
     // Create condition from dll
     std::unique_ptr<BlackboardBlueprint> testGlobalBlackboardBlueprint = std::make_unique<BlackboardBlueprint>();
