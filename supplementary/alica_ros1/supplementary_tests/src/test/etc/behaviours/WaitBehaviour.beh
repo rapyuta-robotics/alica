@@ -5,6 +5,7 @@
   "eventDriven": false,
   "frequency": 30,
   "id": 1384965293178962783,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "name": "WaitBehaviour",

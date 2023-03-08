@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1479718449392,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
@@ -33,7 +34,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/QueryBehaviour1.beh#1479556104511",
+          "abstractPlan": "QueryBehaviour1.beh#1479556104511",
           "comment": "",
           "configuration": null,
           "id": 1597658636425,
