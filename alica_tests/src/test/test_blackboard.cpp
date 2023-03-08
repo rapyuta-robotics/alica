@@ -142,7 +142,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingCantParseValue)
     targetBlueprint.addKey("targetKey", BBType::BOOL);
 
     Blackboard targetBB(&targetBlueprint);
-    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, BlackboardException);
+    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, YAML::BadConversion);
 }
 
 TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
