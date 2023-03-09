@@ -17,6 +17,13 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 2321498751406550734,
+      "key": "ChooseTestState2BlackboardTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
       "type": "bool"
@@ -52,6 +59,36 @@
   "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "BlackboardTestPlan.pml#1633245244310547016",
+          "comment": "",
+          "configuration": null,
+          "id": 1158711423955439419,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 2132957861522514570,
+      "inTransitions": [
+        978339276131155715
+      ],
+      "name": "BlackboardTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 755.5035894355964,
+        "y": -37.89486045527353
+      },
+      "type": "State",
+      "variableBindings": []
+    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -121,6 +158,7 @@
       "name": "ChooseTestState",
       "outTransitions": [
         846865468084822174,
+        978339276131155715,
         2841206023261337744,
         4120890224163547783
       ],
@@ -188,6 +226,36 @@
         "conditionString": "",
         "enabled": true,
         "id": 1879497210052616817,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 978339276131155715,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2BlackboardTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 2132957861522514570,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3320726945359323759,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
