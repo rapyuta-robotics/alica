@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1629895582410,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -98,7 +99,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#682216470625774387",
+      "condition": "ConditionRepository.cnd#682216470625774387",
       "id": 1629895758611,
       "inState": 1629895681520,
       "keyMapping": {
@@ -107,12 +108,7 @@
       },
       "name": "FromPlanATo PlanB",
       "outState": 1629895684249,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 29
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -127,7 +123,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#655002160731734731",
+      "condition": "ConditionRepository.cnd#655002160731734731",
       "id": 1629895768181,
       "inState": 1629895684249,
       "keyMapping": {
@@ -136,12 +132,7 @@
       },
       "name": "FromPlanBTo PlanA",
       "outState": 1629895681520,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": null,

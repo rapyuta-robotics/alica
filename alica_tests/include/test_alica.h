@@ -283,43 +283,6 @@ protected:
     }
 };
 
-class AlicaLegacyConditionsFixture : public AlicaTestFixtureBase
-{
-protected:
-    alica::AlicaCreators creators;
-
-protected:
-    virtual const char* getMasterPlanName() const = 0;
-    virtual bool stepEngine() const { return true; }
-    virtual const char* getHostName() const { return "nase"; }
-    virtual void manageWorldModel(alica::AlicaContext* ac)
-    {
-        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
-    }
-
-    // same setup as AlicaSchedulingTestFixture, but use LegacyTransitionConditionCreator instead of TransitionConditionCreator
-    virtual void SetUp() override
-    {
-        ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), getTestFolderPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
-
-        ASSERT_TRUE(ac->isValid());
-        const YAML::Node& config = ac->getConfig();
-        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
-        ac->setLogger<alica::AlicaDefaultLogger>();
-        creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
-                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
-                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
-
-        ac->init(std::move(creators), true);
-        manageWorldModel(ac.get());
-
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
-        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-    }
-};
-
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
 {
 protected:

@@ -1,18 +1,18 @@
 {
   "blackboard": [
     {
-      "access": "protected",
+      "access": "input",
       "comment": "This is a blackboard entry for testing",
-      "id": 3008593874445613740,
-      "key": "planOutputKey",
+      "id": 785752561217999359,
+      "key": "planInputFromMaster",
       "type": "int64"
     },
     {
       "access": "protected",
-      "comment": "This is a blackboard entry for testing",
-      "id": 4362502621284224779,
-      "key": "planInputKey",
-      "type": "int64"
+      "comment": "",
+      "id": 1610853554686361041,
+      "key": "targetChildStatus",
+      "type": "std::any"
     },
     {
       "access": "protected",
@@ -29,18 +29,18 @@
       "type": "int64"
     },
     {
-      "access": "input",
+      "access": "protected",
       "comment": "This is a blackboard entry for testing",
-      "id": 785752561217999359,
-      "key": "planInputFromMaster",
+      "id": 3008593874445613740,
+      "key": "planOutputKey",
       "type": "int64"
     },
     {
       "access": "protected",
-      "comment": "",
-      "id": 1610853554686361041,
-      "key": "targetChildStatus",
-      "type": "std::any"
+      "comment": "This is a blackboard entry for testing",
+      "id": 4362502621284224779,
+      "key": "planInputKey",
+      "type": "int64"
     }
   ],
   "comment": "",
@@ -64,6 +64,7 @@
   ],
   "frequency": 0,
   "id": 1692837668719979457,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
@@ -76,7 +77,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TestParameterPassingBehaviour.beh#831400441334251602",
+          "abstractPlan": "TestParameterPassingBehaviour.beh#831400441334251602",
           "comment": "",
           "configuration": null,
           "id": 445396005944825226,
@@ -114,7 +115,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/TestParameterPassingBehaviour.beh#831400441334251602",
+          "abstractPlan": "TestParameterPassingBehaviour.beh#831400441334251602",
           "comment": "",
           "configuration": null,
           "id": 445396005944825225,
@@ -158,7 +159,7 @@
   "transitions": [
     {
       "comment": "Forth",
-      "condition": "conditions/ConditionRepository.cnd#843443485857038179",
+      "condition": "ConditionRepository.cnd#843443485857038179",
       "id": 1129456609900,
       "inState": 1092447442809556626,
       "keyMapping": {
@@ -173,12 +174,7 @@
       },
       "name": "MISSING_NAME",
       "outState": 1529456591400,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 29
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -193,7 +189,7 @@
     },
     {
       "comment": "Back",
-      "condition": "conditions/ConditionRepository.cnd#1237521027685048666",
+      "condition": "ConditionRepository.cnd#1237521027685048666",
       "id": 2229456609900,
       "inState": 1529456591400,
       "keyMapping": {
@@ -202,12 +198,7 @@
       },
       "name": "MISSING_NAME",
       "outState": 1092447442809556626,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",

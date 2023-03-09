@@ -29,6 +29,7 @@
   ],
   "frequency": 0,
   "id": 1588060981661,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
@@ -41,9 +42,9 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/ReadConfigurationBehaviour.beh#1588061129360",
+          "abstractPlan": "ReadConfigurationBehaviour.beh#1588061129360",
           "comment": "",
-          "configuration": "configurations/ConfigA.cfg#1588061188681",
+          "configuration": "ConfigA.cfg#1588061188681",
           "id": 1588061141112,
           "keyMapping": {
             "input": [],
@@ -52,9 +53,9 @@
           "name": "1588061141112"
         },
         {
-          "abstractPlan": "behaviours/ReadConfigurationBehaviour.beh#1588061129360",
+          "abstractPlan": "ReadConfigurationBehaviour.beh#1588061129360",
           "comment": "",
-          "configuration": "configurations/ConfigB.cfg#1588061200689",
+          "configuration": "ConfigB.cfg#1588061200689",
           "id": 1588061144175,
           "keyMapping": {
             "input": [],
@@ -65,7 +66,7 @@
         {
           "abstractPlan": "ReadConfigurationPlantype.pty#1588061351007",
           "comment": "",
-          "configuration": "configurations/ConfigA.cfg#1588061188681",
+          "configuration": "ConfigA.cfg#1588061188681",
           "id": 1588246105794,
           "keyMapping": {
             "input": [],
@@ -76,7 +77,7 @@
         {
           "abstractPlan": "ReadConfigurationPlan.pml#1588061334567",
           "comment": "",
-          "configuration": "configurations/ConfigA.cfg#1588061188681",
+          "configuration": "ConfigA.cfg#1588061188681",
           "id": 1588253325052,
           "keyMapping": {
             "input": [],
@@ -106,7 +107,7 @@
         {
           "abstractPlan": "ReadConfigurationPlantype.pty#1588061351007",
           "comment": "",
-          "configuration": "configurations/ConfigB.cfg#1588061200689",
+          "configuration": "ConfigB.cfg#1588061200689",
           "id": 1588253360557,
           "keyMapping": {
             "input": [],
@@ -117,7 +118,7 @@
         {
           "abstractPlan": "ReadConfigurationPlan.pml#1588061334567",
           "comment": "",
-          "configuration": "configurations/ConfigB.cfg#1588061200689",
+          "configuration": "ConfigB.cfg#1588061200689",
           "id": 1588253370222,
           "keyMapping": {
             "input": [],
@@ -146,7 +147,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/ConditionRepository.cnd#2163654295690873706",
+      "condition": "ConditionRepository.cnd#2163654295690873706",
       "id": 1588253347211,
       "inState": 1588060991102,
       "keyMapping": {
@@ -161,12 +162,7 @@
       },
       "name": "FromDefault NameTo Default Name",
       "outState": 1588253341545,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": null,

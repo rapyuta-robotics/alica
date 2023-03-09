@@ -60,7 +60,7 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/behaviours/AcmeBeh.beh")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/behaviours/AcmeBeh.beh")));
 
     // Load model
     Behaviour* behaviourModel;
@@ -133,7 +133,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
     std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/conditions/ConditionRepository.cnd")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/conditions/ConditionRepository.cnd")));
     TransitionCondition* conditionModel;
 
     for (size_t i = 0; i < node["conditions"].size(); i++) {
@@ -146,7 +146,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
     }
 
     ASSERT_EQ(conditionModel->getName(), "VariableHandlingStart");
-    TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0, 0};
+    TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
 
     // Create condition from dll
     std::unique_ptr<BlackboardBlueprint> testGlobalBlackboardBlueprint = std::make_unique<BlackboardBlueprint>();
@@ -165,7 +165,7 @@ TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
     std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/behaviours/WaitBehaviour.beh")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/behaviours/WaitBehaviour.beh")));
 
     // Load model
     Behaviour* behaviourModel;

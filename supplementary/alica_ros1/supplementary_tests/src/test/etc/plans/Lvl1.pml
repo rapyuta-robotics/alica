@@ -21,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1524452759599,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
@@ -111,7 +112,7 @@
   "transitions": [
     {
       "comment": "Lvl1 Transition",
-      "condition": "conditions/ConditionRepository.cnd#295816226925111421",
+      "condition": "ConditionRepository.cnd#295816226925111421",
       "id": 1524453490345,
       "inState": 1524453481856,
       "keyMapping": {

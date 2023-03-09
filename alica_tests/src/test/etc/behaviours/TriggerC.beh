@@ -5,6 +5,7 @@
   "eventDriven": true,
   "frequency": 30,
   "id": 1428508355209,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica-tests",
   "name": "TriggerC",
