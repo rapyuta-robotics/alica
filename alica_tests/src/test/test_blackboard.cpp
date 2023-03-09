@@ -79,7 +79,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingBehaviours)
     ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << _tc->getGlobalBlackboard().impl().get<std::optional<std::string>>("testError").value();
 }
 
 TEST_F(SingleAgentTestFixture, testValueMappingConditions)
@@ -97,7 +97,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingConditions)
     ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << _tc->getGlobalBlackboard().impl().get<std::optional<std::string>>("testError").value();
 }
 
 TEST_F(SingleAgentTestFixture, testValueMappingPlans)
@@ -115,7 +115,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingPlans)
     ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << _tc->getGlobalBlackboard().impl().get<std::optional<std::string>>("testError").value();
 }
 
 TEST_F(SingleAgentTestFixture, testValueMappingKeyNotFound)
