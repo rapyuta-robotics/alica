@@ -7,7 +7,7 @@
   "id": 2948815528667048378,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "libalica-turtlesim",
   "name": "RotateTurtle",
   "postCondition": null,
   "preCondition": null,

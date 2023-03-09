@@ -54,7 +54,7 @@
               {
                 "childKey": "topic",
                 "parentKey": null,
-                "value": "switch"
+                "value": "rotate"
               }
             ],
             "output": []
@@ -134,7 +134,7 @@
               {
                 "childKey": "topic",
                 "parentKey": null,
-                "value": "switch"
+                "value": "move"
               }
             ],
             "output": []

@@ -21,6 +21,8 @@ public:
     bool spawn();                                                 // Spawn the turtle in the middle of the map
     bool moveTowardPosition(const float x, const float y) const;  // publish cmd_vel based on input(x,y) and current pose
     PoseConstPtr getCurrentPose() const { return _currentPose; }; // Retrieve current pose if available
+    void rotate(const float dYaw);
+
 private:
     void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim
     ros::Publisher _velPub;                        // publish cmd_vel to the turtlesim
