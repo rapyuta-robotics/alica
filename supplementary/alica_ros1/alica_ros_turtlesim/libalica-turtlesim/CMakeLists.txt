@@ -10,12 +10,8 @@ add_library(${PROJECT_NAME} SHARED
   src/GoTo.cpp
   src/GoToCalculatedResult.cpp
   src/MakeFormation.cpp
-  src/RandomMoveTutorial.cpp
-  src/Simulation.cpp
   src/SpawnTurtle.cpp
-  src/SurroundLeaderTutorial.cpp
   src/Teleport.cpp
-  src/TeleportToRandomPosition.cpp
   src/turtle_interfaces.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)
