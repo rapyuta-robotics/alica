@@ -1,5 +1,4 @@
 #include "engine/modelmanagement/factories/TransitionFactory.h"
-#include "engine/model/PreCondition.h"
 #include "engine/model/Transition.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/KeyMappingFactory.h"
@@ -31,10 +30,6 @@ Transition* TransitionFactory::create(const YAML::Node& transitionNode, Plan* pl
     }
     if (Factory::isValid(transitionNode[alica::Strings::keyMapping])) {
         transition->_keyMapping = KeyMappingFactory::create(transitionNode[alica::Strings::keyMapping]);
-    }
-    // Used to set the legacyTransitionCondition for the Transition object
-    if (Factory::isValid(transitionNode[alica::Strings::preCondition])) {
-        transition->_preConditionId = PreConditionFactory::create(transitionNode[alica::Strings::preCondition], plan)->getId();
     }
 
     return transition;
