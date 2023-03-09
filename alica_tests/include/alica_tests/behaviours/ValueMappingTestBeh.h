@@ -11,6 +11,7 @@ public:
     ValueMappingTestBeh(BehaviourContext& context);
     virtual void run();
     static std::unique_ptr<ValueMappingTestBeh> create(alica::BehaviourContext& context);
+    virtual void initialiseParameters() override;
 
 private:
 };

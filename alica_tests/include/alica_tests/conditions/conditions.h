@@ -46,6 +46,7 @@ bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::Runnin
 bool IsAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 bool IsAnyChildStatus(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool TestHasNoError(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 
 BOOST_DLL_ALIAS(alica::Entry2Wait, Entry2Wait)
 BOOST_DLL_ALIAS(alica::FailurePlan2FailureHandled, FailurePlan2FailureHandled)
@@ -86,4 +87,5 @@ BOOST_DLL_ALIAS(alica::IsAnyChildStatusSuccess, IsAnyChildStatusSuccess)
 BOOST_DLL_ALIAS(alica::IsAnyChildTaskSuccessfull, IsAnyChildTaskSuccessfull)
 BOOST_DLL_ALIAS(alica::IsAnyChildStatusFailed, IsAnyChildStatusFailed)
 BOOST_DLL_ALIAS(alica::IsAnyChildStatus, IsAnyChildStatus)
+BOOST_DLL_ALIAS(alica::TestHasNoError, TestHasNoError)
 } /* namespace alica */

@@ -229,6 +229,51 @@
         {
           "access": "input",
           "comment": "",
+          "id": 1067986686726517015,
+          "key": "mappedStringValue",
+          "type": "std::string"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1072536082461203314,
+          "key": "mappedIntValue",
+          "type": "int64"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1923116393503068456,
+          "key": "mappedBoolValue",
+          "type": "bool"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2058698019148031741,
+          "key": "mappedUintValue",
+          "type": "uint64"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2476010310420018929,
+          "key": "mappedDoubleValue",
+          "type": "double"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2046573221100914383,
+      "libraryName": "alica-tests",
+      "name": "ValueMappingCondition",
+      "relativeDirectory": ""
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
           "id": 4032224399589857774,
           "key": "numberOfCalls",
           "type": "int64"
@@ -455,48 +500,12 @@
       "relativeDirectory": "conditions"
     },
     {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
-          "id": 2058698019148031741,
-          "key": "mappedUintValue",
-          "type": "uint64"
-        },
-        {
-          "access": "input",
-          "comment": "",
-          "id": 1923116393503068456,
-          "key": "mappedBoolValue",
-          "type": "bool"
-        },
-        {
-          "access": "input",
-          "comment": "",
-          "id": 1072536082461203314,
-          "key": "mappedIntValue",
-          "type": "int64"
-        },
-        {
-          "access": "input",
-          "comment": "",
-          "id": 1067986686726517015,
-          "key": "mappedStringValue",
-          "type": "std::string"
-        },
-        {
-          "access": "input",
-          "comment": "",
-          "id": 2476010310420018929,
-          "key": "mappedDoubleValue",
-          "type": "double"
-        }
-      ],
+      "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
-      "id": 2046573221100914383,
+      "id": 1552609259127937138,
       "libraryName": "alica-tests",
-      "name": "ValueMappingCondition",
+      "name": "TestHasNoError",
       "relativeDirectory": ""
     }
   ],

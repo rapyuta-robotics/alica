@@ -14,6 +14,7 @@ class BlackboardTestPlan : public AlicaTestsPlan<BlackboardTestPlan>
 {
 public:
     BlackboardTestPlan(PlanContext& context);
+    virtual void onInit() override;
 };
 
 bool ValueMappingCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
