@@ -20,6 +20,12 @@
 namespace alica
 {
 
+namespace test
+{
+class SingleAgentBlackboardTestFixture;
+class TestBlackboard;
+} // namespace test
+
 struct BlackboardException : public std::logic_error
 {
     static constexpr const char* BB_EXCEPTION_PREFIX = "Blackboard exception: ";
@@ -359,6 +365,8 @@ public:
     [[deprecated("Use UnlockedBlackboard instead")]] const internal::BlackboardImpl& impl() const { return _impl; }
 
 private:
+    friend alica::test::SingleAgentBlackboardTestFixture;
+    friend alica::test::TestBlackboard;
     internal::BlackboardImpl _impl;
     mutable std::shared_mutex _mtx;
 };

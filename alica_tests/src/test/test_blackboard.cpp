@@ -52,16 +52,23 @@ protected:
         targetBlueprint.addKey("targetKey", targetTypeName);
         Blackboard srcBB(&srcBlueprint);
         Blackboard targetBB(&targetBlueprint);
-        srcBB.impl().set("srcKey", srcValue);
-        targetBB.impl().map("srcKey", "targetKey", srcBB.impl());
+        srcBB._impl.set("srcKey", srcValue);
+        targetBB._impl.map("srcKey", "targetKey", srcBB._impl);
         if constexpr (std::is_same_v<TargetType, std::any>) {
-            return std::any_cast<SrcType>(targetBB.impl().get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
+            return std::any_cast<SrcType>(targetBB._impl.get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
         } else {
-            return targetBB.impl().get<TargetType>("targetKey") == targetValue;
+            return targetBB._impl.get<TargetType>("targetKey") == targetValue;
         }
     }
 
-    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb.impl(); }
+    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb._impl; }
+};
+
+// provides access to blackboard impl in tests
+class SingleAgentBlackboardTestFixture : public SingleAgentTestFixture
+{
+public:
+    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb._impl; }
 };
 
 TEST_F(SingleAgentTestFixture, testValueMappingBehaviours)
@@ -77,7 +84,8 @@ TEST_F(SingleAgentTestFixture, testValueMappingBehaviours)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingBehaviourTestState")) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << _tc->getGlobalBlackboard().impl().get<std::optional<std::string>>("testError").value();
+    UnlockedBlackboard gb(_tc->editGlobalBlackboard());
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << gb.get<std::optional<std::string>>("testError").value();
 }
 
 TEST_F(SingleAgentTestFixture, testValueMappingConditions)
@@ -93,7 +101,8 @@ TEST_F(SingleAgentTestFixture, testValueMappingConditions)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingConditionTestState")) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << _tc->getGlobalBlackboard().impl().get<std::optional<std::string>>("testError").value();
+    UnlockedBlackboard gb(_tc->editGlobalBlackboard());
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << gb.get<std::optional<std::string>>("testError").value();
 }
 
 TEST_F(SingleAgentTestFixture, testValueMappingPlans)
@@ -109,34 +118,35 @@ TEST_F(SingleAgentTestFixture, testValueMappingPlans)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingPlanTestState")) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << _tc->getGlobalBlackboard().impl().get<std::optional<std::string>>("testError").value();
+    UnlockedBlackboard gb(_tc->editGlobalBlackboard());
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << gb.get<std::optional<std::string>>("testError").value();
 }
 
-TEST_F(SingleAgentTestFixture, testValueMappingKeyNotFound)
+TEST_F(SingleAgentBlackboardTestFixture, testValueMappingKeyNotFound)
 {
     BlackboardBlueprint targetBlueprint;
     targetBlueprint.addKey("targetKey", BBType::BOOL);
 
     Blackboard targetBB(&targetBlueprint);
-    EXPECT_THROW({ targetBB.impl().mapValue("wrongTargetKey", "true"); }, BlackboardException);
+    EXPECT_THROW({ getBlackboardImpl(targetBB).mapValue("wrongTargetKey", "true"); }, BlackboardException);
 }
 
-TEST_F(SingleAgentTestFixture, testValueMappingUnknownType)
+TEST_F(SingleAgentBlackboardTestFixture, testValueMappingUnknownType)
 {
     BlackboardBlueprint targetBlueprint;
     targetBlueprint.addKey("targetKey", BBType::ANY);
 
     Blackboard targetBB(&targetBlueprint);
-    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, BlackboardException);
+    EXPECT_THROW({ getBlackboardImpl(targetBB).mapValue("targetKey", "test"); }, BlackboardException);
 }
 
-TEST_F(SingleAgentTestFixture, testValueMappingCantParseValue)
+TEST_F(SingleAgentBlackboardTestFixture, testValueMappingCantParseValue)
 {
     BlackboardBlueprint targetBlueprint;
     targetBlueprint.addKey("targetKey", BBType::BOOL);
 
     Blackboard targetBB(&targetBlueprint);
-    EXPECT_THROW({ targetBB.impl().mapValue("targetKey", "test"); }, YAML::BadConversion);
+    EXPECT_THROW({ getBlackboardImpl(targetBB).mapValue("targetKey", "test"); }, YAML::BadConversion);
 }
 
 TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
