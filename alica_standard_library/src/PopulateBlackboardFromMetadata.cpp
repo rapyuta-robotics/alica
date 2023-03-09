@@ -17,6 +17,7 @@ void PopulateBlackboardFromMetadata::initialiseParameters()
         return;
     }
     populateFromContext();
+    setSuccess();
 }
 
 std::unique_ptr<PopulateBlackboardFromMetadata> PopulateBlackboardFromMetadata::create(alica::BehaviourContext& context)
@@ -72,6 +73,7 @@ void PopulateBlackboardFromMetadata::setError(const std::string& error)
 {
     alica::UnlockedBlackboard bb{*getBlackboard()};
     bb.set("error", error);
+    setFailure();
 }
 
-} // namespace utils
+} // namespace utils0
