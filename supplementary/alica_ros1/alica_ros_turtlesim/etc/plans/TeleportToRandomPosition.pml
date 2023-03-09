@@ -195,12 +195,7 @@
       },
       "name": "",
       "outState": 3715359869158732014,
-      "pointsWeb": [
-        {
-          "x": 844,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -224,12 +219,7 @@
       },
       "name": "",
       "outState": 1435429019417319391,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",

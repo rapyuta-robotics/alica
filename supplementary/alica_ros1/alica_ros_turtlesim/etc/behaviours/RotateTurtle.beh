@@ -1,0 +1,17 @@
+{
+  "blackboard": [],
+  "comment": "Robot rotates clockwise at a fixed speed",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 15,
+  "id": 2948815528667048378,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "",
+  "name": "RotateTurtle",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "variables": []
+}
