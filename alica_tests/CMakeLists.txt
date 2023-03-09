@@ -87,7 +87,6 @@ if(BUILD_TESTING)
         src/test/test_failure_handling.cpp
         src/test/test_alica_logger.cpp
         src/test/test_alica_engine_worldmodel.cpp
-        src/test/test_legacy_conditions.cpp
         src/test/test_success.cpp
     )
 
