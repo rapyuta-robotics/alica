@@ -183,6 +183,15 @@
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
+      "id": 1552609259127937138,
+      "libraryName": "alica-tests",
+      "name": "TestHasNoError",
+      "relativeDirectory": ""
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
       "id": 1556522827919252115,
       "libraryName": "alica-tests",
       "name": "SwitchIsSet",
@@ -500,12 +509,20 @@
       "relativeDirectory": "conditions"
     },
     {
-      "blackboard": [],
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2610737155421779161,
+          "key": "childName",
+          "type": "std::string"
+        }
+      ],
       "comment": "",
       "conditionRepository": 0,
-      "id": 1552609259127937138,
-      "libraryName": "alica-tests",
-      "name": "TestHasNoError",
+      "id": 3290850633957473696,
+      "libraryName": "alica_standard_library",
+      "name": "IsChildSuccess",
       "relativeDirectory": ""
     }
   ],
