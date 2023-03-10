@@ -20,6 +20,12 @@
 namespace alica
 {
 
+namespace test
+{
+class SingleAgentBlackboardTestFixture;
+class TestBlackboard;
+} // namespace test
+
 struct BlackboardException : public std::logic_error
 {
     static constexpr const char* BB_EXCEPTION_PREFIX = "Blackboard exception: ";
@@ -156,6 +162,20 @@ public:
                     set(targetKey, std::forward<decltype(srcValue)>(srcValue));
                 },
                 srcBb._vals.at(srcKey));
+    }
+
+    void mapValue(const std::string& key, const std::string& value)
+    {
+        const std::string errorPrefix = stringify("mapConst() failure, key: ", key, ", value: ", value, ", details: ");
+        try {
+            _vals.at(key) = makeBBValueForIndex<true>::make(getTypeIndex(_yamlType.at(key)).value(), value);
+        } catch (const std::out_of_range&) {
+            throw BlackboardException(stringify(errorPrefix, "key not found in yaml file"));
+        } catch (const std::bad_optional_access&) {
+            throw BlackboardException(stringify(errorPrefix, "type not supported for constant mapping"));
+        } catch (const BlackboardException& ex) {
+            throw BlackboardException(stringify(errorPrefix, ex.what()));
+        }
     }
 
     bool hasValue(const std::string& key) const { return _vals.count(key); }
@@ -345,6 +365,8 @@ public:
     [[deprecated("Use UnlockedBlackboard instead")]] const internal::BlackboardImpl& impl() const { return _impl; }
 
 private:
+    friend alica::test::SingleAgentBlackboardTestFixture;
+    friend alica::test::TestBlackboard;
     internal::BlackboardImpl _impl;
     mutable std::shared_mutex _mtx;
 };

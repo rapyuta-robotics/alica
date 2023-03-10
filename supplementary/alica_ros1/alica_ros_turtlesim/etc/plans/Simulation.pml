@@ -1,20 +1,5 @@
 {
-  "blackboard": [
-    {
-      "access": "protected",
-      "comment": "Subscriber topic to listen for trigger msgs to join the formation",
-      "id": 4387163444028990842,
-      "key": "join_formation_topic",
-      "type": "std::string"
-    },
-    {
-      "access": "protected",
-      "comment": "Subscriber topic to listen for trigger msgs to leave the formation",
-      "id": 1679753874536868957,
-      "key": "leave_formation_topic",
-      "type": "std::string"
-    }
-  ],
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -36,8 +21,9 @@
   ],
   "frequency": 0,
   "id": 2425328142973735249,
+  "implementationName": "TracedPlan",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "Simulation",
   "preCondition": null,
@@ -56,8 +42,8 @@
             "input": [
               {
                 "childKey": "topic",
-                "parentKey": "leave_formation_topic",
-                "value": null
+                "parentKey": null,
+                "value": "leave_formation"
               }
             ],
             "output": []
@@ -79,22 +65,23 @@
       "entryPoint": null,
       "id": 2405597980801916441,
       "inTransitions": [
-        2899549957744653913
+        2467937620932239445,
+        1019769038957717905
       ],
       "name": "MakeFormation",
       "outTransitions": [
-        478458671918151236
+        4195013669615888372
       ],
       "parentPlan": 2425328142973735249,
       "positionWeb": {
-        "x": 822.7358972162353,
-        "y": 198.3822276323798
+        "x": 748.684223242413,
+        "y": 210.7241732946835
       },
       "type": "State",
       "variableBindings": []
     },
     {
-      "comment": "Wait until a trigger to join the formation is received",
+      "comment": "Go to the corner and wait until a trigger to join the formation is received",
       "confAbstractPlanWrappers": [
         {
           "abstractPlan": "WaitForTrigger.beh#1320667069122998665",
@@ -105,8 +92,8 @@
             "input": [
               {
                 "childKey": "topic",
-                "parentKey": "join_formation_topic",
-                "value": null
+                "parentKey": null,
+                "value": "join_formation"
               }
             ],
             "output": []
@@ -117,16 +104,16 @@
       "entryPoint": null,
       "id": 3064881354318777214,
       "inTransitions": [
-        721746124359822922
+        3147792994605157106
       ],
-      "name": "WaitForTrigger",
+      "name": "WaitOutOfFormation",
       "outTransitions": [
-        2899549957744653913
+        1019769038957717905
       ],
       "parentPlan": 2425328142973735249,
       "positionWeb": {
-        "x": 621.4534494058356,
-        "y": 20.00335506798717
+        "x": 756.0311303883144,
+        "y": -4.106345813178368
       },
       "type": "State",
       "variableBindings": []
@@ -148,17 +135,58 @@
       ],
       "entryPoint": 2741715629576575326,
       "id": 3997532517592149463,
-      "inTransitions": [
-        478458671918151236
-      ],
+      "inTransitions": [],
       "name": "Teleport2RandomPosition",
       "outTransitions": [
-        721746124359822922
+        2467937620932239445
       ],
       "parentPlan": 2425328142973735249,
       "positionWeb": {
         "x": 428,
         "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "GoTo.beh#2797939494274869075",
+          "comment": "",
+          "configuration": null,
+          "id": 3025259812511836525,
+          "keyMapping": {
+            "input": [
+              {
+                "childKey": "goal_x",
+                "parentKey": null,
+                "value": 1.5
+              },
+              {
+                "childKey": "goal_y",
+                "parentKey": null,
+                "value": 1.5
+              }
+            ],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 4082412132485660911,
+      "inTransitions": [
+        4195013669615888372
+      ],
+      "name": "LeaveFormation",
+      "outTransitions": [
+        3147792994605157106
+      ],
+      "parentPlan": 2425328142973735249,
+      "positionWeb": {
+        "x": 994.4978480414026,
+        "y": 122.03382606183122
       },
       "type": "State",
       "variableBindings": []
@@ -169,44 +197,20 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 478458671918151236,
-      "inState": 2405597980801916441,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 3997532517592149463,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 1059510119570948194,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#2",
-      "id": 721746124359822922,
+      "id": 2467937620932239445,
       "inState": 3997532517592149463,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 3064881354318777214,
+      "outState": 2405597980801916441,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 2511083801945401071,
+        "id": 3077426683382044276,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -216,8 +220,8 @@
     },
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#974606107671315045",
-      "id": 2899549957744653913,
+      "condition": "ConditionRepository.cnd#1",
+      "id": 1019769038957717905,
       "inState": 3064881354318777214,
       "keyMapping": {
         "input": [],
@@ -230,7 +234,55 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 32783968180087158,
+        "id": 3392326148903943635,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 3147792994605157106,
+      "inState": 4082412132485660911,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 3064881354318777214,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2389656767398160456,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 4195013669615888372,
+      "inState": 2405597980801916441,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 4082412132485660911,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3360288480763978554,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

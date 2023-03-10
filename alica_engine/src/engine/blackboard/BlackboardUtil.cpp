@@ -21,13 +21,22 @@ void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb,
             throw;
         }
     }
+    for (const auto& [value, childKey] : keyMapping->getInputValueMapping()) {
+        try {
+            childBb.mapValue(childKey, value);
+            Logging::logDebug("BlackboardUtil") << "passing value: " << value << " into " << childKey;
+        } catch (std::exception& e) {
+            Logging::logError("BlackboardUtil") << "Blackboard error passing value: " << value << " into " << childKey << ". " << e.what();
+            throw;
+        }
+    }
 }
 
 void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb, const KeyMapping* keyMapping)
 {
     LockedBlackboardRW lockedParentBb(*parent_bb);
     const auto& childBb = child_bb->_impl; // Child is terminated, no other users exists, don't use lock
-    for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
+    for (const auto& [childKey, parentKey] : keyMapping->getOutputMapping()) {
         try {
             parent_bb->_impl.map(childKey, parentKey, childBb);
             Logging::logDebug("BlackboardUtil") << "passing " << childKey << " into " << parentKey;

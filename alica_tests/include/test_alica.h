@@ -1,5 +1,7 @@
 #pragma once
 
+#include <alica/test/TestContext.h>
+#include <alica/test/Util.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/test_sched_world_model.h>
@@ -331,6 +333,43 @@ protected:
     }
 };
 } // namespace alica
+
+namespace alica::test
+{
+class SingleAgentTestFixture : public ::testing::Test
+{
+public:
+    virtual void SetUp() override
+    {
+        // Path to test configs set by CMake
+        std::string path;
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
+        _tc = std::make_unique<TestContext>("hairy", std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1);
+        ASSERT_TRUE(_tc->isValid());
+        const YAML::Node& config = _tc->getConfig();
+
+        _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        _tc->setTimerFactory<alica::AlicaSystemTimerFactory>();
+        _tc->setLogger<alica::AlicaDefaultLogger>();
+
+        AlicaCreators creators{std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
+        _tc->init(std::move(creators));
+        _tc->startEngine();
+
+        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
+    }
+
+    virtual void TearDown() override {}
+
+protected:
+    std::unique_ptr<TestContext> _tc;
+};
+} // namespace alica::test
 
 extern std::jmp_buf restore_point;
 void signalHandler(int signal);

@@ -1,14 +1,15 @@
 #include <alica_tests/conditions/conditions.h>
 
-#include <engine/RunningPlan.h>
-#include <engine/blackboard/Blackboard.h>
-#include <iostream>
-
 #include <alica/test/CounterClass.h>
 #include <alica_tests/SimpleSwitches.h>
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/test_sched_world_model.h>
 #include <engine/BasicPlan.h>
+#include <engine/RunningPlan.h>
+#include <engine/blackboard/Blackboard.h>
+
+#include <iostream>
+#include <optional>
 
 namespace alica
 {
@@ -227,5 +228,11 @@ bool TestTracingMasterCondition(const Blackboard* input, const RunningPlan* rp, 
 {
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     return worldModel->isPreCondition1840401110297459509();
+}
+bool TestHasNoError(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+{
+    LockedBlackboardRO globalBlackboard(*gb);
+    std::cerr << "make check: " << (!globalBlackboard.get<std::optional<std::string>>("testError").has_value()) << std::endl;
+    return !globalBlackboard.get<std::optional<std::string>>("testError").has_value();
 }
 } /* namespace alica */
