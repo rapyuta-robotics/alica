@@ -54,6 +54,30 @@
       "libraryName": "libalica-turtlesim",
       "name": "CustomAnyChildSuccess",
       "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3837414941606102992,
+          "key": "lhs",
+          "type": "std::string"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1522671554895393021,
+          "key": "rhs",
+          "type": "std::string"
+        }
+      ],
+      "comment": "true if the first input parameters is equal to the second input parameter",
+      "conditionRepository": 0,
+      "id": 976473172990372064,
+      "libraryName": "alica_standard_library",
+      "name": "Equals",
+      "relativeDirectory": ""
     }
   ],
   "id": 0,

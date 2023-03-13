@@ -2,16 +2,16 @@
   "blackboard": [
     {
       "access": "protected",
-      "comment": "Subscriber topic to listen for trigger msgs to join the formation",
-      "id": 4387163444028990842,
-      "key": "join_formation_topic",
+      "comment": "Subscriber topic to listen for trigger msgs to leave the formation",
+      "id": 1679753874536868957,
+      "key": "leave_formation_topic",
       "type": "std::string"
     },
     {
       "access": "protected",
-      "comment": "Subscriber topic to listen for trigger msgs to leave the formation",
-      "id": 1679753874536868957,
-      "key": "leave_formation_topic",
+      "comment": "Subscriber topic to listen for trigger msgs to join the formation",
+      "id": 4387163444028990842,
+      "key": "join_formation_topic",
       "type": "std::string"
     }
   ],
@@ -36,6 +36,7 @@
   ],
   "frequency": 0,
   "id": 2425328142973735249,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "libalica-turtlesim",
   "masterPlan": false,

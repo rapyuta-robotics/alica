@@ -8,17 +8,17 @@
       "type": "double"
     },
     {
-      "access": "input",
-      "comment": "",
-      "id": 3735569316629395206,
-      "key": "max",
-      "type": "double"
-    },
-    {
       "access": "output",
       "comment": "",
       "id": 3318528501727248057,
       "key": "value",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 3735569316629395206,
+      "key": "max",
       "type": "double"
     }
   ],
@@ -27,6 +27,7 @@
   "eventDriven": false,
   "frequency": 0,
   "id": 3356053372497284615,
+  "implementationName": "",
   "inheritBlackboard": false,
   "libraryName": "alica_standard_library",
   "name": "GenerateRandom",
