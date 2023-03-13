@@ -39,6 +39,7 @@ static const std::string input = "input";
 static const std::string output = "output";
 static const std::string parentKey = "parentKey";
 static const std::string childKey = "childKey";
+static const std::string value = "value";
 
 static const std::string id = "id";
 static const std::string name = "name";
@@ -99,6 +100,7 @@ static const std::string key = "key";
 static const std::string transitionCondition = "transitionCondition";
 static const std::string transitionConditionRepository = "transitionConditionRepository";
 static const std::string libraryName = "libraryName";
+static const std::string implementationName = "implementationName";
 
 } // namespace Strings
 } // namespace alica

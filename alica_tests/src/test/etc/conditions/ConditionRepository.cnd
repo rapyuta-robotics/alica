@@ -183,6 +183,15 @@
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
+      "id": 1552609259127937138,
+      "libraryName": "alica-tests",
+      "name": "TestHasNoError",
+      "relativeDirectory": ""
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
       "id": 1556522827919252115,
       "libraryName": "alica-tests",
       "name": "SwitchIsSet",
@@ -223,6 +232,51 @@
       "libraryName": "alica-tests",
       "name": "StateTwo2NewSuccessStateTwo",
       "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1067986686726517015,
+          "key": "mappedStringValue",
+          "type": "std::string"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1072536082461203314,
+          "key": "mappedIntValue",
+          "type": "int64"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1923116393503068456,
+          "key": "mappedBoolValue",
+          "type": "bool"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2058698019148031741,
+          "key": "mappedUintValue",
+          "type": "uint64"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2476010310420018929,
+          "key": "mappedDoubleValue",
+          "type": "double"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2046573221100914383,
+      "libraryName": "alica-tests",
+      "name": "ValueMappingCondition",
+      "relativeDirectory": ""
     },
     {
       "blackboard": [
@@ -453,6 +507,23 @@
       "libraryName": "alica-tests",
       "name": "TestTracingMasterCondition",
       "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2610737155421779161,
+          "key": "childName",
+          "type": "std::string"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3290850633957473696,
+      "libraryName": "alica_standard_library",
+      "name": "IsChildSuccess",
+      "relativeDirectory": ""
     }
   ],
   "id": 0,

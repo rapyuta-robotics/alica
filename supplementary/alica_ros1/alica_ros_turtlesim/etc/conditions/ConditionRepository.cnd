@@ -38,24 +38,6 @@
       "relativeDirectory": "conditions"
     },
     {
-      "blackboard": [],
-      "comment": "Equivalent to AllChildSucces but used here for demonstration purposes to show how to implement a custom condition",
-      "conditionRepository": 0,
-      "id": 974606107671315045,
-      "libraryName": "libalica-turtlesim",
-      "name": "CustomAllChildSuccess",
-      "relativeDirectory": "conditions"
-    },
-    {
-      "blackboard": [],
-      "comment": "Equivalent to AnyChildSucces but used here for demonstration purposes to show how to implement a custom condition",
-      "conditionRepository": 0,
-      "id": 2190266318562141841,
-      "libraryName": "libalica-turtlesim",
-      "name": "CustomAnyChildSuccess",
-      "relativeDirectory": "conditions"
-    },
-    {
       "blackboard": [
         {
           "access": "input",

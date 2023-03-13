@@ -10,48 +10,14 @@
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaTimer.h>
 #include <engine/logging/AlicaDefaultLogger.h>
+#include <test_alica.h>
 
 #include <gtest/gtest.h>
 
 namespace alica::test
 {
 
-class TestSuccessFixture : public ::testing::Test
-{
-public:
-    virtual void SetUp() override
-    {
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
-        _tc = std::make_unique<TestContext>("hairy", std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1);
-        ASSERT_TRUE(_tc->isValid());
-        const YAML::Node& config = _tc->getConfig();
-
-        _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        _tc->setTimerFactory<alica::AlicaSystemTimerFactory>();
-        _tc->setLogger<alica::AlicaDefaultLogger>();
-
-        LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
-        AlicaCreators creators{std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
-                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
-                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
-        _tc->init(std::move(creators));
-        _tc->startEngine();
-
-        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
-    }
-
-    virtual void TearDown() override {}
-
-protected:
-    std::unique_ptr<TestContext> _tc;
-};
-
-TEST_F(TestSuccessFixture, behSuccessTest)
+TEST_F(SingleAgentTestFixture, behSuccessTest)
 {
     // Checks if a behaviour can succeed
 
@@ -65,7 +31,7 @@ TEST_F(TestSuccessFixture, behSuccessTest)
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(beh));
 }
 
-TEST_F(TestSuccessFixture, planSuccessTest)
+TEST_F(SingleAgentTestFixture, planSuccessTest)
 {
     // Checks if a plan can succeed
 
@@ -79,7 +45,7 @@ TEST_F(TestSuccessFixture, planSuccessTest)
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
 }
 
-TEST_F(TestSuccessFixture, multiPlanInstanceSuccessTest)
+TEST_F(SingleAgentTestFixture, multiPlanInstanceSuccessTest)
 {
     // Checks if multiple instances of the same plan can run in parallel & succeed without mixing up runtime states with each other
 
@@ -129,6 +95,20 @@ TEST_F(TestSuccessFixture, multiPlanInstanceSuccessTest)
 
     // Step until the test plan succeeds
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(parallelPlan));
+}
+
+TEST_F(SingleAgentTestFixture, isChildSuccessTest)
+{
+    // Checks if isChildSuccess condition is working
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "IsChildSuccessTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("IsChildSuccessTestPlan"));
+    auto isChildSuccessPlan = _tc->getActivePlan("IsChildSuccessTestPlan");
+    ASSERT_NE(isChildSuccessPlan, nullptr) << _tc->getLastFailure();
+
+    // Step until the test plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(isChildSuccessPlan));
 }
 
 } // namespace alica::test

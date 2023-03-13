@@ -23,6 +23,7 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} SHARED
+  src/BasicPlans.cpp
   src/Conditions.cpp
   src/GenerateRandom.cpp
   src/PopulateBlackboardFromJson.cpp

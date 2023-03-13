@@ -4,28 +4,28 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 53133849509772171,
+      "id": 192405225773600915,
       "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "",
-      "plan": 1449843163261594615,
+      "plan": 2851720313998235716,
       "positionWeb": {
-        "x": 522,
-        "y": 421.99999237060547
+        "x": 319,
+        "y": 329
       },
-      "state": 1256477521278293720,
+      "state": 2231154692722562808,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
     }
   ],
   "frequency": 0,
-  "id": 1449843163261594615,
+  "id": 2851720313998235716,
   "implementationName": "TracedPlan",
   "inheritBlackboard": false,
   "libraryName": "alica_standard_library",
   "masterPlan": true,
-  "name": "SurroundLeaderTutorial",
+  "name": "FourCornersTutorial",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
@@ -34,40 +34,10 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "abstractPlan": "FourCorners.pml#1225570798912217901",
           "comment": "",
           "configuration": null,
-          "id": 4220525235259193568,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": 53133849509772171,
-      "id": 1256477521278293720,
-      "inTransitions": [],
-      "name": "SpawnTurtle",
-      "outTransitions": [
-        1701344904592867727
-      ],
-      "parentPlan": 1449843163261594615,
-      "positionWeb": {
-        "x": 762,
-        "y": 408.99999237060547
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "Simulation.pml#2425328142973735249",
-          "comment": "",
-          "configuration": null,
-          "id": 814335721917579950,
+          "id": 1515802129099037226,
           "keyMapping": {
             "input": [],
             "output": []
@@ -76,16 +46,46 @@
         }
       ],
       "entryPoint": null,
-      "id": 3424972982848590838,
+      "id": 3075001531216334549,
       "inTransitions": [
-        1701344904592867727
+        2747861623143659037
       ],
-      "name": "Simulation",
+      "name": "FourCorners",
       "outTransitions": [],
-      "parentPlan": 1449843163261594615,
+      "parentPlan": 2851720313998235716,
       "positionWeb": {
-        "x": 1147,
-        "y": 406.99999237060547
+        "x": 734,
+        "y": 325
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "comment": "",
+          "configuration": null,
+          "id": 1084340226690786551,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": 192405225773600915,
+      "id": 2231154692722562808,
+      "inTransitions": [],
+      "name": "SpawnTurtle",
+      "outTransitions": [
+        2747861623143659037
+      ],
+      "parentPlan": 2851720313998235716,
+      "positionWeb": {
+        "x": 471,
+        "y": 316
       },
       "type": "State",
       "variableBindings": []
@@ -96,20 +96,20 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 1701344904592867727,
-      "inState": 1256477521278293720,
+      "id": 2747861623143659037,
+      "inState": 2231154692722562808,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 3424972982848590838,
+      "outState": 3075001531216334549,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 1158412559413860996,
+        "id": 2629062799832896160,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

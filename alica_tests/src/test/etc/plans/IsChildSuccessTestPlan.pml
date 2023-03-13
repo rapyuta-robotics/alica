@@ -4,28 +4,28 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 53133849509772171,
+      "id": 2614086846208556728,
       "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "",
-      "plan": 1449843163261594615,
+      "plan": 2027765331130289429,
       "positionWeb": {
-        "x": 522,
-        "y": 421.99999237060547
+        "x": 195,
+        "y": 285
       },
-      "state": 1256477521278293720,
+      "state": 4328347657318112535,
       "successRequired": false,
-      "task": "TaskRepository.tsk#3310236980587704776"
+      "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 1449843163261594615,
-  "implementationName": "TracedPlan",
+  "id": 2027765331130289429,
+  "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "alica_standard_library",
-  "masterPlan": true,
-  "name": "SurroundLeaderTutorial",
+  "libraryName": "alica-tests",
+  "masterPlan": false,
+  "name": "IsChildSuccessTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
@@ -34,10 +34,10 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "abstractPlan": "SuccessOnInitBeh.beh#3821787310391665935",
           "comment": "",
           "configuration": null,
-          "id": 4220525235259193568,
+          "id": 655124321119057103,
           "keyMapping": {
             "input": [],
             "output": []
@@ -45,49 +45,39 @@
           "name": ""
         }
       ],
-      "entryPoint": 53133849509772171,
-      "id": 1256477521278293720,
+      "entryPoint": 2614086846208556728,
+      "id": 4328347657318112535,
       "inTransitions": [],
-      "name": "SpawnTurtle",
+      "name": "EntryState",
       "outTransitions": [
-        1701344904592867727
+        2590151640025681691
       ],
-      "parentPlan": 1449843163261594615,
+      "parentPlan": 2027765331130289429,
       "positionWeb": {
-        "x": 762,
-        "y": 408.99999237060547
+        "x": 573,
+        "y": 306
       },
       "type": "State",
       "variableBindings": []
     },
     {
       "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "Simulation.pml#2425328142973735249",
-          "comment": "",
-          "configuration": null,
-          "id": 814335721917579950,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
+      "confAbstractPlanWrappers": [],
       "entryPoint": null,
-      "id": 3424972982848590838,
+      "id": 4068992413297046586,
       "inTransitions": [
-        1701344904592867727
+        2590151640025681691
       ],
-      "name": "Simulation",
+      "name": "SuccessState",
       "outTransitions": [],
-      "parentPlan": 1449843163261594615,
+      "parentPlan": 2027765331130289429,
       "positionWeb": {
-        "x": 1147,
-        "y": 406.99999237060547
+        "x": 928,
+        "y": 340
       },
-      "type": "State",
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
       "variableBindings": []
     }
   ],
@@ -95,21 +85,27 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#1",
-      "id": 1701344904592867727,
-      "inState": 1256477521278293720,
+      "condition": "ConditionRepository.cnd#3290850633957473696",
+      "id": 2590151640025681691,
+      "inState": 4328347657318112535,
       "keyMapping": {
-        "input": [],
+        "input": [
+          {
+            "childKey": "childName",
+            "parentKey": null,
+            "value": "SuccessOnInitBeh"
+          }
+        ],
         "output": []
       },
       "name": "",
-      "outState": 3424972982848590838,
+      "outState": 4068992413297046586,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 1158412559413860996,
+        "id": 1382846002212836995,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

@@ -91,10 +91,27 @@ private:
 TEST(AlicaTurtlesimTest, destinationTest)
 {
     ros::NodeHandle nh;
+    ros::Publisher leave_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/leave_formation", 10);
+    ros::Publisher leave_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/leave_formation", 10);
+    ros::Publisher leave_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/leave_formation", 10);
+    ros::Publisher leave_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/leave_formation", 10);
+
     ros::Publisher join_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/join_formation", 10);
     ros::Publisher join_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/join_formation", 10);
     ros::Publisher join_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/join_formation", 10);
     ros::Publisher join_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/join_formation", 10);
+
+    // wait for subscribers to latch
+    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
+    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_2_pub.getNumSubscribers(), 1U, 10000);
+    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_3_pub.getNumSubscribers(), 1U, 10000);
+    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
+    // Start by telling all turtles to leave the formation
+    std_msgs::Empty msg;
+    leave_formation_turtle_1_pub.publish(msg);
+    leave_formation_turtle_2_pub.publish(msg);
+    leave_formation_turtle_3_pub.publish(msg);
+    leave_formation_turtle_4_pub.publish(msg);
 
     // wait for subscribers to latch
     RUN_UNTIL_ASSERT_EQ(join_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
@@ -115,7 +132,6 @@ TEST(AlicaTurtlesimTest, destinationTest)
     desired_pose_turtle_1.y = 5;
 
     // send init message to turtles
-    std_msgs::Empty msg;
     join_formation_turtle_1_pub.publish(msg);
 
     RUN_UNTIL_ROBOT_STOP(turtle1, 10000);

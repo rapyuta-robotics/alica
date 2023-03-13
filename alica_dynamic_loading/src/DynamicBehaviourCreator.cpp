@@ -27,7 +27,7 @@ std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t
 
     _behaviourCreator = boost::dll::import_alias<behaviourCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                                        // complete path to library also with file name
-            context.behaviourModel->getName(),                          // symbol to import
+            context.behaviourModel->getImplementationName(),            // symbol to import
             boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
     );
     Logging::logDebug("DynamicLoading") << "Loaded behavior " << context.behaviourModel->getName();
