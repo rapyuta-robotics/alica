@@ -1,15 +1,15 @@
-#include "PopulateBlackboardFromMetadata.h"
+#include "PopulateBlackboardFromJson.h"
 #include <yaml-cpp/yaml.h>
 
-namespace utils
+namespace alica_standard_library
 {
 
-PopulateBlackboardFromMetadata::PopulateBlackboardFromMetadata(alica::BehaviourContext& context)
+PopulateBlackboardFromJson::PopulateBlackboardFromJson(alica::BehaviourContext& context)
         : BasicBehaviour(context)
 {
 }
 
-void PopulateBlackboardFromMetadata::initialiseParameters()
+void PopulateBlackboardFromJson::initialiseParameters()
 {
     readContext();
     if (auto error = verifyContext(); !error.empty()) {
@@ -20,12 +20,12 @@ void PopulateBlackboardFromMetadata::initialiseParameters()
     setSuccess();
 }
 
-std::unique_ptr<PopulateBlackboardFromMetadata> PopulateBlackboardFromMetadata::create(alica::BehaviourContext& context)
+std::unique_ptr<PopulateBlackboardFromJson> PopulateBlackboardFromJson::create(alica::BehaviourContext& context)
 {
-    return std::make_unique<PopulateBlackboardFromMetadata>(context);
+    return std::make_unique<PopulateBlackboardFromJson>(context);
 }
 
-void PopulateBlackboardFromMetadata::readContext()
+void PopulateBlackboardFromJson::readContext()
 {
     alica::UnlockedBlackboard bb{*getBlackboard()};
     _context.metadataNode = YAML::Load(bb.get<std::string>("metadata"));
@@ -34,7 +34,7 @@ void PopulateBlackboardFromMetadata::readContext()
     _context.blackboardKeys = bb.get<std::vector<std::string>>("blackboardKeys");
 }
 
-std::string PopulateBlackboardFromMetadata::verifyContext()
+std::string PopulateBlackboardFromJson::verifyContext()
 {
     if (!_context.blackboard) {
         return "Blackboard input error: key `blackboard` is null";
@@ -55,7 +55,7 @@ std::string PopulateBlackboardFromMetadata::verifyContext()
     return std::string{};
 }
 
-void PopulateBlackboardFromMetadata::populateFromContext()
+void PopulateBlackboardFromJson::populateFromContext()
 {
     for (const auto& key : _context.blackboardKeys) {
         auto keyInfoIt = std::find(_context.blueprint->begin(), _context.blueprint->end(), key);
@@ -69,11 +69,11 @@ void PopulateBlackboardFromMetadata::populateFromContext()
     }
 }
 
-void PopulateBlackboardFromMetadata::setError(const std::string& error)
+void PopulateBlackboardFromJson::setError(const std::string& error)
 {
     alica::UnlockedBlackboard bb{*getBlackboard()};
     bb.set("error", error);
     setFailure();
 }
 
-} // namespace utils0
+} // namespace alica_standard_library

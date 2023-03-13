@@ -8,14 +8,14 @@
 #include <string>
 #include <tuple>
 
-namespace utils
+namespace alica_standard_library
 {
 
-class PopulateBlackboardFromMetadata : public alica::BasicBehaviour
+class PopulateBlackboardFromJson : public alica::BasicBehaviour
 {
 public:
-    PopulateBlackboardFromMetadata(alica::BehaviourContext& context);
-    static std::unique_ptr<PopulateBlackboardFromMetadata> create(alica::BehaviourContext& context);
+    PopulateBlackboardFromJson(alica::BehaviourContext& context);
+    static std::unique_ptr<PopulateBlackboardFromJson> create(alica::BehaviourContext& context);
 
 protected:
     void initialiseParameters() override;
@@ -59,6 +59,6 @@ private:
     }
 };
 
-BOOST_DLL_ALIAS(utils::PopulateBlackboardFromMetadata::create, PopulateBlackboardFromMetadata)
+BOOST_DLL_ALIAS(alica_standard_library::PopulateBlackboardFromJson::create, PopulateBlackboardFromJson)
 
-} // namespace utils
+} // namespace alica_standard_library
