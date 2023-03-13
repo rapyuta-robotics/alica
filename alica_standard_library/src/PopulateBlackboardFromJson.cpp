@@ -28,7 +28,7 @@ std::unique_ptr<PopulateBlackboardFromJson> PopulateBlackboardFromJson::create(a
 void PopulateBlackboardFromJson::readContext()
 {
     alica::UnlockedBlackboard bb{*getBlackboard()};
-    _context.metadataNode = YAML::Load(bb.get<std::string>("metadata"));
+    _context.jsonNode = YAML::Load(bb.get<std::string>("json"));
     _context.blackboard = bb.get<const std::shared_ptr<alica::Blackboard>>("blackboard");
     _context.blueprint = bb.get<const alica::BlackboardBlueprint*>("blackboardBlueprint");
     _context.blackboardKeys = bb.get<std::vector<std::string>>("blackboardKeys");
@@ -43,7 +43,7 @@ std::string PopulateBlackboardFromJson::verifyContext()
         return "Blackboard input error: key `blueprint` is null";
     }
     for (const auto& key : _context.blackboardKeys) {
-        auto keyInfoIt = std::find(_context.blueprint->begin(), _context.blueprint->end(), key);
+        auto keyInfoIt = _context.blueprint->find(key);
         if (keyInfoIt == _context.blueprint->end()) {
             return "Blackboard input error: blueprint for key " + key + " not found";
         }
@@ -58,7 +58,7 @@ std::string PopulateBlackboardFromJson::verifyContext()
 void PopulateBlackboardFromJson::populateFromContext()
 {
     for (const auto& key : _context.blackboardKeys) {
-        auto keyInfoIt = std::find(_context.blueprint->begin(), _context.blueprint->end(), key);
+        auto keyInfoIt = _context.blueprint->find(key);
         std::size_t typeIndex = 0;
         for (; typeIndex < _knownTypes.size(); ++typeIndex) {
             if (_knownTypes[typeIndex] == keyInfoIt->second.type) {

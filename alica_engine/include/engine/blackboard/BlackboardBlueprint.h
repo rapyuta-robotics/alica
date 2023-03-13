@@ -24,6 +24,7 @@ public:
     }
     const_iterator begin() const { return _keyInfo.begin(); }
     const_iterator end() const { return _keyInfo.end(); }
+    const_iterator find(const std::string& key) const { return _keyInfo.find(key); }
     friend std::ostream& operator<<(std::ostream& out, const BlackboardBlueprint& bpt)
     {
         if (bpt._keyInfo.size()) {

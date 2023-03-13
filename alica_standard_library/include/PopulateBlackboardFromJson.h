@@ -26,7 +26,7 @@ private:
 
     struct Context
     {
-        YAML::Node metadataNode;
+        YAML::Node jsonNode;
         const alica::BlackboardBlueprint* blueprint;
         std::vector<std::string> blackboardKeys;
         std::shared_ptr<alica::Blackboard> blackboard;
@@ -39,22 +39,22 @@ private:
     void setError(const std::string& error);
 
     template <std::size_t... Is>
-    static void setHelper(const std::string& key, std::size_t typeIndex, std::index_sequence<Is...>)
+    void setHelper(const std::string& key, std::size_t typeIndex, std::index_sequence<Is...>)
     {
         struct Dummy
         {
-            static void dummyFunc(...);
+            static void dummyFunc(...) {}
         };
         Dummy::dummyFunc((setIfIndex<Is>(key, typeIndex), 0)...);
     }
 
     template <std::size_t TYPE_INDEX>
-    static void setIfIndex(const std::string& key, std::size_t typeIndex)
+    void setIfIndex(const std::string& key, std::size_t typeIndex)
     {
         if (typeIndex == TYPE_INDEX) {
             using Type = std::decay_t<decltype(std::get<TYPE_INDEX>(std::declval<KnownTypes>()))>;
             alica::LockedBlackboardRW bb{*(_context.blackboard)};
-            bb.set(key, _context.metadataNode[key].as<Type>());
+            bb.set(key, _context.jsonNode[key].as<Type>());
         }
     }
 };

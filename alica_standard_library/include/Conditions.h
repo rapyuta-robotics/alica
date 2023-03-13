@@ -22,6 +22,7 @@ BOOST_DLL_ALIAS(alica_standard_library::AnyChildFailure, AnyChildFailure)
 BOOST_DLL_ALIAS(alica_standard_library::AllChildFailure, AllChildFailure)
 BOOST_DLL_ALIAS(alica_standard_library::AlwaysTrueCondition, AlwaysTrueCondition)
 BOOST_DLL_ALIAS(alica_standard_library::AlwaysFalseCondition, AlwaysFalseCondition)
+BOOST_DLL_ALIAS(alica_standard_library::Equals, Equals)
 BOOST_DLL_ALIAS(alica_standard_library::IsChildSuccess, IsChildSuccess)
 
 } /* namespace alica_standard_library */

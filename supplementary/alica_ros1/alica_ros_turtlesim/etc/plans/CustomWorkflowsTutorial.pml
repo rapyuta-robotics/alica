@@ -2,16 +2,9 @@
   "blackboard": [
     {
       "access": "protected",
-      "comment": "Name of the custom workflow to be executed",
-      "id": 4266549331742849071,
-      "key": "workflow",
-      "type": "std::string"
-    },
-    {
-      "access": "protected",
       "comment": "",
-      "id": 3749207483126254197,
-      "key": "blackboardBlueprint",
+      "id": 355127835588429254,
+      "key": "blackboard",
       "type": "std::any"
     },
     {
@@ -31,9 +24,16 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 355127835588429254,
-      "key": "blackboard",
+      "id": 3749207483126254197,
+      "key": "blackboardBlueprint",
       "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "Name of the custom workflow to be executed",
+      "id": 4266549331742849071,
+      "key": "workflow",
+      "type": "std::string"
     }
   ],
   "comment": "",
@@ -47,10 +47,10 @@
       "name": "",
       "plan": 4189894247945850072,
       "positionWeb": {
-        "x": 146.83799601091755,
-        "y": 450.5056818181818
+        "x": 35.45488707578903,
+        "y": 452.83126321353063
       },
-      "state": 1916846391743147637,
+      "state": 2388179452961982645,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
     }
@@ -66,6 +66,27 @@
   "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 662315042812135154,
+      "inTransitions": [
+        3277683513653767607
+      ],
+      "name": "Decider",
+      "outTransitions": [
+        421626603653342657,
+        598563885758171039
+      ],
+      "parentPlan": 4189894247945850072,
+      "positionWeb": {
+        "x": 1298.2631408309248,
+        "y": 446.3924694502714
+      },
+      "type": "State",
+      "variableBindings": []
+    },
     {
       "comment": "Move the robot to an adhoc location",
       "confAbstractPlanWrappers": [
@@ -130,11 +151,12 @@
           "name": ""
         }
       ],
-      "entryPoint": 925753448706367246,
+      "entryPoint": null,
       "id": 1916846391743147637,
       "inTransitions": [
         1636776243852871853,
-        2232504332093969980
+        2232504332093969980,
+        4542640490257046665
       ],
       "name": "WaitForTaskMsg",
       "outTransitions": [
@@ -142,8 +164,8 @@
       ],
       "parentPlan": 4189894247945850072,
       "positionWeb": {
-        "x": 430.29462786059213,
-        "y": 437.48409615788364
+        "x": 479.1318371629177,
+        "y": 440.9724682509069
       },
       "type": "State",
       "variableBindings": []
@@ -189,7 +211,7 @@
       "inTransitions": [
         2139084451508981149
       ],
-      "name": "PopulateFromTaskMsg",
+      "name": "PopulateWorkflowFromTaskMsg",
       "outTransitions": [
         3277683513653767607
       ],
@@ -241,21 +263,30 @@
     },
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 662315042812135154,
-      "inTransitions": [
-        3277683513653767607
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "comment": "",
+          "configuration": null,
+          "id": 1205494445828909528,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
       ],
-      "name": "Decider",
+      "entryPoint": 925753448706367246,
+      "id": 2388179452961982645,
+      "inTransitions": [],
+      "name": "SpawnTurtle",
       "outTransitions": [
-        598563885758171039,
-        421626603653342657
+        4542640490257046665
       ],
       "parentPlan": 4189894247945850072,
       "positionWeb": {
-        "x": 1298.2631408309248,
-        "y": 446.3924694502714
+        "x": 190.59975520195837,
+        "y": 443.22521419828644
       },
       "type": "State",
       "variableBindings": []
@@ -263,6 +294,41 @@
   ],
   "synchronisations": [],
   "transitions": [
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#976473172990372064",
+      "id": 421626603653342657,
+      "inState": 662315042812135154,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "lhs",
+            "parentKey": "workflow",
+            "value": null
+          },
+          {
+            "childKey": "rhs",
+            "parentKey": null,
+            "value": "adhoc"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1127883625959574268,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3906756477846625877,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#976473172990372064",
@@ -301,30 +367,6 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 3277683513653767607,
-      "inState": 2634651831492456620,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 662315042812135154,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 314965315740192311,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#1",
       "id": 1636776243852871853,
       "inState": 2803307801097600741,
       "keyMapping": {
@@ -348,32 +390,21 @@
     },
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#976473172990372064",
-      "id": 421626603653342657,
-      "inState": 662315042812135154,
+      "condition": "ConditionRepository.cnd#1",
+      "id": 2139084451508981149,
+      "inState": 1916846391743147637,
       "keyMapping": {
-        "input": [
-          {
-            "childKey": "lhs",
-            "parentKey": "workflow",
-            "value": null
-          },
-          {
-            "childKey": "rhs",
-            "parentKey": null,
-            "value": "adhoc"
-          }
-        ],
+        "input": [],
         "output": []
       },
       "name": "",
-      "outState": 1127883625959574268,
+      "outState": 2634651831492456620,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3906756477846625877,
+        "id": 2613759417509618279,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -408,20 +439,44 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 2139084451508981149,
-      "inState": 1916846391743147637,
+      "id": 3277683513653767607,
+      "inState": 2634651831492456620,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 2634651831492456620,
+      "outState": 662315042812135154,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 2613759417509618279,
+        "id": 314965315740192311,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 4542640490257046665,
+      "inState": 2388179452961982645,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 1916846391743147637,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1161398382324218430,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
