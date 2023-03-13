@@ -29,7 +29,7 @@ void PopulateBlackboardFromJson::readContext()
 {
     alica::UnlockedBlackboard bb{*getBlackboard()};
     _context.metadataNode = YAML::Load(bb.get<std::string>("metadata"));
-    _context.blackboard = bb.get<std::shared_ptr<alica::Blackboard>>("blackboard");
+    _context.blackboard = bb.get<const std::shared_ptr<alica::Blackboard>>("blackboard");
     _context.blueprint = bb.get<const alica::BlackboardBlueprint*>("blackboardBlueprint");
     _context.blackboardKeys = bb.get<std::vector<std::string>>("blackboardKeys");
 }

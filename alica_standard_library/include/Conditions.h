@@ -13,6 +13,7 @@ bool AnyChildFailure(const alica::Blackboard* input, const alica::RunningPlan* r
 bool AllChildFailure(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 bool AlwaysTrueCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 bool AlwaysFalseCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
+bool Equals(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 
 BOOST_DLL_ALIAS(alica_standard_library::AnyChildSuccess, AnyChildSuccess)
 BOOST_DLL_ALIAS(alica_standard_library::AllChildSuccess, AllChildSuccess)

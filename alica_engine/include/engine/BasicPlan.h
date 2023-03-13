@@ -31,6 +31,7 @@ public:
     // Use of private inheritance and explicitly making members public
     // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
     using RunnableObject::getBlackboard;
+    using RunnableObject::getBlackboardBlueprint;
     using RunnableObject::getGlobalBlackboard;
     using RunnableObject::getInheritBlackboard;
     using RunnableObject::getKeyMapping;

@@ -17,6 +17,9 @@ add_library(${PROJECT_NAME} SHARED
   src/Teleport.cpp
   src/TeleportToRandomPosition.cpp
   src/turtle_interfaces.cpp
+  src/CustomWorkflowsTutorial.cpp
+  src/TransportWorkflow.cpp
+  src/AdhocMoveWorkflow.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

@@ -25,6 +25,7 @@ include_directories(
 add_library(${PROJECT_NAME} SHARED
   src/Conditions.cpp
   src/GenerateRandom.cpp
+  src/PopulateBlackboardFromJson.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
