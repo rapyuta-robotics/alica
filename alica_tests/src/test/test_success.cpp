@@ -97,4 +97,18 @@ TEST_F(SingleAgentTestFixture, multiPlanInstanceSuccessTest)
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(parallelPlan));
 }
 
+TEST_F(SingleAgentTestFixture, isChildSuccessTest)
+{
+    // Checks if isChildSuccess condition is working
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "IsChildSuccessTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("IsChildSuccessTestPlan"));
+    auto isChildSuccessPlan = _tc->getActivePlan("IsChildSuccessTestPlan");
+    ASSERT_NE(isChildSuccessPlan, nullptr) << _tc->getLastFailure();
+
+    // Step until the test plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(isChildSuccessPlan));
+}
+
 } // namespace alica::test

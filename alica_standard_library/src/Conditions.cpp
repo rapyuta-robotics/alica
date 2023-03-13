@@ -1,4 +1,5 @@
 #include "Conditions.h"
+#include <engine/BasicBehaviour.h>
 
 namespace alica_standard_library
 {
@@ -76,6 +77,20 @@ bool AlwaysTrueCondition(const alica::Blackboard* input, const alica::RunningPla
 
 bool AlwaysFalseCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
+    return false;
+}
+
+bool IsChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    std::string childName = bb.get<std::string>("childName");
+
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        std::string rpName = rp->isBehaviour() ? child->getBasicBehaviour()->getName() : child->getActivePlan()->getName();
+        if (rpName == childName) {
+            return isSuccess(child);
+        }
+    }
     return false;
 }
 } /* namespace alica_standard_library */
