@@ -1,17 +1,17 @@
 {
   "blackboard": [
     {
-      "access": "input",
-      "comment": "",
-      "id": 2831702563016616416,
-      "key": "min",
-      "type": "double"
-    },
-    {
       "access": "output",
       "comment": "",
       "id": 1661118062604805942,
       "key": "value",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 2831702563016616416,
+      "key": "min",
       "type": "double"
     },
     {

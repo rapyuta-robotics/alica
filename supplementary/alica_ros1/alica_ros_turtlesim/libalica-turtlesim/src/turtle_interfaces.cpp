@@ -51,6 +51,13 @@ void TurtleInterfaces::poseSubCallback(const PoseConstPtr& msg)
     _currentPose = msg;
 }
 
+void TurtleInterfaces::rotate(const float dYaw)
+{
+    geometry_msgs::Twist msg;
+    msg.angular.z = dYaw;
+    _velPub.publish(msg);
+}
+
 bool TurtleInterfaces::moveTowardPosition(float x, float y) const
 {
     if (!_currentPose) {

@@ -10,6 +10,7 @@ add_library(${PROJECT_NAME} SHARED
   src/GoTo.cpp
   src/GoToCalculatedResult.cpp
   src/MakeFormation.cpp
+  src/RotateTurtle.cpp
   src/SpawnTurtle.cpp
   src/Teleport.cpp
   src/turtle_interfaces.cpp
