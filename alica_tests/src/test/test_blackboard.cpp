@@ -84,7 +84,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingBehaviours)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingBehaviourTestState")) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    UnlockedBlackboard gb(_tc->editGlobalBlackboard());
+    LockedBlackboardRO gb(_tc->editGlobalBlackboard());
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << gb.get<std::optional<std::string>>("testError").value();
 }
 
@@ -101,7 +101,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingConditions)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingConditionTestState")) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    UnlockedBlackboard gb(_tc->editGlobalBlackboard());
+    LockedBlackboardRO gb(_tc->editGlobalBlackboard());
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << gb.get<std::optional<std::string>>("testError").value();
 }
 
@@ -118,7 +118,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingPlans)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "ValueMappingPlanTestState")) << _tc->getLastFailure();
 
     // Step until the plan succeeds
-    UnlockedBlackboard gb(_tc->editGlobalBlackboard());
+    LockedBlackboardRO gb(_tc->editGlobalBlackboard());
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan)) << gb.get<std::optional<std::string>>("testError").value();
 }
 

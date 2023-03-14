@@ -232,7 +232,6 @@ bool TestTracingMasterCondition(const Blackboard* input, const RunningPlan* rp, 
 bool TestHasNoError(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     LockedBlackboardRO globalBlackboard(*gb);
-    std::cerr << "make check: " << (!globalBlackboard.get<std::optional<std::string>>("testError").has_value()) << std::endl;
     return !globalBlackboard.get<std::optional<std::string>>("testError").has_value();
 }
 } /* namespace alica */
