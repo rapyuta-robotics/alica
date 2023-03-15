@@ -33,13 +33,11 @@ bool CounterCalled(const Blackboard* input, const RunningPlan* rp, const Blackbo
 bool SwitchIsNotSet(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool Wait2Suc(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool TriggerFromInputCond(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool Decision2B(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool Start2Default(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool SimpleSwitchIsSet(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool BehaviourInSubPlan2EndTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool Start2ExecOrderedSchedulingTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool ExecBehaviour2SubPlan(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool Decision2A(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool Other2NewSuccessStateOne(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool TestTracingMasterCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
@@ -74,13 +72,11 @@ BOOST_DLL_ALIAS(alica::CounterCalled, CounterCalled)
 BOOST_DLL_ALIAS(alica::SwitchIsNotSet, SwitchIsNotSet)
 BOOST_DLL_ALIAS(alica::Wait2Suc, Wait2Suc)
 BOOST_DLL_ALIAS(alica::TriggerFromInputCond, TriggerFromInputCond)
-BOOST_DLL_ALIAS(alica::Decision2B, Decision2B)
 BOOST_DLL_ALIAS(alica::Start2Default, Start2Default)
 BOOST_DLL_ALIAS(alica::SimpleSwitchIsSet, SimpleSwitchIsSet)
 BOOST_DLL_ALIAS(alica::BehaviourInSubPlan2EndTest, BehaviourInSubPlan2EndTest)
 BOOST_DLL_ALIAS(alica::Start2ExecOrderedSchedulingTest, Start2ExecOrderedSchedulingTest)
 BOOST_DLL_ALIAS(alica::ExecBehaviour2SubPlan, ExecBehaviour2SubPlan)
-BOOST_DLL_ALIAS(alica::Decision2A, Decision2A)
 BOOST_DLL_ALIAS(alica::Other2NewSuccessStateOne, Other2NewSuccessStateOne)
 BOOST_DLL_ALIAS(alica::TestTracingMasterCondition, TestTracingMasterCondition)
 BOOST_DLL_ALIAS(alica::IsAnyChildStatusSuccess, IsAnyChildStatusSuccess)

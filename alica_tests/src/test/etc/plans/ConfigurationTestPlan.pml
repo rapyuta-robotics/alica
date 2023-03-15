@@ -40,52 +40,7 @@
   "states": [
     {
       "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "ReadConfigurationBehaviour.beh#1588061129360",
-          "comment": "",
-          "configuration": "ConfigA.cfg#1588061188681",
-          "id": 1588061141112,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": "1588061141112"
-        },
-        {
-          "abstractPlan": "ReadConfigurationBehaviour.beh#1588061129360",
-          "comment": "",
-          "configuration": "ConfigB.cfg#1588061200689",
-          "id": 1588061144175,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": "1588061144175"
-        },
-        {
-          "abstractPlan": "ReadConfigurationPlantype.pty#1588061351007",
-          "comment": "",
-          "configuration": "ConfigA.cfg#1588061188681",
-          "id": 1588246105794,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": "1588246105794"
-        },
-        {
-          "abstractPlan": "ReadConfigurationPlan.pml#1588061334567",
-          "comment": "",
-          "configuration": "ConfigA.cfg#1588061188681",
-          "id": 1588253325052,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": "1588253325052"
-        }
-      ],
+      "confAbstractPlanWrappers": [],
       "entryPoint": 1588061024407,
       "id": 1588060991102,
       "inTransitions": [],
@@ -103,30 +58,7 @@
     },
     {
       "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "ReadConfigurationPlantype.pty#1588061351007",
-          "comment": "",
-          "configuration": "ConfigB.cfg#1588061200689",
-          "id": 1588253360557,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": "1588253360557"
-        },
-        {
-          "abstractPlan": "ReadConfigurationPlan.pml#1588061334567",
-          "comment": "",
-          "configuration": "ConfigB.cfg#1588061200689",
-          "id": 1588253370222,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": "1588253370222"
-        }
-      ],
+      "confAbstractPlanWrappers": [],
       "entryPoint": null,
       "id": 1588253341545,
       "inTransitions": [
