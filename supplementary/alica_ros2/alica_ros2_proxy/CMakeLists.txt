@@ -65,7 +65,7 @@ install(EXPORT ${CMAKE_PROJECT_NAME}Targets
 
 write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-  VERSION 0.9.4
+  VERSION 1.0.0
   COMPATIBILITY SameMajorVersion
 )
 
