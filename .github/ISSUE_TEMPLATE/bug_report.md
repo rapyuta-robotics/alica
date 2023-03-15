@@ -24,7 +24,7 @@ If applicable, add link to plans
 **System information (please complete the following information):**
 
 - OS: [e.g. Ubuntu 18.04]
-- Version [e.g. 0.9.2]
+- Version [e.g. 1.0.0]
 
 **Additional context**
 Add any other context about the problem here.
