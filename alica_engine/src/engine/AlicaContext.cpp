@@ -9,8 +9,8 @@
 namespace alica
 {
 
-constexpr int ALICA_VERSION_MAJOR = 0;
-constexpr int ALICA_VERSION_MINOR = 9;
+constexpr int ALICA_VERSION_MAJOR = 1;
+constexpr int ALICA_VERSION_MINOR = 0;
 constexpr int ALICA_VERSION_PATCH = 0;
 constexpr int ALICA_VERSION = (ALICA_VERSION_MAJOR * 10000) + (ALICA_VERSION_MINOR * 100) + ALICA_VERSION_PATCH;
 constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
