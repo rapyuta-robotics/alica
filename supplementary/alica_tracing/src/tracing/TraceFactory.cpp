@@ -16,6 +16,7 @@ TraceFactory::TraceFactory(const std::string& serviceName, const std::string& co
     try {
         auto configYAML = YAML::LoadFile(configFilePath);
         auto config = jaegertracing::Config::parse(configYAML);
+        config.fromEnv();
         auto tracer = jaegertracing::Tracer::make(_serviceName, config, jaegertracing::logging::consoleLogger());
         opentracing::Tracer::InitGlobal(std::static_pointer_cast<opentracing::Tracer>(tracer));
     } catch (std::exception& e) {
