@@ -1,5 +1,5 @@
-#include "engine/model/Role.h"
 #include "engine/model/RoleSet.h"
+#include "engine/model/Role.h"
 #include "engine/modelmanagement/Strings.h"
 
 #include <sstream>

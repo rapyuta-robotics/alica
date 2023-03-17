@@ -19,7 +19,7 @@ void VariableBinding::setSubPlan(AbstractPlan* subPlan)
 {
     if (_subPlan)
         std::cerr << "VariableBinding " << getName() << ": subPlan replaced" << std::endl;
-    _subPlan = subPlan;    
+    _subPlan = subPlan;
 }
 
 void VariableBinding::setVar(Variable* var)
