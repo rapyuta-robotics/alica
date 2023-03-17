@@ -6,11 +6,9 @@ namespace alica
 {
 Variable* VariableFactory::create(const YAML::Node& variableNode)
 {
-    Variable* variable = new Variable();
+    Variable* variable = new Variable(Factory::getValue<std::string>(variableNode, alica::Strings::variableType, alica::Strings::no_type));
     Factory::setAttributes(variableNode, variable);
     Factory::storeElement(variable, alica::Strings::variable);
-
-    variable->_type = Factory::getValue<std::string>(variableNode, alica::Strings::variableType, alica::Strings::no_type);
 
     return variable;
 }

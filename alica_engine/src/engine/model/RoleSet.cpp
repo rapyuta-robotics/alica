@@ -1,18 +1,27 @@
-#include "engine/model/RoleSet.h"
 #include "engine/model/Role.h"
+#include "engine/model/RoleSet.h"
+#include "engine/modelmanagement/Strings.h"
 
 #include <sstream>
 
 namespace alica
 {
 
-RoleSet::RoleSet()
+RoleSet::RoleSet(const YAML::Node& node)
         : _usableWithPlanID(0)
         , _priorityDefault(0)
 {
-}
+    if (Factory::isValid(node[alica::Strings::priorityDefault])) {
+        _priorityDefault = Factory::getValue<double>(node, alica::Strings::priorityDefault);
+    }
 
-RoleSet::~RoleSet() {}
+    if (Factory::isValid(node[alica::Strings::roles])) {
+        const YAML::Node& rolesNode = node[alica::Strings::roles];
+        for (YAML::const_iterator it = rolesNode.begin(); it != rolesNode.end(); ++it) {
+            _roles.push_back(RoleFactory::create(*it, this));
+        }
+    }
+}
 
 std::string RoleSet::toString(std::string indent) const
 {

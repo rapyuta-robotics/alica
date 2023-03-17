@@ -29,27 +29,24 @@ VariableBinding* VariableBindingFactory::create(const YAML::Node& node)
 
 void VariableBindingFactory::attachReferences()
 {
-    // bindingSubPlanReferences
     for (std::pair<int64_t, int64_t> pairs : Factory::bindingSubPlanReferences) {
         VariableBinding* p = (VariableBinding*) Factory::getElement(pairs.first);
         AbstractPlan* ap = (AbstractPlan*) Factory::getElement(pairs.second);
-        p->_subPlan = ap;
+        p->setSubPlan(ap);
     }
     Factory::bindingSubPlanReferences.clear();
 
-    // bindingSubVarReferences
     for (std::pair<int64_t, int64_t> pairs : Factory::bindingSubVarReferences) {
         VariableBinding* p = (VariableBinding*) Factory::getElement(pairs.first);
         Variable* ap = (Variable*) Factory::getElement(pairs.second);
-        p->_subVar = ap;
+        p->setSubVar(ap);
     }
     Factory::bindingSubVarReferences.clear();
 
-    // bindingVarReferences
     for (std::pair<int64_t, int64_t> pairs : Factory::bindingVarReferences) {
         VariableBinding* p = (VariableBinding*) Factory::getElement(pairs.first);
         Variable* v = (Variable*) Factory::getElement(pairs.second);
-        p->_var = v;
+        p->setVar(v);
     }
     Factory::bindingVarReferences.clear();
 }

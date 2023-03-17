@@ -15,9 +15,8 @@ class VariableFactory;
 class Variable : public AlicaElement
 {
 public:
-    Variable();
+    Variable(const std::string& type);
     Variable(int64_t id, const std::string& name, const std::string& type);
-    virtual ~Variable();
 
     std::string toString(std::string indent = "") const override;
     const std::string& getType() const { return _type; }
@@ -25,8 +24,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) { return os << variable.getName() << "(" << variable.getId() << ")"; }
 
 private:
-    friend VariableFactory;
-    void setType(const std::string& type);
     std::string _type;
 };
 

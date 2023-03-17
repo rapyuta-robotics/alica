@@ -2,20 +2,20 @@
 
 #include "AlicaElement.h"
 
+#include "engine/modelmanagement/factories/RoleFactory.h"
+#include "engine/modelmanagement/factories/RoleSetFactory.h"
+
 #include <string>
 #include <vector>
 
 namespace alica
 {
-class RoleTaskMapping;
-class RoleSetFactory;
 class Role;
 
 class RoleSet : public AlicaElement
 {
 public:
-    RoleSet();
-    virtual ~RoleSet();
+    RoleSet(const YAML::Node& node);
     std::string toString(std::string indent = "") const override;
     int64_t getUsableWithPlanId() const { return _usableWithPlanID; }
     const std::string& getFileName() const { return _fileName; }
@@ -24,7 +24,6 @@ public:
     double getDefaultPriority() const { return _priorityDefault; }
 
 private:
-    friend RoleSetFactory;
     void setUsableWithPlanId(int64_t usableWithPlanId);
 
     std::vector<Role*> _roles;

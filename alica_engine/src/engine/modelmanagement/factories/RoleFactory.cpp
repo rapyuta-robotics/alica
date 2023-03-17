@@ -6,10 +6,9 @@ namespace alica
 {
 Role* RoleFactory::create(const YAML::Node& roleNode, RoleSet* roleSet)
 {
-    Role* role = new Role();
+    Role* role = new Role(roleSet);
     Factory::setAttributes(roleNode, role);
     Factory::storeElement(role, alica::Strings::role);
-    role->_roleSet = roleSet;
 
     if (Factory::isValid(roleNode[alica::Strings::taskPriorities])) {
         const YAML::Node& taskPriorities = roleNode[alica::Strings::taskPriorities];
@@ -23,11 +22,10 @@ Role* RoleFactory::create(const YAML::Node& roleNode, RoleSet* roleSet)
 
 void RoleFactory::attachReferences()
 {
-    // roleTaskReferences
     for (std::tuple<int64_t, int64_t, double> triple : Factory::roleTaskReferences) {
         Role* role = (Role*) Factory::getElement(std::get<0>(triple));
         Task* task = (Task*) Factory::getElement(std::get<1>(triple));
-        role->_taskPriorities.emplace(task, std::get<2>(triple));
+        role->setPriority(task, std::get<2>(triple));
     }
     Factory::planTypePlanReferences.clear();
 }

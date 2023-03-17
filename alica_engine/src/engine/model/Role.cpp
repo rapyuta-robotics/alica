@@ -2,19 +2,16 @@
 #include "engine/model/RoleSet.h"
 #include "engine/model/Task.h"
 
-#include <exception>
 #include <iostream>
 #include <sstream>
 
 namespace alica
 {
 
-Role::Role()
-        : _roleSet(nullptr)
+Role::Role(RoleSet* roleSet)
+        : _roleSet(roleSet)
 {
 }
-
-Role::~Role() {}
 
 double Role::getPriority(int64_t taskId) const
 {
@@ -24,6 +21,11 @@ double Role::getPriority(int64_t taskId) const
         }
     }
     return _roleSet->getDefaultPriority();
+}
+
+void Role::setPriority(Task* task, double priority)
+{
+    _taskPriorities.emplace(task, priority);
 }
 
 std::string Role::toString(std::string indent) const

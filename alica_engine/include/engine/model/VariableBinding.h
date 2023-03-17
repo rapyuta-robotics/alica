@@ -14,7 +14,6 @@ class VariableBinding : public AlicaElement
 {
 public:
     VariableBinding();
-    virtual ~VariableBinding();
 
     std::string toString(std::string indent = "") const override;
 
@@ -22,12 +21,14 @@ public:
     const Variable* getVar() const { return _var; }
     const Variable* getSubVar() const { return _subVar; }
 
-protected:
-    friend VariableBindingFactory;
+    void setSubVar(Variable* subVar);
+    void setVar(Variable* var);
+    void setSubPlan(AbstractPlan* subPlan);
 
-    const Variable* _var;
-    const Variable* _subVar;
+protected:
     const AbstractPlan* _subPlan;
+    const Variable* _subVar;
+    const Variable* _var;
 };
 
 } // namespace alica

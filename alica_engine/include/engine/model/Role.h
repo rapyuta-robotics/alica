@@ -13,15 +13,13 @@ class Task;
 class Role : public AlicaElement
 {
 public:
-    Role();
-    virtual ~Role();
+    Role(RoleSet* roleSet);
 
     double getPriority(int64_t taskId) const;
+    void setPriority(Task*, double);
     std::string toString(std::string indent = "") const override;
 
 private:
-    friend RoleFactory;
-
     std::unordered_map<Task*, double> _taskPriorities;
     RoleSet* _roleSet;
 };
