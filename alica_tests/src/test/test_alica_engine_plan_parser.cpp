@@ -178,7 +178,7 @@ protected:
                     << "ID not part of testplans!" << endl;
             switch (plan->getId()) {
             case 1402488634525:
-                checkPlan(plan, 1402488634525, "AttackPlan", "", false, 0.1, 0, 2147483647);
+                checkPlan(plan, 1402488634525, "AttackPlan", "", 0.1, 0, 2147483647);
                 cout << "States: " << endl;
                 EXPECT_EQ(2u, plan->getStates().size()) << "Number of states didnt fit AttackPlan.pml state size." << endl;
                 for (const alica::State* s : plan->getStates()) {
@@ -255,7 +255,7 @@ protected:
                 cout << endl;
                 break;
             case 1402488893641:
-                checkPlan(plan, 1402488893641, "Defend", "", false, 0.1, 0, 2147483647);
+                checkPlan(plan, 1402488893641, "Defend", "", 0.1, 0, 2147483647);
                 cout << "States: " << endl;
                 EXPECT_EQ(4u, plan->getStates().size()) << "Number of states didnt fit Defend.pml state size." << endl;
                 for (const alica::State* s : plan->getStates()) {
@@ -324,7 +324,7 @@ protected:
                 cout << endl;
                 break;
             case 1402488870347:
-                checkPlan(plan, 1402488870347, "GoalPlan", "", false, 0.1, 0, 2147483647);
+                checkPlan(plan, 1402488870347, "GoalPlan", "", 0.1, 0, 2147483647);
                 checkPreCondition(plan->getPreCondition(), 1402489131988, "GoalPlanPreCondition", "Test PC", "", "DefaultPlugin", true);
                 cout << "States: " << endl;
                 EXPECT_EQ(3u, plan->getStates().size()) << "Number of states didnt fit GoalPlan.pml state size." << endl;
@@ -390,7 +390,7 @@ protected:
                 cout << endl;
                 break;
             case 1402488437260:
-                checkPlan(plan, 1402488437260, "MasterPlan", "comment", true, 0.1, 0, 2147483647);
+                checkPlan(plan, 1402488437260, "MasterPlan", "comment", 0.1, 0, 2147483647);
                 cout << "States: " << endl;
                 EXPECT_EQ(5u, plan->getStates().size()) << "Number of states didnt fit MasterPlan.pml state size." << endl;
                 for (const alica::State* s : plan->getStates()) {
@@ -466,7 +466,7 @@ protected:
                 cout << endl;
                 break;
             case 1402488770050:
-                checkPlan(plan, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 3, 2147483647);
+                checkPlan(plan, 1402488770050, "MidFieldPlayPlan", "", 0.1, 3, 2147483647);
                 checkRuntimeCondition(plan->getRuntimeCondition(), 1402489260911, "MidFieldPlayPlanRuntimeCondition", "Test RC", "", "DefaultPlugin");
                 cout << "States: " << endl;
                 EXPECT_EQ(5u, plan->getStates().size()) << "Number of states didnt fit MidFieldPlayPlan.pml state size." << endl;
@@ -546,7 +546,7 @@ protected:
                 cout << endl;
                 break;
             case 1402489318663:
-                checkPlan(plan, 1402489318663, "Tackle", "", false, 0.1, 0, 2147483647);
+                checkPlan(plan, 1402489318663, "Tackle", "", 0.1, 0, 2147483647);
                 cout << "States: " << endl;
                 EXPECT_EQ(1u, plan->getStates().size()) << "Number of states didnt fit Tackle.pml state size." << endl;
                 for (const alica::State* s : plan->getStates()) {
