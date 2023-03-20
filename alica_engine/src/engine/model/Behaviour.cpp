@@ -21,8 +21,6 @@ Behaviour::Behaviour()
 {
 }
 
-Behaviour::~Behaviour() {}
-
 std::string Behaviour::toString(std::string indent) const
 {
     std::stringstream ss;

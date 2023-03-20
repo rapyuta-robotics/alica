@@ -16,7 +16,7 @@ public:
     Role(RoleSet* roleSet);
 
     double getPriority(int64_t taskId) const;
-    void setPriority(Task*, double);
+    void setPriority(Task* task, double priority);
     std::string toString(std::string indent = "") const override;
 
 private:

@@ -27,7 +27,6 @@ class Behaviour : public AbstractPlan
 {
 public:
     Behaviour();
-    virtual ~Behaviour();
 
     std::string toString(std::string indent = "") const;
 
