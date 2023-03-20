@@ -7,7 +7,7 @@ namespace alica
 {
 PostCondition* PostConditionFactory::create(const YAML::Node& postConditionNode, AbstractPlan* plan)
 {
-    PostCondition* postCondition = new PostCondition();
+    auto* postCondition = new PostCondition();
     ConditionFactory::fillCondition(postConditionNode, postCondition, plan);
     return postCondition;
 }

@@ -3,7 +3,6 @@
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 
-#include <memory>
 #include <sstream>
 
 namespace alica

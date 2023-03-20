@@ -8,7 +8,7 @@ namespace alica
 {
 Configuration* ConfigurationFactory::create(const YAML::Node& wrapperNode)
 {
-    Configuration* configuration = new Configuration();
+    auto* configuration = new Configuration();
     Factory::setAttributes(wrapperNode, configuration);
     Factory::storeElement(configuration, alica::Strings::configuration);
 

@@ -1,5 +1,4 @@
 #include "engine/model/PreCondition.h"
-#include <iostream>
 #include <sstream>
 namespace alica
 {

@@ -6,7 +6,7 @@ namespace alica
 {
 Role* RoleFactory::create(const YAML::Node& roleNode, RoleSet* roleSet)
 {
-    Role* role = new Role(roleSet);
+    auto* role = new Role(roleSet);
     Factory::setAttributes(roleNode, role);
     Factory::storeElement(role, alica::Strings::role);
 

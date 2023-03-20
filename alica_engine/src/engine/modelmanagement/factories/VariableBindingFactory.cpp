@@ -5,7 +5,7 @@ namespace alica
 {
 VariableBinding* VariableBindingFactory::create(const YAML::Node& node)
 {
-    VariableBinding* variableBinding = new VariableBinding();
+    auto* variableBinding = new VariableBinding();
     Factory::setAttributes(node, variableBinding);
     Factory::storeElement(variableBinding, alica::Strings::variableBinding);
 

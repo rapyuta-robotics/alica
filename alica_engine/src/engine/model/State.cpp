@@ -2,7 +2,6 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace alica

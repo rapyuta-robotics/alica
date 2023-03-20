@@ -8,7 +8,7 @@ namespace alica
 {
 ConfAbstractPlanWrapper* ConfAbstractPlanWrapperFactory::create(const YAML::Node& wrapperNode)
 {
-    ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
+    auto* wrapper = new ConfAbstractPlanWrapper();
     Factory::setAttributes(wrapperNode, wrapper);
     Factory::storeElement(wrapper, alica::Strings::confAbstractPlanWrapper);
 

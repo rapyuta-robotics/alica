@@ -4,8 +4,6 @@
 #include "engine/model/PostCondition.h"
 #include "engine/model/TransitionCondition.h"
 
-#include <utility>
-
 namespace alica
 {
 

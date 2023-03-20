@@ -16,7 +16,6 @@ class Task : public AlicaElement
 {
 public:
     Task(TaskRepository* taskRepository);
-    virtual ~Task();
 
     const TaskRepository* getTaskRepository() const { return _taskRepository; }
 

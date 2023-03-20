@@ -26,7 +26,7 @@ namespace alica
 {
 Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML::Node& node)
 {
-    Plan* plan = new Plan(configChangeListener, Factory::getValue<int64_t>(node, alica::Strings::id));
+    auto* plan = new Plan(configChangeListener, Factory::getValue<int64_t>(node, alica::Strings::id));
     Factory::setAttributes(node, plan);
     Factory::storeElement(plan, alica::Strings::plan);
     AbstractPlanFactory::setVariables(node, plan);

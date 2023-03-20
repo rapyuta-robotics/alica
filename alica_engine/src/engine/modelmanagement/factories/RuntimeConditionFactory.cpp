@@ -7,7 +7,7 @@ namespace alica
 {
 RuntimeCondition* RuntimeConditionFactory::create(const YAML::Node& runtimeConditionNode, AbstractPlan* plan)
 {
-    RuntimeCondition* runtimeCondition = new RuntimeCondition();
+    auto* runtimeCondition = new RuntimeCondition();
     ConditionFactory::fillCondition(runtimeConditionNode, runtimeCondition, plan);
     return runtimeCondition;
 }

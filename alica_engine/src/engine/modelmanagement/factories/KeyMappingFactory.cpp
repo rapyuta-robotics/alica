@@ -1,13 +1,11 @@
 #include "engine/modelmanagement/factories/KeyMappingFactory.h"
 
 #include "engine/modelmanagement/Strings.h"
-#include <any>
 
 namespace alica
 {
 std::unique_ptr<KeyMapping> KeyMappingFactory::create(const YAML::Node& node)
 {
-
     auto keyMapping = std::make_unique<KeyMapping>();
     if (Factory::isValid(node[alica::Strings::input])) {
         const auto& inputList = node[alica::Strings::input];

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <list>
 #include <string>
 
 #include "AbstractPlan.h"

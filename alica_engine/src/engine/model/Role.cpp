@@ -2,7 +2,6 @@
 #include "engine/model/RoleSet.h"
 #include "engine/model/Task.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace alica

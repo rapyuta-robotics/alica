@@ -1,8 +1,6 @@
 #include "engine/model/AlicaElement.h"
 #include <sstream>
 
-#include <iostream>
-
 namespace alica
 {
 
