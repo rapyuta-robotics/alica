@@ -1,19 +1,24 @@
-#include "engine/model/Synchronisation.h"
+#include <sstream>
+
 #include "engine/model/Plan.h"
+#include "engine/model/Synchronisation.h"
 #include "engine/model/Transition.h"
 
 namespace alica
 {
 
-Synchronisation::Synchronisation()
-        : _failOnSyncTimeout(false)
-        , _syncTimeout(AlicaTime::milliseconds(3000))
-        , _talkTimeout(AlicaTime::milliseconds(30))
-        , _plan(nullptr)
+Synchronisation::Synchronisation(Plan* plan, const AlicaTime& talkTimeout, const AlicaTime& syncTimeout, bool failOnSyncTimeout)
+        : _plan(plan)
+        , _talkTimeout(talkTimeout)
+        , _syncTimeout(syncTimeout)
+        , _failOnSyncTimeout(failOnSyncTimeout)
 {
 }
 
-Synchronisation::~Synchronisation() {}
+void Synchronisation::addInSync(Transition* t)
+{
+    _inSync.push_back(t);
+}
 
 std::string Synchronisation::toString(std::string indent) const
 {
