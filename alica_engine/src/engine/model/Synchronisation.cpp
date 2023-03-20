@@ -1,27 +1,19 @@
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Transition.h"
-#include "engine/modelmanagement/factories/Factory.h"
-#include <sstream>
 
 namespace alica
 {
 
-Synchronisation::Synchronisation(const YAML::Node& synchronisationNode, Plan* plan)
-        : _plan(plan)
-        , _talkTimeout(AlicaTime::milliseconds(30))
+Synchronisation::Synchronisation()
+        : _failOnSyncTimeout(false)
         , _syncTimeout(AlicaTime::milliseconds(3000))
-        , _failOnSyncTimeout(false)
+        , _talkTimeout(AlicaTime::milliseconds(30))
+        , _plan(nullptr)
 {
-    _failOnSyncTimeout = Factory::getValue<bool>(synchronisationNode, alica::Strings::failOnSyncTimeout);
-    _syncTimeout = AlicaTime::milliseconds(Factory::getValue<int>(synchronisationNode, alica::Strings::syncTimeout));
-    _talkTimeout = AlicaTime::milliseconds(Factory::getValue<int>(synchronisationNode, alica::Strings::talkTimeout));
 }
 
-void Synchronisation::addInSync(Transition* t)
-{
-    _inSync.push_back(t);
-}
+Synchronisation::~Synchronisation() {}
 
 std::string Synchronisation::toString(std::string indent) const
 {
