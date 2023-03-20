@@ -71,7 +71,6 @@ private:
     void doRun() override;
     void doTerminate() override;
 
-    bool _isMasterPlan;
     const Plan* _plan;
 };
 } // namespace alica

@@ -40,7 +40,6 @@ public:
 
     int getMaxCardinality() const { return _maxCardinality; }
     int getMinCardinality() const { return _minCardinality; }
-    bool isMasterPlan() const { return _masterPlan; }
 
     UtilityFunction* getUtilityFunction() const { return _utilityFunction.get(); }
     double getUtilityThreshold() const { return _utilityThreshold; }
@@ -72,7 +71,6 @@ private:
     void setSuccessStates(const SuccessStateGrp& succesPoints);
     void setMaxCardinality(int maxCardinality);
     void setMinCardinality(int minCardinality);
-    void setMasterPlan(bool isMasterPlan);
     void setPostCondition(const PostCondition* postCondition);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
@@ -95,10 +93,6 @@ private:
      * The utility threshold, the higher, the less likely dynamic changes are.
      */
     double _utilityThreshold;
-    /**
-     *  Whether this plan is marked as a MasterPlan.
-     */
-    bool _masterPlan;
     /**
      * This behaviour's runtime condition.
      */

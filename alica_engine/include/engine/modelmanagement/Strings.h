@@ -65,7 +65,6 @@ static const std::string no_type = "no_type";
 static const std::string variableBindings = "variableBindings";
 static const std::string subPlan = "subPlan";
 static const std::string subVariable = "subVariable";
-static const std::string masterPlan = "masterPlan";
 static const std::string utilityThreshold = "utilityThreshold";
 static const std::string minCardinality = "minCardinality";
 static const std::string maxCardinality = "maxCardinality";
