@@ -45,7 +45,6 @@ static const std::string id = "id";
 static const std::string name = "name";
 static const std::string no_name = "no_name";
 static const std::string comment = "comment";
-static const std::string pluginName = "pluginName";
 static const std::string conditionString = "conditionString";
 static const std::string enabled = "enabled";
 static const std::string no_comment = "no_comment";
