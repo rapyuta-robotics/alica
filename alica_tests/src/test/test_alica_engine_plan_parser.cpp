@@ -100,11 +100,9 @@ protected:
         EXPECT_STREQ(taskName.c_str(), ep->getTask()->getName().c_str()) << "Wrong taskName!" << endl;
     }
 
-    static void checkPlan(
-            const alica::Plan* plan, long id, string name, string comment, bool masterPlan, double utilityThreshold, int minCardinality, int maxCardinality)
+    static void checkPlan(const alica::Plan* plan, long id, string name, string comment, double utilityThreshold, int minCardinality, int maxCardinality)
     {
         checkAlicaElement(plan, id, name, comment);
-        EXPECT_EQ(masterPlan, plan->isMasterPlan()) << "MasterPlan true instead of false!" << endl;
         EXPECT_EQ(utilityThreshold, plan->getUtilityThreshold()) << "Wrong utilityThreshold!" << endl;
         EXPECT_EQ(minCardinality, plan->getMinCardinality()) << "Wrong minCardinality!" << endl;
         EXPECT_EQ(maxCardinality, plan->getMaxCardinality()) << "Wrong maxCardinality!" << endl;
