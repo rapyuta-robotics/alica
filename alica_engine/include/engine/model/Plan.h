@@ -6,19 +6,16 @@
 namespace alica
 {
 
-class EntryPoint;
-class FailureState;
-class SuccessState;
-class PostCondition;
-class State;
-class Synchronisation;
-class Transition;
-class ExpressionHandler;
-class PlanFactory;
-class PreCondition;
-class RuntimeCondition;
 class BlackboardBlueprint;
 class ConfigChangeListener;
+class EntryPoint;
+class ExpressionHandler;
+class PlanFactory;
+class PostCondition;
+class PreCondition;
+class RuntimeCondition;
+class State;
+class UtilityFunction;
 /**
  * An ALICA plan
  */
@@ -26,7 +23,6 @@ class Plan : public AbstractPlan
 {
 public:
     Plan(ConfigChangeListener& configChangeListener, int64_t id);
-    virtual ~Plan();
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
     const EntryPoint* getEntryPointByID(int64_t epID) const;

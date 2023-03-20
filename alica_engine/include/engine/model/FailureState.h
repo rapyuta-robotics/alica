@@ -1,6 +1,5 @@
 #pragma once
 
-#include <sstream>
 #include <string>
 
 #include "TerminalState.h"
@@ -15,7 +14,6 @@ class FailureState : public TerminalState
 {
 public:
     FailureState();
-    virtual ~FailureState();
     std::string toString(std::string indent = "") const override;
 };
 

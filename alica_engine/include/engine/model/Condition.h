@@ -24,7 +24,6 @@ class Condition : public AlicaElement
 {
 public:
     Condition();
-    virtual ~Condition();
 
     /**
      * The delegate type used to attach constraints to plans.

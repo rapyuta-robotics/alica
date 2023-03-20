@@ -10,9 +10,6 @@ class Transition;
 class AbstractPlan;
 class VariableBinding;
 class EntryPoint;
-class StateFactory;
-class TerminalStateFactory;
-class ModelManager;
 
 /**
  * A State is a plan element inhabitable by agents, which contains sub-plans, sub-plantypes, and behaviours.
@@ -28,14 +25,19 @@ public:
     };
     State();
     State(StateType t);
-    virtual ~State();
 
     std::string toString(std::string indent = "") const override;
+    void setInPlan(const Plan* p);
     const Plan* getInPlan() const { return _inPlan; }
+    void setEntryPoint(const EntryPoint* entryPoint);
     const EntryPoint* getEntryPoint() const { return _entryPoint; }
+    void addConfAbstractPlanWrapper(const ConfAbstractPlanWrapper* c);
     const ConfAbstractPlanWrapperGrp& getConfAbstractPlanWrappers() const { return _confAbstractPlanWrappers; }
+    void addInTransition(const Transition* t);
     const TransitionGrp& getInTransitions() const { return _inTransitions; }
+    void addOutTransition(const Transition* t);
     const TransitionGrp& getOutTransitions() const { return _outTransitions; }
+    void addParametrisation(const VariableBinding* v);
     const VariableBindingGrp& getParametrisation() const { return _variableBindingGrp; }
 
     bool isTerminal() const { return _type != NORMAL; }
@@ -43,10 +45,6 @@ public:
     bool isFailureState() const { return _type == FAILURE; }
 
 private:
-    friend StateFactory;
-    friend TerminalStateFactory;
-    friend ModelManager;
-
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
      */

@@ -11,8 +11,6 @@ namespace alica
 class State;
 class Synchronisation;
 class TransitionCondition;
-class TransitionFactory;
-class ExpressionHandler;
 class Blackboard;
 class KeyMapping;
 
@@ -29,23 +27,19 @@ struct TransitionConditionContext
 class Transition : public AlicaElement
 {
 public:
-    Transition();
-    virtual ~Transition();
+    Transition(std::unique_ptr<KeyMapping> keyMapping);
 
     const State* getOutState() const { return _outState; }
     const State* getInState() const { return _inState; }
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
     TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
     const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
-
-private:
-    friend TransitionFactory;
-    friend ExpressionHandler;
     void setTransitionCondition(TransitionCondition* transitionCondition);
     void setInState(State* inState);
     void setOutState(State* outState);
     void setSynchronisation(Synchronisation* synchronisation);
 
+private:
     /**
      * The condition guarding this transition.
      */

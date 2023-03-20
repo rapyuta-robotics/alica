@@ -9,7 +9,15 @@ PlanType::PlanType()
 {
 }
 
-PlanType::~PlanType() {}
+void PlanType::addVariableBinding(const VariableBinding* v)
+{
+    _variableBindings.push_back(v);
+}
+
+void PlanType::addPlan(const Plan* p)
+{
+    _plans.push_back(p);
+}
 
 const Plan* PlanType::getPlanById(int64_t id) const
 {
@@ -26,10 +34,8 @@ std::string PlanType::toString(std::string indent) const
     std::stringstream ss;
     ss << indent << "#PlanType: " << getName() << " " << getId() << std::endl;
     ss << indent << "\t Plans: " << _plans.size() << std::endl;
-    if (_plans.size() != 0) {
-        for (const Plan* p : _plans) {
-            ss << indent << "\t" << p->getId() << " " << p->getName() << std::endl;
-        }
+    for (const Plan* p : _plans) {
+        ss << indent << "\t" << p->getId() << " " << p->getName() << std::endl;
     }
     ss << indent << "#EndPlanType" << std::endl;
     return ss.str();

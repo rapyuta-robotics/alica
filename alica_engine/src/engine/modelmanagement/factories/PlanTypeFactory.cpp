@@ -11,7 +11,7 @@ namespace alica
 {
 PlanType* PlanTypeFactory::create(const YAML::Node& planTypeNode)
 {
-    PlanType* planType = new PlanType();
+    auto* planType = new PlanType();
     Factory::setAttributes(planTypeNode, planType);
     Factory::storeElement(planType, alica::Strings::plantype);
     AbstractPlanFactory::setVariables(planTypeNode, planType);
@@ -30,7 +30,7 @@ PlanType* PlanTypeFactory::create(const YAML::Node& planTypeNode)
     if (Factory::isValid(planTypeNode[alica::Strings::variableBindings])) {
         const YAML::Node& variableBindings = planTypeNode[alica::Strings::variableBindings];
         for (YAML::const_iterator it = variableBindings.begin(); it != variableBindings.end(); ++it) {
-            planType->_variableBindings.push_back(VariableBindingFactory::create(*it));
+            planType->addVariableBinding(VariableBindingFactory::create(*it));
         }
     }
 
@@ -45,7 +45,7 @@ void PlanTypeFactory::attachReferences()
     for (std::pair<int64_t, int64_t> pairs : Factory::planTypePlanReferences) {
         PlanType* pt = (PlanType*) Factory::getElement(pairs.first);
         Plan* p = (Plan*) Factory::getElement(pairs.second);
-        pt->_plans.push_back(p);
+        pt->addPlan(p);
     }
     Factory::planTypePlanReferences.clear();
 }

@@ -13,9 +13,6 @@
 namespace alica
 {
 class RunningPlan;
-class SolverTerm;
-class QuantifierFactory;
-class ModelManager;
 
 /**
  * A quantifier encapsulates a set of Variables, belonging to a domain artifact, scoped under a AlicaElement
@@ -24,7 +21,7 @@ class Quantifier : public AlicaElement
 {
 public:
     Quantifier();
-    virtual ~Quantifier();
+    void addDomainIdentifier(std::string d);
     const std::vector<std::string>& getDomainIdentifiers() const { return _domainIdentifiers; }
     bool isScopeEntryPoint() const { return _scopeType == ENTRYPOINTSCOPE; }
     bool isScopePlan() const { return _scopeType == PLANSCOPE; }
@@ -33,12 +30,14 @@ public:
     const EntryPoint* getScopedEntryPoint() const { return _scopeType == ENTRYPOINTSCOPE ? static_cast<const EntryPoint*>(_scope) : nullptr; }
     const Plan* getScopedPlan() const { return _scopeType == PLANSCOPE ? static_cast<const Plan*>(_scope) : nullptr; }
     const AlicaElement* getScope() const { return _scope; }
+    void addTemplateVariable(const Variable* v);
     const VariableGrp& getTemplateVariables() const { return _templateVars; }
     bool hasTemplateVariable(const Variable* v) const { return std::find(_templateVars.begin(), _templateVars.end(), v) != _templateVars.end(); }
+    void setScope(const AlicaElement* ae);
 
     virtual bool isAgentInScope(AgentId id, const RunningPlan& rp) const = 0;
     /**
-     * Access the list of sorted Variables under the scope of this quantifier given a runningplan.
+     * Access the list of sorted Variables under the scope of this quantifier given a running plan.
      * @param p A RunningPlan
      * @param io_agentsInScope the list of Agents with their variables that this quantifier will add to.
      * @return true if io_agentVarsInScop was modified, false otherwise
@@ -55,11 +54,6 @@ protected:
     Scope getScopeType() const { return _scopeType; }
 
 private:
-    friend QuantifierFactory;
-    friend ModelManager;
-    void setScope(const AlicaElement* ae);
-    void setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers);
-
     VariableGrp _templateVars;
     std::vector<std::string> _domainIdentifiers;
 

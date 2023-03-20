@@ -10,8 +10,6 @@ TerminalState::TerminalState(StateType t)
 {
 }
 
-TerminalState::~TerminalState() {}
-
 void TerminalState::setPostCondition(PostCondition* posCondition)
 {
     _postCondition = posCondition;

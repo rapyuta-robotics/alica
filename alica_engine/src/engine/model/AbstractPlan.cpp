@@ -57,6 +57,11 @@ bool AbstractPlan::containsVar(const std::string& name) const
     return false;
 }
 
+void AbstractPlan::addVariable(const Variable* v)
+{
+    _variables.push_back(v);
+}
+
 void AbstractPlan::setFileName(const std::string& fileName)
 {
     _fileName = fileName;

@@ -3,6 +3,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include <assert.h>
+#include <utility>
 namespace alica
 {
 
@@ -12,7 +13,15 @@ Quantifier::Quantifier()
 {
 }
 
-Quantifier::~Quantifier() {}
+void Quantifier::addTemplateVariable(const Variable* v)
+{
+    _templateVars.push_back(v);
+}
+
+void Quantifier::addDomainIdentifier(std::string d)
+{
+    _domainIdentifiers.push_back(std::move(d));
+}
 
 /**
  * Set the scope of this quantifier
@@ -31,10 +40,4 @@ void Quantifier::setScope(const AlicaElement* element)
         assert(false);
     }
 }
-
-void Quantifier::setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers)
-{
-    _domainIdentifiers = domainIdentifiers;
-}
-
 } // namespace alica

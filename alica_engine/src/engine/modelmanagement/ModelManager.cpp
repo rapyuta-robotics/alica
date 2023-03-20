@@ -214,7 +214,7 @@ void ModelManager::generateTemplateVariables()
                 v = VariableFactory::create(id, s, "Template");
                 _planRepository._variables.emplace(id, v);
             }
-            q->_templateVars.push_back(v);
+            q->addTemplateVariable(v);
         }
     }
 }
@@ -229,7 +229,7 @@ void ModelManager::computeReachabilities()
         ep.second->computeReachabilitySet();
         // set backpointers:
         for (const State* s : ep.second->_reachableStates) {
-            _planRepository._states[s->getId()]->_entryPoint = ep.second;
+            _planRepository._states[s->getId()]->setEntryPoint(ep.second);
         }
     }
 }

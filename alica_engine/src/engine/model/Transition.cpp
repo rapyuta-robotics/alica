@@ -4,19 +4,19 @@
 #include "engine/model/PostCondition.h"
 #include "engine/model/TransitionCondition.h"
 
+#include <utility>
+
 namespace alica
 {
 
-Transition::Transition()
+Transition::Transition(std::unique_ptr<KeyMapping> keyMapping)
         : _transitionCondition(nullptr)
         , _inState(nullptr)
         , _outState(nullptr)
         , _synchronisation(nullptr)
-        , _keyMapping(nullptr)
+        , _keyMapping(std::move(keyMapping))
 {
 }
-
-Transition::~Transition() {}
 
 void Transition::setTransitionCondition(TransitionCondition* transitionCondition)
 {

@@ -30,8 +30,6 @@ Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
     reload(configChangeListener.getConfig());
 }
 
-Plan::~Plan() {}
-
 const EntryPoint* Plan::getEntryPointTaskID(int64_t taskID) const
 {
     for (const EntryPoint* ep : _entryPoints) {

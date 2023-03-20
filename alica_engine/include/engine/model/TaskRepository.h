@@ -8,20 +8,17 @@
 namespace alica
 {
 class ModelManager;
-class TaskRepositoryFactory;
 
 class TaskRepository : public AlicaElement
 {
 public:
     TaskRepository();
-    virtual ~TaskRepository();
+    void addTask(const Task* t);
     const TaskGrp& getTasks() const { return _tasks; }
+    void setFileName(const std::string& fileName);
     std::string getFileName() const;
 
 private:
-    friend ModelManager;
-    friend TaskRepositoryFactory;
-    void setFileName(const std::string& fileName);
     TaskGrp _tasks;
     std::string _fileName;
 };

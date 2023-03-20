@@ -5,8 +5,6 @@ namespace alica
 
 TaskRepository::TaskRepository() {}
 
-TaskRepository::~TaskRepository() {}
-
 std::string TaskRepository::getFileName() const
 {
     return _fileName;
@@ -15,6 +13,11 @@ std::string TaskRepository::getFileName() const
 void TaskRepository::setFileName(const std::string& fileName)
 {
     _fileName = fileName;
+}
+
+void TaskRepository::addTask(const Task* t)
+{
+    _tasks.push_back(t);
 }
 
 } // namespace alica

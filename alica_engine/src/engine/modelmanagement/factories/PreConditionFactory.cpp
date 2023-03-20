@@ -7,9 +7,9 @@ namespace alica
 {
 PreCondition* PreConditionFactory::create(const YAML::Node& preConditionNode, AbstractPlan* plan)
 {
-    PreCondition* preCondition = new PreCondition();
+    auto* preCondition = new PreCondition();
     ConditionFactory::fillCondition(preConditionNode, preCondition, plan);
-    preCondition->_enabled = Factory::getValue<bool>(preConditionNode, alica::Strings::enabled);
+    preCondition->setEnabled(Factory::getValue<bool>(preConditionNode, alica::Strings::enabled));
     return preCondition;
 }
 } // namespace alica

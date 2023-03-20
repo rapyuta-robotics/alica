@@ -27,7 +27,35 @@ State::State(StateType t)
 {
 }
 
-State::~State() {}
+void State::setInPlan(const Plan* p)
+{
+    _inPlan = p;
+}
+
+void State::setEntryPoint(const EntryPoint* entryPoint)
+{
+    _entryPoint = entryPoint;
+}
+
+void State::addConfAbstractPlanWrapper(const ConfAbstractPlanWrapper* c)
+{
+    _confAbstractPlanWrappers.push_back(c);
+}
+
+void State::addParametrisation(const VariableBinding* v)
+{
+    _variableBindingGrp.push_back(v);
+}
+
+void State::addInTransition(const Transition* t)
+{
+    _inTransitions.push_back(t);
+}
+
+void State::addOutTransition(const Transition* t)
+{
+    _outTransitions.push_back(t);
+}
 
 std::string State::toString(std::string indent) const
 {

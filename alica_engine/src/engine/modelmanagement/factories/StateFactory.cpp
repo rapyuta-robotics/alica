@@ -9,11 +9,10 @@ namespace alica
 {
 State* StateFactory::create(const YAML::Node& stateNode)
 {
-    State* state = new State();
-    state->_type = State::StateType::NORMAL;
+    auto* state = new State(State::StateType::NORMAL);
     Factory::setAttributes(stateNode, state);
     Factory::storeElement(state, alica::Strings::state);
-    state->_inPlan = (Plan*) Factory::getElement(Factory::getReferencedId(stateNode[alica::Strings::parentPlan]));
+    state->setInPlan((Plan*) Factory::getElement(Factory::getReferencedId(stateNode[alica::Strings::parentPlan])));
 
     if (Factory::isValid(stateNode[alica::Strings::inTransitions])) {
         const YAML::Node& inTransitions = stateNode[alica::Strings::inTransitions];
@@ -30,13 +29,13 @@ State* StateFactory::create(const YAML::Node& stateNode)
     if (Factory::isValid(stateNode[alica::Strings::confAbstractPlanWrappers])) {
         const YAML::Node& confAbstractPlanWrappers = stateNode[alica::Strings::confAbstractPlanWrappers];
         for (YAML::const_iterator it = confAbstractPlanWrappers.begin(); it != confAbstractPlanWrappers.end(); ++it) {
-            state->_confAbstractPlanWrappers.push_back(ConfAbstractPlanWrapperFactory::create(*it));
+            state->addConfAbstractPlanWrapper(ConfAbstractPlanWrapperFactory::create(*it));
         }
     }
     if (Factory::isValid(stateNode[alica::Strings::variableBindings])) {
         const YAML::Node& variableBindings = stateNode[alica::Strings::variableBindings];
         for (YAML::const_iterator it = variableBindings.begin(); it != variableBindings.end(); ++it) {
-            state->_variableBindingGrp.push_back(VariableBindingFactory::create(*it));
+            state->addParametrisation(VariableBindingFactory::create(*it));
         }
     }
     return state;
@@ -51,7 +50,7 @@ void StateFactory::attachReferences()
     for (std::pair<int64_t, int64_t> pairs : Factory::stateInTransitionReferences) {
         Transition* t = (Transition*) Factory::getElement(pairs.second);
         State* st = (State*) Factory::getElement(pairs.first);
-        st->_inTransitions.push_back(t);
+        st->addInTransition(t);
     }
     Factory::stateInTransitionReferences.clear();
 
@@ -59,7 +58,7 @@ void StateFactory::attachReferences()
     for (std::pair<int64_t, int64_t> pairs : Factory::stateOutTransitionReferences) {
         State* st = (State*) Factory::getElement(pairs.first);
         Transition* t = (Transition*) Factory::getElement(pairs.second);
-        st->_outTransitions.push_back(t);
+        st->addOutTransition(t);
     }
     Factory::stateOutTransitionReferences.clear();
 }

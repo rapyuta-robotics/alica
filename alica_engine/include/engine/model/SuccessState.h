@@ -13,7 +13,6 @@ class SuccessState : public TerminalState
 {
 public:
     SuccessState();
-    virtual ~SuccessState();
     std::string toString(std::string indent = "") const override;
 };
 

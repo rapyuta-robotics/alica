@@ -5,7 +5,10 @@ namespace alica
 
 TransitionConditionRepository::TransitionConditionRepository() {}
 
-TransitionConditionRepository::~TransitionConditionRepository() {}
+void TransitionConditionRepository::addTransitionCondition(const TransitionCondition* t)
+{
+    _transitionConditions.push_back(t);
+}
 
 const std::string& TransitionConditionRepository::getFileName() const
 {

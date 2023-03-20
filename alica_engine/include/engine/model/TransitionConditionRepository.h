@@ -7,21 +7,16 @@
 
 namespace alica
 {
-class ModelManager;
-class TransitionConditionRepositoryFactory;
-
 class TransitionConditionRepository : public AlicaElement
 {
 public:
     TransitionConditionRepository();
-    virtual ~TransitionConditionRepository();
+    void addTransitionCondition(const TransitionCondition* t);
     const TransitionConditionGrp& getTransitionConditions() const { return _transitionConditions; }
+    void setFileName(const std::string& fileName);
     const std::string& getFileName() const;
 
 private:
-    friend ModelManager;
-    friend TransitionConditionRepositoryFactory;
-    void setFileName(const std::string& fileName);
     TransitionConditionGrp _transitionConditions;
     std::string _fileName;
 };

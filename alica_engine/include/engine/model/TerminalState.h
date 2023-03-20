@@ -4,7 +4,6 @@
 namespace alica
 {
 class PostCondition;
-class TerminalStateFactory;
 /**
  * A terminal state within a plan. Indicates termination of the corresponding task
  */
@@ -12,12 +11,10 @@ class TerminalState : public State
 {
 public:
     TerminalState(StateType t);
-    virtual ~TerminalState();
+    void setPostCondition(PostCondition* posCondition);
     const PostCondition* getPostCondition() const { return _postCondition; }
 
 protected:
-    friend TerminalStateFactory;
-    void setPostCondition(PostCondition* posCondition);
     PostCondition* _postCondition;
 };
 

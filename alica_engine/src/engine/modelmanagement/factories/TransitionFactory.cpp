@@ -9,9 +9,15 @@ namespace alica
 {
 Transition* TransitionFactory::create(const YAML::Node& transitionNode, Plan* plan)
 {
-    Transition* transition = new Transition();
+    std::unique_ptr<KeyMapping> keyMapping;
+    if (Factory::isValid(transitionNode[alica::Strings::keyMapping])) {
+        keyMapping = KeyMappingFactory::create(transitionNode[alica::Strings::keyMapping]);
+    }
+
+    auto* transition = new Transition(std::move(keyMapping));
     Factory::setAttributes(transitionNode, transition);
     Factory::storeElement(transition, alica::Strings::transition);
+
     if (Factory::isValid(transitionNode[alica::Strings::inState])) {
         Factory::transitionInStateReferences.push_back(
                 std::pair<int64_t, int64_t>(transition->getId(), Factory::getReferencedId(transitionNode[alica::Strings::inState])));
@@ -28,9 +34,6 @@ Transition* TransitionFactory::create(const YAML::Node& transitionNode, Plan* pl
         Factory::transitionConditionReferences.push_back(
                 std::pair<int64_t, int64_t>(transition->getId(), Factory::getReferencedId(transitionNode[alica::Strings::condition])));
     }
-    if (Factory::isValid(transitionNode[alica::Strings::keyMapping])) {
-        transition->_keyMapping = KeyMappingFactory::create(transitionNode[alica::Strings::keyMapping]);
-    }
 
     return transition;
 }
@@ -42,14 +45,14 @@ void TransitionFactory::attachReferences()
     for (std::pair<int64_t, int64_t> pairs : Factory::transitionOutStateReferences) {
         Transition* t = (Transition*) Factory::getElement(pairs.first);
         State* st = (State*) Factory::getElement(pairs.second);
-        t->_outState = st;
+        t->setOutState(st);
     }
     Factory::transitionOutStateReferences.clear();
     // transitionInStateReferences
     for (std::pair<int64_t, int64_t> pairs : Factory::transitionInStateReferences) {
         Transition* t = (Transition*) Factory::getElement(pairs.first);
         State* st = (State*) Factory::getElement(pairs.second);
-        t->_inState = st;
+        t->setInState(st);
     }
     Factory::transitionInStateReferences.clear();
     // transitionSynchReferences

@@ -12,7 +12,7 @@ namespace alica
 {
 Behaviour* BehaviourFactory::create(const YAML::Node& node)
 {
-    Behaviour* behaviour = new Behaviour();
+    auto* behaviour = new Behaviour();
     Factory::setAttributes(node, behaviour);
     Factory::storeElement(behaviour, alica::Strings::behaviour);
     AbstractPlanFactory::setVariables(node, behaviour);

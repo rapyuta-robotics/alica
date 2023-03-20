@@ -10,7 +10,7 @@ void AbstractPlanFactory::setVariables(const YAML::Node& abstractPlanNode, alica
     if (Factory::isValid(abstractPlanNode[alica::Strings::variables])) {
         const YAML::Node& variableNodes = abstractPlanNode[alica::Strings::variables];
         for (YAML::const_iterator it = variableNodes.begin(); it != variableNodes.end(); ++it) {
-            abstractPlan->_variables.push_back(VariableFactory::create(*it));
+            abstractPlan->addVariable(VariableFactory::create(*it));
         }
     }
 }

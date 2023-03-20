@@ -14,7 +14,6 @@ namespace test
 class TestContext;
 }
 
-class BasicBehaviour;
 class BehaviourFactory;
 class PreCondition;
 class RuntimeCondition;

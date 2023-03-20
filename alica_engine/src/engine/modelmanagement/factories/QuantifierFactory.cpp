@@ -28,7 +28,7 @@ Quantifier* QuantifierFactory::create(const YAML::Node& quantifierNode)
     if (Factory::isValid(quantifierNode[alica::Strings::sorts])) {
         const YAML::Node& sorts = quantifierNode[alica::Strings::sorts];
         for (YAML::const_iterator it = sorts.begin(); it != sorts.end(); ++it) {
-            quantifier->_domainIdentifiers.push_back((*it).as<std::string>());
+            quantifier->addDomainIdentifier((*it).as<std::string>());
         }
     }
 

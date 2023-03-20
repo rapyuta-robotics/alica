@@ -16,8 +16,6 @@ Condition::Condition()
 {
 }
 
-Condition::~Condition() {}
-
 void Condition::getConstraint(std::shared_ptr<ProblemDescriptor> pd, const RunningPlan& rp) const
 {
     // TODO: fix const cast below

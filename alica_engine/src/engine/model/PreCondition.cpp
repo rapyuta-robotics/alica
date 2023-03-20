@@ -9,8 +9,6 @@ PreCondition::PreCondition()
 {
 }
 
-PreCondition::~PreCondition() {}
-
 std::string PreCondition::toString(std::string indent) const
 {
     std::stringstream ss;

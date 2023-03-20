@@ -9,14 +9,14 @@ namespace alica
 {
 TaskRepository* TaskRepositoryFactory::create(const YAML::Node& node)
 {
-    TaskRepository* taskRepository = new TaskRepository();
+    auto* taskRepository = new TaskRepository();
     Factory::setAttributes(node, taskRepository);
     Factory::storeElement(taskRepository, alica::Strings::taskrepository);
 
     if (Factory::isValid(node[alica::Strings::tasks])) {
         const YAML::Node& tasksNode = node[alica::Strings::tasks];
         for (YAML::const_iterator it = tasksNode.begin(); it != tasksNode.end(); ++it) {
-            taskRepository->_tasks.push_back(TaskFactory::create(*it, taskRepository));
+            taskRepository->addTask(TaskFactory::create(*it, taskRepository));
         }
     }
 
