@@ -110,11 +110,10 @@ protected:
         EXPECT_EQ(maxCardinality, plan->getMaxCardinality()) << "Wrong maxCardinality!" << endl;
     }
 
-    static void checkPreCondition(const alica::PreCondition* condition, long id, string name, string comment, string conString, string pluginName, bool enabled)
+    static void checkPreCondition(const alica::PreCondition* condition, long id, string name, string comment, string conString, bool enabled)
     {
         checkAlicaElement(condition, id, name, comment);
         EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
-        EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
         EXPECT_EQ(enabled, condition->isEnabled()) << "Wrong enabled value!" << endl;
     }
 
@@ -123,25 +122,23 @@ protected:
         checkAlicaElement(condition, id, name, comment);
     }
 
-    static void checkPostCondition(const alica::PostCondition* condition, long id, string name, string comment, string conString, string pluginName)
+    static void checkPostCondition(const alica::PostCondition* condition, long id, string name, string comment, string conString)
     {
         checkAlicaElement(condition, id, name, comment);
         EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
-        EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
     }
 
-    static void checkRuntimeCondition(const alica::RuntimeCondition* condition, long id, string name, string comment, string conString, string pluginName)
+    static void checkRuntimeCondition(const alica::RuntimeCondition* condition, long id, string name, string comment, string conString)
     {
         checkAlicaElement(condition, id, name, comment);
         EXPECT_STREQ(conString.c_str(), condition->getConditionString().c_str()) << "Wrong ConditionString!" << endl;
-        EXPECT_STREQ(condition->getPlugInName().c_str(), pluginName.c_str()) << "Wrong PlugInName!" << endl;
     }
     static void checkTransition(const alica::Transition* transition, long id, string name, string comment, long preConditionId, long inState, long outState,
-            string preConName, string preConComment, string preConString, string pluginName, bool enabled)
+            string preConName, string preConComment, string preConString, bool enabled)
     {
         checkAlicaElement(transition, id, name, comment);
         checkTransitionCondition(transition->getTransitionCondition(), preConditionId, preConName, preConComment);
-        // checkPreCondition(transition->getPreCondition(), preConditionId, preConName, preConComment, preConString, pluginName, enabled);
+        // checkPreCondition(transition->getPreCondition(), preConditionId, preConName, preConComment, preConString, enabled);
 
         EXPECT_EQ(inState, transition->getInState()->getId()) << "Unknown id for InState!" << endl;
 
@@ -204,8 +201,8 @@ protected:
                     cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                     switch (t->getId()) {
                     case 1402489459382:
-                        checkTransition(t, 1402489459382, "MISSING_NAME", "", 1678986049909129132, 1402488646220, 1402489396914, "AlwaysFalseCondition", "", "",
-                                "DefaultPlugin", true);
+                        checkTransition(
+                                t, 1402489459382, "MISSING_NAME", "", 1678986049909129132, 1402488646220, 1402489396914, "AlwaysFalseCondition", "", "", true);
                         cout << "Quantifiers: " << endl;
                         // for (const alica::Quantifier* q : t->getPreCondition()->getQuantifiers()) {
                         //     switch (q->getId()) {
@@ -240,7 +237,7 @@ protected:
                         break;
                     case 1402489460694:
                         checkTransition(t, 1402489460694, "MISSING_NAME", "", 1678986049909129132, 1402489396914, 1402488646220, "AlwaysFalseCondition", "",
-                                "Some nice comment!", "DefaultPlugin", true);
+                                "Some nice comment!", true);
                         break;
                     default:
                         EXPECT_TRUE(false);
@@ -289,19 +286,19 @@ protected:
                     switch (t->getId()) {
                     case 1402488990761:
                         checkTransition(t, 1402488990761, "TackleToGetBall", "GetBallToTackle", 1678986049909129132, 1402488959965, 1402488903549,
-                                "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402488991762:
                         checkTransition(t, 1402488991762, "TackleToGetBall", "TackleToGetBall", 1678986049909129132, 1402488903549, 1402488959965,
-                                "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402489064693:
                         checkTransition(t, 1402489064693, "GetBallToTryToDefendGoal", "TESTESTETS", 1678986049909129132, 1402488959965, 1402489037735,
-                                "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402489071510:
                         checkTransition(t, 1402489071510, "TryToDefendGoalToGetGoal", "TryToDefendGoalToGetGoal", 1678986049909129132, 1402489037735,
-                                1402488910751, "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                1402488910751, "AlwaysFalseCondition", "", "", true);
                         break;
                     default:
                         EXPECT_TRUE(false);
@@ -327,7 +324,7 @@ protected:
                 break;
             case 1402488870347:
                 checkPlan(plan, 1402488870347, "GoalPlan", "", false, 0.1, 0, 2147483647);
-                checkPreCondition(plan->getPreCondition(), 1402489131988, "GoalPlanPreCondition", "Test PC", "", "DefaultPlugin", true);
+                checkPreCondition(plan->getPreCondition(), 1402489131988, "GoalPlanPreCondition", "Test PC", "", true);
                 cout << "States: " << endl;
                 EXPECT_EQ(3u, plan->getStates().size()) << "Number of states didnt fit GoalPlan.pml state size." << endl;
                 for (const alica::State* s : plan->getStates()) {
@@ -343,7 +340,7 @@ protected:
                         EXPECT_TRUE(s->isSuccessState()) << "Should be a SuccessState" << endl;
                         checkState(s, 1402489192198, "Scored", "", {}, {1402489216617}, {});
                         alica::TerminalState* terminalState = (alica::TerminalState*) s;
-                        checkPostCondition(terminalState->getPostCondition(), 1402489620773, "MISSING_NAME", "Test POSTC", "", "DefaultPlugin");
+                        checkPostCondition(terminalState->getPostCondition(), 1402489620773, "MISSING_NAME", "Test POSTC", "");
                         break;
                     }
                     default:
@@ -358,16 +355,16 @@ protected:
                     cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                     switch (t->getId()) {
                     case 1402489173167:
-                        checkTransition(t, 1402489173167, "MISSING_NAME", "", 1678986049909129132, 1402488881799, 1402489152217, "AlwaysFalseCondition", "", "",
-                                "DefaultPlugin", true);
+                        checkTransition(
+                                t, 1402489173167, "MISSING_NAME", "", 1678986049909129132, 1402488881799, 1402489152217, "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402489205153:
-                        checkTransition(t, 1402489205153, "MISSING_NAME", "", 1678986049909129132, 1402489152217, 1402488881799, "AlwaysFalseCondition", "", "",
-                                "DefaultPlugin", true);
+                        checkTransition(
+                                t, 1402489205153, "MISSING_NAME", "", 1678986049909129132, 1402489152217, 1402488881799, "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402489216617:
-                        checkTransition(t, 1402489216617, "MISSING_NAME", "", 1678986049909129132, 1402489152217, 1402489192198, "AlwaysFalseCondition", "", "",
-                                "DefaultPlugin", true);
+                        checkTransition(
+                                t, 1402489216617, "MISSING_NAME", "", 1678986049909129132, 1402489152217, 1402489192198, "AlwaysFalseCondition", "", "", true);
                         break;
                     default:
                         EXPECT_TRUE(false);
@@ -427,19 +424,19 @@ protected:
                     switch (t->getId()) {
                     case 1402488557864:
                         checkTransition(t, 1402488557864, "GoalToSucGoal", "GoalToSucGoal", 1678986049909129132, 1402488470615, 1402488536570,
-                                "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402488517667:
                         checkTransition(t, 1402488517667, "AttackToGoal", "AttackToGoal", 1678986049909129132, 1402488437261, 1402488477650,
-                                "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402488519757:
                         checkTransition(t, 1402488519757, "MidFieldToGoal", "MidFieldToGoal", 1678986049909129132, 1402488477650, 1402488470615,
-                                "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1409218318661:
                         checkTransition(t, 1409218318661, "AttackToDefend", "AttackToDefend", 1678986049909129132, 1402488437261, 1402488463437,
-                                "AlwaysFalseCondition", "", "", "DefaultPlugin", true);
+                                "AlwaysFalseCondition", "", "", true);
                         break;
                     default:
                         cout << t->getId() << "########" << endl;
@@ -469,7 +466,7 @@ protected:
                 break;
             case 1402488770050:
                 checkPlan(plan, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 3, 2147483647);
-                checkRuntimeCondition(plan->getRuntimeCondition(), 1402489260911, "MidFieldPlayPlanRuntimeCondition", "Test RC", "", "DefaultPlugin");
+                checkRuntimeCondition(plan->getRuntimeCondition(), 1402489260911, "MidFieldPlayPlanRuntimeCondition", "Test RC", "");
                 cout << "States: " << endl;
                 EXPECT_EQ(5u, plan->getStates().size()) << "Number of states didnt fit MidFieldPlayPlan.pml state size." << endl;
                 for (const alica::State* s : plan->getStates()) {
@@ -504,17 +501,17 @@ protected:
                     cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                     switch (t->getId()) {
                     case 1402489257607:
-                        checkTransition(t, 1402489257607, "MISSING_NAME", "", 1678986049909129132, 1402488787818, 1402489237914, "AlwaysFalseCondition", "", "",
-                                "DefaultPlugin", true);
+                        checkTransition(
+                                t, 1402489257607, "MISSING_NAME", "", 1678986049909129132, 1402488787818, 1402489237914, "AlwaysFalseCondition", "", "", true);
                         break;
                     case 1402489276995:
-                        checkTransition(t, 1402489276995, "MISSING_NAME", "", 1678986049909129132, 1402488787818, 1402489273401, "AlwaysFalseCondition", "", "",
-                                "DefaultPlugin", true);
+                        checkTransition(
+                                t, 1402489276995, "MISSING_NAME", "", 1678986049909129132, 1402488787818, 1402489273401, "AlwaysFalseCondition", "", "", true);
                         EXPECT_EQ(1402500865502, t->getSynchronisation()->getId()) << "Wrong synctransition ID!" << endl;
                         break;
                     case 1402500843072:
-                        checkTransition(t, 1402500843072, "MISSING_NAME", "", 1678986049909129132, 1402500830885, 1402500833246, "AlwaysFalseCondition", "", "",
-                                "DefaultPlugin", true);
+                        checkTransition(
+                                t, 1402500843072, "MISSING_NAME", "", 1678986049909129132, 1402500830885, 1402500833246, "AlwaysFalseCondition", "", "", true);
                         checkSynchronisation(t->getSynchronisation(), 1402500865502, "SynChro", "", 30, 10000);
 
                         break;
