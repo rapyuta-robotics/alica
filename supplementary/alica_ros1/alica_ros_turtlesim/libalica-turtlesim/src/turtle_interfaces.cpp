@@ -7,8 +7,9 @@
 namespace turtlesim
 {
 
-TurtleInterfaces::TurtleInterfaces(const std::string& name)
+TurtleInterfaces::TurtleInterfaces(const std::string& name, uint64_t id)
         : _name(name)
+        , _id(id)
 {
     // initialize publisher, subscriber and service client.
     ros::NodeHandle nh("~");

@@ -31,7 +31,7 @@ void SpawnTurtle::initialiseParameters()
         setFailure();
         return;
     }
-    g_bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleInterfaces>(name));
+    g_bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleInterfaces>(name, getOwnId()));
 
     auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 

@@ -12,41 +12,9 @@
       "plan": 1225570798912217901,
       "positionWeb": {
         "x": 200,
-        "y": 612
+        "y": 212
       },
       "state": 3162295592305824185,
-      "successRequired": false,
-      "task": "TaskRepository.tsk#3310236980587704776"
-    },
-    {
-      "comment": "",
-      "id": 3975697190021470017,
-      "isDynamic": false,
-      "maxCardinality": 1,
-      "minCardinality": 0,
-      "name": "",
-      "plan": 1225570798912217901,
-      "positionWeb": {
-        "x": 200,
-        "y": 412
-      },
-      "state": 3797889270889861969,
-      "successRequired": false,
-      "task": "TaskRepository.tsk#3310236980587704776"
-    },
-    {
-      "comment": "",
-      "id": 1002169119911528732,
-      "isDynamic": false,
-      "maxCardinality": 1,
-      "minCardinality": 0,
-      "name": "",
-      "plan": 1225570798912217901,
-      "positionWeb": {
-        "x": 200,
-        "y": 812
-      },
-      "state": 3102339349066193934,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
     },
@@ -60,24 +28,95 @@
       "plan": 1225570798912217901,
       "positionWeb": {
         "x": 200,
-        "y": 212
+        "y": 412
       },
       "state": 3319164559788507935,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
+    },
+    {
+      "comment": "",
+      "id": 1002169119911528732,
+      "isDynamic": false,
+      "maxCardinality": 1,
+      "minCardinality": 0,
+      "name": "",
+      "plan": 1225570798912217901,
+      "positionWeb": {
+        "x": 200,
+        "y": 610.6155950752394
+      },
+      "state": 3102339349066193934,
+      "successRequired": false,
+      "task": "TaskRepository.tsk#3310236980587704776"
+    },
+    {
+      "comment": "",
+      "id": 3975697190021470017,
+      "isDynamic": false,
+      "maxCardinality": 1,
+      "minCardinality": 0,
+      "name": "",
+      "plan": 1225570798912217901,
+      "positionWeb": {
+        "x": 200,
+        "y": 812
+      },
+      "state": 3797889270889861969,
+      "successRequired": false,
+      "task": "TaskRepository.tsk#3310236980587704776"
     }
   ],
-  "frequency": 0,
+  "frequency": 30,
   "id": 1225570798912217901,
-  "implementationName": "TracedPlan",
+  "implementationName": "FourCorners",
   "inheritBlackboard": false,
-  "libraryName": "alica_standard_library",
+  "libraryName": "libalica-turtlesim",
   "masterPlan": false,
   "name": "FourCorners",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "GoTo.beh#2797939494274869075",
+          "comment": "",
+          "configuration": null,
+          "id": 331991001677741800,
+          "keyMapping": {
+            "input": [
+              {
+                "childKey": "goal_y",
+                "parentKey": null,
+                "value": 1.5
+              },
+              {
+                "childKey": "goal_x",
+                "parentKey": null,
+                "value": 8.5
+              }
+            ],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": 1002169119911528732,
+      "id": 3102339349066193934,
+      "inTransitions": [],
+      "name": "BottomRight",
+      "outTransitions": [],
+      "parentPlan": 1225570798912217901,
+      "positionWeb": {
+        "x": 427.984375,
+        "y": 600
+      },
+      "type": "State",
+      "variableBindings": []
+    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -111,47 +150,8 @@
       "outTransitions": [],
       "parentPlan": 1225570798912217901,
       "positionWeb": {
-        "x": 428,
-        "y": 600
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "GoTo.beh#2797939494274869075",
-          "comment": "",
-          "configuration": null,
-          "id": 259482488220618618,
-          "keyMapping": {
-            "input": [
-              {
-                "childKey": "goal_y",
-                "parentKey": null,
-                "value": 8.5
-              },
-              {
-                "childKey": "goal_x",
-                "parentKey": null,
-                "value": 8.5
-              }
-            ],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": 3975697190021470017,
-      "id": 3797889270889861969,
-      "inTransitions": [],
-      "name": "TopRight",
-      "outTransitions": [],
-      "parentPlan": 1225570798912217901,
-      "positionWeb": {
-        "x": 428,
-        "y": 400
+        "x": 427.984375,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -189,8 +189,8 @@
       "outTransitions": [],
       "parentPlan": 1225570798912217901,
       "positionWeb": {
-        "x": 428,
-        "y": 200
+        "x": 427.984375,
+        "y": 400
       },
       "type": "State",
       "variableBindings": []
@@ -202,16 +202,16 @@
           "abstractPlan": "GoTo.beh#2797939494274869075",
           "comment": "",
           "configuration": null,
-          "id": 331991001677741800,
+          "id": 259482488220618618,
           "keyMapping": {
             "input": [
               {
-                "childKey": "goal_y",
+                "childKey": "goal_x",
                 "parentKey": null,
-                "value": 1.5
+                "value": 8.5
               },
               {
-                "childKey": "goal_x",
+                "childKey": "goal_y",
                 "parentKey": null,
                 "value": 8.5
               }
@@ -221,14 +221,14 @@
           "name": ""
         }
       ],
-      "entryPoint": 1002169119911528732,
-      "id": 3102339349066193934,
+      "entryPoint": 3975697190021470017,
+      "id": 3797889270889861969,
       "inTransitions": [],
-      "name": "BottomRight",
+      "name": "TopRight",
       "outTransitions": [],
       "parentPlan": 1225570798912217901,
       "positionWeb": {
-        "x": 428,
+        "x": 427.984375,
         "y": 800
       },
       "type": "State",
@@ -237,6 +237,6 @@
   ],
   "synchronisations": [],
   "transitions": [],
-  "utilityThreshold": 0.0,
+  "utilityThreshold": 0.750,
   "variables": []
 }
