@@ -91,9 +91,9 @@ void Factory::setModelManager(alica::ModelManager* modelManager)
 
 void Factory::setAttributes(const YAML::Node& node, alica::AlicaElement* ael)
 {
-    ael->_id = getValue<int64_t>(node, alica::Strings::id);
-    ael->_name = getValue<std::string>(node, alica::Strings::name, alica::Strings::no_name);
-    ael->_comment = getValue<std::string>(node, alica::Strings::comment, alica::Strings::no_comment);
+    ael->setId(getValue<int64_t>(node, alica::Strings::id));
+    ael->setName(getValue<std::string>(node, alica::Strings::name, alica::Strings::no_name));
+    ael->setComment(getValue<std::string>(node, alica::Strings::comment, alica::Strings::no_comment));
 }
 
 const AlicaElement* Factory::getElement(const int64_t id)

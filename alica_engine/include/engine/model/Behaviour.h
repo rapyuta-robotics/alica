@@ -13,7 +13,6 @@ namespace test
 class TestContext;
 }
 
-class BehaviourFactory;
 class PreCondition;
 class RuntimeCondition;
 class PostCondition;

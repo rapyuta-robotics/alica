@@ -27,8 +27,6 @@ AlicaElement::AlicaElement(int64_t id, const std::string& name, const std::strin
 {
 }
 
-AlicaElement::~AlicaElement() {}
-
 void AlicaElement::setName(const std::string& name)
 {
     _name = name;
