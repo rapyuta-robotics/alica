@@ -12,7 +12,6 @@ namespace alica
 
 Condition::Condition()
         : _abstractPlan(nullptr)
-        , _basicCondition(nullptr)
 {
 }
 
@@ -38,30 +37,25 @@ bool Condition::evaluate(const RunningPlan& rp, const Blackboard* globalBlackboa
             // TODO: fix const cast below
             ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer(), globalBlackboard);
         } catch (const std::exception& e) {
-            Logging::logDebug("Condition") << "Condition: Exception during evaluation catched:\n" << e.what();
+            Logging::logDebug("Condition") << "Condition: Exception during evaluation caught:\n" << e.what();
         }
         return ret;
     }
 }
 
-void Condition::setQuantifiers(const QuantifierGrp& quantifiers)
+void Condition::addQuantifier(const Quantifier* quantifier)
 {
-    _quantifiers = quantifiers;
+    _quantifiers.push_back(quantifier);
 }
 
-void Condition::setVariables(const VariableGrp& variables)
+void Condition::addVariable(const Variable* variable)
 {
-    _variables = variables;
+    _variables.push_back(variable);
 }
 
 void Condition::setAbstractPlan(const AbstractPlan* abstractPlan)
 {
     _abstractPlan = abstractPlan;
-}
-
-void Condition::setPlugInName(const std::string& plugInName)
-{
-    _plugInName = plugInName;
 }
 
 void Condition::setBasicCondition(const std::shared_ptr<BasicCondition>& basicCondition)
@@ -74,9 +68,9 @@ void Condition::setBasicConstraint(const std::shared_ptr<BasicConstraint>& basic
     _basicConstraint = basicConstraint;
 }
 
-std::string Condition::getLibraryName() const
+void Condition::setLibraryName(const std::string& name)
 {
-    return _libraryName;
+    _libraryName = name;
 }
 
 } // namespace alica

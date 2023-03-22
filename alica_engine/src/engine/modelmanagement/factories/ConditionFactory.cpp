@@ -10,13 +10,13 @@ void ConditionFactory::fillCondition(const YAML::Node& conditionNode, Condition*
 {
     Factory::setAttributes(conditionNode, condition);
     Factory::storeElement(condition, alica::Strings::condition);
-    condition->_abstractPlan = abstractPlan;
-    condition->_conditionString = Factory::getValue<std::string>(conditionNode, alica::Strings::conditionString, "");
+    condition->setAbstractPlan(abstractPlan);
+    condition->setConditionString(Factory::getValue<std::string>(conditionNode, alica::Strings::conditionString, ""));
 
     if (Factory::isValid(conditionNode[alica::Strings::libraryName])) {
-        condition->_libraryName = Factory::getValue<std::string>(conditionNode, alica::Strings::libraryName);
+        condition->setLibraryName(Factory::getValue<std::string>(conditionNode, alica::Strings::libraryName));
     } else {
-        condition->_libraryName = static_cast<Plan*>(abstractPlan)->getLibraryName();
+        condition->setLibraryName(static_cast<Plan*>(abstractPlan)->getLibraryName());
     }
 
     if (Factory::isValid(conditionNode[alica::Strings::variables])) {
@@ -28,7 +28,7 @@ void ConditionFactory::fillCondition(const YAML::Node& conditionNode, Condition*
     if (Factory::isValid(conditionNode[alica::Strings::quantifiers])) {
         const YAML::Node& quantifierNodes = conditionNode[alica::Strings::quantifiers];
         for (YAML::const_iterator it = quantifierNodes.begin(); it != quantifierNodes.end(); ++it) {
-            condition->_quantifiers.push_back(QuantifierFactory::create(*it));
+            condition->addQuantifier(QuantifierFactory::create(*it));
         }
     }
 }
@@ -37,11 +37,10 @@ void ConditionFactory::attachReferences()
 {
     QuantifierFactory::attachReferences();
 
-    // conditionVarReferences
     for (std::pair<int64_t, int64_t> pairs : Factory::conditionVarReferences) {
         Condition* c = (Condition*) Factory::getElement(pairs.first);
         Variable* v = (Variable*) Factory::getElement(pairs.second);
-        c->_variables.push_back(v);
+        c->addVariable(v);
     }
     Factory::conditionVarReferences.clear();
 }

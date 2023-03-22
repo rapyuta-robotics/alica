@@ -30,37 +30,33 @@ public:
      */
     void getConstraint(std::shared_ptr<ProblemDescriptor> pd, const RunningPlan& rp) const;
 
+    void setAbstractPlan(const AbstractPlan* abstractPlan);
     const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
 
+    void setConditionString(const std::string& conditionString);
     const std::string& getConditionString() const { return _conditionString; }
-    const std::string& getPlugInName() const { return _plugInName; }
 
+    void addVariable(const Variable* variables);
     const VariableGrp& getVariables() const { return _variables; }
+    void addQuantifier(const Quantifier* quantifier);
     const QuantifierGrp& getQuantifiers() const { return _quantifiers; }
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
 
     bool evaluate(const RunningPlan& rp, const Blackboard* globalBlackboard) const;
 
-    std::string getLibraryName() const;
+    void setLibraryName(const std::string& name);
+    std::string getLibraryName() const { return _libraryName; }
 
-private:
-    friend ConditionFactory;
-    friend ExpressionHandler;
-
-    void setConditionString(const std::string& conditionString);
-    void setVariables(const VariableGrp& variables);
-    void setPlugInName(const std::string& plugInName);
-    void setAbstractPlan(const AbstractPlan* abstractPlan);
     void setBasicConstraint(const std::shared_ptr<BasicConstraint>& basicConstraint);
     void setBasicCondition(const std::shared_ptr<BasicCondition>& basicCondition);
-    void setQuantifiers(const QuantifierGrp& quantifiers);
 
+private:
     std::shared_ptr<BasicCondition> _basicCondition;
     std::shared_ptr<BasicConstraint> _basicConstraint;
 
     /**
-     * The static variables used in the constraint of this condition.
+     * The variables used in the constraint of this condition.
      */
     VariableGrp _variables;
 
@@ -75,8 +71,6 @@ private:
     const AbstractPlan* _abstractPlan;
 
     std::string _conditionString;
-    std::string _plugInName; // TODO: is this needed?!
-
     std::string _libraryName;
 };
 } // namespace alica
