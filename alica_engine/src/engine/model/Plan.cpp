@@ -17,7 +17,6 @@ Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
         : AbstractPlan(id)
         , _minCardinality(0)
         , _maxCardinality(0)
-        , _masterPlan(false)
         , _utilityFunction(nullptr)
         , _utilityThreshold(1.0)
         , _runtimeCondition(nullptr)
@@ -90,11 +89,6 @@ void Plan::setMinCardinality(int minCardinality)
     _minCardinality = minCardinality;
 }
 
-void Plan::setMasterPlan(bool masterPlan)
-{
-    _masterPlan = masterPlan;
-}
-
 void Plan::setSuccessStates(const SuccessStateGrp& successStates)
 {
     _successStates = successStates;
@@ -104,7 +98,6 @@ std::string Plan::toString(std::string indent) const
 {
     std::stringstream ss;
     ss << indent << "#Plan: " << AbstractPlan::toString(indent);
-    ss << indent << "\tIsMasterPlan: " << this->_masterPlan << std::endl;
     ss << indent << "\tUtility Threshold: " << this->_utilityThreshold << std::endl;
     ss << indent << "\tfrequency: " << _frequency << std::endl;
     if (this->_preCondition != nullptr) {

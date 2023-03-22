@@ -9,7 +9,6 @@ namespace alica
 
 BasicPlan::BasicPlan(PlanContext& context)
         : RunnableObject(context.globalBlackboard, context.traceFactory, context.name)
-        , _isMasterPlan(context.planModel->isMasterPlan())
         , _plan(context.planModel)
 {
     if (_plan->getFrequency() < 1) {
@@ -28,12 +27,6 @@ BasicPlan::BasicPlan(PlanContext& context)
 
 void BasicPlan::doInit()
 {
-    // TODO Cleanup: do this after moving trace context setting to RunningPlan
-    /*if (_isMasterPlan) {
-        // Immediately send out the trace for the master plan, otherwise the traces will not be available until the application ends
-        _runnableObjectTracer.cleanupTraceContext();
-    }*/
-
     try {
         onInit();
     } catch (const std::exception& e) {
