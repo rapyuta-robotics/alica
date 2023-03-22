@@ -61,8 +61,6 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
             parseFile(fileToParse, alica::Strings::taskrepository);
         } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::behaviour_extension)) {
             parseFile(fileToParse, alica::Strings::behaviour);
-        } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::configuration_extension)) {
-            parseFile(fileToParse, alica::Strings::configuration);
         } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::plantype_extension)) {
             parseFile(fileToParse, alica::Strings::plantype);
         } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::condition_extension)) {

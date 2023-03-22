@@ -16,11 +16,6 @@ ConfAbstractPlanWrapper* ConfAbstractPlanWrapperFactory::create(const YAML::Node
         Factory::wrapperAbstractPlanReferences.push_back(
                 std::pair<int64_t, int64_t>(wrapper->getId(), Factory::getReferencedId(wrapperNode[alica::Strings::abstractPlan])));
     }
-
-    if (Factory::isValid(wrapperNode[alica::Strings::configuration])) {
-        Factory::wrapperConfigurationReferences.push_back(
-                std::pair<int64_t, int64_t>(wrapper->getId(), Factory::getReferencedId(wrapperNode[alica::Strings::configuration])));
-    }
     if (Factory::isValid(wrapperNode[alica::Strings::keyMapping])) {
         wrapper->_keyMapping = KeyMappingFactory::create(wrapperNode[alica::Strings::keyMapping]);
     }
