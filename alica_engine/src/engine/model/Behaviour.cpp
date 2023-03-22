@@ -4,19 +4,12 @@
 #include "engine/model/RuntimeCondition.h"
 
 #include <sstream>
+#include <utility>
 
 namespace alica
 {
 Behaviour::Behaviour()
-        : _preCondition(nullptr)
-        , _runtimeCondition(nullptr)
-        , _postCondition(nullptr)
-        , _frequency(1)
-        , _deferring(0)
-        , _eventDriven(false)
-        , AbstractPlan()
-        , _blackboardBlueprint(nullptr)
-        , _libraryName("")
+        : AbstractPlan()
 {
 }
 
@@ -37,6 +30,7 @@ std::string Behaviour::toString(std::string indent) const
         ss << this->_postCondition->toString(indent + "\t");
     }
     ss << indent << "\tlibraryname: " << _libraryName << std::endl;
+    ss << indent << "\timplementationName: " << _implementationName << std::endl;
     ss << indent << "#EndBehaviour" << std::endl;
     return ss.str();
 }
@@ -44,17 +38,46 @@ std::string Behaviour::toString(std::string indent) const
 void Behaviour::setEventDriven(bool eventDriven)
 {
     _eventDriven = eventDriven;
-    _frequency = (_eventDriven ? 0 : _frequency);
 }
 
 void Behaviour::setFrequency(int frequency)
 {
-    _frequency = (_eventDriven ? 0 : frequency);
+    _frequency = frequency;
 }
 
 void Behaviour::setDeferring(int deferring)
 {
     _deferring = deferring;
+}
+
+void Behaviour::setLibraryName(const std::string& name)
+{
+    _libraryName = name;
+}
+
+void Behaviour::setImplementationName(const std::string& name)
+{
+    _implementationName = name;
+}
+
+void Behaviour::setPreCondition(PreCondition* condition)
+{
+    _preCondition = condition;
+}
+
+void Behaviour::setRuntimeCondition(RuntimeCondition* condition)
+{
+    _runtimeCondition = condition;
+}
+
+void Behaviour::setPostCondition(PostCondition* condition)
+{
+    _postCondition = condition;
+}
+
+void Behaviour::setBlackboardBlueprint(std::unique_ptr<BlackboardBlueprint> blueprint)
+{
+    _blackboardBlueprint = std::move(blueprint);
 }
 
 } // namespace alica

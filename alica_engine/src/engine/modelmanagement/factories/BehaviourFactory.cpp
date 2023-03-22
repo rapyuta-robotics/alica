@@ -17,35 +17,32 @@ Behaviour* BehaviourFactory::create(const YAML::Node& node)
     Factory::storeElement(behaviour, alica::Strings::behaviour);
     AbstractPlanFactory::setVariables(node, behaviour);
 
-    behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
-    behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
-    behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
+    behaviour->setFrequency(Factory::getValue<int>(node, alica::Strings::frequency, 1));
+    behaviour->setDeferring(Factory::getValue<int>(node, alica::Strings::deferring, 0));
+    behaviour->setEventDriven(Factory::getValue<bool>(node, alica::Strings::eventDriven, false));
 
     if (Factory::isValid(node[alica::Strings::libraryName])) {
-        behaviour->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
+        behaviour->setLibraryName(Factory::getValue<std::string>(node, alica::Strings::libraryName, ""));
     }
-
     if (Factory::isValid(node[alica::Strings::implementationName])) {
-        behaviour->_implementationName = Factory::getValue<std::string>(node, alica::Strings::implementationName, "");
+        behaviour->setImplementationName(Factory::getValue<std::string>(node, alica::Strings::implementationName, ""));
     }
     if (Factory::isValid(node[alica::Strings::preCondition])) {
-        behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
+        behaviour->setPreCondition(PreConditionFactory::create(node[alica::Strings::preCondition], behaviour));
     }
     if (Factory::isValid(node[alica::Strings::runtimeCondition])) {
-        behaviour->_runtimeCondition = RuntimeConditionFactory::create(node[alica::Strings::runtimeCondition], behaviour);
+        behaviour->setRuntimeCondition(RuntimeConditionFactory::create(node[alica::Strings::runtimeCondition], behaviour));
     }
     if (Factory::isValid(node[alica::Strings::postCondition])) {
-        behaviour->_postCondition = PostConditionFactory::create(node[alica::Strings::postCondition], behaviour);
+        behaviour->setPostCondition(PostConditionFactory::create(node[alica::Strings::postCondition], behaviour));
     }
-    auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, true);
+    const auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, true);
     if (!inheritBlackboard) {
         if (Factory::isValid(node[alica::Strings::blackboard])) {
-            behaviour->_blackboardBlueprint = BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]);
+            behaviour->setBlackboardBlueprint(BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]));
         } else {
-            behaviour->_blackboardBlueprint = BlackboardBlueprintFactory::createEmpty();
+            behaviour->setBlackboardBlueprint(BlackboardBlueprintFactory::createEmpty());
         }
-    } else {
-        behaviour->_blackboardBlueprint = nullptr;
     }
     return behaviour;
 }

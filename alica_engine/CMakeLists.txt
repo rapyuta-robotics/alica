@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_engine)
 
-add_compile_options(-std=c++17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Debug)
 
 # Set up utils to allow Colcon/catkin to find the packages
