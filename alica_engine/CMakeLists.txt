@@ -87,7 +87,6 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/model/Behaviour.cpp
   src/engine/model/Condition.cpp
   src/engine/model/ConfAbstractPlanWrapper.cpp
-  src/engine/model/Configuration.cpp
   src/engine/model/EntryPoint.cpp
   src/engine/model/FailureState.cpp
   src/engine/model/ForallAgents.cpp
@@ -117,7 +116,6 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/modelmanagement/factories/BlackboardBlueprintFactory.cpp
   src/engine/modelmanagement/factories/ConditionFactory.cpp
   src/engine/modelmanagement/factories/ConfAbstractPlanWrapperFactory.cpp
-  src/engine/modelmanagement/factories/ConfigurationFactory.cpp
   src/engine/modelmanagement/factories/EntryPointFactory.cpp
   src/engine/modelmanagement/factories/Factory.cpp
   src/engine/modelmanagement/factories/KeyMappingFactory.cpp
