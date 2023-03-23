@@ -11,12 +11,31 @@ std::shared_ptr<FourCornersUtilityFunction> FourCornersUtilityFunction::create(a
     return std::make_shared<FourCornersUtilityFunction>(context);
 }
 
+/*
+    The utility function combines three components to determine the best assignment:
+    1. Priority (prio): A measure of how important the assignment is considering agent role and it's priority to take up a task.
+    2. Similarity (sim): A measure of how close the new assignment is to the previous assignment.
+    3. Custom component (summand): A user-defined component to add extra criteria.
+
+    Utility = priorityWeight * prio(assignment) + similarityWeight * sim(assignment, oldAssignment) + customWeight * summand(assignment)
+
+    The utility threshold is set to 0.750 for this plan (see FourCorner.pml for details).
+
+    If summand(assignment) returns 0, it indicates that the current assignment is not ideal. In this case, it can only be accepted if it is highly similar to
+   the oldAssignment. When the current assignment is an improvement but deviates considerably from the oldAssignment, the utility score will not surpass the
+   threshold, leading to the assignment's rejection.
+
+    Initially, only suitable assignments are selected. In later iterations, the algorithm searches for new assignments that are both better and similar to the
+   selected ones.
+
+    The similarityWeight helps the solution converge faster by not being too greedy in accepting better solutions. It also helps maintain stability among agents
+   who have already found their tasks. This approach also assists the alica framework in resolving conflicts if two agents want the same task.
+*/
 std::shared_ptr<alica::UtilityFunction> FourCornersUtilityFunction::getUtilityFunction(alica::Plan* plan)
 {
-    // contribution weightage in utilty score for similar assignments
     double similarityWeight = 0.5;
-    // in this case priorityWeight is 0 as all agents role are same.
-    // it only comes into account when the role of agent differs and we have priority of each task based on agent role
+    // The priorityWeight is set to 0 because all agents have the same role.
+    // It becomes relevant when agents have different roles, and each task has a priority based on the agent's role.
     double priorityWeight = 0;
     double customWeight = 0.5;
     std::shared_ptr<alica::UtilityFunction> function = std::make_shared<alica::UtilityFunction>(priorityWeight, similarityWeight, plan);
@@ -26,15 +45,6 @@ std::shared_ptr<alica::UtilityFunction> FourCornersUtilityFunction::getUtilityFu
     summand->addEntryPoint(plan->getEntryPointByID(1002169119911528732));
     summand->addEntryPoint(plan->getEntryPointByID(3975697190021470017));
     function->editUtilSummands().emplace_back(summand);
-    // final equation for utiltiy will be
-    //  uility = priorityWeight*prio(assignment) + similarityWeight*sim(assignment, oldAssignment) + customWeight*summand(assignment)
-    //  uility threshold is set to 1 check FourCorner.pml
-    //  if summand(assignment) returns 0 that means, the current assignment is not good and for this solution to be accepted it has to be very similar to the
-    //  oldAssignment. If current assignment is better but differs too much from the oldAssignment then utility score will not cross threshold and assignment
-    //  will be finally rejected. At first when there is no assignment only good assignment will be selected and on subsequent iterations new assignments will
-    //  be searched, which are better and similar to already selected assignment. similarityWeight helps converge the solution faster as we are not greedy in
-    //  accepting better solution, in this case if some agents already found their task we mostly don't disturb them even if any new agent comes up and is
-    //  better match for that task. This also helps alica internally resolve conflicts if two agetns want same task.
     return function;
 }
 

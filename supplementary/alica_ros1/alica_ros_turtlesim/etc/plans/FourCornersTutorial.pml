@@ -1,20 +1,5 @@
 {
-  "blackboard": [
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 3904653870066436984,
-      "key": "y",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 4407030473741374880,
-      "key": "x",
-      "type": "double"
-    }
-  ],
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -26,7 +11,7 @@
       "name": "",
       "plan": 2851720313998235716,
       "positionWeb": {
-        "x": 319,
+        "x": 151.41046754852027,
         "y": 329
       },
       "state": 2231154692722562808,
@@ -65,12 +50,12 @@
       "inTransitions": [],
       "name": "SpawnTurtle",
       "outTransitions": [
-        2747861623143659037
+        264009118846798931
       ],
       "parentPlan": 2851720313998235716,
       "positionWeb": {
-        "x": 471,
-        "y": 316
+        "x": 329.1075291910805,
+        "y": 317.1172635496765
       },
       "type": "State",
       "variableBindings": []
@@ -93,14 +78,14 @@
       "entryPoint": null,
       "id": 3075001531216334549,
       "inTransitions": [
-        3302351301741700783
+        2987009902483289454
       ],
       "name": "FourCorners",
       "outTransitions": [],
       "parentPlan": 2851720313998235716,
       "positionWeb": {
-        "x": 1278.8318424070458,
-        "y": 313.8405974920547
+        "x": 883.0019759405669,
+        "y": 320.25457826079355
       },
       "type": "State",
       "variableBindings": []
@@ -109,116 +94,30 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "Teleport.beh#4085572422059465423",
+          "abstractPlan": "TeleportToRandomPosition.pml#847199748749956244",
           "comment": "",
           "configuration": null,
-          "id": 16859304727572262,
+          "id": 3607598770981228246,
           "keyMapping": {
-            "input": [
-              {
-                "childKey": "y",
-                "parentKey": "y",
-                "value": null
-              },
-              {
-                "childKey": "x",
-                "parentKey": "x",
-                "value": null
-              }
-            ],
+            "input": [],
             "output": []
           },
           "name": ""
         }
       ],
       "entryPoint": null,
-      "id": 3121720663170820287,
+      "id": 4427016306827673008,
       "inTransitions": [
-        3731884057947997339
+        264009118846798931
       ],
-      "name": "Teleport",
+      "name": "Teleport2RandomPosition",
       "outTransitions": [
-        3302351301741700783
+        2987009902483289454
       ],
       "parentPlan": 2851720313998235716,
       "positionWeb": {
-        "x": 986.154961023046,
-        "y": 317.2284616514604
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "GenerateRandom2.beh#4020999983789429596",
-          "comment": "",
-          "configuration": null,
-          "id": 2632620596183892341,
-          "keyMapping": {
-            "input": [
-              {
-                "childKey": "min",
-                "parentKey": null,
-                "value": 0.1
-              },
-              {
-                "childKey": "max",
-                "parentKey": null,
-                "value": 10.0
-              }
-            ],
-            "output": [
-              {
-                "childKey": "value",
-                "parentKey": "y"
-              }
-            ]
-          },
-          "name": ""
-        },
-        {
-          "abstractPlan": "GenerateRandom.beh#3356053372497284615",
-          "comment": "",
-          "configuration": null,
-          "id": 3516560261487300370,
-          "keyMapping": {
-            "input": [
-              {
-                "childKey": "min",
-                "parentKey": null,
-                "value": 0.1
-              },
-              {
-                "childKey": "max",
-                "parentKey": null,
-                "value": 10.0
-              }
-            ],
-            "output": [
-              {
-                "childKey": "value",
-                "parentKey": "x"
-              }
-            ]
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 2594370945855828580,
-      "inTransitions": [
-        2747861623143659037
-      ],
-      "name": "GenerateRandomLocation",
-      "outTransitions": [
-        3731884057947997339
-      ],
-      "parentPlan": 2851720313998235716,
-      "positionWeb": {
-        "x": 688.0895614484632,
-        "y": 312.3964055888333
+        "x": 599.6665510852412,
+        "y": 316.85289875552866
       },
       "type": "State",
       "variableBindings": []
@@ -229,32 +128,8 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 2747861623143659037,
-      "inState": 2231154692722562808,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 2594370945855828580,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 2629062799832896160,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#1",
-      "id": 3302351301741700783,
-      "inState": 3121720663170820287,
+      "id": 2987009902483289454,
+      "inState": 4427016306827673008,
       "keyMapping": {
         "input": [],
         "output": []
@@ -266,7 +141,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 662261866873614921,
+        "id": 1757241392646422745,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -277,20 +152,20 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 3731884057947997339,
-      "inState": 2594370945855828580,
+      "id": 264009118846798931,
+      "inState": 2231154692722562808,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 3121720663170820287,
+      "outState": 4427016306827673008,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 2264173628975172003,
+        "id": 2936614415253480616,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

@@ -12,7 +12,7 @@
       "plan": 1225570798912217901,
       "positionWeb": {
         "x": 200,
-        "y": 212
+        "y": 612
       },
       "state": 3162295592305824185,
       "successRequired": false,
@@ -28,7 +28,7 @@
       "plan": 1225570798912217901,
       "positionWeb": {
         "x": 200,
-        "y": 412
+        "y": 212
       },
       "state": 3319164559788507935,
       "successRequired": false,
@@ -44,7 +44,7 @@
       "plan": 1225570798912217901,
       "positionWeb": {
         "x": 200,
-        "y": 610.6155950752394
+        "y": 812
       },
       "state": 3102339349066193934,
       "successRequired": false,
@@ -60,14 +60,14 @@
       "plan": 1225570798912217901,
       "positionWeb": {
         "x": 200,
-        "y": 812
+        "y": 412
       },
       "state": 3797889270889861969,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
     }
   ],
-  "frequency": 30,
+  "frequency": 0,
   "id": 1225570798912217901,
   "implementationName": "FourCorners",
   "inheritBlackboard": false,
@@ -111,8 +111,8 @@
       "outTransitions": [],
       "parentPlan": 1225570798912217901,
       "positionWeb": {
-        "x": 427.984375,
-        "y": 600
+        "x": 428,
+        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -150,8 +150,8 @@
       "outTransitions": [],
       "parentPlan": 1225570798912217901,
       "positionWeb": {
-        "x": 427.984375,
-        "y": 200
+        "x": 428,
+        "y": 600
       },
       "type": "State",
       "variableBindings": []
@@ -189,8 +189,8 @@
       "outTransitions": [],
       "parentPlan": 1225570798912217901,
       "positionWeb": {
-        "x": 427.984375,
-        "y": 400
+        "x": 428,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -206,12 +206,12 @@
           "keyMapping": {
             "input": [
               {
-                "childKey": "goal_x",
+                "childKey": "goal_y",
                 "parentKey": null,
                 "value": 8.5
               },
               {
-                "childKey": "goal_y",
+                "childKey": "goal_x",
                 "parentKey": null,
                 "value": 8.5
               }
@@ -228,8 +228,8 @@
       "outTransitions": [],
       "parentPlan": 1225570798912217901,
       "positionWeb": {
-        "x": 427.984375,
-        "y": 800
+        "x": 428,
+        "y": 400
       },
       "type": "State",
       "variableBindings": []
@@ -237,6 +237,6 @@
   ],
   "synchronisations": [],
   "transitions": [],
-  "utilityThreshold": 0.750,
+  "utilityThreshold": 0.725,
   "variables": []
 }
