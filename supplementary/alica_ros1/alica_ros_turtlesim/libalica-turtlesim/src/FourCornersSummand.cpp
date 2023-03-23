@@ -22,7 +22,7 @@ FourCornersSummand::~FourCornersSummand() {}
 alica::UtilityInterval FourCornersSummand::eval(alica::IAssignment ass, const alica::Assignment* oldAss, const alica::Blackboard* globalBlackboard) const
 {
     // co-ordinates of each corner
-    std::vector<std::pair<double, double>> coOrdinates{{1.5, 1.5}, {1.5, 8.5}, {8.5, 1.5}, {8.5, 8.5}};
+    std::vector<std::pair<double, double>> coordinates{{1.5, 1.5}, {1.5, 8.5}, {8.5, 1.5}, {8.5, 8.5}};
     auto turtle = alica::LockedBlackboardRO(*globalBlackboard).get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
     if (!turtle->getCurrentPose()) {
         alica::Logging::logInfo("FourCornersSummand") << "Turtle pose not valid";
@@ -34,18 +34,18 @@ alica::UtilityInterval FourCornersSummand::eval(alica::IAssignment ass, const al
     double currentAgentDistance = std::numeric_limits<double>::max();
     std::pair<double, double> currentCorner, bestCorner;
     for (auto entryPoint : _relevantEntryPoints) {
-        auto distanceSqr = std::pow(x - coOrdinates[entryPoint->getIndex()].first, 2) + std::pow(y - coOrdinates[entryPoint->getIndex()].second, 2);
+        auto distanceSqr = std::pow(x - coordinates[entryPoint->getIndex()].first, 2) + std::pow(y - coordinates[entryPoint->getIndex()].second, 2);
         for (alica::AgentId agent : ass.getAgentsWorking(entryPoint)) {
             if (agent == turtle->id()) {
                 // track distance of current agent to the corner task which is being assigned in this assignment
                 currentAgentDistance = distanceSqr;
-                currentCorner = coOrdinates[entryPoint->getIndex()];
+                currentCorner = coordinates[entryPoint->getIndex()];
             }
         }
         // track the distance of the best corner task for the current agent
         if (distanceSqr < bestDistance) {
             bestDistance = distanceSqr;
-            bestCorner = coOrdinates[entryPoint->getIndex()];
+            bestCorner = coordinates[entryPoint->getIndex()];
         }
     }
     // if there is a corner task which is better than agent's current tasks in this assignment then we prioritized this assignment

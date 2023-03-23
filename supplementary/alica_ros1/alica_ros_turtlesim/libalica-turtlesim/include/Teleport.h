@@ -12,6 +12,8 @@ class Teleport : public alica::BasicBehaviour
 {
 private:
     std::shared_ptr<turtlesim::TurtleInterfaces> _turtle;
+    double _x;
+    double _y;
 
 public:
     Teleport(alica::BehaviourContext& context);
