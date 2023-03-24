@@ -18,9 +18,9 @@ std::unique_ptr<QueryPlan2> QueryPlan2::create(alica::PlanContext& context)
     return std::make_unique<QueryPlan2>(context);
 }
 
-std::unique_ptr<QueryPlan2UtilityFunction> QueryPlan2UtilityFunction::create(alica::UtilityFunctionContext& context)
+std::shared_ptr<QueryPlan2UtilityFunction> QueryPlan2UtilityFunction::create(alica::UtilityFunctionContext& context)
 {
-    return std::make_unique<QueryPlan2UtilityFunction>();
+    return std::make_shared<QueryPlan2UtilityFunction>();
 }
 
 } // namespace alica

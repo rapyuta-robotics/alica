@@ -21,14 +21,14 @@ std::unique_ptr<QueryPlan1> QueryPlan1::create(alica::PlanContext& context)
     return std::make_unique<QueryPlan1>(context);
 }
 
-std::unique_ptr<QueryPlan1UtilityFunction> QueryPlan1UtilityFunction::create(alica::UtilityFunctionContext& context)
+std::shared_ptr<QueryPlan1UtilityFunction> QueryPlan1UtilityFunction::create(alica::UtilityFunctionContext& context)
 {
-    return std::make_unique<QueryPlan1UtilityFunction>();
+    return std::make_shared<QueryPlan1UtilityFunction>();
 }
 
-std::unique_ptr<QueryPlan1RuntimeCondition> QueryPlan1RuntimeCondition::create(alica::ConditionContext& context)
+std::shared_ptr<QueryPlan1RuntimeCondition> QueryPlan1RuntimeCondition::create(alica::ConditionContext& context)
 {
-    return std::make_unique<QueryPlan1RuntimeCondition>();
+    return std::make_shared<QueryPlan1RuntimeCondition>();
 }
 
 bool QueryPlan1RuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
@@ -36,9 +36,9 @@ bool QueryPlan1RuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const
     return true;
 }
 
-std::unique_ptr<QueryPlan1RuntimeConditionConstraint> QueryPlan1RuntimeConditionConstraint::create(alica::ConstraintContext& context)
+std::shared_ptr<QueryPlan1RuntimeConditionConstraint> QueryPlan1RuntimeConditionConstraint::create(alica::ConstraintContext& context)
 {
-    return std::make_unique<QueryPlan1RuntimeConditionConstraint>();
+    return std::make_shared<QueryPlan1RuntimeConditionConstraint>();
 }
 
 void QueryPlan1RuntimeConditionConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
