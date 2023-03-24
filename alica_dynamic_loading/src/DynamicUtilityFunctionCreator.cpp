@@ -17,17 +17,24 @@ DynamicUtilityFunctionCreator::DynamicUtilityFunctionCreator()
 
 std::shared_ptr<BasicUtilityFunction> DynamicUtilityFunctionCreator::createUtility(int64_t utilityFunctionConfId, UtilityFunctionContext& context)
 {
-    std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    if (completeLibraryName.empty()) {
-        Logging::logError("DynamicLoading") << "Could not compute the complete library name for creating the utility function: " << context.name;
-        return nullptr;
+    std::string completeLibraryName;
+    std::string symbolName =
+            context.name + "UtilityFunction"; // symbol to import, append `UtilityFunction` to name because the name is the same as the plan's name
+    try {
+        completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
+    } catch (const DynamicLoadingException& ex) {
+        throw DynamicLoadingException{"condition", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
     }
 
-    _utilityFunctionCreator = boost::dll::import_alias<utilityFunctionCreatorType>( // type of imported symbol must be explicitly specified
-            completeLibraryName,                                                    // complete path to library also with file name
-            context.name + "UtilityFunction",         // symbol to import, append `UtilityFunction` to name because the name is the same as the plan's name
-            boost::dll::load_mode::append_decorations // do append extensions and prefixes
-    );
+    try {
+        _utilityFunctionCreator = boost::dll::import_alias<utilityFunctionCreatorType>( // type of imported symbol must be explicitly specified
+                completeLibraryName,                                                    // complete path to library also with file name
+                symbolName,
+                boost::dll::load_mode::append_decorations // do append extensions and prefixes
+        );
+    } catch (const std::exception& ex) {
+        throw DynamicLoadingException{"condition", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
+    }
 
     std::shared_ptr<BasicUtilityFunction> createdUtilityFunction = _utilityFunctionCreator(context);
 
