@@ -1,0 +1,39 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "This is a blackboard entry for testing",
+      "id": 831672371947300202,
+      "key": "behaviorInputKey",
+      "type": "int64"
+    },
+    {
+      "access": "output",
+      "comment": "This is a blackboard entry for testing",
+      "id": 4355442070811434152,
+      "key": "behaviorOutputKey",
+      "type": "int64"
+    },
+    {
+      "access": "protected",
+      "comment": "This is a blackboard entry for testing",
+      "id": 4595223845781635836,
+      "key": "behaviorKey",
+      "type": "int64"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 831400441334251602,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-tests",
+  "name": "TestParameterPassingBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

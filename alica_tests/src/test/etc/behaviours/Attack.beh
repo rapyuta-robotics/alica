@@ -1,0 +1,17 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1402488848841,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-tests",
+  "name": "Attack",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

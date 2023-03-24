@@ -3,41 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 110523600591030675,
-      "key": "xmin",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 3518934415848973217,
-      "key": "xmax",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 181181142658587283,
-      "key": "ymin",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 3833947625034180743,
-      "key": "ymax",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 2295131000765240190,
-      "key": "x",
-      "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
       "id": 268368693041806104,
       "key": "y",
       "type": "double"
@@ -45,8 +10,8 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 3595251136493112330,
-      "key": "idletime",
+      "id": 2295131000765240190,
+      "key": "x",
       "type": "double"
     }
   ],
@@ -71,8 +36,9 @@
   ],
   "frequency": 0,
   "id": 2768292828182334477,
+  "implementationName": "TracedPlan",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica_standard_library",
   "masterPlan": true,
   "name": "RandomMoveTutorial",
   "preCondition": null,
@@ -121,19 +87,46 @@
             "input": [
               {
                 "childKey": "min",
-                "parentKey": "xmin",
-                "value": null
+                "parentKey": null,
+                "value": 0.1
               },
               {
                 "childKey": "max",
-                "parentKey": "xmax",
-                "value": null
+                "parentKey": null,
+                "value": 10.0
               }
             ],
             "output": [
               {
                 "childKey": "value",
                 "parentKey": "x"
+              }
+            ]
+          },
+          "name": ""
+        },
+        {
+          "abstractPlan": "GenerateRandom2.beh#4020999983789429596",
+          "comment": "",
+          "configuration": null,
+          "id": 2212405775726167297,
+          "keyMapping": {
+            "input": [
+              {
+                "childKey": "min",
+                "parentKey": null,
+                "value": 0.1
+              },
+              {
+                "childKey": "max",
+                "parentKey": null,
+                "value": 10.0
+              }
+            ],
+            "output": [
+              {
+                "childKey": "value",
+                "parentKey": "y"
               }
             ]
           },
@@ -148,7 +141,7 @@
       ],
       "name": "ChooseNextDestination",
       "outTransitions": [
-        4482352928621881699
+        2899315486017501859
       ],
       "parentPlan": 2768292828182334477,
       "positionWeb": {
@@ -170,8 +163,8 @@
             "input": [
               {
                 "childKey": "time",
-                "parentKey": "idletime",
-                "value": null
+                "parentKey": null,
+                "value": 5.0
               }
             ],
             "output": []
@@ -225,7 +218,7 @@
       "entryPoint": null,
       "id": 1474370998699018467,
       "inTransitions": [
-        1753701729918088411
+        2899315486017501859
       ],
       "name": "GoToDestination",
       "outTransitions": [
@@ -235,54 +228,6 @@
       "positionWeb": {
         "x": 1207,
         "y": 411
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "GenerateRandom.beh#3356053372497284615",
-          "comment": "",
-          "configuration": null,
-          "id": 982385114375549551,
-          "keyMapping": {
-            "input": [
-              {
-                "childKey": "min",
-                "parentKey": "ymin",
-                "value": null
-              },
-              {
-                "childKey": "max",
-                "parentKey": "ymax",
-                "value": null
-              }
-            ],
-            "output": [
-              {
-                "childKey": "value",
-                "parentKey": "y"
-              }
-            ]
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 2696970137074258240,
-      "inTransitions": [
-        4482352928621881699
-      ],
-      "name": "ChooseNextDestinationY",
-      "outTransitions": [
-        1753701729918088411
-      ],
-      "parentPlan": 2768292828182334477,
-      "positionWeb": {
-        "x": 1024.920193470375,
-        "y": 606.29746070133
       },
       "type": "State",
       "variableBindings": []
@@ -307,30 +252,6 @@
         "conditionString": "",
         "enabled": true,
         "id": 906579184271078477,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#1",
-      "id": 1753701729918088411,
-      "inState": 2696970137074258240,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 1474370998699018467,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 3404036633917712792,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -388,21 +309,21 @@
     },
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#1",
-      "id": 4482352928621881699,
+      "condition": "ConditionRepository.cnd#2",
+      "id": 2899315486017501859,
       "inState": 699418104844149540,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 2696970137074258240,
+      "outState": 1474370998699018467,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 612568619416692934,
+        "id": 3454146765593914364,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

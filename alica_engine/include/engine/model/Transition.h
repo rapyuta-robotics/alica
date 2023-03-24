@@ -21,7 +21,6 @@ struct TransitionConditionContext
     const std::string name;
     const std::string libraryName;
     int64_t conditionConfId;
-    int64_t preConditionId;
 };
 
 /**
@@ -38,8 +37,6 @@ public:
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
     TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
     const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
-    // Deprecated, only used when using legacy transition conditions.
-    int64_t getPreConditionId() const { return _preConditionId; }
 
 private:
     friend TransitionFactory;
@@ -65,11 +62,6 @@ private:
      * The Synchronisation this transition belongs to. Null if it does not belong to any.
      */
     const Synchronisation* _synchronisation;
-
-    /**
-     * Deprecated, only used when using legacy transition conditions.
-     */
-    int64_t _preConditionId;
 
     std::unique_ptr<KeyMapping> _keyMapping;
 };

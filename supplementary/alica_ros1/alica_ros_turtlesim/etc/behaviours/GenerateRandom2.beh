@@ -1,0 +1,39 @@
+{
+  "blackboard": [
+    {
+      "access": "output",
+      "comment": "",
+      "id": 1661118062604805942,
+      "key": "value",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 2831702563016616416,
+      "key": "min",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 4515970455700756335,
+      "key": "max",
+      "type": "double"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 0,
+  "id": 4020999983789429596,
+  "implementationName": "GenerateRandom",
+  "inheritBlackboard": false,
+  "libraryName": "alica_standard_library",
+  "name": "GenerateRandom2",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "variables": []
+}

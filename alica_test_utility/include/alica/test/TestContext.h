@@ -23,6 +23,9 @@ class TestBehaviourCreator;
 class TestContext : public alica::AlicaContext
 {
 public:
+    [[deprecated("Use TestContext(agentName, configPaths, ...) instead")]] TestContext(const std::string& agentName, const std::string& configPath,
+            const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const AgentId agentID = InvalidAgentID);
+
     TestContext(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName, const std::string& masterPlanName,
             bool stepEngine, const AgentId agentID = InvalidAgentID);
 

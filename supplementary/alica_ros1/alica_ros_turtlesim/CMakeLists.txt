@@ -65,6 +65,24 @@ target_link_libraries(${PROJECT_NAME}
 add_subdirectory(libalica-turtlesim)
 add_subdirectory(libalica-ros-utils)
 
+##########
+## Test ##
+##########
+
+if (CATKIN_ENABLE_TESTING)
+    find_package(rostest REQUIRED)
+    add_rostest_gtest(${PROJECT_NAME}-test test/alica_ros_turtlesim.test test/test_main.cpp)
+    target_link_libraries(${PROJECT_NAME}-test
+        Boost::system
+        Boost::filesystem
+        ${CMAKE_DL_LIBS}
+        ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+        alica_dynamic_loading
+        autodiff
+        constraintsolver)
+endif()
+
 #############
 ## Install ##
 #############

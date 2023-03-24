@@ -12,7 +12,6 @@ void ConditionFactory::fillCondition(const YAML::Node& conditionNode, Condition*
     Factory::storeElement(condition, alica::Strings::condition);
     condition->_abstractPlan = abstractPlan;
     condition->_conditionString = Factory::getValue<std::string>(conditionNode, alica::Strings::conditionString, "");
-    condition->_plugInName = Factory::getValue<std::string>(conditionNode, alica::Strings::pluginName);
 
     if (Factory::isValid(conditionNode[alica::Strings::libraryName])) {
         condition->_libraryName = Factory::getValue<std::string>(conditionNode, alica::Strings::libraryName);

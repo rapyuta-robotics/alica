@@ -14,8 +14,6 @@ static const std::string behaviour = "behaviour";
 static const std::string behaviour_extension = ".beh";
 static const std::string taskrepository = "taskrepository";
 static const std::string taskrepository_extension = ".tsk";
-static const std::string configuration = "configuration";
-static const std::string configuration_extension = ".cfg";
 static const std::string condition_extension = ".cnd";
 static const std::string task = "task";
 static const std::string state = "state";
@@ -39,12 +37,12 @@ static const std::string input = "input";
 static const std::string output = "output";
 static const std::string parentKey = "parentKey";
 static const std::string childKey = "childKey";
+static const std::string value = "value";
 
 static const std::string id = "id";
 static const std::string name = "name";
 static const std::string no_name = "no_name";
 static const std::string comment = "comment";
-static const std::string pluginName = "pluginName";
 static const std::string conditionString = "conditionString";
 static const std::string enabled = "enabled";
 static const std::string no_comment = "no_comment";
@@ -65,7 +63,6 @@ static const std::string no_type = "no_type";
 static const std::string variableBindings = "variableBindings";
 static const std::string subPlan = "subPlan";
 static const std::string subVariable = "subVariable";
-static const std::string masterPlan = "masterPlan";
 static const std::string utilityThreshold = "utilityThreshold";
 static const std::string minCardinality = "minCardinality";
 static const std::string maxCardinality = "maxCardinality";
@@ -99,6 +96,7 @@ static const std::string key = "key";
 static const std::string transitionCondition = "transitionCondition";
 static const std::string transitionConditionRepository = "transitionConditionRepository";
 static const std::string libraryName = "libraryName";
+static const std::string implementationName = "implementationName";
 
 } // namespace Strings
 } // namespace alica
