@@ -1,7 +1,6 @@
 #include <alica_tests/behaviours/ReadConfigurationBehaviour.h>
 #include <memory>
 
-#include "engine/model/Configuration.h"
 #include "engine/model/Parameter.h"
 
 namespace alica
