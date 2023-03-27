@@ -17,7 +17,7 @@ FourCornersSummand::~FourCornersSummand() {}
 
 /*
     The goal of this summand is to prioritize agent to pick up corner task which is closest to it.
-    We evaluate current assignment to prioritize assignment if current agent is assigned task which is to it's closest corner
+    We evaluate current assignment to prioritize assignment if current agent is assigned task which is to its closest corner
 */
 alica::UtilityInterval FourCornersSummand::eval(alica::IAssignment ass, const alica::Assignment* oldAss, const alica::Blackboard* globalBlackboard) const
 {
@@ -28,8 +28,8 @@ alica::UtilityInterval FourCornersSummand::eval(alica::IAssignment ass, const al
         alica::Logging::logInfo("FourCornersSummand") << "Turtle pose not valid";
         return alica::UtilityInterval(0, 0);
     }
-    const auto x = turtle->getCurrentPose()->x;
-    const auto y = turtle->getCurrentPose()->y;
+    const double x = turtle->getCurrentPose()->x;
+    const double y = turtle->getCurrentPose()->y;
     double bestDistance = std::numeric_limits<double>::max();
     double currentAgentDistance = std::numeric_limits<double>::max();
     std::pair<double, double> currentCorner, bestCorner;
@@ -48,7 +48,7 @@ alica::UtilityInterval FourCornersSummand::eval(alica::IAssignment ass, const al
             bestCorner = coordinates[entryPoint->getIndex()];
         }
     }
-    // if there is a corner task which is better than agent's current tasks in this assignment then we prioritized this assignment
+    // if there is a corner task which is better than agent's current tasks in this assignment then we de-prioritized this assignment
     if (bestDistance < currentAgentDistance) {
         return alica::UtilityInterval(0, 0);
     }

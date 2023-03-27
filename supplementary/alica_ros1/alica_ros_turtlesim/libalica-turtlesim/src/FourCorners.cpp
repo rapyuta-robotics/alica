@@ -13,7 +13,7 @@ std::shared_ptr<FourCornersUtilityFunction> FourCornersUtilityFunction::create(a
 
 /*
     The utility function combines three components to determine the best assignment:
-    1. Priority (prio): A measure of how important the assignment is considering agent role and it's priority to take up a task.
+    1. Priority (prio): A measure of how important the assignment is considering agent role and its priority to take up a task.
     2. Similarity (sim): A measure of how close the new assignment is to the previous assignment.
     3. Custom component (summand): A user-defined component to add extra criteria.
 
@@ -40,10 +40,10 @@ std::shared_ptr<alica::UtilityFunction> FourCornersUtilityFunction::getUtilityFu
     double customWeight = 0.5;
     std::shared_ptr<alica::UtilityFunction> function = std::make_shared<alica::UtilityFunction>(priorityWeight, similarityWeight, plan);
     FourCornersSummand* summand = new FourCornersSummand(customWeight);
-    summand->addEntryPoint(plan->getEntryPointByID(599427197773116147));
-    summand->addEntryPoint(plan->getEntryPointByID(919409193351805481));
-    summand->addEntryPoint(plan->getEntryPointByID(1002169119911528732));
-    summand->addEntryPoint(plan->getEntryPointByID(3975697190021470017));
+    summand->addEntryPoint(plan->getEntryPointByID(599427197773116147));  // goto bottom-left
+    summand->addEntryPoint(plan->getEntryPointByID(919409193351805481));  // goto top-left
+    summand->addEntryPoint(plan->getEntryPointByID(1002169119911528732)); // goto bottom-right
+    summand->addEntryPoint(plan->getEntryPointByID(3975697190021470017)); // goto top-right
     function->editUtilSummands().emplace_back(summand);
     return function;
 }
