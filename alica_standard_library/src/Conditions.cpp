@@ -93,4 +93,68 @@ bool IsChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp
     }
     return false;
 }
+
+template <typename T>
+bool IsEqual(const alica::Blackboard* input)
+{
+    try {
+        alica::LockedBlackboardRO bb(*input);
+        const T left = bb.get<T>("left");
+        const T right = bb.get<T>("right");
+        return left == right;
+    } catch (...) {
+        throw std::runtime_error("Error while evaluating IsEqual condition. Please check the input types");
+    }
+}
+
+bool IsEqualDouble(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    try {
+        return IsEqual<double>(input);
+    } catch (const std::runtime_error& error) {
+        alica::Logging::logError(__func__) << error.what();
+        return false;
+    }
+}
+
+bool IsEqualInt64(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    try {
+        return IsEqual<int64_t>(input);
+    } catch (const std::runtime_error& error) {
+        alica::Logging::logError(__func__) << error.what();
+        return false;
+    }
+}
+
+bool IsEqualUInt64(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    try {
+        return IsEqual<int64_t>(input);
+    } catch (const std::runtime_error& error) {
+        alica::Logging::logError(__func__) << error.what();
+        return false;
+    }
+}
+
+bool IsEqualString(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    try {
+        return IsEqual<int64_t>(input);
+    } catch (const std::runtime_error& error) {
+        alica::Logging::logError(__func__) << error.what();
+        return false;
+    }
+}
+
+bool IsEqualBool(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    try {
+        return IsEqual<bool>(input);
+    } catch (const std::runtime_error& error) {
+        alica::Logging::logError(__func__) << error.what();
+        return false;
+    }
+}
+
 } /* namespace alica_standard_library */
