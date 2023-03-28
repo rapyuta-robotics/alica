@@ -21,7 +21,7 @@ std::shared_ptr<BasicConstraint> DynamicConstraintCreator::createConstraint(int6
     std::string symbolName = context.name + "Constraint"; // symbol to import, append `Constraint` to name because the name is the same as the condition's name
     try {
         completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    } catch (const DynamicLoadingException& ex) {
+    } catch (const std::exception& ex) {
         throw DynamicLoadingException{"constraint", constraintConfId, symbolName, "", context.libraryName, ex.what()};
     }
 

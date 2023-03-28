@@ -22,7 +22,7 @@ std::shared_ptr<BasicUtilityFunction> DynamicUtilityFunctionCreator::createUtili
             context.name + "UtilityFunction"; // symbol to import, append `UtilityFunction` to name because the name is the same as the plan's name
     try {
         completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    } catch (const DynamicLoadingException& ex) {
+    } catch (const std::exception& ex) {
         throw DynamicLoadingException{"condition", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
     }
 

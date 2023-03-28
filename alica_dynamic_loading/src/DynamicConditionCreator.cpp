@@ -20,7 +20,7 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_
     std::string completeLibraryName;
     try {
         completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    } catch (const DynamicLoadingException& ex) {
+    } catch (const std::exception& ex) {
         throw DynamicLoadingException{"condition", conditionConfId, context.name, "", context.libraryName, ex.what()};
     }
 

@@ -20,7 +20,7 @@ TransitionConditionCallback DynamicTransitionConditionCreator::createConditions(
     std::string completeLibraryName;
     try {
         completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    } catch (const DynamicLoadingException& ex) {
+    } catch (const std::exception& ex) {
         throw DynamicLoadingException{"transitionCondition", conditionId, context.name, "", context.libraryName, ex.what()};
     }
 

@@ -22,7 +22,7 @@ std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t
     std::string completeLibraryName;
     try {
         completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.behaviourModel->getLibraryName());
-    } catch (const DynamicLoadingException& ex) {
+    } catch (const std::exception& ex) {
         throw DynamicLoadingException{
                 "behaviour", behaviourId, context.name, context.behaviourModel->getImplementationName(), context.behaviourModel->getLibraryName(), ex.what()};
     }

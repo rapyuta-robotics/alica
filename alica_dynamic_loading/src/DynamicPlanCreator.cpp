@@ -22,7 +22,7 @@ std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanCo
     std::string completeLibraryName;
     try {
         completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.planModel->getLibraryName());
-    } catch (const DynamicLoadingException& ex) {
+    } catch (const std::exception& ex) {
         throw DynamicLoadingException{"plan", planId, context.name, context.planModel->getImplementationName(), context.planModel->getLibraryName(), ex.what()};
     }
 
