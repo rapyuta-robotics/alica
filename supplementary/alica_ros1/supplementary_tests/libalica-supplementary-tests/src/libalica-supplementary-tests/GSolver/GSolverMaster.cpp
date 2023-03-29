@@ -18,9 +18,9 @@ std::unique_ptr<GSolverMaster> GSolverMaster::create(PlanContext& context)
     return std::make_unique<GSolverMaster>(context);
 }
 
-std::unique_ptr<GSolverMasterUtilityFunction> GSolverMasterUtilityFunction::create(UtilityFunctionContext& context)
+std::shared_ptr<GSolverMasterUtilityFunction> GSolverMasterUtilityFunction::create(UtilityFunctionContext& context)
 {
-    return std::make_unique<GSolverMasterUtilityFunction>();
+    return std::make_shared<GSolverMasterUtilityFunction>();
 }
 
 } // namespace alica

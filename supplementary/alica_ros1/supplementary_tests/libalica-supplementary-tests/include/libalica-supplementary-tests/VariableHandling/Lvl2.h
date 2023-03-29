@@ -26,7 +26,7 @@ class Lvl2UtilityFunction : public alica::BasicUtilityFunction
 public:
     Lvl2UtilityFunction() = default;
     std::shared_ptr<alica::UtilityFunction> getUtilityFunction(alica::Plan* plan) override;
-    static std::unique_ptr<Lvl2UtilityFunction> create(alica::UtilityFunctionContext&);
+    static std::shared_ptr<Lvl2UtilityFunction> create(alica::UtilityFunctionContext&);
 };
 BOOST_DLL_ALIAS(alica::Lvl2UtilityFunction::create, Lvl2UtilityFunction)
 
@@ -34,7 +34,7 @@ class Lvl2RuntimeCondition : public BasicCondition
 {
 public:
     // Factory method
-    static std::unique_ptr<Lvl2RuntimeCondition> create(ConditionContext& context);
+    static std::shared_ptr<Lvl2RuntimeCondition> create(ConditionContext& context);
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
 BOOST_DLL_ALIAS(alica::Lvl2RuntimeCondition::create, Lvl2RuntimeCondition)
@@ -43,7 +43,7 @@ class Lvl2RuntimeConditionConstraint : public BasicConstraint
 {
 public:
     void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
-    static std::unique_ptr<Lvl2RuntimeConditionConstraint> create(alica::ConstraintContext&);
+    static std::shared_ptr<Lvl2RuntimeConditionConstraint> create(alica::ConstraintContext&);
 };
 BOOST_DLL_ALIAS(alica::Lvl2RuntimeConditionConstraint::create, Lvl2RuntimeConditionConstraint)
 

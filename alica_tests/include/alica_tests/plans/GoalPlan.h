@@ -25,7 +25,7 @@ public:
     GoalPlanPreCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<GoalPlanPreCondition> create(ConditionContext& context) { return std::make_unique<GoalPlanPreCondition>(context); };
+    static std::shared_ptr<GoalPlanPreCondition> create(ConditionContext& context) { return std::make_shared<GoalPlanPreCondition>(context); };
 };
 class GoalPlanRuntimeCondition : public BasicCondition
 {
@@ -33,7 +33,7 @@ public:
     GoalPlanRuntimeCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<GoalPlanRuntimeCondition> create(ConditionContext& context) { return std::make_unique<GoalPlanRuntimeCondition>(context); };
+    static std::shared_ptr<GoalPlanRuntimeCondition> create(ConditionContext& context) { return std::make_shared<GoalPlanRuntimeCondition>(context); };
 };
 class GoalPlanPostCondition : public BasicCondition
 {
@@ -41,7 +41,7 @@ public:
     GoalPlanPostCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<GoalPlanPostCondition> create(ConditionContext& context) { return std::make_unique<GoalPlanPostCondition>(context); };
+    static std::shared_ptr<GoalPlanPostCondition> create(ConditionContext& context) { return std::make_shared<GoalPlanPostCondition>(context); };
 };
 
 class GoalPlanRuntimeConditionConstraint : public BasicConstraint
@@ -50,9 +50,9 @@ public:
     GoalPlanRuntimeConditionConstraint(ConstraintContext& context)
             : BasicConstraint(){};
     void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
-    static std::unique_ptr<GoalPlanRuntimeConditionConstraint> create(ConstraintContext& context)
+    static std::shared_ptr<GoalPlanRuntimeConditionConstraint> create(ConstraintContext& context)
     {
-        return std::make_unique<GoalPlanRuntimeConditionConstraint>(context);
+        return std::make_shared<GoalPlanRuntimeConditionConstraint>(context);
     };
 };
 

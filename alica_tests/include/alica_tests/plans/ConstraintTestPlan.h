@@ -25,9 +25,9 @@ public:
     ConstraintTestPlanRuntimeCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<ConstraintTestPlanRuntimeCondition> create(ConditionContext& context)
+    static std::shared_ptr<ConstraintTestPlanRuntimeCondition> create(ConditionContext& context)
     {
-        return std::make_unique<ConstraintTestPlanRuntimeCondition>(context);
+        return std::make_shared<ConstraintTestPlanRuntimeCondition>(context);
     };
 };
 
@@ -37,9 +37,9 @@ public:
     ConstraintTestPlanRuntimeConditionConstraint(ConstraintContext& context)
             : BasicConstraint(){};
     void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
-    static std::unique_ptr<ConstraintTestPlanRuntimeConditionConstraint> create(ConstraintContext& context)
+    static std::shared_ptr<ConstraintTestPlanRuntimeConditionConstraint> create(ConstraintContext& context)
     {
-        return std::make_unique<ConstraintTestPlanRuntimeConditionConstraint>(context);
+        return std::make_shared<ConstraintTestPlanRuntimeConditionConstraint>(context);
     };
 };
 

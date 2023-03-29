@@ -29,4 +29,12 @@ std::ostream& operator<<(std::ostream& out, const std::vector<T>& gr)
     return out;
 }
 
+template <class... Args>
+std::string stringify(Args&&... args)
+{
+    std::ostringstream oss;
+    (oss << ... << std::forward<Args>(args));
+    return oss.str();
+}
+
 } // namespace alica

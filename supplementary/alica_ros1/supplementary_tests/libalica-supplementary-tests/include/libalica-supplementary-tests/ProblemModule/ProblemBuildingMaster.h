@@ -25,7 +25,7 @@ class ProblemBuildingMasterUtilityFunction : public BasicUtilityFunction
 {
 public:
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
-    static std::unique_ptr<ProblemBuildingMasterUtilityFunction> create(alica::UtilityFunctionContext&);
+    static std::shared_ptr<ProblemBuildingMasterUtilityFunction> create(alica::UtilityFunctionContext&);
 };
 
 BOOST_DLL_ALIAS(alica::ProblemBuildingMasterUtilityFunction::create, ProblemBuildingMasterUtilityFunction)

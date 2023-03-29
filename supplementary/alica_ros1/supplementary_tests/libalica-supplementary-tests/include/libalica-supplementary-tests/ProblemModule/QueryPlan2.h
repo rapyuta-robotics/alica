@@ -22,7 +22,7 @@ class QueryPlan2UtilityFunction : public BasicUtilityFunction
 {
 public:
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
-    static std::unique_ptr<QueryPlan2UtilityFunction> create(alica::UtilityFunctionContext&);
+    static std::shared_ptr<QueryPlan2UtilityFunction> create(alica::UtilityFunctionContext&);
 };
 
 BOOST_DLL_ALIAS(alica::QueryPlan2UtilityFunction::create, QueryPlan2UtilityFunction)
