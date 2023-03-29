@@ -95,7 +95,7 @@ bool IsChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp
 }
 
 template <typename T>
-bool IsEqual(const alica::Blackboard* input)
+bool IsEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     try {
         alica::LockedBlackboardRO bb(*input);
@@ -103,58 +103,75 @@ bool IsEqual(const alica::Blackboard* input)
         const T right = bb.get<T>("right");
         return left == right;
     } catch (...) {
-        throw std::runtime_error("Error while evaluating IsEqual condition. Please check the input types");
-    }
-}
-
-bool IsEqualDouble(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
-{
-    try {
-        return IsEqual<double>(input);
-    } catch (const std::runtime_error& error) {
-        alica::Logging::logError(__func__) << error.what();
+        alica::Logging::logError(__func__) << "Error while evaluating IsEqual condition. Please check the input types";
         return false;
     }
 }
 
-bool IsEqualInt64(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+template <typename T>
+bool IsNotEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     try {
-        return IsEqual<int64_t>(input);
-    } catch (const std::runtime_error& error) {
-        alica::Logging::logError(__func__) << error.what();
+        return !IsEqual<T>(input, rp, gb);
+    } catch (...) {
+        alica::Logging::logError(__func__) << "Error while evaluating IsNotEqual condition. Please check the input types";
         return false;
     }
 }
 
-bool IsEqualUInt64(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+template <typename T>
+bool IsGreaterThan(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     try {
-        return IsEqual<int64_t>(input);
-    } catch (const std::runtime_error& error) {
-        alica::Logging::logError(__func__) << error.what();
+        alica::LockedBlackboardRO bb(*input);
+        const T left = bb.get<T>("left");
+        const T right = bb.get<T>("right");
+        return left > right;
+    } catch (...) {
+        alica::Logging::logError(__func__) << "Error while evaluating condition. Please check the input types";
         return false;
     }
 }
 
-bool IsEqualString(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+template <typename T>
+bool IsLessThan(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     try {
-        return IsEqual<int64_t>(input);
-    } catch (const std::runtime_error& error) {
-        alica::Logging::logError(__func__) << error.what();
+        alica::LockedBlackboardRO bb(*input);
+        const T left = bb.get<T>("left");
+        const T right = bb.get<T>("right");
+        return left < right;
+    } catch (...) {
+        alica::Logging::logError(__func__) << "Error while evaluating condition. Please check the input types";
         return false;
     }
 }
 
-bool IsEqualBool(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+template <typename T>
+bool IsLessThanOrEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     try {
-        return IsEqual<bool>(input);
-    } catch (const std::runtime_error& error) {
-        alica::Logging::logError(__func__) << error.what();
+        alica::LockedBlackboardRO bb(*input);
+        const T left = bb.get<T>("left");
+        const T right = bb.get<T>("right");
+        return left <= right;
+    } catch (...) {
+        alica::Logging::logError(__func__) << "Error while evaluating condition. Please check the input types";
         return false;
     }
 }
 
+template <typename T>
+bool IsGreaterThanOrEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    try {
+        alica::LockedBlackboardRO bb(*input);
+        const T left = bb.get<T>("left");
+        const T right = bb.get<T>("right");
+        return left >= right;
+    } catch (...) {
+        alica::Logging::logError(__func__) << "Error while evaluating condition. Please check the input types";
+        return false;
+    }
+}
 } /* namespace alica_standard_library */
