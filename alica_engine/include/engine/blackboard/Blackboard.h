@@ -45,14 +45,6 @@ class BlackboardImpl
     using BBValueType = std::variant<std::monostate, bool, int64_t, uint64_t, double, std::string, std::any>;
     static constexpr std::size_t BB_VALUE_TYPE_ANY_INDEX = 6;
 
-    template <class... Args>
-    static std::string stringify(Args&&... args)
-    {
-        std::ostringstream oss;
-        (oss << ... << std::forward<Args>(args));
-        return oss.str();
-    }
-
 public:
     BlackboardImpl() = default;
     BlackboardImpl(const BlackboardImpl&) = delete;

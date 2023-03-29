@@ -22,7 +22,7 @@ public:
     FailsOnOneRuntimeCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<FailsOnOneRuntimeCondition> create(ConditionContext& context) { return std::make_unique<FailsOnOneRuntimeCondition>(context); };
+    static std::shared_ptr<FailsOnOneRuntimeCondition> create(ConditionContext& context) { return std::make_shared<FailsOnOneRuntimeCondition>(context); };
 };
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, FailsOnOne)

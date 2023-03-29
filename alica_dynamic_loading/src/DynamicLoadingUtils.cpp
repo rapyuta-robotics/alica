@@ -6,6 +6,17 @@ namespace alica
 
 static constexpr const char* LOGNAME = "DynamicLoading";
 
+DynamicLoadingException::DynamicLoadingException(const std::string& errorMsg)
+        : std::runtime_error(errorMsg)
+{
+}
+DynamicLoadingException::DynamicLoadingException(
+        const std::string& element, int64_t id, const std::string& name, const std::string& implName, const std::string& libName, const std::string& errorMsg)
+        : std::runtime_error(
+                  stringify("Could not load ", element, ": ", name, ", id: ", id, ", implName: ", implName, " from library: ", libName, ", reason: ", errorMsg))
+{
+}
+
 std::vector<std::string> tokenizeStr(const std::string& toTokenize, char delimter)
 {
     std::vector<std::string> tokens;
@@ -23,16 +34,12 @@ std::vector<std::string> calculateLibraryPath()
 {
     const char* ldLibraryPath = std::getenv("LD_LIBRARY_PATH");
     if (!ldLibraryPath) {
-        Logging::logError(LOGNAME) << "Error:"
-                                   << "Missing LD_LIBRARY_PATH variable";
-        return std::vector<std::string>();
+        throw DynamicLoadingException{"could not load LD_LIBRARY_PATH"};
     }
 
     auto tokens = tokenizeStr(ldLibraryPath, ':');
     if (tokens.empty()) {
-        Logging::logError(LOGNAME) << "Error:"
-                                   << "Missing LD_LIBRARY_PATH";
-        return std::vector<std::string>();
+        throw DynamicLoadingException{"LD_LIBRARY_PATH is empty"};
     }
 
     return tokens;
@@ -40,10 +47,8 @@ std::vector<std::string> calculateLibraryPath()
 
 std::string calculateLibraryCompleteName(const std::vector<std::string>& libraryPath, const std::string& libraryName)
 {
-    if (libraryName == "") {
-        Logging::logError(LOGNAME) << "Error:"
-                                   << "Empty library name";
-        return "";
+    if (libraryName.empty()) {
+        throw DynamicLoadingException{"library name is empty"};
     }
 
     for (const std::string& current : libraryPath) {
@@ -52,9 +57,7 @@ std::string calculateLibraryCompleteName(const std::vector<std::string>& library
             return completeName;
         }
     }
-    Logging::logError(LOGNAME) << "Error:"
-                               << "Lib not exists in LD_CONFIG_PATH library name:" << libraryName;
-    return "";
+    throw DynamicLoadingException{"could not find library: lib" + libraryName + ".so, in paths defined in LD_LIBRARY_PATH"};
 }
 
 } // namespace alica

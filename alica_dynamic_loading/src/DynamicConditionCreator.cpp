@@ -17,20 +17,24 @@ DynamicConditionCreator::DynamicConditionCreator()
 
 std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_t conditionConfId, ConditionContext& context)
 {
-    std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    if (completeLibraryName.empty()) {
-        Logging::logError("DynamicLoading") << "Could not compute the complete library name for creating the condition: " << context.name;
-        return nullptr;
+    std::string completeLibraryName;
+    try {
+        completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
+    } catch (const std::exception& ex) {
+        throw DynamicLoadingException{"condition", conditionConfId, context.name, "", context.libraryName, ex.what()};
     }
 
-    _conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
-            completeLibraryName,                                        // complete path to library also with file name
-            context.name,                                               // symbol to import
-            boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
-    );
+    try {
+        _conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
+                completeLibraryName,                                        // complete path to library also with file name
+                context.name,                                               // symbol to import
+                boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
+        );
+    } catch (const std::exception& ex) {
+        throw DynamicLoadingException{"condition", conditionConfId, context.name, "", context.libraryName, ex.what()};
+    }
 
     std::shared_ptr<BasicCondition> createdCondition = _conditionCreator(context);
-
     Logging::logDebug("DynamicLoading") << "Loaded condition " << context.name;
 
     return createdCondition;

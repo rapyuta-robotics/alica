@@ -22,7 +22,7 @@ class ProbBuildingLevel1UtilityFunction : public BasicUtilityFunction
 {
 public:
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
-    static std::unique_ptr<ProbBuildingLevel1UtilityFunction> create(alica::UtilityFunctionContext&);
+    static std::shared_ptr<ProbBuildingLevel1UtilityFunction> create(alica::UtilityFunctionContext&);
 };
 
 BOOST_DLL_ALIAS(alica::ProbBuildingLevel1UtilityFunction::create, ProbBuildingLevel1UtilityFunction)

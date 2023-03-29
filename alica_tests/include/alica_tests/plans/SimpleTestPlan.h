@@ -24,7 +24,7 @@ public:
     SimpleTestPlanPreCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<SimpleTestPlanPreCondition> create(ConditionContext& context) { return std::make_unique<SimpleTestPlanPreCondition>(context); };
+    static std::shared_ptr<SimpleTestPlanPreCondition> create(ConditionContext& context) { return std::make_shared<SimpleTestPlanPreCondition>(context); };
 };
 class SimpleTestPlanRuntimeCondition : public BasicCondition
 {
@@ -32,9 +32,9 @@ public:
     SimpleTestPlanRuntimeCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<SimpleTestPlanRuntimeCondition> create(ConditionContext& context)
+    static std::shared_ptr<SimpleTestPlanRuntimeCondition> create(ConditionContext& context)
     {
-        return std::make_unique<SimpleTestPlanRuntimeCondition>(context);
+        return std::make_shared<SimpleTestPlanRuntimeCondition>(context);
     };
 };
 

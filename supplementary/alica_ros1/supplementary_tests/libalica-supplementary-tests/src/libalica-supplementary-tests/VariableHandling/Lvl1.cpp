@@ -53,19 +53,19 @@ std::unique_ptr<Lvl1> Lvl1::create(PlanContext& context)
     return std::make_unique<Lvl1>(context);
 }
 
-std::unique_ptr<Lvl1UtilityFunction> Lvl1UtilityFunction::create(UtilityFunctionContext& context)
+std::shared_ptr<Lvl1UtilityFunction> Lvl1UtilityFunction::create(UtilityFunctionContext& context)
 {
-    return std::make_unique<Lvl1UtilityFunction>();
+    return std::make_shared<Lvl1UtilityFunction>();
 }
 
-std::unique_ptr<Lvl1RuntimeCondition> Lvl1RuntimeCondition::create(alica::ConditionContext& context)
+std::shared_ptr<Lvl1RuntimeCondition> Lvl1RuntimeCondition::create(alica::ConditionContext& context)
 {
-    return std::make_unique<Lvl1RuntimeCondition>();
+    return std::make_shared<Lvl1RuntimeCondition>();
 }
 
-std::unique_ptr<Lvl1RuntimeConditionConstraint> Lvl1RuntimeConditionConstraint::create(alica::ConstraintContext& context)
+std::shared_ptr<Lvl1RuntimeConditionConstraint> Lvl1RuntimeConditionConstraint::create(alica::ConstraintContext& context)
 {
-    return std::make_unique<Lvl1RuntimeConditionConstraint>();
+    return std::make_shared<Lvl1RuntimeConditionConstraint>();
 }
 
 } // namespace alica

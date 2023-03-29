@@ -25,19 +25,19 @@ std::unique_ptr<VHMaster> VHMaster::create(PlanContext& context)
 {
     return std::make_unique<VHMaster>(context);
 }
-std::unique_ptr<VHMasterUtilityFunction> VHMasterUtilityFunction::create(UtilityFunctionContext& context)
+std::shared_ptr<VHMasterUtilityFunction> VHMasterUtilityFunction::create(UtilityFunctionContext& context)
 {
-    return std::make_unique<VHMasterUtilityFunction>();
+    return std::make_shared<VHMasterUtilityFunction>();
 }
 
-std::unique_ptr<VHMasterRuntimeCondition> VHMasterRuntimeCondition::create(alica::ConditionContext& context)
+std::shared_ptr<VHMasterRuntimeCondition> VHMasterRuntimeCondition::create(alica::ConditionContext& context)
 {
-    return std::make_unique<VHMasterRuntimeCondition>();
+    return std::make_shared<VHMasterRuntimeCondition>();
 }
 
-std::unique_ptr<VHMasterRuntimeConditionConstraint> VHMasterRuntimeConditionConstraint::create(alica::ConstraintContext& context)
+std::shared_ptr<VHMasterRuntimeConditionConstraint> VHMasterRuntimeConditionConstraint::create(alica::ConstraintContext& context)
 {
-    return std::make_unique<VHMasterRuntimeConditionConstraint>();
+    return std::make_shared<VHMasterRuntimeConditionConstraint>();
 }
 
 } // namespace alica

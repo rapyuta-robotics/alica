@@ -18,9 +18,9 @@ std::unique_ptr<ProblemBuildingMaster> ProblemBuildingMaster::create(alica::Plan
     return std::make_unique<ProblemBuildingMaster>(context);
 }
 
-std::unique_ptr<ProblemBuildingMasterUtilityFunction> ProblemBuildingMasterUtilityFunction::create(alica::UtilityFunctionContext& context)
+std::shared_ptr<ProblemBuildingMasterUtilityFunction> ProblemBuildingMasterUtilityFunction::create(alica::UtilityFunctionContext& context)
 {
-    return std::make_unique<ProblemBuildingMasterUtilityFunction>();
+    return std::make_shared<ProblemBuildingMasterUtilityFunction>();
 }
 
 } // namespace alica
