@@ -385,6 +385,23 @@
       "relativeDirectory": "conditions"
     },
     {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2610737155421779161,
+          "key": "childName",
+          "type": "std::string"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3290850633957473696,
+      "libraryName": "alica_standard_library",
+      "name": "IsChildSuccess",
+      "relativeDirectory": ""
+    },
+    {
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
@@ -495,16 +512,95 @@
         {
           "access": "input",
           "comment": "",
-          "id": 2610737155421779161,
-          "key": "childName",
+          "id": 732403311103918917,
+          "key": "right",
+          "type": "double"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3758957980165190187,
+          "key": "left",
+          "type": "double"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2056838422073723411,
+      "libraryName": "alica_standard_library",
+      "name": "IsNotEqualDouble",
+      "relativeDirectory": ""
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1085743488387337734,
+          "key": "right",
+          "type": "uint64"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2746617638945454002,
+          "key": "left",
+          "type": "uint64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 718333707505171884,
+      "libraryName": "alica_standard_library",
+      "name": "IsGreaterThanOrEqualInt64",
+      "relativeDirectory": ""
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 423497022241155678,
+          "key": "left",
+          "type": "std::string"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 297103765735860664,
+          "key": "right",
           "type": "std::string"
         }
       ],
       "comment": "",
       "conditionRepository": 0,
-      "id": 3290850633957473696,
+      "id": 4434919629521912839,
       "libraryName": "alica_standard_library",
-      "name": "IsChildSuccess",
+      "name": "IsEqualString",
+      "relativeDirectory": ""
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3834485219782018596,
+          "key": "left",
+          "type": "int64"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2553683918549651059,
+          "key": "right",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 997531702947519653,
+      "libraryName": "alica_standard_library",
+      "name": "IsLessThanInt64",
       "relativeDirectory": ""
     }
   ],
