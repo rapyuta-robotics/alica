@@ -49,13 +49,13 @@ class AlicaTestBase
 {
 public:
     AlicaTestBase()
-#if defined(PLANS)
-            : _testFolderPath(std::string(PLANS) + "/src/test")
+#if defined(THIS_PACKAGE_DIR)
+            : _testFolderPath(std::string(THIS_PACKAGE_DIR) + "/etc/")
 #endif
     {
     }
 
-    virtual std::vector<std::string> getTestFolderPaths() const { return {_testFolderPath + "/etc/"}; }
+    virtual std::vector<std::string> getTestFolderPaths() const { return {_testFolderPath}; }
 
 private:
     std::string _testFolderPath;
@@ -343,11 +343,11 @@ public:
     {
         // Path to test configs set by CMake
         std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
+#if defined(THIS_PACKAGE_DIR)
+        path = THIS_PACKAGE_DIR;
+        path += "/etc/";
 #endif
-        _tc = std::make_unique<TestContext>("hairy", std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1);
+        _tc = std::make_unique<TestContext>("hairy", std::vector<std::string>{path}, "Roleset", "TestMasterPlan", true, 1);
         ASSERT_TRUE(_tc->isValid());
         const YAML::Node& config = _tc->getConfig();
 

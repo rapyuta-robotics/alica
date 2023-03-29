@@ -575,10 +575,9 @@ protected:
     std::vector<std::string> getTestFolderPaths() const override
     {
         std::string path;
-#if defined(PLANS)
-        path = std::string{PLANS} + "/src/test";
+#if defined(THIS_PACKAGE_DIR)
+        path = std::string{THIS_PACKAGE_DIR} + "/etc/";
 #endif
-        path += "/etc";
 
         // Use the sub-folders in the etc folder as separate config folders
         return std::vector<std::string>{path + "/hairy", path + "/nase", path + "/plans", path + "/roles", path + "/tasks", path + "/behaviours",
