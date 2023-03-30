@@ -36,9 +36,7 @@ protected:
 TEST_F(StandardLibraryCompareConditions, comparConditions)
 {
     ae->start();
-    std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
-
+    // if we reach this final state, the test is successful. Check TestStandardLibraryCompareConditions.pml for details.
     STEP_UNTIL(alica::test::Util::isStateActive(ae, 3632801511049529612));
 }
 } // namespace
