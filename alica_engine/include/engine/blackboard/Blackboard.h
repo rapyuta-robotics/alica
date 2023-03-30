@@ -139,7 +139,7 @@ public:
         using IntPromotedType = std::conditional_t<std::is_integral_v<Type> && !std::is_same_v<Type, bool>,
                 std::conditional_t<std::is_signed_v<Type>, int64_t, uint64_t>, Type>;
         // Promote float to double. Note: we promote to double & not long double for backwards compatibility (otherwise variant type would need to be changed
-        // resulting in long double being treated as a known type instead of unknonwn (std::any) & all get<double> statements changing to get<long double>)
+        // resulting in long double being treated as a known type instead of unknown (std::any) & all get<double> statements changing to get<long double>)
         using PromotedType = std::conditional_t<std::is_same_v<IntPromotedType, float>, double, IntPromotedType>;
         if constexpr (std::is_same_v<Type, PromotedType>) {
             setImpl(key, std::forward<T>(value));
@@ -223,9 +223,9 @@ private:
     template <class T>
     static const char* getTypeName()
     {
-        auto index = findInVariant<std::decay_t<T>, BBValueType>::value;
-        index = (index == -1) ? BB_VALUE_TYPE_ANY_INDEX : index; // If a type is not found, treat it as std::any
-        return getTypeName(index);
+        auto idx = findInVariant<std::decay_t<T>, BBValueType>::value;
+        idx = (idx == -1) ? BB_VALUE_TYPE_ANY_INDEX : idx; // If a type is not found, treat it as std::any
+        return getTypeName(idx);
     }
 
     static const char* getTypeName(std::size_t index)
