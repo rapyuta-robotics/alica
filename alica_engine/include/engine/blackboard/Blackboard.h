@@ -79,7 +79,7 @@ public:
             const auto yamlTypeIt = _yamlType.find(key);
             if (yamlTypeIt == _yamlType.end()) {
                 // key is not found in yaml file
-                if constexpr (isTypeInVariant<T, BBValueType>::value) {
+                if constexpr (findInVariant<T, BBValueType>::value != -1) {
                     // T is a known type or std::any, in either case use std::get directly to fetch from variant
                     // Although std::any is considered an unknown type, we treat it as if its a known type here to avoid any_cast<const std::any&>
                     return std::get<T>(_vals.at(key));
@@ -98,7 +98,7 @@ public:
                         return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
                     }
                 }
-                if constexpr (isTypeInVariant<T, BBValueType>::value) {
+                if constexpr (findInVariant<T, BBValueType>::value != -1) {
                     // T is a known type or std::any, in either case use std::get directly to fetch from variant
                     // if T is std::any, get<T> will throw, because yaml type is not "std::any"
                     return std::get<T>(_vals.at(key));
@@ -136,8 +136,11 @@ public:
     {
         using Type = std::decay_t<T>;
         // Promote signed integers to int64 & unsigned integers to uint64 to avoid compiler error in variant constructor/assignment operator (due to ambiguity)
-        using PromotedType = std::conditional_t<std::is_integral_v<Type> && !std::is_same_v<Type, bool>,
+        using IntPromotedType = std::conditional_t<std::is_integral_v<Type> && !std::is_same_v<Type, bool>,
                 std::conditional_t<std::is_signed_v<Type>, int64_t, uint64_t>, Type>;
+        // Promote float to double. Note: we promote to double & not long double for backwards compatibility (otherwise variant type would need to be changed
+        // resulting in long double being treated as a known type instead of unknonwn (std::any) & all get<double> statements changing to get<long double>)
+        using PromotedType = std::conditional_t<std::is_same_v<IntPromotedType, float>, double, IntPromotedType>;
         if constexpr (std::is_same_v<Type, PromotedType>) {
             setImpl(key, std::forward<T>(value));
         } else {
@@ -220,7 +223,9 @@ private:
     template <class T>
     static const char* getTypeName()
     {
-        return getTypeName(BBValueType{std::decay_t<T>{}}.index());
+        auto index = findInVariant<std::decay_t<T>, BBValueType>::value;
+        index = (index == -1) ? BB_VALUE_TYPE_ANY_INDEX : index; // If a type is not found, treat it as std::any
+        return getTypeName(index);
     }
 
     static const char* getTypeName(std::size_t index)
@@ -308,22 +313,30 @@ private:
         };
     };
 
-    // trait to check if a type is one of the types in the variant
-    template <class T1, class T2>
-    struct isTypeInVariant;
+    // trait to find the index of the given type in the variant, -1 if not found
+    template <class T, class Variant, std::size_t numTypes>
+    struct findInVariantImpl;
 
-    template <class T>
-    struct isTypeInVariant<T, std::variant<>> : std::false_type
+    template <class T, std::size_t NUM_TYPES>
+    struct findInVariantImpl<T, std::variant<>, NUM_TYPES> : std::integral_constant<std::ptrdiff_t, -1>
     {
     };
+
+    template <class T, class... VariantTs, std::size_t NUM_TYPES>
+    struct findInVariantImpl<T, std::variant<T, VariantTs...>, NUM_TYPES> : std::integral_constant<std::ptrdiff_t, NUM_TYPES - sizeof...(VariantTs) - 1>
+    {
+    };
+
+    template <class T, class First, class... VariantTs, std::size_t NUM_TYPES>
+    struct findInVariantImpl<T, std::variant<First, VariantTs...>, NUM_TYPES> : findInVariantImpl<T, std::variant<VariantTs...>, NUM_TYPES>
+    {
+    };
+
+    template <class T1, class Variant>
+    struct findInVariant;
 
     template <class T, class... VariantTs>
-    struct isTypeInVariant<T, std::variant<T, VariantTs...>> : std::true_type
-    {
-    };
-
-    template <class T, class First, class... VariantTs>
-    struct isTypeInVariant<T, std::variant<First, VariantTs...>> : isTypeInVariant<T, std::variant<VariantTs...>>
+    struct findInVariant<T, std::variant<VariantTs...>> : public findInVariantImpl<T, std::variant<VariantTs...>, sizeof...(VariantTs)>
     {
     };
 };
