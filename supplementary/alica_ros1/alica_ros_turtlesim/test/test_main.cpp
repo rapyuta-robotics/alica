@@ -88,6 +88,41 @@ private:
     turtlesim::Pose _pose;
 };
 
+TEST(AlicaTurtlesimTest, memoryleak)
+{
+    ros::NodeHandle nh;
+    ros::Publisher leave_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/leave_formation", 10);
+    ros::Publisher leave_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/leave_formation", 10);
+    ros::Publisher leave_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/leave_formation", 10);
+    ros::Publisher leave_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/leave_formation", 10);
+
+    ros::Publisher join_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/join_formation", 10);
+    ros::Publisher join_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/join_formation", 10);
+    ros::Publisher join_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/join_formation", 10);
+    ros::Publisher join_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/join_formation", 10);
+
+    std_msgs::Empty msg;
+
+    ros::Rate rate(10);
+
+    while (true) {
+        // Start by telling all turtles to leave the formation
+        leave_formation_turtle_1_pub.publish(msg);
+        leave_formation_turtle_2_pub.publish(msg);
+        leave_formation_turtle_3_pub.publish(msg);
+        leave_formation_turtle_4_pub.publish(msg);
+
+        rate.sleep();
+
+        join_formation_turtle_1_pub.publish(msg);
+        join_formation_turtle_2_pub.publish(msg);
+        join_formation_turtle_3_pub.publish(msg);
+        join_formation_turtle_4_pub.publish(msg);
+
+        rate.sleep();
+    }
+}
+
 TEST(AlicaTurtlesimTest, destinationTest)
 {
     ros::NodeHandle nh;

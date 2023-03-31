@@ -41,6 +41,6 @@
         <param name="alica_path"   value="$(arg alica_path)" />
     </node>
 
-    <test name="all_tests" test-name="all_tests" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim-test" time-limit="100" launch-prefix="$(arg launch_prefix)"/>
+    <test name="all_tests" test-name="all_tests" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim-test" time-limit="100000000000000" launch-prefix="$(arg launch_prefix)"/>
 
 </launch>
