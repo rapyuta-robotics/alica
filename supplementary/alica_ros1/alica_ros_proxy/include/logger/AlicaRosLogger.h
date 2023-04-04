@@ -17,7 +17,7 @@ class AlicaRosLogger : public alica::IAlicaLogger
 {
 public:
     AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName);
-    [[deprecated]] AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId)
+    [[deprecated]] AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, [[maybe_unused]] const alica::AgentId localAgentId)
             : AlicaRosLogger(verbosity, localAgentName)
     {
     }

@@ -7,17 +7,15 @@ using namespace alica;
 
 namespace alicaRosLogger
 {
-AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId)
+AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName)
         : _localAgentName(localAgentName)
-        , _localAgentId(localAgentId)
 {
 }
 
 void AlicaRosLogger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)
 {
     std::stringstream streamName;
-    streamName << "[ALICA] "
-               << "[" << _localAgentId << "/" << _localAgentName << "]";
+    streamName << "[" << _localAgentName << "]";
     if (verbosity == alica::Verbosity::DEBUG) {
         RCLCPP_DEBUG(rclcpp::get_logger(streamName.str()), msg.c_str());
     } else if (verbosity == alica::Verbosity::INFO) {

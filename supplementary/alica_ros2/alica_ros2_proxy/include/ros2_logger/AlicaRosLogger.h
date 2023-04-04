@@ -15,7 +15,11 @@ namespace alicaRosLogger
 class AlicaRosLogger : public alica::IAlicaLogger
 {
 public:
-    AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId);
+    AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName);
+    [[deprecated]] AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, [[maybe_unused]] const alica::AgentId localAgentId)
+            : AlicaRosLogger(verbosity, localAgentName)
+    {
+    }
     void log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace) override;
 
 private:
