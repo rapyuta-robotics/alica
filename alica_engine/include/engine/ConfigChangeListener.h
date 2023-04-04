@@ -18,10 +18,12 @@ public:
     ConfigChangeListener(YAML::Node& config);
     void subscribe(ReloadFunction reloadFunction);
     void reloadConfig(const YAML::Node& config);
+    void deactivate();
     YAML::Node& getConfig() const;
 
 private:
     std::vector<ReloadFunction> _configChangeListenerCBs;
     YAML::Node& _config;
+    bool _active;
 };
 } // namespace alica
