@@ -112,6 +112,8 @@ void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan);
+    // config should not be updated after starting the engine
+    _configChangeListener.deactivate();
     Logging::logInfo(LOGNAME) << "Engine started!";
 }
 /**
