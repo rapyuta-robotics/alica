@@ -93,4 +93,18 @@ bool IsChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp
     }
     return false;
 }
+
+bool IsChildFailure(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    std::string childName = bb.get<std::string>("childName");
+
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        std::string rpName = rp->isBehaviour() ? child->getBasicBehaviour()->getName() : child->getActivePlan()->getName();
+        if (rpName == childName) {
+            return isFailure(child);
+        }
+    }
+    return false;
+}
 } /* namespace alica_standard_library */
