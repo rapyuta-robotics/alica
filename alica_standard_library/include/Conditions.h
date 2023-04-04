@@ -26,6 +26,7 @@ template <typename T>
 bool IsLessThanOrEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 template <typename T>
 bool IsGreaterThanOrEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsChildFailure(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 
 BOOST_DLL_ALIAS(alica_standard_library::AnyChildSuccess, AnyChildSuccess)
 BOOST_DLL_ALIAS(alica_standard_library::AllChildSuccess, AllChildSuccess)
@@ -34,6 +35,7 @@ BOOST_DLL_ALIAS(alica_standard_library::AllChildFailure, AllChildFailure)
 BOOST_DLL_ALIAS(alica_standard_library::AlwaysTrueCondition, AlwaysTrueCondition)
 BOOST_DLL_ALIAS(alica_standard_library::AlwaysFalseCondition, AlwaysFalseCondition)
 BOOST_DLL_ALIAS(alica_standard_library::IsChildSuccess, IsChildSuccess)
+BOOST_DLL_ALIAS(alica_standard_library::IsChildFailure, IsChildFailure)
 
 // IsEqual
 BOOST_DLL_ALIAS(alica_standard_library::IsEqual<double>, IsEqualDouble)
