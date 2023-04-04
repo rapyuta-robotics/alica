@@ -160,7 +160,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 
     const Plan* p = static_cast<const Plan*>(r.getActivePlan());
 
-    if (p->getUtilityThreshold() < 0) {
+    if (!p || p->getUtilityThreshold() < 0) {
         return PlanChange::NoChange;
     }
 
