@@ -52,7 +52,9 @@ int main(int argc, char** argv)
     ROS_INFO("Starting ALICA turtle Base.......");
     base.start();
 
-    while (ros::ok()) {
+    int counter = 3000;
+
+    while (counter-- > 0) {
         ros::Rate(10).sleep();
     }
 

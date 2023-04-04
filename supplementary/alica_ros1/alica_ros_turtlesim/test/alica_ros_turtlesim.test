@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <arg name="use_gdb" default="$(optenv GDB false)"/>
+    <arg name="use_val" default="$(optenv VAL false)"/>
     <arg name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" if="$(arg use_gdb)"/>
-    <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
+    <arg name="launch_prefix" value="valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --keep-debuginfo=yes --track-origins=yes --num-callers=64" if="$(arg use_val)"/>
+    <arg name="launch_prefix" value="" unless="$(arg use_val)"/>
     <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find alica_ros_turtlesim)" />

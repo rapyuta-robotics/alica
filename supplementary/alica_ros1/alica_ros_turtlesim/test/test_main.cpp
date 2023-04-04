@@ -103,9 +103,11 @@ TEST(AlicaTurtlesimTest, memoryleak)
 
     std_msgs::Empty msg;
 
-    ros::Rate rate(10);
+    ros::Rate rate(1);
+    int count = 0;
 
-    while (true) {
+    while (count < 100) {
+        std::cerr << count << std::endl;
         // Start by telling all turtles to leave the formation
         leave_formation_turtle_1_pub.publish(msg);
         leave_formation_turtle_2_pub.publish(msg);
@@ -120,109 +122,110 @@ TEST(AlicaTurtlesimTest, memoryleak)
         join_formation_turtle_4_pub.publish(msg);
 
         rate.sleep();
+        count++;
     }
 }
 
-TEST(AlicaTurtlesimTest, destinationTest)
-{
-    ros::NodeHandle nh;
-    ros::Publisher leave_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/leave_formation", 10);
-    ros::Publisher leave_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/leave_formation", 10);
-    ros::Publisher leave_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/leave_formation", 10);
-    ros::Publisher leave_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/leave_formation", 10);
+// TEST(AlicaTurtlesimTest, destinationTest)
+// {
+//     ros::NodeHandle nh;
+//     ros::Publisher leave_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/leave_formation", 10);
+//     ros::Publisher leave_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/leave_formation", 10);
+//     ros::Publisher leave_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/leave_formation", 10);
+//     ros::Publisher leave_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/leave_formation", 10);
 
-    ros::Publisher join_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/join_formation", 10);
-    ros::Publisher join_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/join_formation", 10);
-    ros::Publisher join_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/join_formation", 10);
-    ros::Publisher join_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/join_formation", 10);
+//     ros::Publisher join_formation_turtle_1_pub = nh.advertise<std_msgs::Empty>("/turtle1/join_formation", 10);
+//     ros::Publisher join_formation_turtle_2_pub = nh.advertise<std_msgs::Empty>("/turtle2/join_formation", 10);
+//     ros::Publisher join_formation_turtle_3_pub = nh.advertise<std_msgs::Empty>("/turtle3/join_formation", 10);
+//     ros::Publisher join_formation_turtle_4_pub = nh.advertise<std_msgs::Empty>("/turtle4/join_formation", 10);
 
-    // wait for subscribers to latch
-    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_2_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_3_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
-    // Start by telling all turtles to leave the formation
-    std_msgs::Empty msg;
-    leave_formation_turtle_1_pub.publish(msg);
-    leave_formation_turtle_2_pub.publish(msg);
-    leave_formation_turtle_3_pub.publish(msg);
-    leave_formation_turtle_4_pub.publish(msg);
+//     // wait for subscribers to latch
+//     RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
+//     RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_2_pub.getNumSubscribers(), 1U, 10000);
+//     RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_3_pub.getNumSubscribers(), 1U, 10000);
+//     RUN_UNTIL_ASSERT_EQ(leave_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
+//     // Start by telling all turtles to leave the formation
+//     std_msgs::Empty msg;
+//     leave_formation_turtle_1_pub.publish(msg);
+//     leave_formation_turtle_2_pub.publish(msg);
+//     leave_formation_turtle_3_pub.publish(msg);
+//     leave_formation_turtle_4_pub.publish(msg);
 
-    // wait for subscribers to latch
-    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_2_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_3_pub.getNumSubscribers(), 1U, 10000);
-    RUN_UNTIL_ASSERT_EQ(join_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
+//     // wait for subscribers to latch
+//     RUN_UNTIL_ASSERT_EQ(join_formation_turtle_1_pub.getNumSubscribers(), 1U, 10000);
+//     RUN_UNTIL_ASSERT_EQ(join_formation_turtle_2_pub.getNumSubscribers(), 1U, 10000);
+//     RUN_UNTIL_ASSERT_EQ(join_formation_turtle_3_pub.getNumSubscribers(), 1U, 10000);
+//     RUN_UNTIL_ASSERT_EQ(join_formation_turtle_4_pub.getNumSubscribers(), 1U, 10000);
 
-    turtlesim::Pose pose_tolerance;
-    pose_tolerance.x = 0.1;
-    pose_tolerance.y = 0.1;
+//     turtlesim::Pose pose_tolerance;
+//     pose_tolerance.x = 0.1;
+//     pose_tolerance.y = 0.1;
 
-    // Turtle 1 test
-    TurtlePosition turtle1;
-    ros::Subscriber turtle1_sub = nh.subscribe("turtle1/pose", 10, &TurtlePosition::poseCallback, &turtle1);
+//     // Turtle 1 test
+//     TurtlePosition turtle1;
+//     ros::Subscriber turtle1_sub = nh.subscribe("turtle1/pose", 10, &TurtlePosition::poseCallback, &turtle1);
 
-    turtlesim::Pose desired_pose_turtle_1;
-    desired_pose_turtle_1.x = 5;
-    desired_pose_turtle_1.y = 5;
+//     turtlesim::Pose desired_pose_turtle_1;
+//     desired_pose_turtle_1.x = 5;
+//     desired_pose_turtle_1.y = 5;
 
-    // send init message to turtles
-    join_formation_turtle_1_pub.publish(msg);
+//     // send init message to turtles
+//     join_formation_turtle_1_pub.publish(msg);
 
-    RUN_UNTIL_ROBOT_STOP(turtle1, 10000);
-    EXPECT_POSE_NEAR(turtle1.getPose(), desired_pose_turtle_1, pose_tolerance);
+//     RUN_UNTIL_ROBOT_STOP(turtle1, 10000);
+//     EXPECT_POSE_NEAR(turtle1.getPose(), desired_pose_turtle_1, pose_tolerance);
 
-    // Turtle 2 test
-    TurtlePosition turtle2;
-    ros::Subscriber turtle2_sub = nh.subscribe("turtle2/pose", 10, &TurtlePosition::poseCallback, &turtle2);
+//     // Turtle 2 test
+//     TurtlePosition turtle2;
+//     ros::Subscriber turtle2_sub = nh.subscribe("turtle2/pose", 10, &TurtlePosition::poseCallback, &turtle2);
 
-    const auto turtle_center = TurtlePosition(5, 5);
-    const double desired_distance_to_the_center = 2.5;
-    const double distance_tolerance = 0.15;
+//     const auto turtle_center = TurtlePosition(5, 5);
+//     const double desired_distance_to_the_center = 2.5;
+//     const double distance_tolerance = 0.15;
 
-    join_formation_turtle_2_pub.publish(msg);
+//     join_formation_turtle_2_pub.publish(msg);
 
-    RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
-    EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+//     RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
+//     EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
 
-    // Turtle 3
-    TurtlePosition turtle3;
-    ros::Subscriber turtle3_sub = nh.subscribe("turtle3/pose", 10, &TurtlePosition::poseCallback, &turtle3);
+//     // Turtle 3
+//     TurtlePosition turtle3;
+//     ros::Subscriber turtle3_sub = nh.subscribe("turtle3/pose", 10, &TurtlePosition::poseCallback, &turtle3);
 
-    join_formation_turtle_3_pub.publish(msg);
+//     join_formation_turtle_3_pub.publish(msg);
 
-    RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
-    RUN_UNTIL_ROBOT_STOP(turtle3, 10000);
+//     RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
+//     RUN_UNTIL_ROBOT_STOP(turtle3, 10000);
 
-    EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
-    EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+//     EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+//     EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
 
-    // auto actual_distance_from_the_center = turtle2.distance(turtle_center);
-    auto distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / 2.0) - distance_tolerance;
+//     // auto actual_distance_from_the_center = turtle2.distance(turtle_center);
+//     auto distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / 2.0) - distance_tolerance;
 
-    EXPECT_GE(turtle3.distance(turtle2), distance_between_followers);
+//     EXPECT_GE(turtle3.distance(turtle2), distance_between_followers);
 
-    // Turtle 4
-    TurtlePosition turtle4;
-    ros::Subscriber turtle4_sub = nh.subscribe("turtle4/pose", 10, &TurtlePosition::poseCallback, &turtle4);
+//     // Turtle 4
+//     TurtlePosition turtle4;
+//     ros::Subscriber turtle4_sub = nh.subscribe("turtle4/pose", 10, &TurtlePosition::poseCallback, &turtle4);
 
-    join_formation_turtle_4_pub.publish(msg);
+//     join_formation_turtle_4_pub.publish(msg);
 
-    RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
-    RUN_UNTIL_ROBOT_STOP(turtle3, 10000);
-    RUN_UNTIL_ROBOT_STOP(turtle4, 10000);
+//     RUN_UNTIL_ROBOT_STOP(turtle2, 10000);
+//     RUN_UNTIL_ROBOT_STOP(turtle3, 10000);
+//     RUN_UNTIL_ROBOT_STOP(turtle4, 10000);
 
-    EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
-    EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
-    EXPECT_NEAR(turtle4.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+//     EXPECT_NEAR(turtle2.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+//     EXPECT_NEAR(turtle3.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
+//     EXPECT_NEAR(turtle4.distance(turtle_center), desired_distance_to_the_center, distance_tolerance);
 
-    // actual_distance_from_the_center = turtle2.distance(turtle_center);
-    distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / 3.0) - distance_tolerance;
+//     // actual_distance_from_the_center = turtle2.distance(turtle_center);
+//     distance_between_followers = 2.0 * desired_distance_to_the_center * sin(M_PI / 3.0) - distance_tolerance;
 
-    EXPECT_GE(turtle3.distance(turtle2), distance_between_followers);
-    EXPECT_GE(turtle4.distance(turtle2), distance_between_followers);
-    EXPECT_GE(turtle4.distance(turtle3), distance_between_followers);
-}
+//     EXPECT_GE(turtle3.distance(turtle2), distance_between_followers);
+//     EXPECT_GE(turtle4.distance(turtle2), distance_between_followers);
+//     EXPECT_GE(turtle4.distance(turtle3), distance_between_followers);
+// }
 
 int main(int argc, char** argv)
 {

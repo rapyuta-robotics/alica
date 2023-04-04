@@ -2,7 +2,7 @@
 <launch>
     <arg name="use_gdb" default="$(optenv GDB false)"/>
     <arg name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" if="$(arg use_gdb)"/>
-    <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
+    <arg name="launch_prefix" value="valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --keep-debuginfo=yes --track-origins=yes --num-callers=64" unless="$(arg use_gdb)"/>
     <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find alica_ros_turtlesim)" />
@@ -10,7 +10,7 @@
     <arg name="turtles"        default="1"/>
 
     <arg name="agent_name"     value="$(eval 'turtle'+str(turtles))"/>
-    <node name="$(arg agent_name)" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
+    <node name="$(arg agent_name)" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix) --log-file=valgrind_log_$(arg agent_name).log">
         <param name="name"         value="$(arg agent_name)" />
         <param name="agent_id"     value="$(arg turtles)" />
         <param name="master_plan"  value="$(arg master_plan)" />
