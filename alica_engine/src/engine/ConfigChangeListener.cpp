@@ -23,8 +23,8 @@ void ConfigChangeListener::unsubscribe(uint64_t callbackId)
 
 void ConfigChangeListener::reloadConfig(const YAML::Node& config)
 {
-    for (auto it = _configChangeListenerCBs.begin(); it != _configChangeListenerCBs.end(); it++) {
-        it->second(config);
+    for (const auto& [id, reloadCallback] : _configChangeListenerCBs) {
+        reloadCallback(config);
     }
 }
 
