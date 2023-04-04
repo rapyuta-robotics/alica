@@ -157,6 +157,13 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     if (!r.getCycleManagement().mayDoUtilityCheck()) {
         return PlanChange::NoChange;
     }
+
+    const Plan* p = static_cast<const Plan*>(r.getActivePlan());
+
+    if (p->getUtilityThreshold() < 0) {
+        return PlanChange::NoChange;
+    }
+
     const RunningPlan* parent = r.getParent();
 
     AgentGrp robots;
@@ -167,7 +174,6 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     if (newr == nullptr) {
         return PlanChange::NoChange;
     }
-    const Plan* p = static_cast<const Plan*>(r.getActivePlan());
 
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
 
