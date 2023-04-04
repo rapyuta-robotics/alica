@@ -30,7 +30,7 @@ public:
     PreConditionPlanPreCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<PreConditionPlanPreCondition> create(ConditionContext& context) { return std::make_unique<PreConditionPlanPreCondition>(context); };
+    static std::shared_ptr<PreConditionPlanPreCondition> create(ConditionContext& context) { return std::make_shared<PreConditionPlanPreCondition>(context); };
 };
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, PreConditionPlan)

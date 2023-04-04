@@ -18,9 +18,9 @@ std::unique_ptr<ProbBuildingLevel1_1> ProbBuildingLevel1_1::create(alica::PlanCo
     return std::make_unique<ProbBuildingLevel1_1>(context);
 }
 
-std::unique_ptr<ProbBuildingLevel1_1UtilityFunction> ProbBuildingLevel1_1UtilityFunction::create(alica::UtilityFunctionContext& context)
+std::shared_ptr<ProbBuildingLevel1_1UtilityFunction> ProbBuildingLevel1_1UtilityFunction::create(alica::UtilityFunctionContext& context)
 {
-    return std::make_unique<ProbBuildingLevel1_1UtilityFunction>();
+    return std::make_shared<ProbBuildingLevel1_1UtilityFunction>();
 }
 
 } // namespace alica

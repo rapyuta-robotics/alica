@@ -60,19 +60,19 @@ std::unique_ptr<GSolverTestPlan> GSolverTestPlan::create(alica::PlanContext& con
     return std::make_unique<GSolverTestPlan>(context);
 }
 
-std::unique_ptr<GSolverTestPlanUtilityFunction> GSolverTestPlanUtilityFunction::create(alica::UtilityFunctionContext& context)
+std::shared_ptr<GSolverTestPlanUtilityFunction> GSolverTestPlanUtilityFunction::create(alica::UtilityFunctionContext& context)
 {
-    return std::make_unique<GSolverTestPlanUtilityFunction>();
+    return std::make_shared<GSolverTestPlanUtilityFunction>();
 }
 
-std::unique_ptr<GSolverTestPlanRuntimeCondition> GSolverTestPlanRuntimeCondition::create(alica::ConditionContext& context)
+std::shared_ptr<GSolverTestPlanRuntimeCondition> GSolverTestPlanRuntimeCondition::create(alica::ConditionContext& context)
 {
-    return std::make_unique<GSolverTestPlanRuntimeCondition>();
+    return std::make_shared<GSolverTestPlanRuntimeCondition>();
 }
 
-std::unique_ptr<GSolverTestPlanRuntimeConditionConstraint> GSolverTestPlanRuntimeConditionConstraint::create(alica::ConstraintContext& context)
+std::shared_ptr<GSolverTestPlanRuntimeConditionConstraint> GSolverTestPlanRuntimeConditionConstraint::create(alica::ConstraintContext& context)
 {
-    return std::make_unique<GSolverTestPlanRuntimeConditionConstraint>();
+    return std::make_shared<GSolverTestPlanRuntimeConditionConstraint>();
 }
 
 } // namespace alica

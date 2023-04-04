@@ -25,7 +25,7 @@ class UtilityFunction
 public:
     UtilityFunction();
     UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan);
-    ~UtilityFunction();
+    virtual ~UtilityFunction();
     const std::vector<std::unique_ptr<USummand>>& getUtilSummands() const { return _utilSummands; };
     std::vector<std::unique_ptr<USummand>>& editUtilSummands() { return _utilSummands; };
 
