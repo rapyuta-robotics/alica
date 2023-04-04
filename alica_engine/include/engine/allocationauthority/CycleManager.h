@@ -55,9 +55,11 @@ private:
     const AlicaClock& _clock;
     const TeamManager& _teamManager;
     const PlanRepository& _planRepository;
+    ConfigChangeListener& _configChangeListener;
     std::vector<AllocationDifference> _allocationHistory;
     int _newestAllocationDifference;
     int _maxAllocationCycles;
+    uint64_t _reloadCallbackId;
     bool _enabled;
     AgentId _myID;
     AlicaTime _overrideTimestamp;
