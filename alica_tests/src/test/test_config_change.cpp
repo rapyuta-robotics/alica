@@ -4,6 +4,7 @@
 
 #include "engine/planselector/PartialAssignment.h"
 #include <DynamicBehaviourCreator.h>
+#include <engine/ConfigChangeListener.h>
 
 namespace alica
 {
@@ -93,6 +94,24 @@ TEST_F(AlicaNotInitialized, TestConfigUpdatesWithVector)
 
     EXPECT_TRUE(ac->getConfig()["Local"]["IsGoalie"].as<bool>());
     EXPECT_EQ(1000.0f, ac->getConfig()["Local"]["AverageTranslation"].as<float>());
+}
+
+TEST(ConfigChangeListenerTest, TestConfigSubscribeAndUnsubscribe)
+{
+    // create new configChangeListener with empty config node
+    YAML::Node cfg;
+    alica::ConfigChangeListener ccl(cfg);
+    bool called = false;
+
+    std::function<void(const YAML::Node& cfg)> cb = [&](const YAML::Node& cfg) { called = true; };
+    uint64_t cbId = ccl.subscribe(cb);
+    ccl.reloadConfig(cfg);
+    ASSERT_TRUE(called);
+
+    ccl.unsubscribe(cbId);
+    called = false;
+    ccl.reloadConfig(cfg);
+    ASSERT_FALSE(called);
 }
 } // namespace
 } // namespace alica
