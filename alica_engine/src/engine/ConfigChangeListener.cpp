@@ -5,18 +5,26 @@ namespace alica
 
 ConfigChangeListener::ConfigChangeListener(YAML::Node& config)
         : _config(config)
+        , _callbackIdCounter(0)
 {
 }
 
-void ConfigChangeListener::subscribe(ReloadFunction reloadFunction)
+uint64_t ConfigChangeListener::subscribe(ReloadFunction reloadFunction)
 {
-    _configChangeListenerCBs.push_back(reloadFunction);
-};
+    _callbackIdCounter++;
+    _configChangeListenerCBs[_callbackIdCounter] = reloadFunction;
+    return _callbackIdCounter;
+}
+
+void ConfigChangeListener::unsubscribe(uint64_t callbackId)
+{
+    _configChangeListenerCBs.erase(callbackId);
+}
 
 void ConfigChangeListener::reloadConfig(const YAML::Node& config)
 {
-    for (auto reloadFunction : _configChangeListenerCBs) {
-        reloadFunction(config);
+    for (const auto& [id, reloadCallback] : _configChangeListenerCBs) {
+        reloadCallback(config);
     }
 }
 
