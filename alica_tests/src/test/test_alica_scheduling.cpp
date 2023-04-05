@@ -124,8 +124,8 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
     ac->stepEngine();
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    SLEEP_UNTIL(alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0) != nullptr);
-    auto behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0);
+    SLEEP_UNTIL(alica::test::Util::getBasicBehaviour(ae, 1629895901559) != nullptr);
+    auto behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559);
     ASSERT_FALSE(wm->behAAASuccessInInit);
     ASSERT_FALSE(wm->behAAAFailureInInit);
     ASSERT_FALSE(behAAA->isSuccess());
@@ -161,7 +161,7 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
     ac->stepEngine();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0);
+    behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559);
     ASSERT_FALSE(wm->behAAASuccessInInit);
     ASSERT_FALSE(wm->behAAAFailureInInit);
     ASSERT_FALSE(behAAA->isSuccess());

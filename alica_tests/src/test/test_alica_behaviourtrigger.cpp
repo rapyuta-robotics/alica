@@ -35,37 +35,37 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
     ae->getAlicaClock().sleep(duration);
 
-    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116, 0))->callCounter, 0);
+    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492))->callCounter, 0);
+    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905))->callCounter, 0);
+    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209))->callCounter, 0);
+    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116))->callCounter, 0);
 
-    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
-
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
-
-    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492))->doTrigger();
+    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905))->doTrigger();
+    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209))->doTrigger();
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492))->doTrigger();
+    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905))->doTrigger();
+    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209))->doTrigger();
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492))->doTrigger();
+    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905))->doTrigger();
+    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209))->doTrigger();
+
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+
+    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209))->doTrigger();
 
     ae->getAlicaClock().sleep(duration * 2);
 
-    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->callCounter, 3);
-    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->callCounter, 3);
-    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->callCounter, 4);
-    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116, 0))->callCounter, 0);
+    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492))->callCounter, 3);
+    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905))->callCounter, 3);
+    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209))->callCounter, 4);
+    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116))->callCounter, 0);
 }
 } // namespace
 } // namespace alica

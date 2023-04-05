@@ -32,13 +32,5 @@ void ConfAbstractPlanWrapperFactory::attachReferences()
         wrapper->_abstractPlan = abstractPlan;
     }
     Factory::wrapperAbstractPlanReferences.clear();
-
-    // wrapperConfiguration references
-    for (std::pair<int64_t, int64_t> pairs : Factory::wrapperConfigurationReferences) {
-        ConfAbstractPlanWrapper* wrapper = (ConfAbstractPlanWrapper*) Factory::getElement(pairs.first);
-        Configuration* configuration = (Configuration*) Factory::getElement(pairs.second);
-        wrapper->_configuration = configuration;
-    }
-    Factory::wrapperConfigurationReferences.clear();
 }
 } // namespace alica
