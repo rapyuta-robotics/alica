@@ -207,9 +207,9 @@ TEST_F(TestBlackboard, testNotInheritBlackboardFlag)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     // Behaviour has inheritBlackboard set to false
-    EXPECT_FALSE(alica::test::Util::getBasicBehaviour(ae, 831400441334251602, 0)->getInheritBlackboard());
+    EXPECT_FALSE(alica::test::Util::getBasicBehaviour(ae, 831400441334251602)->getInheritBlackboard());
     // Plan has inheritBlackboard set to false
-    EXPECT_FALSE(alica::test::Util::getBasicPlan(ae, 1692837668719979457, 0)->getInheritBlackboard());
+    EXPECT_FALSE(alica::test::Util::getBasicPlan(ae, 1692837668719979457)->getInheritBlackboard());
 }
 
 TEST_F(TestBlackboard, testWithoutPlan)
