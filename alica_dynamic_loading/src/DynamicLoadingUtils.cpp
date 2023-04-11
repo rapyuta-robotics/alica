@@ -4,8 +4,6 @@
 namespace alica
 {
 
-static constexpr const char* LOGNAME = "DynamicLoading";
-
 DynamicLoadingException::DynamicLoadingException(const std::string& errorMsg)
         : std::runtime_error(errorMsg)
 {

@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_solver_interface)
 include(CTest)
-## Change to use clang ... unfortunately it doesnt work :(
-#set(CMAKE_CXX_COMPILER "clang")
-#
+
 if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
   set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
   set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
@@ -70,7 +68,6 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
 )
 
 
