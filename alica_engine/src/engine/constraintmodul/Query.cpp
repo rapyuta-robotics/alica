@@ -83,11 +83,6 @@ void Query::fillBufferFromQuery()
 
 bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
-#ifdef ALICA_DEBUG_ENABLED
-    AlicaTime time;
-    time = pi->getAlicaClock().now();
-#endif
-
     clearTemporaries();
     // insert _queried_ variables of this query into the _relevant_ variables
     fillBufferFromQuery();
