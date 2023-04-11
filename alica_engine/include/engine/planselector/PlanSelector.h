@@ -28,7 +28,7 @@ public:
             RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
     RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp,
-            const PlanType* relevantPlanType, double& o_oldUtility);
+            const PlanType* relevantPlanType, double& o_oldUtility, const ConfAbstractPlanWrapper* wrapper);
     void setGlobalBlackboard(const Blackboard* globalBlackboard);
 
 private:

@@ -105,16 +105,10 @@ public:
     explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
             VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
-            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
-            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
-            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-            const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard, TeamObserver& teamObserver,
+            TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const RuntimePlanFactory& runTimePlanFactory,
+            const RuntimeBehaviourFactory& runTimeBehaviourFactory, const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -229,6 +223,8 @@ public:
     const AlicaClock& getAlicaClock() const { return _clock; };
     VariableSyncModule& editResultStore() const { return _resultStore; }
 
+    const ConfAbstractPlanWrapper* getConfAbstractPlanWrapper() const { return _wrapper; };
+
     //[[deprecated("temporary method tobe removed in last PR")]]
     template <class SolverType>
     SolverType& getSolver() const;
@@ -253,14 +249,15 @@ private:
     RunningPlan* _parent;
     std::unique_ptr<BasicBehaviour> _basicBehaviour;
     std::unique_ptr<BasicPlan> _basicPlan;
+    const ConfAbstractPlanWrapper* _wrapper;
     // Components
     Assignment _assignment;
     CycleManager _cycleManagement;
     ConditionStore _constraintStore;
 
     // Type info
-    const PlanType* const _planType;
-    const bool _behaviour; // TODO: get rid of this, the behaviour pointer should not be null for behaviors (currently it can be)
+    const PlanType* _planType;
+    bool _behaviour; // TODO: get rid of this, the behaviour pointer should not be null for behaviors (currently it can be)
 
     // engine Pointer
     const AlicaClock& _clock;
