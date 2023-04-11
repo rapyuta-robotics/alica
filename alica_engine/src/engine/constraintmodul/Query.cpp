@@ -83,8 +83,8 @@ void Query::fillBufferFromQuery()
 
 bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
-    AlicaTime time;
 #ifdef ALICA_DEBUG_ENABLED
+    AlicaTime time;
     time = pi->getAlicaClock().now();
 #endif
 

@@ -41,7 +41,6 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/
   DESTINATION include
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
 )
 
 ament_target_dependencies(alica_ros2_proxy
