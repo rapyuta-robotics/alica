@@ -54,7 +54,6 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/alica/reasoner
   DESTINATION include/alica
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
 )
 
 

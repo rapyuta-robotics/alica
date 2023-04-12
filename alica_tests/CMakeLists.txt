@@ -87,6 +87,7 @@ if(BUILD_TESTING)
         src/test/test_alica_logger.cpp
         src/test/test_alica_engine_worldmodel.cpp
         src/test/test_success.cpp
+        src/test/test_standard_library_conditions.cpp
     )
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
     target_compile_definitions(${PROJECT_NAME}-test PUBLIC "THIS_PACKAGE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
@@ -104,7 +105,6 @@ EXPORT ${CMAKE_PROJECT_NAME}Targets
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
 )
 
 # Export targets to make package libraries
