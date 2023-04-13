@@ -99,4 +99,57 @@ bool IsChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp
     }
     return false;
 }
+
+template <typename T>
+bool IsEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    return bb.get<T>("left") == bb.get<T>("right");
+}
+
+template <typename T>
+bool IsNotEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return !IsEqual<T>(input, rp, gb);
+}
+
+template <typename T>
+bool IsLessThan(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    return bb.get<T>("left") < bb.get<T>("right");
+}
+
+template <typename T>
+bool IsLessThanOrEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    return bb.get<T>("left") <= bb.get<T>("right");
+}
+
+template <typename T>
+bool IsGreaterThan(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return !IsLessThanOrEqual<T>(input, rp, gb);
+}
+
+template <typename T>
+bool IsGreaterThanOrEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    return !IsLessThan<T>(input, rp, gb);
+}
+
+bool IsChildFailure(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+{
+    alica::LockedBlackboardRO bb(*input);
+    std::string childName = bb.get<std::string>("childName");
+
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        std::string rpName = rp->isBehaviour() ? child->getBasicBehaviour()->getName() : child->getActivePlan()->getName();
+        if (rpName == childName) {
+            return isFailure(child);
+        }
+    }
+    return false;
+}
 } /* namespace alica_standard_library */

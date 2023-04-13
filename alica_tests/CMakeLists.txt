@@ -32,7 +32,6 @@ $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(alica-tests alica_solver_interface alica_simple_solver alica_engine ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
-target_compile_definitions(alica-tests PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 install(TARGETS alica-tests
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -88,9 +87,10 @@ if(BUILD_TESTING)
         src/test/test_alica_logger.cpp
         src/test/test_alica_engine_worldmodel.cpp
         src/test/test_success.cpp
+        src/test/test_standard_library_conditions.cpp
     )
-
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
+    target_compile_definitions(${PROJECT_NAME}-test PUBLIC "THIS_PACKAGE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
     target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads alica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
     gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
@@ -122,7 +122,7 @@ install(EXPORT ${CMAKE_PROJECT_NAME}Targets
 # Installing files to make a find_package()-able package
 write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-  VERSION 0.9.4
+  VERSION 1.0.0
   COMPATIBILITY SameMajorVersion
 )
 

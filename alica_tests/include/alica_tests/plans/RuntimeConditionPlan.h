@@ -30,9 +30,9 @@ public:
     RuntimeConditionPlanRuntimeCondition(ConditionContext& context)
             : BasicCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    static std::unique_ptr<RuntimeConditionPlanRuntimeCondition> create(ConditionContext& context)
+    static std::shared_ptr<RuntimeConditionPlanRuntimeCondition> create(ConditionContext& context)
     {
-        return std::make_unique<RuntimeConditionPlanRuntimeCondition>(context);
+        return std::make_shared<RuntimeConditionPlanRuntimeCondition>(context);
     };
 };
 

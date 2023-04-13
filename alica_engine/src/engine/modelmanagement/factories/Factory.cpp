@@ -5,7 +5,6 @@
 #include "engine/logging/Logging.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
-#include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/modelmanagement/Strings.h"
 
@@ -29,7 +28,6 @@ ReferenceList Factory::epStateReferences;
 ReferenceList Factory::epTaskReferences;
 ReferenceList Factory::planTypePlanReferences;
 ReferenceList Factory::wrapperAbstractPlanReferences;
-ReferenceList Factory::wrapperConfigurationReferences;
 TripleReferenceList Factory::roleTaskReferences;
 ModelManager* Factory::modelManager;
 
@@ -84,7 +82,6 @@ void Factory::setModelManager(alica::ModelManager* modelManager)
     epTaskReferences.clear();
     planTypePlanReferences.clear();
     wrapperAbstractPlanReferences.clear();
-    wrapperConfigurationReferences.clear();
     roleTaskReferences.clear();
     Factory::modelManager = modelManager;
 }
@@ -149,8 +146,6 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->_planRepository._roleSets.emplace(ael->getId(), (RoleSet*) ael);
     } else if (alica::Strings::confAbstractPlanWrapper.compare(type) == 0) {
         modelManager->_planRepository._confAbstractPlanWrapperRepository.emplace(ael->getId(), (ConfAbstractPlanWrapper*) ael);
-    } else if (alica::Strings::configuration.compare(type) == 0) {
-        modelManager->_planRepository._configurationRepository.emplace(ael->getId(), (Configuration*) ael);
     } else if (alica::Strings::transitionCondition.compare(type) == 0) {
         modelManager->_planRepository._transitionConditions.emplace(ael->getId(), (TransitionCondition*) ael);
     } else if (alica::Strings::transitionConditionRepository.compare(type) == 0) {

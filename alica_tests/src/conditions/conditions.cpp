@@ -185,12 +185,6 @@ bool TriggerFromInputCond(const Blackboard* input, const RunningPlan* rp, const 
     LockedBlackboardRO bb(*input);
     return bb.get<bool>("result");
 }
-bool Decision2B(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    std::string value;
-    rp->getParameter("TestValue", value);
-    return value.compare("2") == 0;
-}
 bool Start2Default(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     return CounterClass::called == 1;
@@ -213,12 +207,6 @@ bool ExecBehaviour2SubPlan(const Blackboard* input, const RunningPlan* rp, const
     std::shared_ptr<alica_test::SchedWM> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     return worldModel->transitionToExecuteBehaviourInSubPlan;
 }
-bool Decision2A(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    std::string value;
-    rp->getParameter("TestValue", value);
-    return value.compare("1") == 0;
-}
 bool Other2NewSuccessStateOne(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
@@ -232,7 +220,6 @@ bool TestTracingMasterCondition(const Blackboard* input, const RunningPlan* rp, 
 bool TestHasNoError(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     LockedBlackboardRO globalBlackboard(*gb);
-    std::cerr << "make check: " << (!globalBlackboard.get<std::optional<std::string>>("testError").has_value()) << std::endl;
     return !globalBlackboard.get<std::optional<std::string>>("testError").has_value();
 }
 } /* namespace alica */

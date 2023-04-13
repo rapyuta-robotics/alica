@@ -16,11 +16,6 @@ ConfAbstractPlanWrapper* ConfAbstractPlanWrapperFactory::create(const YAML::Node
         Factory::wrapperAbstractPlanReferences.push_back(
                 std::pair<int64_t, int64_t>(wrapper->getId(), Factory::getReferencedId(wrapperNode[alica::Strings::abstractPlan])));
     }
-
-    if (Factory::isValid(wrapperNode[alica::Strings::configuration])) {
-        Factory::wrapperConfigurationReferences.push_back(
-                std::pair<int64_t, int64_t>(wrapper->getId(), Factory::getReferencedId(wrapperNode[alica::Strings::configuration])));
-    }
     if (Factory::isValid(wrapperNode[alica::Strings::keyMapping])) {
         wrapper->_keyMapping = KeyMappingFactory::create(wrapperNode[alica::Strings::keyMapping]);
     }
@@ -37,13 +32,5 @@ void ConfAbstractPlanWrapperFactory::attachReferences()
         wrapper->_abstractPlan = abstractPlan;
     }
     Factory::wrapperAbstractPlanReferences.clear();
-
-    // wrapperConfiguration references
-    for (std::pair<int64_t, int64_t> pairs : Factory::wrapperConfigurationReferences) {
-        ConfAbstractPlanWrapper* wrapper = (ConfAbstractPlanWrapper*) Factory::getElement(pairs.first);
-        Configuration* configuration = (Configuration*) Factory::getElement(pairs.second);
-        wrapper->_configuration = configuration;
-    }
-    Factory::wrapperConfigurationReferences.clear();
 }
 } // namespace alica

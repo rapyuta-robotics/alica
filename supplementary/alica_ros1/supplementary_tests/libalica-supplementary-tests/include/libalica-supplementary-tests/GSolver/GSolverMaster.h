@@ -21,7 +21,7 @@ class GSolverMasterUtilityFunction : public BasicUtilityFunction
 {
 public:
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
-    static std::unique_ptr<GSolverMasterUtilityFunction> create(UtilityFunctionContext& context);
+    static std::shared_ptr<GSolverMasterUtilityFunction> create(UtilityFunctionContext& context);
 };
 
 BOOST_DLL_ALIAS(alica::GSolverMasterUtilityFunction::create, GSolverMasterUtilityFunction)
