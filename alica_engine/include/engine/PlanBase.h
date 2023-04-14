@@ -62,11 +62,8 @@ public:
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
 
-    // factory functions
+    // factory function
     RunningPlan* makeRunningPlan(const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper);
-    // RunningPlan* makeRunningPlan(const Plan* plan);
-    // RunningPlan* makeRunningPlan(const Behaviour* behaviour);
-    // RunningPlan* makeRunningPlan(const PlanType* planType);
 
     void reload(const YAML::Node& config);
     void init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator, std::unique_ptr<IPlanCreator>&& planCreator);
