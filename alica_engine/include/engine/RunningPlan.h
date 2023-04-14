@@ -148,6 +148,7 @@ public:
 
     std::shared_ptr<Blackboard> getBlackboard() const;
     const KeyMapping* getKeyMapping(int64_t wrapperId) const;
+    const KeyMapping* getKeyMapping() const;
 
     void printRecursive() const;
 
