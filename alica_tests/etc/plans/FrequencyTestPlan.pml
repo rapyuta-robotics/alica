@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "FrequencyTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

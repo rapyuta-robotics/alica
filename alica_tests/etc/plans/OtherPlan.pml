@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "OtherPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

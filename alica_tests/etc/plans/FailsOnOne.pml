@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "FailsOnOne",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": {
     "comment": "Is not set 1",
     "conditionString": "",

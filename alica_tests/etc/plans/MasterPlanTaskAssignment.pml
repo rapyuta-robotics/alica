@@ -75,7 +75,6 @@
   "masterPlan": true,
   "name": "MasterPlanTaskAssignment",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

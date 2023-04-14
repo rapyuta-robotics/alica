@@ -7,8 +7,7 @@
       "conditionRepository": 0,
       "id": 1,
       "libraryName": "alica_standard_library",
-      "name": "AnyChildSuccess",
-      "relativeDirectory": "conditions"
+      "name": "AnyChildSuccess"
     },
     {
       "blackboard": [],
@@ -16,8 +15,7 @@
       "conditionRepository": 0,
       "id": 2,
       "libraryName": "alica_standard_library",
-      "name": "AllChildSuccess",
-      "relativeDirectory": "conditions"
+      "name": "AllChildSuccess"
     },
     {
       "blackboard": [],
@@ -25,8 +23,7 @@
       "conditionRepository": 0,
       "id": 3,
       "libraryName": "alica_standard_library",
-      "name": "AnyChildFailure",
-      "relativeDirectory": "conditions"
+      "name": "AnyChildFailure"
     },
     {
       "blackboard": [],
@@ -34,8 +31,7 @@
       "conditionRepository": 0,
       "id": 4,
       "libraryName": "alica_standard_library",
-      "name": "AllChildFailure",
-      "relativeDirectory": "conditions"
+      "name": "AllChildFailure"
     },
     {
       "blackboard": [],
@@ -43,8 +39,7 @@
       "conditionRepository": 0,
       "id": 19871606597697646,
       "libraryName": "alica-tests",
-      "name": "Entry2Wait",
-      "relativeDirectory": "conditions"
+      "name": "Entry2Wait"
     },
     {
       "blackboard": [
@@ -67,8 +62,7 @@
       "conditionRepository": 0,
       "id": 89453017592951088,
       "libraryName": "alica_standard_library",
-      "name": "IsEqualBool",
-      "relativeDirectory": ""
+      "name": "IsEqualBool"
     },
     {
       "blackboard": [],
@@ -76,8 +70,7 @@
       "conditionRepository": 0,
       "id": 190171326790683374,
       "libraryName": "alica-tests",
-      "name": "FailurePlan2FailureHandled",
-      "relativeDirectory": "conditions"
+      "name": "FailurePlan2FailureHandled"
     },
     {
       "blackboard": [],
@@ -85,8 +78,7 @@
       "conditionRepository": 0,
       "id": 330238006348384830,
       "libraryName": "alica-tests",
-      "name": "IsAnyChildTaskSuccessfull",
-      "relativeDirectory": "conditions"
+      "name": "IsAnyChildTaskSuccessfull"
     },
     {
       "blackboard": [
@@ -109,8 +101,7 @@
       "conditionRepository": 0,
       "id": 344595839150634454,
       "libraryName": "alica_standard_library",
-      "name": "IsEqualUInt64",
-      "relativeDirectory": ""
+      "name": "IsEqualUInt64"
     },
     {
       "blackboard": [
@@ -126,8 +117,7 @@
       "conditionRepository": 0,
       "id": 593157092542472645,
       "libraryName": "alica-tests",
-      "name": "TriggerCond",
-      "relativeDirectory": "conditions"
+      "name": "TriggerCond"
     },
     {
       "blackboard": [],
@@ -135,8 +125,7 @@
       "conditionRepository": 0,
       "id": 655002160731734731,
       "libraryName": "alica-tests",
-      "name": "PlanB2PlanA",
-      "relativeDirectory": "conditions"
+      "name": "PlanB2PlanA"
     },
     {
       "blackboard": [],
@@ -144,8 +133,7 @@
       "conditionRepository": 0,
       "id": 682216470625774387,
       "libraryName": "alica-tests",
-      "name": "PlanA2PlanB",
-      "relativeDirectory": "conditions"
+      "name": "PlanA2PlanB"
     },
     {
       "blackboard": [],
@@ -153,8 +141,7 @@
       "conditionRepository": 0,
       "id": 711536493236439192,
       "libraryName": "alica-tests",
-      "name": "IsAnyChildStatusFailed",
-      "relativeDirectory": "conditions"
+      "name": "IsAnyChildStatusFailed"
     },
     {
       "blackboard": [
@@ -170,8 +157,7 @@
       "conditionRepository": 0,
       "id": 843443485857038179,
       "libraryName": "alica-tests",
-      "name": "IsAnyChildStatus",
-      "relativeDirectory": "conditions"
+      "name": "IsAnyChildStatus"
     },
     {
       "blackboard": [
@@ -194,8 +180,7 @@
       "conditionRepository": 0,
       "id": 997531702947519653,
       "libraryName": "alica_standard_library",
-      "name": "IsLessThanInt64",
-      "relativeDirectory": ""
+      "name": "IsLessThanInt64"
     },
     {
       "blackboard": [],
@@ -203,8 +188,7 @@
       "conditionRepository": 0,
       "id": 1013158988206959873,
       "libraryName": "alica-tests",
-      "name": "Default2EndTest",
-      "relativeDirectory": "conditions"
+      "name": "Default2EndTest"
     },
     {
       "blackboard": [],
@@ -212,8 +196,7 @@
       "conditionRepository": 0,
       "id": 1221637895518338620,
       "libraryName": "alica-tests",
-      "name": "SecondTaskFirstState2SecondTaskSecondState",
-      "relativeDirectory": "conditions"
+      "name": "SecondTaskFirstState2SecondTaskSecondState"
     },
     {
       "blackboard": [],
@@ -221,8 +204,7 @@
       "conditionRepository": 0,
       "id": 1237521027685048666,
       "libraryName": "alica-tests",
-      "name": "SecondCall2FirstCall",
-      "relativeDirectory": "conditions"
+      "name": "SecondCall2FirstCall"
     },
     {
       "blackboard": [],
@@ -230,8 +212,7 @@
       "conditionRepository": 0,
       "id": 1291995818541962959,
       "libraryName": "alica-tests",
-      "name": "Init2Fail",
-      "relativeDirectory": "conditions"
+      "name": "Init2Fail"
     },
     {
       "blackboard": [],
@@ -239,8 +220,7 @@
       "conditionRepository": 0,
       "id": 1311087067347475449,
       "libraryName": "alica-tests",
-      "name": "Start2Init",
-      "relativeDirectory": "conditions"
+      "name": "Start2Init"
     },
     {
       "blackboard": [],
@@ -248,8 +228,7 @@
       "conditionRepository": 0,
       "id": 1377356708472618789,
       "libraryName": "alica-tests",
-      "name": "StateOne2StateTwo",
-      "relativeDirectory": "conditions"
+      "name": "StateOne2StateTwo"
     },
     {
       "blackboard": [
@@ -272,8 +251,7 @@
       "conditionRepository": 0,
       "id": 1496803185713136824,
       "libraryName": "alica_standard_library",
-      "name": "IsLessThanString",
-      "relativeDirectory": ""
+      "name": "IsLessThanString"
     },
     {
       "blackboard": [],
@@ -281,8 +259,7 @@
       "conditionRepository": 0,
       "id": 1552609259127937138,
       "libraryName": "alica-tests",
-      "name": "TestHasNoError",
-      "relativeDirectory": ""
+      "name": "TestHasNoError"
     },
     {
       "blackboard": [],
@@ -290,8 +267,7 @@
       "conditionRepository": 0,
       "id": 1556522827919252115,
       "libraryName": "alica-tests",
-      "name": "SwitchIsSet",
-      "relativeDirectory": "conditions"
+      "name": "SwitchIsSet"
     },
     {
       "blackboard": [
@@ -314,8 +290,7 @@
       "conditionRepository": 0,
       "id": 1644313031322732060,
       "libraryName": "alica_standard_library",
-      "name": "IsEqualDouble",
-      "relativeDirectory": ""
+      "name": "IsEqualDouble"
     },
     {
       "blackboard": [],
@@ -323,8 +298,7 @@
       "conditionRepository": 0,
       "id": 1648591654803570403,
       "libraryName": "alica-tests",
-      "name": "Start2Finish",
-      "relativeDirectory": "conditions"
+      "name": "Start2Finish"
     },
     {
       "blackboard": [],
@@ -332,8 +306,7 @@
       "conditionRepository": 0,
       "id": 1678986049909129132,
       "libraryName": "alica_standard_library",
-      "name": "AlwaysFalseCondition",
-      "relativeDirectory": "conditions"
+      "name": "AlwaysFalseCondition"
     },
     {
       "blackboard": [
@@ -356,8 +329,7 @@
       "conditionRepository": 0,
       "id": 1704333014293218519,
       "libraryName": "alica_standard_library",
-      "name": "IsLessThanDouble",
-      "relativeDirectory": ""
+      "name": "IsLessThanDouble"
     },
     {
       "blackboard": [],
@@ -365,8 +337,7 @@
       "conditionRepository": 0,
       "id": 1770682125085719690,
       "libraryName": "alica-tests",
-      "name": "Fail2Failed",
-      "relativeDirectory": "conditions"
+      "name": "Fail2Failed"
     },
     {
       "blackboard": [],
@@ -374,8 +345,7 @@
       "conditionRepository": 0,
       "id": 2019050763618766552,
       "libraryName": "alica-tests",
-      "name": "StateTwo2NewSuccessStateTwo",
-      "relativeDirectory": "conditions"
+      "name": "StateTwo2NewSuccessStateTwo"
     },
     {
       "blackboard": [
@@ -419,8 +389,7 @@
       "conditionRepository": 0,
       "id": 2046573221100914383,
       "libraryName": "alica-tests",
-      "name": "ValueMappingCondition",
-      "relativeDirectory": ""
+      "name": "ValueMappingCondition"
     },
     {
       "blackboard": [
@@ -436,8 +405,7 @@
       "conditionRepository": 0,
       "id": 2163654295690873706,
       "libraryName": "alica-tests",
-      "name": "CounterClassCalled",
-      "relativeDirectory": "conditions"
+      "name": "CounterClassCalled"
     },
     {
       "blackboard": [],
@@ -445,8 +413,7 @@
       "conditionRepository": 0,
       "id": 2171152220550556375,
       "libraryName": "alica-tests",
-      "name": "FirstTaskFirstState2FirstTaskSecondState",
-      "relativeDirectory": "conditions"
+      "name": "FirstTaskFirstState2FirstTaskSecondState"
     },
     {
       "blackboard": [],
@@ -454,8 +421,7 @@
       "conditionRepository": 0,
       "id": 2205566100638019970,
       "libraryName": "alica-tests",
-      "name": "BehaviourSubPlan2ExecuteBehaviour",
-      "relativeDirectory": "conditions"
+      "name": "BehaviourSubPlan2ExecuteBehaviour"
     },
     {
       "blackboard": [],
@@ -463,8 +429,7 @@
       "conditionRepository": 0,
       "id": 2208457928613785430,
       "libraryName": "alica-tests",
-      "name": "Init2Start",
-      "relativeDirectory": "conditions"
+      "name": "Init2Start"
     },
     {
       "blackboard": [],
@@ -472,8 +437,7 @@
       "conditionRepository": 0,
       "id": 2452554857659522052,
       "libraryName": "alica-tests",
-      "name": "Start2ExecBehaviourTest",
-      "relativeDirectory": "conditions"
+      "name": "Start2ExecBehaviourTest"
     },
     {
       "blackboard": [
@@ -496,8 +460,7 @@
       "conditionRepository": 0,
       "id": 2618711924921632178,
       "libraryName": "alica_standard_library",
-      "name": "IsEqualInt64",
-      "relativeDirectory": ""
+      "name": "IsEqualInt64"
     },
     {
       "blackboard": [],
@@ -505,8 +468,7 @@
       "conditionRepository": 0,
       "id": 2619422076497988080,
       "libraryName": "alica-tests",
-      "name": "Start2ExecOrderTest",
-      "relativeDirectory": "conditions"
+      "name": "Start2ExecOrderTest"
     },
     {
       "blackboard": [],
@@ -514,8 +476,7 @@
       "conditionRepository": 0,
       "id": 2711102114821139213,
       "libraryName": "alica-tests",
-      "name": "Init2End",
-      "relativeDirectory": "conditions"
+      "name": "Init2End"
     },
     {
       "blackboard": [],
@@ -523,8 +484,7 @@
       "conditionRepository": 0,
       "id": 2872265442510628524,
       "libraryName": "alica_standard_library",
-      "name": "AlwaysTrueCondition",
-      "relativeDirectory": "conditions"
+      "name": "AlwaysTrueCondition"
     },
     {
       "blackboard": [
@@ -540,8 +500,7 @@
       "conditionRepository": 0,
       "id": 2901825906319407673,
       "libraryName": "alica-tests",
-      "name": "CounterCalled",
-      "relativeDirectory": "conditions"
+      "name": "CounterCalled"
     },
     {
       "blackboard": [],
@@ -549,8 +508,7 @@
       "conditionRepository": 0,
       "id": 3016035752801585170,
       "libraryName": "alica-tests",
-      "name": "SwitchIsNotSet",
-      "relativeDirectory": "conditions"
+      "name": "SwitchIsNotSet"
     },
     {
       "blackboard": [
@@ -573,8 +531,7 @@
       "conditionRepository": 0,
       "id": 3240875604708587637,
       "libraryName": "alica_standard_library",
-      "name": "IsLessThanUInt64",
-      "relativeDirectory": ""
+      "name": "IsLessThanUInt64"
     },
     {
       "blackboard": [
@@ -590,8 +547,7 @@
       "conditionRepository": 0,
       "id": 3290850633957473696,
       "libraryName": "alica_standard_library",
-      "name": "IsChildSuccess",
-      "relativeDirectory": ""
+      "name": "IsChildSuccess"
     },
     {
       "blackboard": [],
@@ -599,8 +555,7 @@
       "conditionRepository": 0,
       "id": 3517323109117319233,
       "libraryName": "alica-tests",
-      "name": "Wait2Suc",
-      "relativeDirectory": "conditions"
+      "name": "Wait2Suc"
     },
     {
       "blackboard": [
@@ -616,8 +571,7 @@
       "conditionRepository": 0,
       "id": 3592699233854318376,
       "libraryName": "alica-tests",
-      "name": "TriggerFromInputCond",
-      "relativeDirectory": "conditions"
+      "name": "TriggerFromInputCond"
     },
     {
       "blackboard": [],
@@ -625,8 +579,7 @@
       "conditionRepository": 0,
       "id": 3604374027783683696,
       "libraryName": "alica-tests",
-      "name": "IsAnyChildStatusSuccess",
-      "relativeDirectory": "conditions"
+      "name": "IsAnyChildStatusSuccess"
     },
     {
       "blackboard": [],
@@ -634,8 +587,7 @@
       "conditionRepository": 0,
       "id": 3726136276355540527,
       "libraryName": "alica-tests",
-      "name": "Start2Default",
-      "relativeDirectory": "conditions"
+      "name": "Start2Default"
     },
     {
       "blackboard": [
@@ -651,8 +603,7 @@
       "conditionRepository": 0,
       "id": 3787001793582633602,
       "libraryName": "alica-tests",
-      "name": "SimpleSwitchIsSet",
-      "relativeDirectory": "conditions"
+      "name": "SimpleSwitchIsSet"
     },
     {
       "blackboard": [],
@@ -660,8 +611,7 @@
       "conditionRepository": 0,
       "id": 3828316183435191952,
       "libraryName": "alica-tests",
-      "name": "BehaviourInSubPlan2EndTest",
-      "relativeDirectory": "conditions"
+      "name": "BehaviourInSubPlan2EndTest"
     },
     {
       "blackboard": [],
@@ -669,8 +619,7 @@
       "conditionRepository": 0,
       "id": 4108042962123065459,
       "libraryName": "alica-tests",
-      "name": "Start2ExecOrderedSchedulingTest",
-      "relativeDirectory": "conditions"
+      "name": "Start2ExecOrderedSchedulingTest"
     },
     {
       "blackboard": [],
@@ -678,8 +627,7 @@
       "conditionRepository": 0,
       "id": 4244459279660861567,
       "libraryName": "alica-tests",
-      "name": "ExecBehaviour2SubPlan",
-      "relativeDirectory": "conditions"
+      "name": "ExecBehaviour2SubPlan"
     },
     {
       "blackboard": [],
@@ -687,8 +635,7 @@
       "conditionRepository": 0,
       "id": 4368560569514553226,
       "libraryName": "alica-tests",
-      "name": "Other2NewSuccessStateOne",
-      "relativeDirectory": "conditions"
+      "name": "Other2NewSuccessStateOne"
     },
     {
       "blackboard": [
@@ -711,8 +658,7 @@
       "conditionRepository": 0,
       "id": 4434919629521912839,
       "libraryName": "alica_standard_library",
-      "name": "IsEqualString",
-      "relativeDirectory": ""
+      "name": "IsEqualString"
     },
     {
       "blackboard": [],
@@ -720,11 +666,9 @@
       "conditionRepository": 0,
       "id": 4547372457936774346,
       "libraryName": "alica-tests",
-      "name": "TestTracingMasterCondition",
-      "relativeDirectory": "conditions"
+      "name": "TestTracingMasterCondition"
     }
   ],
   "id": 0,
-  "name": "ConditionRepository",
-  "relativeDirectory": ""
+  "name": "ConditionRepository"
 }

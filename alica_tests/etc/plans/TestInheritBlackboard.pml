@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "TestInheritBlackboard",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "BackForth",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

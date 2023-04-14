@@ -35,7 +35,6 @@
   "masterPlan": true,
   "name": "TestParameterPassingMaster",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

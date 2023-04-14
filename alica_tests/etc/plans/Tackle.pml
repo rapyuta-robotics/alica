@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "Tackle",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

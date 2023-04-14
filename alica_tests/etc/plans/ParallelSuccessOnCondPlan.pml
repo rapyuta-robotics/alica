@@ -35,7 +35,6 @@
   "masterPlan": false,
   "name": "ParallelSuccessOnCondPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

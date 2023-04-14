@@ -35,7 +35,6 @@
   "masterPlan": true,
   "name": "TestInheritBlackboardMaster",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

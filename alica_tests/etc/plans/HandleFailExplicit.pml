@@ -42,7 +42,6 @@
   "masterPlan": false,
   "name": "HandleFailExplicit",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

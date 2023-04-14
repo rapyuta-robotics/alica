@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "AdjacentSuccessMasterPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

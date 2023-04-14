@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "Defend",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {
