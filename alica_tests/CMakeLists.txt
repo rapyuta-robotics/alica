@@ -106,7 +106,6 @@ EXPORT ${CMAKE_PROJECT_NAME}Targets
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
 )
 
 # Export targets to make package libraries
