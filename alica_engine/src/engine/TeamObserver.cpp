@@ -73,8 +73,11 @@ bool TeamObserver::updateTeamPlanTrees()
 
     std::vector<AgentId> deactivatedAgentIds;
     bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
-    for (auto agent : deactivatedAgentIds) {
-        _simplePlanTrees.erase(agent);
+
+    for (auto it = _simplePlanTrees.begin(); it != _simplePlanTrees.end(); /*No increment*/) {
+        AgentId agentId = it->first;
+        // delete msgs of inactive agents, increment iterator in both cases
+        (!_tm.isAgentActive(agentId)) ? _simplePlanTrees.erase(it++) : it++;
     }
 
     return changedSomeAgent;
