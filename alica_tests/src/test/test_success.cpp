@@ -111,4 +111,32 @@ TEST_F(SingleAgentTestFixture, isChildSuccessTest)
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(isChildSuccessPlan));
 }
 
+TEST_F(SingleAgentTestFixture, adjacentSuccessTestPlan)
+{
+    // Checks if plans in adjacent states can succeed without interfering with each other
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "AdjacentSuccessTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("AdjacentSuccessTestPlan")) << _tc->getLastFailure();
+
+    // Switch back & forth between the 2 states having the same attached plan
+    for (std::size_t i = 0; i < 10; ++i) {
+        // Agent should be in the first state i.e. SuccessOnCondStateA
+        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("AdjacentSuccessTestPlan", "SuccessOnCondStateA")) << _tc->getLastFailure();
+        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SuccessOnCondPlan")) << _tc->getLastFailure();
+        auto successOnCondPlan = _tc->getActivePlan("SuccessOnCondPlan");
+        ASSERT_FALSE(_tc->isSuccess(successOnCondPlan));
+
+        // Transition to the second state i.e. SuccessOnCondStateB by setting success
+        ASSERT_TRUE(_tc->setTransitionCond("SuccessOnCondPlan", "WaitForCondState", "CondSuccessState")) << _tc->getLastFailure();
+        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("AdjacentSuccessTestPlan", "SuccessOnCondStateB")) << _tc->getLastFailure();
+        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SuccessOnCondPlan")) << _tc->getLastFailure();
+        successOnCondPlan = _tc->getActivePlan("SuccessOnCondPlan");
+        ASSERT_FALSE(_tc->isSuccess(successOnCondPlan));
+
+        // Transition back to the first state
+        ASSERT_TRUE(_tc->setTransitionCond("SuccessOnCondPlan", "WaitForCondState", "CondSuccessState")) << _tc->getLastFailure();
+    }
+}
+
 } // namespace alica::test

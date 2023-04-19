@@ -75,7 +75,6 @@
   "masterPlan": false,
   "name": "PlanFive",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

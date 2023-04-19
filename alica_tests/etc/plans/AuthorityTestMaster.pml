@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "AuthorityTestMaster",
   "preCondition": null,
-  "relativeDirectory": "Authority",
   "runtimeCondition": null,
   "states": [
     {

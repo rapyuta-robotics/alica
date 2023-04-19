@@ -11,7 +11,6 @@
   "name": "AttackOpp",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "Behaviour",
   "runtimeCondition": null,
   "variables": []
 }

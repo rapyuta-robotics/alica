@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "MasterPlanTestConditionPlanType",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "BehaviorSuccessSpamMaster",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

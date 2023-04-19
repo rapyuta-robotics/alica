@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "BehaviourTriggerTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

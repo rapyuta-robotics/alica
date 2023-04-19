@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "TestTracingSubPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {
