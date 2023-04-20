@@ -12,7 +12,8 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
-
+find_package(OpenTracing REQUIRED)
+find_package(jaegertracing REQUIRED)
 
 include_directories(
   include
@@ -41,8 +42,8 @@ target_include_directories(alica_tracing PUBLIC
 target_link_libraries(
   ${PROJECT_NAME}
   ${YAML_CPP_LIBRARIES}
-  "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
   jaegertracing
+  opentracing
 )
 
 #############

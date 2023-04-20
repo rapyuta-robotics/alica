@@ -10,6 +10,8 @@
   <depend>yaml-cpp</depend>
   <depend>alica_engine</depend>
   <depend>roscpp</depend>
+  <depend>opentracing</depend>
+  <depend>jaegertracing</depend>
   <export>
     <build_type>cmake</build_type>
   </export>
