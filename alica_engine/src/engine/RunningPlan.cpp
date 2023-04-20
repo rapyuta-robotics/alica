@@ -883,6 +883,7 @@ TeamManager& RunningPlan::getTeamManager() const
 
 const KeyMapping* RunningPlan::getKeyMapping() const
 {
+    assert(_wrapper);
     return _wrapper->getKeyMapping();
 }
 
