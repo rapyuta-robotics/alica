@@ -81,12 +81,6 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
     inputWrappers.push_back(wrapper.get());
 
-    // RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
-    //         TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-    //         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
-    //         const RuntimePlanFactory& runTimePlanFactory, const RuntimeBehaviourFactory& runTimeBehaviourFactory,
-    //         const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper);
-
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
     // fake inform the team observer about roles of none existing robots
     auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(), ae->editTeamObserver(),
