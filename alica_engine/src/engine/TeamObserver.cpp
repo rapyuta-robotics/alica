@@ -64,20 +64,19 @@ bool TeamObserver::updateTeamPlanTrees()
                 if (sptEntry != _simplePlanTrees.end()) {
                     sptEntry->second = std::move(spt);
                 } else {
-                    _simplePlanTrees.emplace(spt->getAgentId(), std::move(spt));
+                    _simplePlanTrees[spt->getAgentId()] = std::move(spt);
                 }
             }
         }
         _msgQueue.clear();
     }
 
-    std::vector<AgentId> deactivatedAgentIds;
-    bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
+    bool changedSomeAgent = _tm.updateAgents();
 
     for (auto it = _simplePlanTrees.begin(); it != _simplePlanTrees.end(); /*No increment*/) {
         AgentId agentId = it->first;
         // delete msgs of inactive agents, increment iterator in both cases
-        (!_tm.isAgentActive(agentId)) ? _simplePlanTrees.erase(it++) : it++;
+        (!_tm.isAgentActive(agentId)) ? it = _simplePlanTrees.erase(it) : it++;
     }
 
     return changedSomeAgent;
