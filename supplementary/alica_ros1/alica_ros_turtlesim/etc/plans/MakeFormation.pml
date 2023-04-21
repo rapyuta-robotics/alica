@@ -43,7 +43,6 @@
   "masterPlan": false,
   "name": "MakeFormation",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

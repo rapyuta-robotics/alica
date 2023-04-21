@@ -42,7 +42,6 @@
   "masterPlan": true,
   "name": "RandomMoveTutorial",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

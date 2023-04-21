@@ -1,46 +1,25 @@
 {
   "blackboard": [
     {
-      "access": "protected",
+      "access": "input",
       "comment": "",
-      "id": 3047597954425160962,
-      "key": "blackboardKeys",
-      "type": "std::any"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 2622393546596805822,
-      "key": "blackboardBlueprint",
-      "type": "std::any"
+      "id": 610196170392400041,
+      "key": "data",
+      "type": "std::string"
     },
     {
       "access": "protected",
       "comment": "",
       "id": 1293324462022421085,
-      "key": "x",
+      "key": "target_x",
       "type": "double"
     },
     {
       "access": "protected",
       "comment": "",
       "id": 1302855491540810679,
-      "key": "y",
+      "key": "target_y",
       "type": "double"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 3949955977224766241,
-      "key": "blackboard",
-      "type": "std::any"
-    },
-    {
-      "access": "input",
-      "comment": "",
-      "id": 610196170392400041,
-      "key": "task",
-      "type": "std::string"
     }
   ],
   "comment": "",
@@ -54,76 +33,24 @@
       "name": "",
       "plan": 3683805017237692753,
       "positionWeb": {
-        "x": 578,
-        "y": 436
+        "x": 200,
+        "y": 212
       },
-      "state": 2507524292527222213,
+      "state": 2578169245525112306,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
     }
   ],
   "frequency": 0,
   "id": 3683805017237692753,
-  "implementationName": "",
+  "implementationName": "PopulateBlackboard",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "AdhocMoveWorkflow",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "PopulateBlackboardFromJson.beh#3218372711073374685",
-          "comment": "",
-          "configuration": null,
-          "id": 2052369829007344956,
-          "keyMapping": {
-            "input": [
-              {
-                "childKey": "blackboard",
-                "parentKey": "blackboard",
-                "value": null
-              },
-              {
-                "childKey": "blackboardBlueprint",
-                "parentKey": "blackboardBlueprint",
-                "value": null
-              },
-              {
-                "childKey": "blackboardKeys",
-                "parentKey": "blackboardKeys",
-                "value": null
-              },
-              {
-                "childKey": "json",
-                "parentKey": "task",
-                "value": null
-              }
-            ],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": 2271062550998909602,
-      "id": 2507524292527222213,
-      "inTransitions": [],
-      "name": "PopulateBlackboard",
-      "outTransitions": [
-        3522637572077184775
-      ],
-      "parentPlan": 3683805017237692753,
-      "positionWeb": {
-        "x": 795,
-        "y": 422
-      },
-      "type": "State",
-      "variableBindings": []
-    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
@@ -136,8 +63,8 @@
       "outTransitions": [],
       "parentPlan": 3683805017237692753,
       "positionWeb": {
-        "x": 1496,
-        "y": 421
+        "x": 686,
+        "y": 200
       },
       "postCondition": null,
       "success": true,
@@ -156,12 +83,12 @@
             "input": [
               {
                 "childKey": "goal_x",
-                "parentKey": "x",
+                "parentKey": "target_x",
                 "value": null
               },
               {
                 "childKey": "goal_y",
-                "parentKey": "y",
+                "parentKey": "target_y",
                 "value": null
               }
             ],
@@ -170,19 +97,17 @@
           "name": ""
         }
       ],
-      "entryPoint": null,
+      "entryPoint": 2271062550998909602,
       "id": 2578169245525112306,
-      "inTransitions": [
-        3522637572077184775
-      ],
+      "inTransitions": [],
       "name": "GoTo",
       "outTransitions": [
         1410678085374684927
       ],
       "parentPlan": 3683805017237692753,
       "positionWeb": {
-        "x": 1183,
-        "y": 421
+        "x": 428,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -201,36 +126,17 @@
       },
       "name": "",
       "outState": 1376360864978758396,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
         "id": 332397056034410795,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#1",
-      "id": 3522637572077184775,
-      "inState": 2507524292527222213,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 2578169245525112306,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 976647507208964729,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

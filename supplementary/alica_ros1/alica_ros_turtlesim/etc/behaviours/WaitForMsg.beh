@@ -1,17 +1,17 @@
 {
   "blackboard": [
     {
-      "access": "input",
-      "comment": "The topic name on which to wait for the msg",
-      "id": 3377017469681391113,
-      "key": "topic",
-      "type": "std::string"
-    },
-    {
       "access": "output",
       "comment": "The contents of the msg that was received on the topic",
       "id": 1670287826314001481,
       "key": "msg",
+      "type": "std::string"
+    },
+    {
+      "access": "input",
+      "comment": "The topic name on which to wait for the msg",
+      "id": 3377017469681391113,
+      "key": "topic",
       "type": "std::string"
     }
   ],
@@ -26,7 +26,6 @@
   "name": "WaitForMsg",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "variables": []
 }
