@@ -23,7 +23,7 @@ std::shared_ptr<BasicUtilityFunction> DynamicUtilityFunctionCreator::createUtili
     try {
         completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
     } catch (const std::exception& ex) {
-        throw DynamicLoadingException{"condition", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
+        throw DynamicLoadingException{"utilityFunction", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
     }
 
     try {
@@ -33,7 +33,7 @@ std::shared_ptr<BasicUtilityFunction> DynamicUtilityFunctionCreator::createUtili
                 boost::dll::load_mode::append_decorations // do append extensions and prefixes
         );
     } catch (const std::exception& ex) {
-        throw DynamicLoadingException{"condition", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
+        throw DynamicLoadingException{"utilityFunction", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
     }
 
     std::shared_ptr<BasicUtilityFunction> createdUtilityFunction = _utilityFunctionCreator(context);

@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "ConstraintTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

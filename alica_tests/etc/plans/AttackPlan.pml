@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "AttackPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

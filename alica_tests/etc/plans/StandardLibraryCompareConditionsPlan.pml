@@ -77,7 +77,6 @@
   "masterPlan": true,
   "name": "StandardLibraryCompareConditionsPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {
@@ -411,6 +410,46 @@
         "conditionString": "",
         "enabled": true,
         "id": 1047898305021363246,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1644313031322732060",
+      "id": 757718038326292563,
+      "inState": 2326317223569681786,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "right",
+            "parentKey": "valueDouble",
+            "value": null
+          },
+          {
+            "childKey": "left",
+            "parentKey": null,
+            "value": 3.15
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 717240492377837483,
+      "pointsWeb": [
+        {
+          "x": 1101.9375,
+          "y": 228.9921875
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 855000311320764054,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -792,46 +831,6 @@
         "conditionString": "",
         "enabled": true,
         "id": 3256088237934994159,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#1644313031322732060",
-      "id": 757718038326292563,
-      "inState": 2326317223569681786,
-      "keyMapping": {
-        "input": [
-          {
-            "childKey": "right",
-            "parentKey": "valueDouble",
-            "value": null
-          },
-          {
-            "childKey": "left",
-            "parentKey": null,
-            "value": 3.15
-          }
-        ],
-        "output": []
-      },
-      "name": "",
-      "outState": 717240492377837483,
-      "pointsWeb": [
-        {
-          "x": 1101.9375,
-          "y": 228.9921875
-        }
-      ],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 855000311320764054,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

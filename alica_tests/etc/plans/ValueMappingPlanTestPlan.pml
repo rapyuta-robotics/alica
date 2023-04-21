@@ -63,7 +63,6 @@
   "masterPlan": false,
   "name": "ValueMappingPlanTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

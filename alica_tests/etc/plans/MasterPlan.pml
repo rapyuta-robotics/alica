@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "MasterPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

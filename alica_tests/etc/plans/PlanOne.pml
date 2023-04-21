@@ -43,7 +43,6 @@
   "masterPlan": false,
   "name": "PlanOne",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

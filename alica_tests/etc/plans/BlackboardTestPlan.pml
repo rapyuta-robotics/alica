@@ -49,7 +49,6 @@
   "masterPlan": false,
   "name": "BlackboardTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "SchedulingTestSequenceSubPlan2",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

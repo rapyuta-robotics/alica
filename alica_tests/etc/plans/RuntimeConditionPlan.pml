@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "RuntimeConditionPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

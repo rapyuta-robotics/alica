@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "BehSuccessTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

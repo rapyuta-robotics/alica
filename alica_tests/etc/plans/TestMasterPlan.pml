@@ -41,6 +41,13 @@
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
       "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 295638103823734752,
+      "key": "ChooseTestState2AdjacentSuccessTestState",
+      "type": "bool"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -70,7 +77,6 @@
   "masterPlan": true,
   "name": "TestMasterPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {
@@ -97,7 +103,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 1000
       },
       "type": "State",
@@ -127,7 +133,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 400
       },
       "type": "State",
@@ -157,7 +163,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 800
       },
       "type": "State",
@@ -187,7 +193,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 600
       },
       "type": "State",
@@ -217,7 +223,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 1200
       },
       "type": "State",
@@ -236,11 +242,12 @@
         1234148291059202190,
         2841206023261337744,
         3651332618963874336,
-        4120890224163547783
+        4120890224163547783,
+        3815101160319869321
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 427.984375,
+        "x": 428,
         "y": 800
       },
       "type": "State",
@@ -270,8 +277,38 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "AdjacentSuccessTestPlan.pml#2039053377176713134",
+          "comment": "",
+          "configuration": null,
+          "id": 2655529348250165827,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1016088688698752054,
+      "inTransitions": [
+        3815101160319869321
+      ],
+      "name": "AdjacentSuccessTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1400
       },
       "type": "State",
       "variableBindings": []
@@ -298,8 +335,8 @@
       "outState": 4487929496627066142,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 228.9921875
+          "x": 586,
+          "y": 229
         }
       ],
       "preCondition": {
@@ -333,8 +370,8 @@
       "outState": 2132957861522514570,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 428.9921875
+          "x": 586,
+          "y": 429
         }
       ],
       "preCondition": {
@@ -368,8 +405,8 @@
       "outState": 3029581745457050844,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 628.9921875
+          "x": 586,
+          "y": 629
         }
       ],
       "preCondition": {
@@ -403,8 +440,8 @@
       "outState": 2212831089687963769,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 828.9921875
+          "x": 586,
+          "y": 829
         }
       ],
       "preCondition": {
@@ -438,8 +475,8 @@
       "outState": 235414165593595069,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 1028.9921875
+          "x": 586,
+          "y": 1029
         }
       ],
       "preCondition": {
@@ -473,8 +510,8 @@
       "outState": 3960396736820956915,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 1228.9921875
+          "x": 586,
+          "y": 1229
         }
       ],
       "preCondition": {
@@ -482,6 +519,41 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 3815101160319869321,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2AdjacentSuccessTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1016088688698752054,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1429
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2822951189378292075,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
