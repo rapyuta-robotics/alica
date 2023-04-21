@@ -54,9 +54,9 @@ protected:
     bool checkMapping(const std::string& srcTypeName, const SrcType& srcValue, const std::string& targetTypeName, const TargetType& targetValue)
     {
         BlackboardBlueprint srcBlueprint;
-        srcBlueprint.addKey("srcKey", srcTypeName);
+        srcBlueprint.addKey("srcKey", srcTypeName, BBAccessType::PROTECTED);
         BlackboardBlueprint targetBlueprint;
-        targetBlueprint.addKey("targetKey", targetTypeName);
+        targetBlueprint.addKey("targetKey", targetTypeName, BBAccessType::INPUT);
         Blackboard srcBB(&srcBlueprint);
         Blackboard targetBB(&targetBlueprint);
         srcBB._impl.set("srcKey", srcValue);
@@ -556,6 +556,33 @@ TEST_F(TestBlackboard, TestUnlockedBB)
     EXPECT_TRUE(bb.hasValue("intVal"));
     EXPECT_EQ(bb.size(), 1);
     EXPECT_FALSE(bb.empty());
+}
+
+TEST_F(SingleAgentTestFixture, testPopulateBlackboardPlan)
+{
+    // Checks if PopulateBlackboard implementation in the standard library works as expected
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("BlackboardTestPlan")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "PopulateBlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("PopulateBlackboardTestPlan")) << _tc->getLastFailure();
+
+    // Ensure all blackboard values are populated correctly by checking if we land up in OtherChecksState
+    // Note: The transition conditions do the checking
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("PopulateBlackboardTestPlan", "OtherChecksState")) << _tc->getLastFailure();
+
+    // Ensure that `not_in_data_key` is not populated because it is not present in the input data
+    auto plan = _tc->getActivePlan("PopulateBlackboardTestPlan");
+    ASSERT_TRUE(alica::LockedBlackboardRO(*plan->getBlackboard()).get<std::string>("not_in_data_key").empty());
+
+    // Ensure that `not_in_bb` is not on the blackboard though it is in the input data because no new keys should be created during populating the blackboard
+    ASSERT_FALSE(alica::LockedBlackboardRO(*plan->getBlackboard()).hasValue("not_in_bb"));
+
+    // Transition to success & ensure that the PopulateBlackboard implementation can successfully terminate
+    ASSERT_TRUE(_tc->setTransitionCond("PopulateBlackboardTestPlan", "OtherChecksState", "PopulatedState")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->getActivePlan("BlackboardTestPlan"));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardTestPlan")));
 }
 
 } // namespace alica::test

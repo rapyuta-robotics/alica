@@ -36,38 +36,6 @@
           "abstractPlan": "SuccessOnCondPlan.pml#3153116020668535682",
           "comment": "",
           "configuration": null,
-          "id": 1427847311614550547,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 1813014648904251459,
-      "inTransitions": [
-        1124111964911548913
-      ],
-      "name": "SuccessOnCondStateB",
-      "outTransitions": [
-        4586149331725958934
-      ],
-      "parentPlan": 2039053377176713134,
-      "positionWeb": {
-        "x": 686,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "SuccessOnCondPlan.pml#3153116020668535682",
-          "comment": "",
-          "configuration": null,
           "id": 704656399979191907,
           "keyMapping": {
             "input": [],
@@ -88,6 +56,38 @@
       "parentPlan": 2039053377176713134,
       "positionWeb": {
         "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SuccessOnCondPlan.pml#3153116020668535682",
+          "comment": "",
+          "configuration": null,
+          "id": 1427847311614550547,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1813014648904251459,
+      "inTransitions": [
+        1124111964911548913
+      ],
+      "name": "SuccessOnCondStateB",
+      "outTransitions": [
+        4586149331725958934
+      ],
+      "parentPlan": 2039053377176713134,
+      "positionWeb": {
+        "x": 686,
         "y": 200
       },
       "type": "State",

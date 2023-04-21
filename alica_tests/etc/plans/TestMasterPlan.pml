@@ -3,6 +3,13 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 295638103823734752,
+      "key": "ChooseTestState2AdjacentSuccessTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 330153981060768900,
       "key": "ChooseTestState2BehSuccessTestState",
       "type": "bool"
@@ -40,13 +47,6 @@
       "comment": "",
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
-      "type": "bool"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 295638103823734752,
-      "key": "ChooseTestState2AdjacentSuccessTestState",
       "type": "bool"
     }
   ],
@@ -105,6 +105,36 @@
       "positionWeb": {
         "x": 686,
         "y": 1000
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "AdjacentSuccessTestPlan.pml#2039053377176713134",
+          "comment": "",
+          "configuration": null,
+          "id": 2655529348250165827,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1016088688698752054,
+      "inTransitions": [
+        3815101160319869321
+      ],
+      "name": "AdjacentSuccessTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1200
       },
       "type": "State",
       "variableBindings": []
@@ -224,7 +254,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 1200
+        "y": 1400
       },
       "type": "State",
       "variableBindings": []
@@ -242,8 +272,8 @@
         1234148291059202190,
         2841206023261337744,
         3651332618963874336,
-        4120890224163547783,
-        3815101160319869321
+        3815101160319869321,
+        4120890224163547783
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -279,36 +309,6 @@
       "positionWeb": {
         "x": 686,
         "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "AdjacentSuccessTestPlan.pml#2039053377176713134",
-          "comment": "",
-          "configuration": null,
-          "id": 2655529348250165827,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 1016088688698752054,
-      "inTransitions": [
-        3815101160319869321
-      ],
-      "name": "AdjacentSuccessTestState",
-      "outTransitions": [],
-      "parentPlan": 2521443078354411465,
-      "positionWeb": {
-        "x": 686,
-        "y": 1400
       },
       "type": "State",
       "variableBindings": []
@@ -494,41 +494,6 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#3592699233854318376",
-      "id": 4120890224163547783,
-      "inState": 4098979167613947533,
-      "keyMapping": {
-        "input": [
-          {
-            "childKey": "result",
-            "parentKey": "ChooseTestState2MultiPlanInstanceSuccessTestState",
-            "value": null
-          }
-        ],
-        "output": []
-      },
-      "name": "",
-      "outState": 3960396736820956915,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 1229
-        }
-      ],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 2733591692277574870,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#3592699233854318376",
       "id": 3815101160319869321,
       "inState": 4098979167613947533,
       "keyMapping": {
@@ -546,7 +511,7 @@
       "pointsWeb": [
         {
           "x": 586,
-          "y": 1429
+          "y": 1229
         }
       ],
       "preCondition": {
@@ -554,6 +519,41 @@
         "conditionString": "",
         "enabled": true,
         "id": 2822951189378292075,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 4120890224163547783,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2MultiPlanInstanceSuccessTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3960396736820956915,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1429
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2733591692277574870,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
