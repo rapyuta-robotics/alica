@@ -20,6 +20,13 @@ struct BBType
     static constexpr const char* ANY = "std::any";
 };
 
+struct BBAccessType
+{
+    static constexpr const char* INPUT = "input";
+    static constexpr const char* OUTPUT = "output";
+    static constexpr const char* PROTECTED = "protected";
+};
+
 // used for accessing bb values with an unknown type
 class UnknownType
 {
@@ -125,7 +132,7 @@ TEST_F(SingleAgentTestFixture, testValueMappingPlans)
 TEST_F(SingleAgentBlackboardTestFixture, testValueMappingKeyNotFound)
 {
     BlackboardBlueprint targetBlueprint;
-    targetBlueprint.addKey("targetKey", BBType::BOOL);
+    targetBlueprint.addKey("targetKey", BBType::BOOL, BBAccessType::PROTECTED);
 
     Blackboard targetBB(&targetBlueprint);
     EXPECT_THROW({ getBlackboardImpl(targetBB).mapValue("wrongTargetKey", "true"); }, BlackboardException);
@@ -134,7 +141,7 @@ TEST_F(SingleAgentBlackboardTestFixture, testValueMappingKeyNotFound)
 TEST_F(SingleAgentBlackboardTestFixture, testValueMappingUnknownType)
 {
     BlackboardBlueprint targetBlueprint;
-    targetBlueprint.addKey("targetKey", BBType::ANY);
+    targetBlueprint.addKey("targetKey", BBType::ANY, BBAccessType::PROTECTED);
 
     Blackboard targetBB(&targetBlueprint);
     EXPECT_THROW({ getBlackboardImpl(targetBB).mapValue("targetKey", "test"); }, BlackboardException);
@@ -143,7 +150,7 @@ TEST_F(SingleAgentBlackboardTestFixture, testValueMappingUnknownType)
 TEST_F(SingleAgentBlackboardTestFixture, testValueMappingCantParseValue)
 {
     BlackboardBlueprint targetBlueprint;
-    targetBlueprint.addKey("targetKey", BBType::BOOL);
+    targetBlueprint.addKey("targetKey", BBType::BOOL, BBAccessType::PROTECTED);
 
     Blackboard targetBB(&targetBlueprint);
     EXPECT_THROW({ getBlackboardImpl(targetBB).mapValue("targetKey", "test"); }, YAML::BadConversion);
@@ -332,11 +339,11 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
 TEST_F(TestBlackboard, testSetNotMatchingKnownType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", BBType::INT64);
-    blueprint->addKey("uintVal", BBType::UINT64);
-    blueprint->addKey("doubleVal", BBType::DOUBLE);
-    blueprint->addKey("boolVal", BBType::BOOL);
-    blueprint->addKey("stringVal", BBType::STRING);
+    blueprint->addKey("intVal", BBType::INT64, BBAccessType::PROTECTED);
+    blueprint->addKey("uintVal", BBType::UINT64, BBAccessType::PROTECTED);
+    blueprint->addKey("doubleVal", BBType::DOUBLE, BBAccessType::PROTECTED);
+    blueprint->addKey("boolVal", BBType::BOOL, BBAccessType::PROTECTED);
+    blueprint->addKey("stringVal", BBType::STRING, BBAccessType::PROTECTED);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
@@ -410,9 +417,9 @@ TEST_F(TestBlackboard, testSetAnyWithDifferentType)
 TEST_F(TestBlackboard, testAnyWithDifferentTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyType", BBType::ANY);
-    blueprint->addKey("knownType", BBType::ANY);
-    blueprint->addKey("unknownType", BBType::ANY);
+    blueprint->addKey("anyType", BBType::ANY, BBAccessType::PROTECTED);
+    blueprint->addKey("knownType", BBType::ANY, BBAccessType::PROTECTED);
+    blueprint->addKey("unknownType", BBType::ANY, BBAccessType::PROTECTED);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     LockedBlackboardRW bb_locked = LockedBlackboardRW(blackboard);
 
@@ -436,14 +443,14 @@ TEST_F(TestBlackboard, testAnyWithDifferentTypes)
 TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprintSrc = std::make_unique<alica::BlackboardBlueprint>();
-    blueprintSrc->addKey("anyTypeSrc", BBType::ANY);
-    blueprintSrc->addKey("knownTypeSrc", BBType::INT64);
-    blueprintSrc->addKey("unknownTypeSrc", BBType::ANY);
+    blueprintSrc->addKey("anyTypeSrc", BBType::ANY, BBAccessType::PROTECTED);
+    blueprintSrc->addKey("knownTypeSrc", BBType::INT64, BBAccessType::PROTECTED);
+    blueprintSrc->addKey("unknownTypeSrc", BBType::ANY, BBAccessType::PROTECTED);
 
     std::unique_ptr<alica::BlackboardBlueprint> blueprintTarget = std::make_unique<alica::BlackboardBlueprint>();
-    blueprintTarget->addKey("anyTypeTarget", BBType::ANY);
-    blueprintTarget->addKey("knownTypeTarget", BBType::INT64);
-    blueprintTarget->addKey("unknownTypeTarget", BBType::ANY);
+    blueprintTarget->addKey("anyTypeTarget", BBType::ANY, BBAccessType::PROTECTED);
+    blueprintTarget->addKey("knownTypeTarget", BBType::INT64, BBAccessType::PROTECTED);
+    blueprintTarget->addKey("unknownTypeTarget", BBType::ANY, BBAccessType::PROTECTED);
 
     alica::Blackboard srcBlackboard = alica::Blackboard(blueprintSrc.get());
     auto& srcBb = getBlackboardImpl(srcBlackboard);
@@ -467,9 +474,9 @@ TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
 TEST_F(TestBlackboard, setWithConvertibleType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", BBType::INT64);
-    blueprint->addKey("uintVal", BBType::UINT64);
-    blueprint->addKey("decimal", BBType::DOUBLE);
+    blueprint->addKey("intVal", BBType::INT64, BBAccessType::PROTECTED);
+    blueprint->addKey("uintVal", BBType::UINT64, BBAccessType::PROTECTED);
+    blueprint->addKey("decimal", BBType::DOUBLE, BBAccessType::PROTECTED);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 

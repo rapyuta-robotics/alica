@@ -25,8 +25,6 @@ private:
     using KnownTypes = std::tuple<bool, int64_t, uint64_t, double, std::string>;
     static constexpr std::array<const char*, 5> _knownTypes{"bool", "int64", "uint64", "double", "std::string"};
 
-    YAML::Node _json;
-
     void set(const std::string& key, const std::string& type);
 
     template <std::size_t... Is>
@@ -44,10 +42,12 @@ private:
     {
         if (typeIndex == TYPE_INDEX) {
             using Type = std::decay_t<decltype(std::get<TYPE_INDEX>(std::declval<KnownTypes>()))>;
-            alica::LockedBlackboardRW bb{*(_context.blackboard)};
-            bb.set(key, _context.json[key].as<Type>());
+            alica::UnlockedBlackboard bb{*getBlackboard()};
+            bb.set(key, _json[key].as<Type>());
         }
     }
+
+    YAML::Node _json;
 };
 
 BOOST_DLL_ALIAS(alica_standard_library::PopulateBlackboard::create, PopulateBlackboard)

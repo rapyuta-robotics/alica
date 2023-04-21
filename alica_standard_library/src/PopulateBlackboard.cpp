@@ -15,7 +15,14 @@ void PopulateBlackboard::onInit()
     _json = YAML::Load(bb.get<std::string>("data"));
 
     for (const auto& [key, keyInfo] : *getBlackboardBlueprint()) {
-        if (keyInfo.type == "protected") {
+        if (keyInfo.access == "protected") {
+            if (!_json[key]) {
+                alica::Logging::logDebug("PopulateBlackboard") << key << " not present in `data`, skipping";
+                continue;
+            } else if (_json[key].IsNull()) {
+                alica::Logging::logDebug("PopulateBlackboard") << key << " is null in `data`, skipping";
+                continue;
+            }
             set(key, keyInfo.type);
         }
     }
