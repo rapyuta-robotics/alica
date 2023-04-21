@@ -13,7 +13,6 @@ bool AnyChildFailure(const alica::Blackboard* input, const alica::RunningPlan* r
 bool AllChildFailure(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 bool AlwaysTrueCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 bool AlwaysFalseCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
-bool Equals(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 bool IsChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 template <typename T>
 bool IsEqual(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
@@ -35,7 +34,6 @@ BOOST_DLL_ALIAS(alica_standard_library::AnyChildFailure, AnyChildFailure)
 BOOST_DLL_ALIAS(alica_standard_library::AllChildFailure, AllChildFailure)
 BOOST_DLL_ALIAS(alica_standard_library::AlwaysTrueCondition, AlwaysTrueCondition)
 BOOST_DLL_ALIAS(alica_standard_library::AlwaysFalseCondition, AlwaysFalseCondition)
-BOOST_DLL_ALIAS(alica_standard_library::Equals, Equals)
 BOOST_DLL_ALIAS(alica_standard_library::IsChildSuccess, IsChildSuccess)
 BOOST_DLL_ALIAS(alica_standard_library::IsChildFailure, IsChildFailure)
 

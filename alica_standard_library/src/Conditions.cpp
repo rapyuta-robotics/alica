@@ -80,12 +80,6 @@ bool AlwaysFalseCondition(const alica::Blackboard* input, const alica::RunningPl
     return false;
 }
 
-bool Equals(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard)
-{
-    alica::LockedBlackboardRO bb(*input);
-    return bb.get<std::string>("lhs") == bb.get<std::string>("rhs");
-}
-
 bool IsChildSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     alica::LockedBlackboardRO bb(*input);
