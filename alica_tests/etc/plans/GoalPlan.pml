@@ -36,7 +36,6 @@
     "quantifiers": [],
     "variables": []
   },
-  "relativeDirectory": "",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "test",

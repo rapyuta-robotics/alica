@@ -43,7 +43,6 @@
   "masterPlan": false,
   "name": "AuthorityTest",
   "preCondition": null,
-  "relativeDirectory": "Authority",
   "runtimeCondition": null,
   "states": [
     {

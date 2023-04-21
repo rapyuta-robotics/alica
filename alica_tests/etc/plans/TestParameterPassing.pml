@@ -70,7 +70,6 @@
   "masterPlan": false,
   "name": "TestParameterPassing",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

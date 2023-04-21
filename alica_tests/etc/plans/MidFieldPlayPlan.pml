@@ -43,7 +43,6 @@
   "masterPlan": false,
   "name": "MidFieldPlayPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

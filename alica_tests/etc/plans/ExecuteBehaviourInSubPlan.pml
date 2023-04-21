@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "ExecuteBehaviourInSubPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

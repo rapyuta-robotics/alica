@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "ConstraintTestMaster",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

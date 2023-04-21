@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "FailureHandlingMaster",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {
