@@ -47,7 +47,7 @@
   "inheritBlackboard": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
-  "name": "AdhocMoveWorkflow",
+  "name": "MoveToWorkflow",
   "preCondition": null,
   "runtimeCondition": null,
   "states": [

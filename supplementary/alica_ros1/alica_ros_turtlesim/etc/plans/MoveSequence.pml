@@ -83,14 +83,14 @@
           "keyMapping": {
             "input": [
               {
-                "childKey": "goal_x",
-                "parentKey": null,
-                "value": 1.5
-              },
-              {
                 "childKey": "goal_y",
                 "parentKey": null,
                 "value": 8.5
+              },
+              {
+                "childKey": "goal_x",
+                "parentKey": null,
+                "value": 1.5
               }
             ],
             "output": []
@@ -169,14 +169,14 @@
           "keyMapping": {
             "input": [
               {
-                "childKey": "goal_y",
-                "parentKey": null,
-                "value": 1.5
-              },
-              {
                 "childKey": "goal_x",
                 "parentKey": null,
                 "value": 8.5
+              },
+              {
+                "childKey": "goal_y",
+                "parentKey": null,
+                "value": 1.5
               }
             ],
             "output": []

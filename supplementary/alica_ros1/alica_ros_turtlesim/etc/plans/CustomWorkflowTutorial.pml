@@ -41,6 +41,50 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
+          "abstractPlan": "WaitForMsg.beh#2324679431617631864",
+          "comment": "",
+          "configuration": null,
+          "id": 2848149231989200191,
+          "keyMapping": {
+            "input": [
+              {
+                "childKey": "topic",
+                "parentKey": null,
+                "value": "task"
+              }
+            ],
+            "output": [
+              {
+                "childKey": "msg",
+                "parentKey": "task_msg"
+              }
+            ]
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 158154529973628369,
+      "inTransitions": [
+        492844968110048610,
+        1851957926410438463
+      ],
+      "name": "WaitForTaskMsg",
+      "outTransitions": [
+        942917957687993046
+      ],
+      "parentPlan": 3523338962708569737,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
           "abstractPlan": "CustomWorkflow.pml#1923957580593038667",
           "comment": "",
           "configuration": null,
@@ -104,54 +148,39 @@
       },
       "type": "State",
       "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "WaitForMsg.beh#2324679431617631864",
-          "comment": "",
-          "configuration": null,
-          "id": 2848149231989200191,
-          "keyMapping": {
-            "input": [
-              {
-                "childKey": "topic",
-                "parentKey": null,
-                "value": "task"
-              }
-            ],
-            "output": [
-              {
-                "childKey": "msg",
-                "parentKey": "task_msg"
-              }
-            ]
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 158154529973628369,
-      "inTransitions": [
-        1851957926410438463,
-        492844968110048610
-      ],
-      "name": "WaitForTaskMsg",
-      "outTransitions": [
-        942917957687993046
-      ],
-      "parentPlan": 3523338962708569737,
-      "positionWeb": {
-        "x": 686,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 492844968110048610,
+      "inState": 1732227321262777278,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 158154529973628369,
+      "pointsWeb": [
+        {
+          "x": 844,
+          "y": 229
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3031003343149149669,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
@@ -203,35 +232,6 @@
         "conditionString": "",
         "enabled": true,
         "id": 3419746199760196530,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#1",
-      "id": 492844968110048610,
-      "inState": 1732227321262777278,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 158154529973628369,
-      "pointsWeb": [
-        {
-          "x": 844,
-          "y": 229
-        }
-      ],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 3031003343149149669,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
