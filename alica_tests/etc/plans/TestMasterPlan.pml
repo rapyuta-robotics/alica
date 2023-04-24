@@ -45,6 +45,13 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 4056440268292823384,
+      "key": "ChooseTestState2SamePlanBehaviourInParallelTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 4124795778227649150,
       "key": "ChooseTestState2SameBehaviourInParallelTestState",
       "type": "bool"
@@ -69,7 +76,7 @@
       "plan": 2521443078354411465,
       "positionWeb": {
         "x": 200,
-        "y": 812
+        "y": 1012
       },
       "state": 4098979167613947533,
       "successRequired": false,
@@ -110,8 +117,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
-        "y": 1000
+        "x": 686,
+        "y": 1400
       },
       "type": "State",
       "variableBindings": []
@@ -125,13 +132,7 @@
           "configuration": null,
           "id": 2916283102649396469,
           "keyMapping": {
-            "input": [
-              {
-                "childKey": "baseValue",
-                "parentKey": null,
-                "value": 0
-              }
-            ],
+            "input": [],
             "output": []
           },
           "name": ""
@@ -146,8 +147,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 700.5809128630704,
-        "y": 64.8625518672199
+        "x": 686,
+        "y": 1000
       },
       "type": "State",
       "variableBindings": []
@@ -176,7 +177,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 400
       },
       "type": "State",
@@ -206,8 +207,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
-        "y": 800
+        "x": 686,
+        "y": 1200
       },
       "type": "State",
       "variableBindings": []
@@ -236,7 +237,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 600
       },
       "type": "State",
@@ -251,13 +252,7 @@
           "configuration": null,
           "id": 2352502246066736064,
           "keyMapping": {
-            "input": [
-              {
-                "childKey": "baseValue",
-                "parentKey": null,
-                "value": 0
-              }
-            ],
+            "input": [],
             "output": []
           },
           "name": ""
@@ -272,8 +267,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 716.8464730290456,
-        "y": -75.7183609958506
+        "x": 686,
+        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -302,8 +297,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
-        "y": 1200
+        "x": 686,
+        "y": 1600
       },
       "type": "State",
       "variableBindings": []
@@ -316,6 +311,7 @@
       "inTransitions": [],
       "name": "ChooseTestState",
       "outTransitions": [
+        450501830354047881,
         846865468084822174,
         978339276131155715,
         1234148291059202190,
@@ -327,8 +323,38 @@
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 427.984375,
-        "y": 800
+        "x": 428,
+        "y": 1000
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SamePlanBehInParallelTestPlan.pml#3509966476895996647",
+          "comment": "",
+          "configuration": null,
+          "id": 2650146910109892725,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 4390170155819827621,
+      "inTransitions": [
+        450501830354047881
+      ],
+      "name": "SamePlanBehaviourInParallelTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1800
       },
       "type": "State",
       "variableBindings": []
@@ -357,7 +383,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 685.96875,
+        "x": 686,
         "y": 200
       },
       "type": "State",
@@ -366,6 +392,41 @@
   ],
   "synchronisations": [],
   "transitions": [
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 450501830354047881,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2SamePlanBehaviourInParallelTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 4390170155819827621,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1829
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1474894026909541222,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#3592699233854318376",
@@ -385,8 +446,8 @@
       "outState": 4487929496627066142,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 228.9921875
+          "x": 586,
+          "y": 229
         }
       ],
       "preCondition": {
@@ -420,8 +481,8 @@
       "outState": 2132957861522514570,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 428.9921875
+          "x": 586,
+          "y": 429
         }
       ],
       "preCondition": {
@@ -455,8 +516,8 @@
       "outState": 3029581745457050844,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 628.9921875
+          "x": 586,
+          "y": 629
         }
       ],
       "preCondition": {
@@ -490,8 +551,8 @@
       "outState": 3481846171271038478,
       "pointsWeb": [
         {
-          "x": 557.6763485477178,
-          "y": -42.02541493775931
+          "x": 586,
+          "y": 829
         }
       ],
       "preCondition": {
@@ -525,8 +586,8 @@
       "outState": 1373205578171374580,
       "pointsWeb": [
         {
-          "x": 575.1037344398339,
-          "y": 92.74636929460581
+          "x": 586,
+          "y": 1029
         }
       ],
       "preCondition": {
@@ -560,8 +621,8 @@
       "outState": 2212831089687963769,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 828.9921875
+          "x": 586,
+          "y": 1229
         }
       ],
       "preCondition": {
@@ -595,8 +656,8 @@
       "outState": 235414165593595069,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 1028.9921875
+          "x": 586,
+          "y": 1429
         }
       ],
       "preCondition": {
@@ -630,8 +691,8 @@
       "outState": 3960396736820956915,
       "pointsWeb": [
         {
-          "x": 585.96875,
-          "y": 1228.9921875
+          "x": 586,
+          "y": 1629
         }
       ],
       "preCondition": {

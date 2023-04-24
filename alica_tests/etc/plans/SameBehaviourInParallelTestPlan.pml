@@ -15,13 +15,6 @@
       "type": "int64"
     },
     {
-      "access": "input",
-      "comment": "",
-      "id": 3628916307787761189,
-      "key": "baseValue",
-      "type": "int64"
-    },
-    {
       "access": "protected",
       "comment": "",
       "id": 4053503531230885495,
@@ -109,14 +102,14 @@
           "keyMapping": {
             "input": [
               {
+                "childKey": "valueBase",
+                "parentKey": null,
+                "value": 1
+              },
+              {
                 "childKey": "valueAddition",
                 "parentKey": null,
                 "value": 2
-              },
-              {
-                "childKey": "valueBase",
-                "parentKey": "baseValue",
-                "value": null
               }
             ],
             "output": [
@@ -135,6 +128,11 @@
           "id": 3609573181032898252,
           "keyMapping": {
             "input": [
+              {
+                "childKey": "valueBase",
+                "parentKey": null,
+                "value": 1
+              },
               {
                 "childKey": "valueAddition",
                 "parentKey": null,
@@ -197,14 +195,14 @@
       "keyMapping": {
         "input": [
           {
+            "childKey": "left",
+            "parentKey": null,
+            "value": 2
+          },
+          {
             "childKey": "right",
             "parentKey": "resultOne",
             "value": null
-          },
-          {
-            "childKey": "left",
-            "parentKey": null,
-            "value": 1
           }
         ],
         "output": []
@@ -237,14 +235,14 @@
       "keyMapping": {
         "input": [
           {
+            "childKey": "left",
+            "parentKey": null,
+            "value": 3
+          },
+          {
             "childKey": "right",
             "parentKey": "resultTwo",
             "value": null
-          },
-          {
-            "childKey": "left",
-            "parentKey": null,
-            "value": 2
           }
         ],
         "output": []
