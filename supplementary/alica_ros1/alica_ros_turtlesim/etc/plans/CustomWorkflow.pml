@@ -269,6 +269,11 @@
       "keyMapping": {
         "input": [
           {
+            "childKey": "left",
+            "parentKey": "workflow",
+            "value": null
+          },
+          {
             "childKey": "right",
             "parentKey": null,
             "value": "moveTo"
