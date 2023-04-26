@@ -13,10 +13,15 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
 
+find_package(opentelemetry-cpp CONFIG REQUIRED)
+find_package(Protobuf REQUIRED)
+find_package(gRPC CONFIG REQUIRED)
+
 
 include_directories(
   include
   ${alica_engine_INCLUDE_DIRS}
+  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
   SYSTEM
 )
 
@@ -34,6 +39,7 @@ add_library(
 target_include_directories(alica_tracing PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  PRIVATE ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
 )
 
 
@@ -42,7 +48,8 @@ target_link_libraries(
   ${PROJECT_NAME}
   ${YAML_CPP_LIBRARIES}
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
-  jaegertracing
+  ${OPENTELEMETRY_CPP_LIBRARIES}  
+  gRPC::grpc++
 )
 
 #############

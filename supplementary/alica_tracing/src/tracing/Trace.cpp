@@ -6,8 +6,18 @@
 #include <utility>
 #include <variant>
 
-#include <opentracing/string_view.h>
-#include <opentracing/util.h>
+#include "opentelemetry/exporters/otlp/otlp_grpc_exporter_factory.h"
+#include "opentelemetry/sdk/trace/simple_processor_factory.h"
+#include "opentelemetry/sdk/trace/tracer_provider_factory.h"
+#include "opentelemetry/trace/provider.h"
+#include "opentelemetry/trace/span_startoptions.h"
+
+#include "opentelemetry/sdk/trace/tracer_provider.h"
+
+namespace otlp      = opentelemetry::exporter::otlp;
+namespace nostd     = opentelemetry::nostd;
+namespace sdktrace  = opentelemetry::sdk::trace;
+namespace trace     = opentelemetry::trace;
 
 namespace alicaTracing
 {
@@ -15,7 +25,7 @@ namespace
 {
 auto prepareStringView(std::string_view value)
 {
-    return opentracing::string_view(value.data(), value.length());
+    return nostd::string_view(value.data(), value.length());
 }
 
 struct TraceValueConverter
@@ -23,56 +33,51 @@ struct TraceValueConverter
     template <typename T>
     auto operator()(T&& value) const
     {
-        return RawTraceValue(std::forward<T>(value));
+        return OTLTraceValue(std::forward<T>(value));
     }
     auto operator()(std::string_view value) const
     {
         // The rest of the tracing process didn't work properly with string views, so construct the string here.
-        return RawTraceValue(std::string(value));
+        return OTLTraceValue(std::string(value));
     }
 };
 
 template <typename T>
-RawTraceValue prepareRawTraceValue(T&& value)
+OTLTraceValue prepareOTLTraceValue(T&& value)
 {
     return std::visit(TraceValueConverter{}, std::forward<T>(value));
 }
 } // namespace
 
-Trace::Trace(const std::string& opName, std::optional<const std::string> parent)
+Trace::Trace(OTLSpanPtr&& span)
+    : _span(span)
 {
-    if (parent) {
-        std::stringstream ss(parent.value());
-        jaegertracing::SpanContext parentCtx = jaegertracing::SpanContext::fromStream(ss);
-        _rawTrace = opentracing::Tracer::Global()->StartSpan(opName, {opentracing::ChildOf(&parentCtx)});
-    } else {
-        _rawTrace = opentracing::Tracer::Global()->StartSpan(opName);
-    }
+    
 }
 
 Trace::~Trace()
 {
-    _rawTrace->Finish();
+    _span->End();
 }
 
 void Trace::setTag(std::string_view key, TraceValue value)
 {
-    _rawTrace->SetTag(prepareStringView(key), prepareRawTraceValue(extractVariant(std::move(value))));
+    _span->SetAttribute(prepareStringView(key), prepareOTLTraceValue(extractVariant(std::move(value))));
 }
 
-void Trace::setTag(const std::string& key, const RawTraceValue& value)
+void Trace::setTag(const std::string& key, const OTLTraceValue& value)
 {
-    _rawTrace->SetTag(key, value);
+    _span->SetAttribute(key, value);
 }
 
-void Trace::log(const std::unordered_map<std::string_view, TraceValue>& fields)
+void Trace::log(const std::unordered_map<std::string_view, TraceValue>& fields, const std::string& event_name)
 {
-    using RawFields = std::vector<std::pair<opentracing::string_view, RawTraceValue>>;
+    using RawFields = std::vector<std::pair<nostd::string_view, OTLTraceValue>>;
     RawFields raw_fields;
     raw_fields.reserve(fields.size());
     std::transform(begin(fields), end(fields), std::back_inserter(raw_fields),
-            [](const auto& v) { return std::make_pair(prepareStringView(v.first), prepareRawTraceValue(extractVariant(v.second))); });
-    _rawTrace->Log(opentracing::SystemClock::now(), raw_fields);
+            [](const auto& v) { return std::make_pair(prepareStringView(v.first), prepareOTLTraceValue(extractVariant(v.second))); });
+    _span->AddEvent(event_name, raw_fields);
 }
 
 void Trace::markError(std::string_view description)
@@ -83,16 +88,23 @@ void Trace::markError(std::string_view description)
 
 std::string Trace::context() const
 {
-    const auto& jctx = dynamic_cast<const jaegertracing::SpanContext&>(_rawTrace->context());
-    std::stringstream ss;
-    jctx.print(ss);
-    return ss.str();
+    if (!_span) {
+        return std::string();
+    }
+
+    TraceContext amrCtx;
+    _span->GetContext().trace_id().CopyBytesTo(amrCtx.trace_id);
+    _span->GetContext().span_id().CopyBytesTo(amrCtx.span_id);
+    std::vector<decltype(amrCtx.trace_flags)> trace_flags_vec = {amrCtx.trace_flags};
+    _span->GetContext().trace_flags().CopyBytesTo(trace_flags_vec);
+    amrCtx.trace_state = _span->GetContext().trace_state()->ToHeader(); 
+    return amrCtx.toString();
 }
 
 void Trace::finish()
 {
-    setTag("endTime", RawTraceValue(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
-    _rawTrace->Finish();
+    setTag("endTime", OTLTraceValue(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
+    _span->End();
 }
 
 } // namespace alicaTracing
