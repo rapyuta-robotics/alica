@@ -5,36 +5,24 @@
 #include <string>
 
 #include <engine/IAlicaTrace.h>
-#include <jaegertracing/Tracer.h>
+#include <tracing/TraceContext.h>
+#include <tracing/TraceFactory.h>
 
 namespace alicaTracing
 {
-using RawTrace = opentracing::Span;
-using RawTracePtr = std::unique_ptr<RawTrace>;
-
-//// Value can be numeric types, strings, or bools.
-using RawTraceValue = opentracing::Value;
-
-class TraceFactory;
+using OTLSpan = opentelemetry::trace::Span;
+using OTLSpanPtr = opentelemetry::nostd::shared_ptr<OTLSpan>;
+// Value can be numeric types, strings, or bools.
+using OTLTraceValue = opentelemetry::v1::common::AttributeValue;
 
 class Trace : public alica::IAlicaTrace
 {
-    friend TraceFactory;
-
 public:
-    // Create partial trace instance with optional reference to the parent.
-    // Trace without parent will be reported as root of the trace and can have further children.
-    // Although library doesn't validate operation name or stop any operation to be a root,
-    // users of the library are supposed to follow this specs
-    // https://app.diagrams.net/?libs=general;basic;arrows#G17zQOPcT-Tr2GStr2nYzvcbgGe_SeFUEi
-    // Creation of this instance will set operation start time to now()
-    Trace(const std::string& opName, std::optional<const std::string> parent = std::nullopt);
-
-    Trace() {}
-
-    Trace(Trace&& other) = default;
-
-    Trace& operator=(Trace&& other) = default;
+    Trace() = delete;
+    Trace(const Trace& other) = delete;
+    Trace(Trace&& other) = delete;
+    Trace& operator=(const Trace& other) = delete;
+    Trace&& operator=(Trace&& other) = delete;
 
     // This class can either be used raw, inherited or can be used to compose module level trace classes
     // Destruction of this instance will mark the end time of operation, and will be reported to tracing collectors
@@ -52,7 +40,7 @@ public:
     //        {"wait.time", "waited 10 sec for agent 2"}});
     // BE CAREFUL about what you want to log,
     // These are supposed to be micro logs to be carried over the network.
-    void log(const std::unordered_map<std::string_view, TraceValue>& fields) override;
+    void log(const std::unordered_map<std::string_view, TraceValue>& fields, const std::string& event_name = "Log") override;
 
     // When operation being traced by this instance fail, call this api
     // Error traces are highlighted in tracing ui.
@@ -65,9 +53,13 @@ public:
     // Get the context of this trace to propogate across process boundary
     std::string context() const override;
 
-private:
-    void setTag(const std::string& key, const RawTraceValue& value);
+private:    
+    friend class TraceFactory;
 
-    RawTracePtr _rawTrace;
+    Trace(OTLSpanPtr&& span);
+
+    void setTag(const std::string& key, const OTLTraceValue& value);
+
+    OTLSpanPtr _span;
 };
 } // namespace alicaTracing
