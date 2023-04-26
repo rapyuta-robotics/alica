@@ -64,6 +64,10 @@ TEST_F(AlicaInactiveAgentCommunicationTest, inactiveAgentTest)
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     STEP_ALL_UNTIL(acs, alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
+
+    // step once to see if agents crash
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 }
 } // namespace
 } // namespace supplementary
