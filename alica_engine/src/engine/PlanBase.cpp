@@ -370,8 +370,8 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
 
 RunningPlan* PlanBase::makeRunningPlan(const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _teamObserver, _teamManager, _planRepository, _resultStore,
-            _solvers, _runTimePlanFactory, _runTimeBehaviourFactory, abstractPlan, wrapper));
+    _runningPlans.emplace_back(std::make_shared<RunningPlan>(_configChangeListener, _clock, _globalBlackboard, _teamObserver, _teamManager, _planRepository,
+            _resultStore, _solvers, _runTimePlanFactory, _runTimeBehaviourFactory, abstractPlan, wrapper));
     return _runningPlans.back().get();
 }
 
