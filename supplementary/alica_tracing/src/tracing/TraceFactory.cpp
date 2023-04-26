@@ -83,7 +83,7 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
     return trace;
 }
 
-OTLSpanPtr TraceFactory::createSpan(const std::string& opName, std::optional<const TraceContext> parent) const
+OTLSpanPtr TraceFactory::createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent) const
 {
     assert(!opName.empty());
 

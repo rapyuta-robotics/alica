@@ -86,19 +86,19 @@ void Trace::markError(std::string_view description)
     setTag("error.description", TraceValue(description));
 }
 
-std::string Trace::context() const
+alica::TraceContext Trace::context() const
 {
     if (!_span) {
         return std::string();
     }
 
-    TraceContext amrCtx;
+    alica::TraceContext amrCtx;
     _span->GetContext().trace_id().CopyBytesTo(amrCtx.trace_id);
     _span->GetContext().span_id().CopyBytesTo(amrCtx.span_id);
     std::vector<decltype(amrCtx.trace_flags)> trace_flags_vec = {amrCtx.trace_flags};
     _span->GetContext().trace_flags().CopyBytesTo(trace_flags_vec);
     amrCtx.trace_state = _span->GetContext().trace_state()->ToHeader(); 
-    return amrCtx.toString();
+    return amrCtx;
 }
 
 void Trace::finish()

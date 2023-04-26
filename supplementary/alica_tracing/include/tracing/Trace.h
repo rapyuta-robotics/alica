@@ -5,7 +5,7 @@
 #include <string>
 
 #include <engine/IAlicaTrace.h>
-#include <tracing/TraceContext.h>
+#include <engine/util/TraceContext.h>
 #include <tracing/TraceFactory.h>
 
 namespace alicaTracing
@@ -51,7 +51,7 @@ public:
     void finish() override;
 
     // Get the context of this trace to propogate across process boundary
-    std::string context() const override;
+    alica::TraceContext context() const override;
 
 private:    
     friend class TraceFactory;

@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 
-namespace alicaTracing
+namespace alica
 {
 
 struct TraceContext

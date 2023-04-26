@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <utility>
 #include <variant>
+#include <engine/util/TraceContext.h>
 
 namespace alica
 {
@@ -47,7 +48,7 @@ public:
     // Explicitly set the trace as finished. Any calls to setTag, setLog & markError after this call should
     // leave the trace in a valid but unspecified state. Calling context on a finished trace is a valid operation
     virtual void finish() = 0;
-    virtual std::string context() const = 0;
+    virtual TraceContext context() const = 0;
 
 protected:
     template <typename V>
