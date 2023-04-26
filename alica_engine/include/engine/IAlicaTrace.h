@@ -1,5 +1,6 @@
 #pragma once
 
+#include <engine/util/TraceContext.h>
 #include <memory>
 #include <optional>
 #include <string>
@@ -8,7 +9,6 @@
 #include <unordered_map>
 #include <utility>
 #include <variant>
-#include <engine/util/TraceContext.h>
 
 namespace alica
 {

@@ -12,10 +12,10 @@
 
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 
-namespace otlp      = opentelemetry::exporter::otlp;
-namespace nostd     = opentelemetry::nostd;
-namespace sdktrace  = opentelemetry::sdk::trace;
-namespace trace     = opentelemetry::trace;
+namespace otlp = opentelemetry::exporter::otlp;
+namespace nostd = opentelemetry::nostd;
+namespace sdktrace = opentelemetry::sdk::trace;
+namespace trace = opentelemetry::trace;
 
 namespace alicaTracing
 {
@@ -30,16 +30,16 @@ TraceFactory::TraceFactory(const std::string& serviceName, const std::string& co
 
         otlp::OtlpGrpcExporterOptions options;
         options.endpoint = configYAML["reporter.server_addr"].as<std::string>() + ":" + configYAML["reporter.server_port"].as<std::string>();
-        options.use_ssl_credentials = configYAML["reporter.use_ssl_credentials"].as<bool>();        
+        options.use_ssl_credentials = configYAML["reporter.use_ssl_credentials"].as<bool>();
         options.ssl_credentials_cacert_as_string = "ssl-certificate";
 
-        auto exporter = otlp::OtlpGrpcExporterFactory::Create(options);         
+        auto exporter = otlp::OtlpGrpcExporterFactory::Create(options);
         auto processor = sdktrace::SimpleSpanProcessorFactory::Create(std::move(exporter));
 
         _provider = sdktrace::TracerProviderFactory::Create(std::move(processor));
         _tracer = _provider->GetTracer(_serviceName);
     } catch (std::exception& e) {
-        alica::Logging::logInfo(LOGNAME) << __func__ << " Failed to initialize OTLP " << e.what();        
+        alica::Logging::logInfo(LOGNAME) << __func__ << " Failed to initialize OTLP " << e.what();
         throw e;
     }
     _initialized = true;
@@ -52,8 +52,7 @@ TraceFactory::~TraceFactory()
     // allow termination to propogate,
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     _provider = trace::Provider::GetTracerProvider();
-    if (_provider)
-    {
+    if (_provider) {
         static_cast<sdktrace::TracerProvider*>(_provider.get())->ForceFlush();
     }
 
@@ -93,7 +92,7 @@ OTLSpanPtr TraceFactory::createSpan(const std::string& opName, std::optional<con
 
     OTLSpanPtr span;
     if (parent) {
-        trace::SpanContext context(trace::TraceId(parent->trace_id), trace::SpanId(parent->span_id), trace::TraceFlags(parent->trace_flags), true, 
+        trace::SpanContext context(trace::TraceId(parent->trace_id), trace::SpanId(parent->span_id), trace::TraceFlags(parent->trace_flags), true,
                 opentelemetry::trace::TraceState::FromHeader(parent->trace_state));
         trace::StartSpanOptions options;
         options.parent = context;

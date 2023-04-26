@@ -53,7 +53,7 @@ public:
     // Get the context of this trace to propogate across process boundary
     alica::TraceContext context() const override;
 
-private:    
+private:
     friend class TraceFactory;
 
     Trace(OTLSpanPtr&& span);

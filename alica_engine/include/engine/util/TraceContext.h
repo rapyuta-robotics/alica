@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 
 namespace alica
@@ -16,9 +16,7 @@ struct TraceContext
 
     std::string toString()
     {
-        return std::string(trace_id.begin(), trace_id.end()) + "-" + 
-               std::string(span_id.begin(), span_id.end()) + "-" + 
-               std::to_string(trace_flags) + "-" + 
+        return std::string(trace_id.begin(), trace_id.end()) + "-" + std::string(span_id.begin(), span_id.end()) + "-" + std::to_string(trace_flags) + "-" +
                trace_state;
     }
 
@@ -38,4 +36,4 @@ struct TraceContext
     }
 };
 
-}  // namespace alicaTracingnewfront
+} // namespace alica
