@@ -26,7 +26,6 @@
   "name": "GoTo",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "behaviours",
   "runtimeCondition": null,
   "variables": []
 }

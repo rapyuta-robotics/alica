@@ -7,8 +7,7 @@
       "conditionRepository": 0,
       "id": 1,
       "libraryName": "alica_standard_library",
-      "name": "AnyChildSuccess",
-      "relativeDirectory": "conditions"
+      "name": "AnyChildSuccess"
     },
     {
       "blackboard": [],
@@ -16,8 +15,7 @@
       "conditionRepository": 0,
       "id": 2,
       "libraryName": "alica_standard_library",
-      "name": "AllChildSuccess",
-      "relativeDirectory": "conditions"
+      "name": "AllChildSuccess"
     },
     {
       "blackboard": [],
@@ -25,8 +23,7 @@
       "conditionRepository": 0,
       "id": 3,
       "libraryName": "alica_standard_library",
-      "name": "AnyChildFailure",
-      "relativeDirectory": "conditions"
+      "name": "AnyChildFailure"
     },
     {
       "blackboard": [],
@@ -34,11 +31,32 @@
       "conditionRepository": 0,
       "id": 4,
       "libraryName": "alica_standard_library",
-      "name": "AllChildFailure",
-      "relativeDirectory": "conditions"
+      "name": "AllChildFailure"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1522671554895393021,
+          "key": "left",
+          "type": "std::string"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3837414941606102992,
+          "key": "right",
+          "type": "std::string"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 976473172990372064,
+      "libraryName": "alica_standard_library",
+      "name": "IsEqualString"
     }
   ],
   "id": 0,
-  "name": "ConditionRepository",
-  "relativeDirectory": ""
+  "name": "ConditionRepository"
 }

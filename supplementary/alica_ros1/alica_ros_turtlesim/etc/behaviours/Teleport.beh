@@ -26,7 +26,6 @@
   "name": "Teleport",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "variables": []
 }

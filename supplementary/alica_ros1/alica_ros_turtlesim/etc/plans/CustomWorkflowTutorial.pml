@@ -1,31 +1,39 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 3275358505487787998,
+      "key": "task_msg",
+      "type": "std::string"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
-      "id": 3052522711932804870,
+      "id": 3020026408665372387,
       "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "",
-      "plan": 1807175145810248577,
+      "plan": 3523338962708569737,
       "positionWeb": {
         "x": 200,
         "y": 212
       },
-      "state": 1577660109759227973,
+      "state": 4533751772634304619,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
     }
   ],
   "frequency": 0,
-  "id": 1807175145810248577,
-  "implementationName": "TracedPlan",
+  "id": 3523338962708569737,
+  "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
   "libraryName": "alica_standard_library",
   "masterPlan": true,
-  "name": "MoveSequenceTutorial",
+  "name": "CustomWorkflowTutorial",
   "preCondition": null,
   "runtimeCondition": null,
   "states": [
@@ -33,75 +41,39 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "abstractPlan": "WaitForMsg.beh#2324679431617631864",
           "comment": "",
           "configuration": null,
-          "id": 3944826184966310210,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": 3052522711932804870,
-      "id": 1577660109759227973,
-      "inTransitions": [],
-      "name": "SpawnTurtle",
-      "outTransitions": [
-        3233566518007110816
-      ],
-      "parentPlan": 1807175145810248577,
-      "positionWeb": {
-        "x": 428,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "MoveSequence.pml#2955879459958169673",
-          "comment": "",
-          "configuration": null,
-          "id": 1190477524656036388,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        },
-        {
-          "abstractPlan": "WaitForTrigger.beh#1320667069122998665",
-          "comment": "",
-          "configuration": null,
-          "id": 3088308470338945807,
+          "id": 2848149231989200191,
           "keyMapping": {
             "input": [
               {
                 "childKey": "topic",
                 "parentKey": null,
-                "value": "rotate"
+                "value": "task"
               }
             ],
-            "output": []
+            "output": [
+              {
+                "childKey": "msg",
+                "parentKey": "task_msg"
+              }
+            ]
           },
           "name": ""
         }
       ],
       "entryPoint": null,
-      "id": 2710995558290149564,
+      "id": 158154529973628369,
       "inTransitions": [
-        1623866678061633764,
-        3233566518007110816
+        492844968110048610,
+        1851957926410438463
       ],
-      "name": "MoveBetweenCorners",
+      "name": "WaitForTaskMsg",
       "outTransitions": [
-        2149585609162989755
+        942917957687993046
       ],
-      "parentPlan": 1807175145810248577,
+      "parentPlan": 3523338962708569737,
       "positionWeb": {
         "x": 686,
         "y": 200
@@ -113,27 +85,16 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "RotateTurtle.beh#2948815528667048378",
+          "abstractPlan": "CustomWorkflow.pml#1923957580593038667",
           "comment": "",
           "configuration": null,
-          "id": 3993219790856802160,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        },
-        {
-          "abstractPlan": "WaitForTrigger.beh#1320667069122998665",
-          "comment": "",
-          "configuration": null,
-          "id": 4301939880152356767,
+          "id": 3976479078999314029,
           "keyMapping": {
             "input": [
               {
-                "childKey": "topic",
-                "parentKey": null,
-                "value": "move"
+                "childKey": "data",
+                "parentKey": "task_msg",
+                "value": null
               }
             ],
             "output": []
@@ -142,17 +103,47 @@
         }
       ],
       "entryPoint": null,
-      "id": 2724107460069037337,
+      "id": 1732227321262777278,
       "inTransitions": [
-        2149585609162989755
+        942917957687993046
       ],
-      "name": "Rotate",
+      "name": "ExecuteTask",
       "outTransitions": [
-        1623866678061633764
+        492844968110048610
       ],
-      "parentPlan": 1807175145810248577,
+      "parentPlan": 3523338962708569737,
       "positionWeb": {
         "x": 944,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "comment": "",
+          "configuration": null,
+          "id": 1701601505357084523,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": 3020026408665372387,
+      "id": 4533751772634304619,
+      "inTransitions": [],
+      "name": "SpawnTurtle",
+      "outTransitions": [
+        1851957926410438463
+      ],
+      "parentPlan": 3523338962708569737,
+      "positionWeb": {
+        "x": 428,
         "y": 200
       },
       "type": "State",
@@ -164,14 +155,14 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 1623866678061633764,
-      "inState": 2724107460069037337,
+      "id": 492844968110048610,
+      "inState": 1732227321262777278,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 2710995558290149564,
+      "outState": 158154529973628369,
       "pointsWeb": [
         {
           "x": 844,
@@ -182,7 +173,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 2903806643656271000,
+        "id": 3031003343149149669,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -193,14 +184,14 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 2149585609162989755,
-      "inState": 2710995558290149564,
+      "id": 942917957687993046,
+      "inState": 158154529973628369,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 2724107460069037337,
+      "outState": 1732227321262777278,
       "pointsWeb": [
         {
           "x": 844,
@@ -211,7 +202,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 210552878214970537,
+        "id": 3252002974980035492,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -222,14 +213,14 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 3233566518007110816,
-      "inState": 1577660109759227973,
+      "id": 1851957926410438463,
+      "inState": 4533751772634304619,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 2710995558290149564,
+      "outState": 158154529973628369,
       "pointsWeb": [
         {
           "x": 586,
@@ -240,7 +231,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3981435665385062489,
+        "id": 3419746199760196530,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

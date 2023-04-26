@@ -27,6 +27,7 @@ add_library(${PROJECT_NAME} SHARED
   src/BasicPlans.cpp
   src/Conditions.cpp
   src/GenerateRandom.cpp
+  src/PopulateBlackboard.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
