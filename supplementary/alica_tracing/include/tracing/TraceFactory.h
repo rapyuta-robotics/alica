@@ -23,6 +23,8 @@ namespace alicaTracing
 class TraceFactory : public alica::IAlicaTraceFactory
 {
 public:
+    TraceFactory(const std::string& serviceName, const std::string& configFilePath,    
+            const std::unordered_map<std::string, OTLTraceValue>& defaultTags = std::unordered_map<std::string, OTLTraceValue>());
     TraceFactory(const TraceFactory&) = delete;
     TraceFactory(TraceFactory&&) = delete;
     TraceFactory& operator=(const TraceFactory&) = delete;
@@ -33,9 +35,7 @@ public:
     void setGlobalContext(const std::string& globalContext) override;
     void unsetGlobalContext() override;
 
-private:
-    TraceFactory(const std::string& serviceName, const std::string& configFilePath,    
-            const std::unordered_map<std::string, OTLTraceValue>& defaultTags = std::unordered_map<std::string, OTLTraceValue>());
+private:    
     OTLSpanPtr createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent = std::nullopt) const;
 
     static constexpr const char* LOGNAME = "TraceFactory";
