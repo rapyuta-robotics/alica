@@ -18,8 +18,7 @@ find_package(CURL REQUIRED)
 
 include_directories(
   include
-  ${alica_engine_INCLUDE_DIRS}
-  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
+  ${alica_engine_INCLUDE_DIRS}  
   SYSTEM
 )
 
@@ -37,7 +36,7 @@ add_library(
 target_include_directories(alica_tracing PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}  
+  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
 )
 
 
@@ -45,11 +44,15 @@ target_include_directories(alica_tracing PUBLIC
 target_link_libraries(
   ${PROJECT_NAME} PUBLIC
   ${YAML_CPP_LIBRARIES}
-  "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
-  opentelemetry_trace 
-  opentelemetry_exporter_jaeger_trace 
-  thrift 
+  opentelemetry_exporter_ostream_span
+  opentelemetry_trace
+  opentelemetry_common
+  opentelemetry_http_client_curl 
+  opentelemetry_resources
+  opentelemetry_exporter_jaeger_trace  
+  thrift
   curl
+  "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"  
 )
 
 #############
