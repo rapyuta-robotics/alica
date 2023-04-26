@@ -14,10 +14,10 @@
 
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 
-namespace otlp      = opentelemetry::exporter::otlp;
-namespace nostd     = opentelemetry::nostd;
-namespace sdktrace  = opentelemetry::sdk::trace;
-namespace trace     = opentelemetry::trace;
+namespace otlp = opentelemetry::exporter::otlp;
+namespace nostd = opentelemetry::nostd;
+namespace sdktrace = opentelemetry::sdk::trace;
+namespace trace = opentelemetry::trace;
 
 namespace alicaTracing
 {
@@ -50,9 +50,8 @@ OTLTraceValue prepareOTLTraceValue(T&& value)
 } // namespace
 
 Trace::Trace(OTLSpanPtr&& span)
-    : _span(span)
+        : _span(span)
 {
-    
 }
 
 Trace::~Trace()
@@ -97,7 +96,7 @@ alica::TraceContext Trace::context() const
     _span->GetContext().span_id().CopyBytesTo(amrCtx.span_id);
     std::vector<decltype(amrCtx.trace_flags)> trace_flags_vec = {amrCtx.trace_flags};
     _span->GetContext().trace_flags().CopyBytesTo(trace_flags_vec);
-    amrCtx.trace_state = _span->GetContext().trace_state()->ToHeader(); 
+    amrCtx.trace_state = _span->GetContext().trace_state()->ToHeader();
     return amrCtx;
 }
 

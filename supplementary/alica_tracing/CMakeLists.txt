@@ -48,7 +48,7 @@ target_link_libraries(
   ${PROJECT_NAME}
   ${YAML_CPP_LIBRARIES}
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
-  ${OPENTELEMETRY_CPP_LIBRARIES}  
+  ${OPENTELEMETRY_CPP_LIBRARIES}
   gRPC::grpc++
 )
 
