@@ -50,9 +50,9 @@
   ],
   "frequency": 0,
   "id": 3704681038071220276,
-  "implementationName": "",
+  "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
-  "libraryName": "alica-tests",
+  "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "SamePlanInParallelTestPlan",
   "preCondition": null,
@@ -249,14 +249,14 @@
       "keyMapping": {
         "input": [
           {
-            "childKey": "right",
-            "parentKey": "resultTwo",
-            "value": null
-          },
-          {
             "childKey": "left",
             "parentKey": null,
             "value": 3
+          },
+          {
+            "childKey": "right",
+            "parentKey": "resultTwo",
+            "value": null
           }
         ],
         "output": []

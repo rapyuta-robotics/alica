@@ -280,7 +280,7 @@
       "inTransitions": [
         71477950978277121
       ],
-      "name": "",
+      "name": "SuccessState",
       "outTransitions": [],
       "parentPlan": 3509966476895996647,
       "positionWeb": {
