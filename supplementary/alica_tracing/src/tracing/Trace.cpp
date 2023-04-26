@@ -6,7 +6,6 @@
 #include <utility>
 #include <variant>
 
-#include "opentelemetry/exporters/otlp/otlp_grpc_exporter_factory.h"
 #include "opentelemetry/sdk/trace/simple_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/trace/provider.h"
@@ -14,7 +13,6 @@
 
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 
-namespace otlp = opentelemetry::exporter::otlp;
 namespace nostd = opentelemetry::nostd;
 namespace sdktrace = opentelemetry::sdk::trace;
 namespace trace = opentelemetry::trace;

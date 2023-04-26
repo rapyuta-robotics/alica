@@ -4,7 +4,7 @@
 
 #include <exception>
 
-#include "opentelemetry/exporters/otlp/otlp_grpc_exporter_factory.h"
+#include "opentelemetry/exporters/jaeger/jaeger_exporter_factory.h"
 #include "opentelemetry/sdk/trace/simple_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/trace/provider.h"
@@ -12,7 +12,7 @@
 
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 
-namespace otlp = opentelemetry::exporter::otlp;
+namespace jaeger = opentelemetry::exporter::jaeger;
 namespace nostd = opentelemetry::nostd;
 namespace sdktrace = opentelemetry::sdk::trace;
 namespace trace = opentelemetry::trace;
@@ -28,12 +28,11 @@ TraceFactory::TraceFactory(const std::string& serviceName, const std::string& co
     try {
         auto configYAML = YAML::LoadFile(configFilePath);
 
-        otlp::OtlpGrpcExporterOptions options;
-        options.endpoint = configYAML["reporter.server_addr"].as<std::string>() + ":" + configYAML["reporter.server_port"].as<std::string>();
-        options.use_ssl_credentials = configYAML["reporter.use_ssl_credentials"].as<bool>();
-        options.ssl_credentials_cacert_as_string = "ssl-certificate";
+        jaeger::JaegerExporterOptions options;
+        options.endpoint = configYAML["reporter.server_addr"].as<std::string>();
+        options.server_port = configYAML["reporter.server_port"].as<uint16_t>();
 
-        auto exporter = otlp::OtlpGrpcExporterFactory::Create(options);
+        auto exporter = jaeger::JaegerExporterFactory::Create(options);
         auto processor = sdktrace::SimpleSpanProcessorFactory::Create(std::move(exporter));
 
         _provider = sdktrace::TracerProviderFactory::Create(std::move(processor));

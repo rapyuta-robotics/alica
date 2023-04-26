@@ -14,9 +14,7 @@ find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
 
 find_package(opentelemetry-cpp CONFIG REQUIRED)
-find_package(Protobuf REQUIRED)
-find_package(gRPC CONFIG REQUIRED)
-
+find_package(CURL REQUIRED)
 
 include_directories(
   include
@@ -39,17 +37,19 @@ add_library(
 target_include_directories(alica_tracing PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
+  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}  
 )
 
 
 # Specify libraries to link a library or executable target against
 target_link_libraries(
-  ${PROJECT_NAME}
+  ${PROJECT_NAME} PUBLIC
   ${YAML_CPP_LIBRARIES}
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
-  ${OPENTELEMETRY_CPP_LIBRARIES}
-  gRPC::grpc++
+  opentelemetry_trace 
+  opentelemetry_exporter_jaeger_trace 
+  thrift 
+  curl
 )
 
 #############
