@@ -39,7 +39,7 @@ add_library(
 target_include_directories(alica_tracing PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  PRIVATE ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
+  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
 )
 
 

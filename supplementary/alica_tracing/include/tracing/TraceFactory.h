@@ -1,7 +1,7 @@
 #pragma once
 
 #include <engine/IAlicaTrace.h>
-#include <tracing/TraceContext.h>
+#include <engine/util/TraceContext.h>
 
 #include <memory>
 #include <string>
@@ -36,7 +36,7 @@ public:
 private:
     TraceFactory(const std::string& serviceName, const std::string& configFilePath,    
             const std::unordered_map<std::string, OTLTraceValue>& defaultTags = std::unordered_map<std::string, OTLTraceValue>());
-    OTLSpanPtr createSpan(const std::string& opName, std::optional<const TraceContext> parent = std::nullopt) const;
+    OTLSpanPtr createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent = std::nullopt) const;
 
     static constexpr const char* LOGNAME = "TraceFactory";
 
