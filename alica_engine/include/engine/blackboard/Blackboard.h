@@ -273,6 +273,11 @@ private:
         {
             auto operator()(const std::string& value) const
             {
+                if constexpr (std::is_same_v<T, std::string>) {
+                    // This ensures that a value that itself is a json is passed as a string instead of being parsed again
+                    return value;
+                }
+                // TODO: using Load on value may have some pitfalls, eg. the if statement above is to deal with one of them
                 YAML::Node node = YAML::Load(value);
                 return node.as<T>();
             }

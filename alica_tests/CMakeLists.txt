@@ -79,7 +79,6 @@ if(BUILD_TESTING)
         src/test/test_path_parser.cpp
         src/test/test_config_change.cpp
         src/test/test_alica_scheduling.cpp
-        src/test/test_adjacent_plans_success.cpp
         src/test/test_alica_tracing.cpp
         src/test/test_blackboard.cpp
         src/test/test_inherit_blackboard.cpp

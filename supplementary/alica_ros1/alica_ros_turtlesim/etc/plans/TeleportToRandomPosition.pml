@@ -42,7 +42,6 @@
   "masterPlan": false,
   "name": "TeleportToRandomPosition",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

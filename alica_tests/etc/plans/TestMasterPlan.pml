@@ -3,6 +3,13 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 295638103823734752,
+      "key": "ChooseTestState2AdjacentSuccessTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 330153981060768900,
       "key": "ChooseTestState2BehSuccessTestState",
       "type": "bool"
@@ -112,6 +119,36 @@
       "positionWeb": {
         "x": 686,
         "y": 1000
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "AdjacentSuccessTestPlan.pml#2039053377176713134",
+          "comment": "",
+          "configuration": null,
+          "id": 2655529348250165827,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1016088688698752054,
+      "inTransitions": [
+        3815101160319869321
+      ],
+      "name": "AdjacentSuccessTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1200
       },
       "type": "State",
       "variableBindings": []
@@ -249,8 +286,9 @@
         1234148291059202190,
         2841206023261337744,
         3651332618963874336,
-        4120890224163547783,
-        2394621718823101117
+        2394621718823101117,
+        3815101160319869321,
+        4120890224163547783
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -491,6 +529,41 @@
         "conditionString": "",
         "enabled": true,
         "id": 1434924428337492941,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 3815101160319869321,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2AdjacentSuccessTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1016088688698752054,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1229
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2822951189378292075,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

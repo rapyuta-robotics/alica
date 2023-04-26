@@ -33,7 +33,6 @@
   "name": "GenerateRandom2",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "variables": []
 }
