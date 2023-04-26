@@ -43,7 +43,6 @@
   "masterPlan": false,
   "name": "PlanFour",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

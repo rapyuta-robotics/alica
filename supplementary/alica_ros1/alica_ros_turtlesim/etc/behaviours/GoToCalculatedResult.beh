@@ -11,7 +11,6 @@
   "name": "GoToCalculatedResult",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "variables": []
 }

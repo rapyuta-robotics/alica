@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "SurroundLeaderTutorial",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

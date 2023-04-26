@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "RealMasterPlanForSyncTest",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

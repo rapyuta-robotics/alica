@@ -47,7 +47,6 @@
   "name": "ValueMappingTestBeh",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "variables": []
 }

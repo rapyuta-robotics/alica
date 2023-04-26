@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "PlanBA",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

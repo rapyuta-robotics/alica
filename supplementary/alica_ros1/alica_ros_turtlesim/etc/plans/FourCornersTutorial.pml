@@ -27,39 +27,8 @@
   "masterPlan": true,
   "name": "FourCornersTutorial",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "FourCorners.pml#1225570798912217901",
-          "comment": "",
-          "configuration": null,
-          "id": 1515802129099037226,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 3075001531216334549,
-      "inTransitions": [
-        2747861623143659037
-      ],
-      "name": "FourCorners",
-      "outTransitions": [],
-      "parentPlan": 2851720313998235716,
-      "positionWeb": {
-        "x": 734,
-        "y": 325
-      },
-      "type": "State",
-      "variableBindings": []
-    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -86,6 +55,36 @@
       "positionWeb": {
         "x": 471,
         "y": 316
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "FourCorners.pml#1225570798912217901",
+          "comment": "",
+          "configuration": null,
+          "id": 1515802129099037226,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3075001531216334549,
+      "inTransitions": [
+        2747861623143659037
+      ],
+      "name": "FourCorners",
+      "outTransitions": [],
+      "parentPlan": 2851720313998235716,
+      "positionWeb": {
+        "x": 734,
+        "y": 325
       },
       "type": "State",
       "variableBindings": []

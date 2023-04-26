@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "MultiPlanInstanceSuccessTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

@@ -27,17 +27,16 @@
   "masterPlan": true,
   "name": "RotatingTurtleTutorial",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "RotateTurtle.beh#2948815528667048378",
+          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
           "comment": "",
           "configuration": null,
-          "id": 2379999259387878547,
+          "id": 1244979919906966056,
           "keyMapping": {
             "input": [],
             "output": []
@@ -45,10 +44,10 @@
           "name": ""
         },
         {
-          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "abstractPlan": "RotateTurtle.beh#2948815528667048378",
           "comment": "",
           "configuration": null,
-          "id": 1244979919906966056,
+          "id": 2379999259387878547,
           "keyMapping": {
             "input": [],
             "output": []

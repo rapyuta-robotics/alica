@@ -216,7 +216,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 
     // Create condition from dll
     std::unique_ptr<BlackboardBlueprint> testGlobalBlackboardBlueprint = std::make_unique<BlackboardBlueprint>();
-    testGlobalBlackboardBlueprint->addKey("vhStartCondition", "bool");
+    testGlobalBlackboardBlueprint->addKey("vhStartCondition", "bool", "protected");
     std::unique_ptr<Blackboard> testGlobalBlackboard = std::make_unique<Blackboard>(testGlobalBlackboardBlueprint.get());
     testGlobalBlackboard->impl().set("vhStartCondition", false);
 

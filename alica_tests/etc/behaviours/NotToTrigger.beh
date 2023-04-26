@@ -11,7 +11,6 @@
   "name": "NotToTrigger",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "Behaviour",
   "runtimeCondition": null,
   "variables": []
 }

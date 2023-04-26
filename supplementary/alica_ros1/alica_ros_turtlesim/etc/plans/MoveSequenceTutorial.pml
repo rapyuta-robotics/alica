@@ -27,9 +27,38 @@
   "masterPlan": true,
   "name": "MoveSequenceTutorial",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
+          "comment": "",
+          "configuration": null,
+          "id": 3944826184966310210,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": 3052522711932804870,
+      "id": 1577660109759227973,
+      "inTransitions": [],
+      "name": "SpawnTurtle",
+      "outTransitions": [
+        3233566518007110816
+      ],
+      "parentPlan": 1807175145810248577,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -65,8 +94,8 @@
       "entryPoint": null,
       "id": 2710995558290149564,
       "inTransitions": [
-        3233566518007110816,
-        1623866678061633764
+        1623866678061633764,
+        3233566518007110816
       ],
       "name": "MoveBetweenCorners",
       "outTransitions": [
@@ -75,36 +104,6 @@
       "parentPlan": 1807175145810248577,
       "positionWeb": {
         "x": 686,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
-          "comment": "",
-          "configuration": null,
-          "id": 3944826184966310210,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": 3052522711932804870,
-      "id": 1577660109759227973,
-      "inTransitions": [],
-      "name": "SpawnTurtle",
-      "outTransitions": [
-        3233566518007110816
-      ],
-      "parentPlan": 1807175145810248577,
-      "positionWeb": {
-        "x": 428,
         "y": 200
       },
       "type": "State",
@@ -165,8 +164,8 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 3233566518007110816,
-      "inState": 1577660109759227973,
+      "id": 1623866678061633764,
+      "inState": 2724107460069037337,
       "keyMapping": {
         "input": [],
         "output": []
@@ -175,7 +174,7 @@
       "outState": 2710995558290149564,
       "pointsWeb": [
         {
-          "x": 586,
+          "x": 844,
           "y": 229
         }
       ],
@@ -183,7 +182,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3981435665385062489,
+        "id": 2903806643656271000,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -223,8 +222,8 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#1",
-      "id": 1623866678061633764,
-      "inState": 2724107460069037337,
+      "id": 3233566518007110816,
+      "inState": 1577660109759227973,
       "keyMapping": {
         "input": [],
         "output": []
@@ -233,7 +232,7 @@
       "outState": 2710995558290149564,
       "pointsWeb": [
         {
-          "x": 844,
+          "x": 586,
           "y": 229
         }
       ],
@@ -241,7 +240,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 2903806643656271000,
+        "id": 3981435665385062489,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

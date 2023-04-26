@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "Simulation",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

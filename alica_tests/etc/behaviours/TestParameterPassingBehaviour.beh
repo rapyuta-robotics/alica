@@ -33,7 +33,6 @@
   "name": "TestParameterPassingBehaviour",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "Behaviour",
   "runtimeCondition": null,
   "variables": []
 }
