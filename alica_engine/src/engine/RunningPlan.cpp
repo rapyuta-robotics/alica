@@ -86,8 +86,6 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _teamManager(teamManager)
         , _behaviour(false)
         , _assignment()
-        , _basicBehaviour(nullptr)
-        , _basicPlan(nullptr)
         , _planType(nullptr)
         , _resultStore(resultStore)
         , _solvers(solvers)
