@@ -74,7 +74,7 @@ public:
     const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
-    bool updateAgents(AgentGrp& deactivatedAgents);
+    bool updateAgents();
     void handleAgentQuery(const AgentQuery& pq) const;
     void handleAgentAnnouncement(const AgentAnnouncement& aa);
     void init();
