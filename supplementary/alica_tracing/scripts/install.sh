@@ -20,24 +20,35 @@ mkdir -p ~/temp
 cd ~/temp
 version=v3.9.1 && git clone --depth 1 -b $version https://github.com/nlohmann/json.git
 cd json
-cmake -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true . && make -j $CPUS && make install
-
-cd ~/temp
-version=v1.6.0 && git clone --depth 1 -b $version https://github.com/opentracing/opentracing-cpp.git
-cd opentracing-cpp/ && git submodule init && git submodule update
-cmake -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true CMakeLists.txt && make -j $CPUS && make install
+CXX=$CXX CC=$CC cmake -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true . && make -j $CPUS && make install
 
 cd ~/temp
 version=0.11.0 && git clone --depth 1 -b $version https://github.com/apache/thrift.git
-cd thrift && ./bootstrap.sh && ./configure --with-nodejs=no --with-php=no --with-java=no --with-go=no --with-qt5=no --enable-tests=no --enable-tutorial=no && make -j $CPUS install
+cd thrift && CXX=$CXX CC=$CC ./bootstrap.sh && CXX=$CXX CC=$CC ./configure --with-nodejs=no --with-php=no --with-java=no --with-go=no --with-qt5=no --enable-tests=no --enable-tutorial=no && make -j $CPUS install
 
 cd ~/temp
-version=v0.7.0 && git clone --depth 1 -b $version https://github.com/jaegertracing/jaeger-client-cpp.git
-cd jaeger-client-cpp/ && git submodule init && git submodule update
-sed -i 's/Boost\ CONFIG/Boost/g' cmake/Config.cmake.in
-cmake -DHUNTER_ENABLED=OFF -DBUILD_TESTING=OFF -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true CMakeLists.txt && make -j $CPUS && make install
+git clone https://github.com/google/benchmark.git
+cd benchmark && cmake -E make_directory "build" && cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ && cmake --build "build" --config Release --target install
 
-cp ~/temp/jaeger-client-cpp/cmake/Findthrift.cmake /usr/local/lib/cmake/
-rm -rf ~/temp/opentracing-cpp ~/temp/jaeger-client-cpp ~/temp/thrift ~/temp/json
+cd ~/temp
+version=v1.13.0 git clone https://github.com/google/googletest.git -b $version
+cd googletest && mkdir build && cd build && cmake .. -DCMAKE_CXX_STANDARD=17 && make && make install
+
+cd ~/temp
+curl https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.zip
+unzip protobuf-cpp-3.6.1.zip -d .
+cd protobuf-3.6.1 && cd cmake && mkdir build && cd build
+cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release .. && make install
+
+cd ~/temp
+git clone -b v1.54.0 https://github.com/grpc/grpc && cd grpc && git submodule update --init && ./test/distrib/cpp/run_distrib_test_cmake.sh
+
+cd ~/temp
+version=v1.9.0 && git clone --recurse-submodules -b $version https://github.com/open-telemetry/opentelemetry-cpp
+cd opentelemetry-cpp && CXX=$CXX CC=$CC && mkdir build && cd build && 
+cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DWITH_JAEGER:BOOL=true -DWITH_STL:BOOL=true && cmake --build . --target all && cmake --install .
+export LD_LIBRARY_PATH=/home/rr/catkin_ws/devel/lib:/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu:/opt/ortools/lib:/usr/lib:/usr/local/lib
+
+rm -rf ~/temp/grpc ~/temp/protobuf-3.6.1 ~/temp/googletest ~/temp/benchmark ~/temp/opentelemetry ~/temp/thrift ~/temp/json
 
 ldconfig
