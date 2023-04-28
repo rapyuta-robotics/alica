@@ -7,14 +7,13 @@
 #include <variant>
 
 #include "opentelemetry/sdk/trace/simple_processor_factory.h"
-#include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider.h"
+#include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/trace/provider.h"
 #include "opentelemetry/trace/span_startoptions.h"
 
 #include "SpanWrapper.hpp"
 #include "TraceUtils.hpp"
-
 
 namespace nostd = opentelemetry::nostd;
 namespace sdktrace = opentelemetry::sdk::trace;
@@ -81,8 +80,7 @@ alica::TraceContext Trace::context() const
 
 void Trace::finish()
 {
-    _span->_span->SetAttribute(
-            prepareStringView("endTime"), 
+    _span->_span->SetAttribute(prepareStringView("endTime"),
             OTLTraceValue(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
     _span->_span->End();
 }
