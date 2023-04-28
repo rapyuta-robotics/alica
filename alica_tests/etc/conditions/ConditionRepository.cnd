@@ -73,6 +73,14 @@
       "name": "FailurePlan2FailureHandled"
     },
     {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 330238006348384830,
+      "libraryName": "alica-tests",
+      "name": "IsAnyChildTaskSuccessfull"
+    },
+    {
       "blackboard": [
         {
           "access": "input",

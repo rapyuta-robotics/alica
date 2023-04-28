@@ -1,0 +1,38 @@
+{
+  "blackboard": [
+    {
+      "access": "output",
+      "comment": "",
+      "id": 466746386440200495,
+      "key": "result",
+      "type": "int64"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 472712871981904208,
+      "key": "valueBase",
+      "type": "int64"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 1801626755158684009,
+      "key": "valueAddition",
+      "type": "int64"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 1629144600464136880,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-tests",
+  "name": "AddToValueBeh",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}
