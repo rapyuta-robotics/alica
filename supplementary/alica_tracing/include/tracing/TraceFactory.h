@@ -41,4 +41,4 @@ private:
     static constexpr const char* LOGNAME = "TraceFactory";
 };
 
-}  // namespace alicaTracing
+} // namespace alicaTracing

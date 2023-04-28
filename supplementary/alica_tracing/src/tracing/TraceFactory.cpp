@@ -6,14 +6,13 @@
 
 #include "opentelemetry/exporters/jaeger/jaeger_exporter_factory.h"
 #include "opentelemetry/sdk/trace/simple_processor_factory.h"
-#include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider.h"
+#include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/trace/provider.h"
 #include "opentelemetry/trace/span_startoptions.h"
 
 #include "SpanWrapper.hpp"
 #include "TraceUtils.hpp"
-
 
 namespace jaeger = opentelemetry::exporter::jaeger;
 namespace nostd = opentelemetry::nostd;
@@ -27,7 +26,6 @@ using OTLSpan = opentelemetry::trace::Span;
 using OTLSpanPtr = opentelemetry::nostd::shared_ptr<OTLSpan>;
 using OTLTracerProviderPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::TracerProvider>;
 using OTLTracerPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::Tracer>;
-
 
 namespace alicaTracing
 {
@@ -44,8 +42,8 @@ struct TraceFactory::TraceFactoryImpl
     OTLTracerPtr _tracer;
 };
 
-
-TraceFactory::TraceFactory(const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, AlicaTraceValue>& defaultTags)
+TraceFactory::TraceFactory(
+        const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, AlicaTraceValue>& defaultTags)
 {
     _impl->_defaultTags = defaultTags;
     alica::Logging::logInfo(LOGNAME) << __func__ << " Initializing tracing for service " << serviceName;
