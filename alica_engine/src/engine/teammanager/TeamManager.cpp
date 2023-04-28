@@ -169,7 +169,6 @@ Agent* TeamManager::getAgent(AgentId agentId) const
     if (agentEntry != agents.end()) {
         return agentEntry->second;
     }
-
     return nullptr;
 }
 
@@ -246,15 +245,12 @@ const DomainVariable* TeamManager::getDomainVariable(AgentId agentId, const std:
     return nullptr;
 }
 
-bool TeamManager::updateAgents(AgentGrp& deactivatedAgents)
+bool TeamManager::updateAgents()
 {
     AgentsCache::AgentMap& agents = *_agentsCache.get();
     bool changedSomeAgent = false;
     for (const auto& agent : agents) {
         bool changedCurrentAgent = agent.second->update();
-        if (changedCurrentAgent && !agent.second->isActive()) {
-            deactivatedAgents.push_back(agent.second->getId());
-        }
         changedSomeAgent |= changedCurrentAgent;
     }
     return changedSomeAgent;
