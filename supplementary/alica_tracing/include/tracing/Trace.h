@@ -10,10 +10,6 @@
 
 namespace alicaTracing
 {
-using OTLSpan = opentelemetry::trace::Span;
-using OTLSpanPtr = opentelemetry::nostd::shared_ptr<OTLSpan>;
-// Value can be numeric types, strings, or bools.
-using OTLTraceValue = opentelemetry::v1::common::AttributeValue;
 
 class Trace : public alica::IAlicaTrace
 {
@@ -56,10 +52,10 @@ public:
 private:
     friend class TraceFactory;
 
-    Trace(OTLSpanPtr&& span);
+    Trace(SpanWrapper&& span);
 
-    void setTag(const std::string& key, const OTLTraceValue& value);
+    // void setTag(const std::string& key, const OTLTraceValue& value);
 
-    OTLSpanPtr _span;
+    std::unique_ptr<SpanWrapper> _span;
 };
 } // namespace alicaTracing

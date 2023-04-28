@@ -4,27 +4,24 @@
 #include <engine/util/TraceContext.h>
 
 #include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 
-#include <opentelemetry/trace/provider.h>
-#include <opentelemetry/trace/tracer.h>
-
-using OTLSpan = opentelemetry::trace::Span;
-using OTLSpanPtr = opentelemetry::nostd::shared_ptr<OTLSpan>;
-// Value can be numeric types, strings, or bools.
-using OTLTraceValue = opentelemetry::v1::common::AttributeValue;
-
-using OTLTracerProviderPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::TracerProvider>;
-using OTLTracerPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::Tracer>;
+using AlicaTraceValue = alica::IAlicaTrace::TraceValue;
 
 namespace alicaTracing
 {
+
+class SpanWrapper;
+
 class TraceFactory : public alica::IAlicaTraceFactory
 {
+    class TraceFactoryImpl;
+
 public:
     TraceFactory(const std::string& serviceName, const std::string& configFilePath,
-            const std::unordered_map<std::string, OTLTraceValue>& defaultTags = std::unordered_map<std::string, OTLTraceValue>());
+            const std::unordered_map<std::string, AlicaTraceValue>& defaultTags = std::unordered_map<std::string, AlicaTraceValue>());
     TraceFactory(const TraceFactory&) = delete;
     TraceFactory(TraceFactory&&) = delete;
     TraceFactory& operator=(const TraceFactory&) = delete;
@@ -36,19 +33,12 @@ public:
     void unsetGlobalContext() override;
 
 private:
-    OTLSpanPtr createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent = std::nullopt) const;
+    SpanWrapper createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent = std::nullopt) const;
 
-    static constexpr const char* LOGNAME = "TraceFactory";
-
-    bool _initialized = false;
-    std::unordered_map<std::string, OTLTraceValue> _defaultTags;
-    std::string _serviceName;
+    std::unique_ptr<TraceFactoryImpl> _impl;
 
     mutable std::mutex _mutex;
-    std::optional<std::string> _globalContext;
-
-    OTLTracerProviderPtr _provider;
-    OTLTracerPtr _tracer;
+    static constexpr const char* LOGNAME = "TraceFactory";
 };
 
-} // namespace alicaTracing
+}  // namespace alicaTracing

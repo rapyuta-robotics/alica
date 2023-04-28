@@ -7,24 +7,49 @@
 #include "opentelemetry/exporters/jaeger/jaeger_exporter_factory.h"
 #include "opentelemetry/sdk/trace/simple_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider_factory.h"
+#include "opentelemetry/sdk/trace/tracer_provider.h"
 #include "opentelemetry/trace/provider.h"
 #include "opentelemetry/trace/span_startoptions.h"
 
-#include "opentelemetry/sdk/trace/tracer_provider.h"
+#include "SpanWrapper.hpp"
+#include "TraceUtils.hpp"
+
 
 namespace jaeger = opentelemetry::exporter::jaeger;
 namespace nostd = opentelemetry::nostd;
 namespace sdktrace = opentelemetry::sdk::trace;
 namespace trace = opentelemetry::trace;
 
+// Value can be numeric types, strings, or bools.
+using OTLTraceValue = opentelemetry::v1::common::AttributeValue;
+
+using OTLSpan = opentelemetry::trace::Span;
+using OTLSpanPtr = opentelemetry::nostd::shared_ptr<OTLSpan>;
+using OTLTracerProviderPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::TracerProvider>;
+using OTLTracerPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::Tracer>;
+
+
 namespace alicaTracing
 {
 
-TraceFactory::TraceFactory(const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, OTLTraceValue>& defaultTags)
-        : _defaultTags(defaultTags)
+struct TraceFactory::TraceFactoryImpl
 {
+    bool _initialized = false;
+    std::unordered_map<std::string, AlicaTraceValue> _defaultTags;
+    std::string _serviceName;
+
+    std::optional<std::string> _globalContext;
+
+    OTLTracerProviderPtr _provider;
+    OTLTracerPtr _tracer;
+};
+
+
+TraceFactory::TraceFactory(const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, AlicaTraceValue>& defaultTags)
+{
+    _impl->_defaultTags = defaultTags;
     alica::Logging::logInfo(LOGNAME) << __func__ << " Initializing tracing for service " << serviceName;
-    _serviceName = serviceName;
+    _impl->_serviceName = serviceName;
     try {
         auto configYAML = YAML::LoadFile(configFilePath);
 
@@ -35,24 +60,24 @@ TraceFactory::TraceFactory(const std::string& serviceName, const std::string& co
         auto exporter = jaeger::JaegerExporterFactory::Create(options);
         auto processor = sdktrace::SimpleSpanProcessorFactory::Create(std::move(exporter));
 
-        _provider = sdktrace::TracerProviderFactory::Create(std::move(processor));
-        _tracer = _provider->GetTracer(_serviceName);
+        _impl->_provider = sdktrace::TracerProviderFactory::Create(std::move(processor));
+        _impl->_tracer = _impl->_provider->GetTracer(_impl->_serviceName);
     } catch (std::exception& e) {
         alica::Logging::logInfo(LOGNAME) << __func__ << " Failed to initialize OTLP " << e.what();
         throw e;
     }
-    _initialized = true;
-    alica::Logging::logInfo(LOGNAME) << __func__ << " tracing for service " << _serviceName;
+    _impl->_initialized = true;
+    alica::Logging::logInfo(LOGNAME) << __func__ << " tracing for service " << _impl->_serviceName;
 }
 
 TraceFactory::~TraceFactory()
 {
-    alica::Logging::logInfo(LOGNAME) << __func__ << " Terminating tracing for service " << _serviceName;
+    alica::Logging::logInfo(LOGNAME) << __func__ << " Terminating tracing for service " << _impl->_serviceName;
     // allow termination to propogate,
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    _provider = trace::Provider::GetTracerProvider();
-    if (_provider) {
-        static_cast<sdktrace::TracerProvider*>(_provider.get())->ForceFlush();
+    _impl->_provider = trace::Provider::GetTracerProvider();
+    if (_impl->_provider) {
+        static_cast<sdktrace::TracerProvider*>(_impl->_provider.get())->ForceFlush();
     }
 
     std::shared_ptr<opentelemetry::trace::TracerProvider> none;
@@ -63,58 +88,54 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
 {
     assert(!opName.empty());
 
-    if (!_initialized) {
+    if (!_impl->_initialized) {
         return nullptr;
     }
 
     std::optional<std::string> applicableParent = parent;
     if (!applicableParent) {
         std::lock_guard<std::mutex> lck(_mutex);
-        applicableParent = _globalContext; // Note: _globalContext may be intentionally empty
+        applicableParent = _impl->_globalContext; // Note: _globalContext may be intentionally empty
     }
 
     std::unique_ptr<Trace> trace = std::unique_ptr<Trace>(new Trace(createSpan(opName, applicableParent)));
-    for (const auto& defaultTag : _defaultTags) {
+    for (const auto& defaultTag : _impl->_defaultTags) {
         trace->setTag(defaultTag.first, defaultTag.second);
     }
 
     return trace;
 }
 
-OTLSpanPtr TraceFactory::createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent) const
+SpanWrapper TraceFactory::createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent) const
 {
     assert(!opName.empty());
 
-    if (!_initialized) {
-        return OTLSpanPtr();
-    }
-
     OTLSpanPtr span;
-    if (parent) {
-        trace::SpanContext context(trace::TraceId(parent->trace_id), trace::SpanId(parent->span_id), trace::TraceFlags(parent->trace_flags), true,
-                opentelemetry::trace::TraceState::FromHeader(parent->trace_state));
-        trace::StartSpanOptions options;
-        options.parent = context;
-        span = _tracer->StartSpan(opName, options);
-    } else {
-        span = _tracer->StartSpan(opName);
+
+    if (_impl->_initialized) {
+        if (parent) {
+            trace::SpanContext context(trace::TraceId(parent->trace_id), trace::SpanId(parent->span_id), trace::TraceFlags(parent->trace_flags), true,
+                    opentelemetry::trace::TraceState::FromHeader(parent->trace_state));
+            trace::StartSpanOptions options;
+            options.parent = context;
+            span = _impl->_tracer->StartSpan(opName, options);
+        } else {
+            span = _impl->_tracer->StartSpan(opName);
+        }
     }
 
-    for (const auto& defaultTag : _defaultTags) {
-        span->SetAttribute(defaultTag.first, defaultTag.second);
-    }
-    return span;
+    return SpanWrapper(span);
 }
 
 void TraceFactory::setGlobalContext(const std::string& globalContext)
 {
     std::lock_guard<std::mutex> lck(_mutex);
-    _globalContext = globalContext;
+    _impl->_globalContext = globalContext;
 }
 
 void TraceFactory::unsetGlobalContext()
 {
     std::lock_guard<std::mutex> lck(_mutex);
-    _globalContext.reset();
+    _impl->_globalContext.reset();
 }
 } // namespace alicaTracing

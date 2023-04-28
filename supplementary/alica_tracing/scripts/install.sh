@@ -34,20 +34,19 @@ cd ~/temp
 version=v1.13.0 git clone https://github.com/google/googletest.git -b $version
 cd googletest && mkdir build && cd build && cmake .. -DCMAKE_CXX_STANDARD=17 && make && make install
 
-cd ~/temp
-curl https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.zip
-unzip protobuf-cpp-3.6.1.zip -d .
-cd protobuf-3.6.1 && cd cmake && mkdir build && cd build
-cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release .. && make install
+# cd ~/temp
+# curl https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.zip
+# unzip protobuf-cpp-3.6.1.zip -d .
+# cd protobuf-3.6.1 && cd cmake && mkdir build && cd build
+# cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release .. && make install
 
-cd ~/temp
-git clone -b v1.54.0 https://github.com/grpc/grpc && cd grpc && git submodule update --init && ./test/distrib/cpp/run_distrib_test_cmake.sh
+# cd ~/temp
+# git clone -b v1.54.0 https://github.com/grpc/grpc && cd grpc && git submodule update --init && ./test/distrib/cpp/run_distrib_test_cmake.sh
 
 cd ~/temp
 version=v1.9.0 && git clone --recurse-submodules -b $version https://github.com/open-telemetry/opentelemetry-cpp
-cd opentelemetry-cpp && CXX=$CXX CC=$CC && mkdir build && cd build && 
-cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DWITH_JAEGER:BOOL=true -DWITH_STL:BOOL=true && cmake --build . --target all && cmake --install .
-export LD_LIBRARY_PATH=/home/rr/catkin_ws/devel/lib:/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu:/opt/ortools/lib:/usr/lib:/usr/local/lib
+cd opentelemetry-cpp && mkdir build && cd build &&
+cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DWITH_JAEGER:BOOL=true -DCMAKE_CXX_STANDARD=17 && cmake --build . --target all && cmake --install .
 
 rm -rf ~/temp/grpc ~/temp/protobuf-3.6.1 ~/temp/googletest ~/temp/benchmark ~/temp/opentelemetry ~/temp/thrift ~/temp/json
 

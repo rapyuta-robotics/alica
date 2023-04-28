@@ -29,8 +29,10 @@ include_directories(
 # Declare a C++ library with project namespace to avoid naming collision
 add_library(
   ${PROJECT_NAME} SHARED
+  src/tracing/SpanWrapper.hpp
   src/tracing/Trace.cpp
   src/tracing/TraceFactory.cpp
+  src/tracing/TraceUtils.hpp
 )
 
 target_include_directories(alica_tracing PUBLIC
