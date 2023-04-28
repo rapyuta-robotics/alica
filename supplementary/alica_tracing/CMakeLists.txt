@@ -18,7 +18,7 @@ find_package(CURL REQUIRED)
 
 include_directories(
   include
-  ${alica_engine_INCLUDE_DIRS}  
+  ${alica_engine_INCLUDE_DIRS}
   SYSTEM
 )
 
@@ -47,12 +47,12 @@ target_link_libraries(
   opentelemetry_exporter_ostream_span
   opentelemetry_trace
   opentelemetry_common
-  opentelemetry_http_client_curl 
+  opentelemetry_http_client_curl
   opentelemetry_resources
-  opentelemetry_exporter_jaeger_trace  
+  opentelemetry_exporter_jaeger_trace
   thrift
   curl
-  "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"  
+  "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
 )
 
 #############
