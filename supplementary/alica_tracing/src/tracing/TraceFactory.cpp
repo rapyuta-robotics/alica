@@ -44,6 +44,7 @@ struct TraceFactory::TraceFactoryImpl
 
 TraceFactory::TraceFactory(
         const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, AlicaTraceValue>& defaultTags)
+            : _impl(std::make_unique<TraceFactoryImpl>())
 {
     _impl->_defaultTags = defaultTags;
     alica::Logging::logInfo(LOGNAME) << __func__ << " Initializing tracing for service " << serviceName;
