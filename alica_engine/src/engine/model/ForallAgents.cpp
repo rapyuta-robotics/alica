@@ -25,6 +25,11 @@ ForallAgents::~ForallAgents() {}
 
 ForallAgents::Result ForallAgents::TryAddId(AgentId id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const
 {
+    if (!tm.getAgentByID(id)) {
+        // Assignment contains unknown agent because of authority role, ignore unknown agent
+        return NONE;
+    }
+
     std::vector<AgentVariables>::iterator it =
             std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
 
