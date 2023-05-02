@@ -27,7 +27,7 @@ ForallAgents::~ForallAgents() {}
 ForallAgents::Result ForallAgents::TryAddId(AgentId id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const
 {
     if (!tm.getAgentByID(id)) {
-        // Assignment contains unknown agent because of authority role, ignore unknown agent
+        // Assignment contains unknown agent because of authority rule, ignore unknown agent
         Logging::logWarn("ForallAgents") << "Can not add domain variable for agent with id " << id << ": Agent is not discovered yet!";
         return NONE;
     }
