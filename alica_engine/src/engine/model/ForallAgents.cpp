@@ -4,6 +4,7 @@
 #include "engine/TeamObserver.h"
 #include "engine/collections/AgentVariables.h"
 #include "engine/collections/RobotEngineData.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/DomainVariable.h"
 #include "engine/model/Plan.h"
@@ -25,6 +26,12 @@ ForallAgents::~ForallAgents() {}
 
 ForallAgents::Result ForallAgents::TryAddId(AgentId id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const
 {
+    if (!tm.getAgentByID(id)) {
+        // Assignment contains unknown agent because of authority rule, ignore unknown agent
+        Logging::logWarn("ForallAgents") << "Can not add domain variable for agent with id " << id << ": Agent is not discovered yet!";
+        return NONE;
+    }
+
     std::vector<AgentVariables>::iterator it =
             std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
 
