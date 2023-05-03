@@ -6,10 +6,12 @@
 
 #include <engine/IAlicaTrace.h>
 #include <engine/util/TraceContext.h>
-#include <tracing/TraceFactory.h>
 
 namespace alicaTracing
 {
+
+class TraceFactory;
+class SpanWrapper;
 
 class Trace : public alica::IAlicaTrace
 {
@@ -53,8 +55,6 @@ private:
     friend class TraceFactory;
 
     Trace(SpanWrapper&& span);
-
-    // void setTag(const std::string& key, const OTLTraceValue& value);
 
     std::unique_ptr<SpanWrapper> _span;
 };

@@ -5,7 +5,7 @@
 #include <string_view>
 
 using namespace opentelemetry::v1;
-using OTLTraceValue = opentelemetry::v1::common::AttributeValue;
+using OTELTraceValue = opentelemetry::v1::common::AttributeValue;
 
 namespace alicaTracing
 {
@@ -20,17 +20,17 @@ struct TraceValueConverter
     template <typename T>
     auto operator()(T&& value) const
     {
-        return OTLTraceValue(std::forward<T>(value));
+        return OTELTraceValue(std::forward<T>(value));
     }
     auto operator()(std::string_view value) const
     {
         // The rest of the tracing process didn't work properly with string views, so construct the string here.
-        return OTLTraceValue(std::string(value));
+        return OTELTraceValue(std::string(value));
     }
 };
 
 template <typename T>
-static OTLTraceValue prepareOTLTraceValue(T&& value)
+static OTELTraceValue prepareOTELTraceValue(T&& value)
 {
     return std::visit(TraceValueConverter{}, std::forward<T>(value));
 }
