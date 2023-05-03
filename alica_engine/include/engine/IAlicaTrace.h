@@ -18,7 +18,7 @@ class IAlicaTrace
     // Integral values need to be disambiguated to convert to their largest variants.
     template <typename T>
     using PromotedType = std::conditional_t<std::is_integral_v<std::decay_t<T>> && !std::is_same_v<std::decay_t<T>, bool>,
-            std::conditional_t<std::is_signed_v<std::decay_t<T>>, long int, unsigned long int>,
+            long int,
             std::conditional_t<std::is_constructible_v<std::string_view, T>, std::string_view, T>>;
 
 public:
@@ -26,7 +26,7 @@ public:
     {
         friend IAlicaTrace;
 
-        using Variant = std::variant<bool, long int, unsigned long int, double, std::string_view>;
+        using Variant = std::variant<bool, long int, double, std::string_view>;
 
     public:
         template <typename T, typename = std::enable_if_t<std::is_constructible_v<Variant, PromotedType<T&&>>>>

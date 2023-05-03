@@ -1,11 +1,12 @@
 #include "tracing/TraceFactory.h"
-#include "engine/logging/Logging.h"
 #include "tracing/Trace.h"
+
+#include "engine/logging/Logging.h"
 
 #include <exception>
 
 #include "opentelemetry/exporters/jaeger/jaeger_exporter_factory.h"
-#include "opentelemetry/sdk/trace/simple_processor_factory.h"
+#include "opentelemetry/sdk/trace/batch_span_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 #include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/trace/provider.h"
@@ -20,12 +21,11 @@ namespace sdktrace = opentelemetry::sdk::trace;
 namespace trace = opentelemetry::trace;
 
 // Value can be numeric types, strings, or bools.
-using OTLTraceValue = opentelemetry::v1::common::AttributeValue;
+using OTELTraceValue = opentelemetry::v1::common::AttributeValue;
 
-using OTLSpan = opentelemetry::trace::Span;
-using OTLSpanPtr = opentelemetry::nostd::shared_ptr<OTLSpan>;
-using OTLTracerProviderPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::TracerProvider>;
-using OTLTracerPtr = opentelemetry::v1::nostd::shared_ptr<opentelemetry::v1::trace::Tracer>;
+using OTELSpan = opentelemetry::trace::Span;
+using OTELSpanPtr = opentelemetry::nostd::shared_ptr<OTELSpan>;
+using OTELTracerProviderPtr = opentelemetry::nostd::shared_ptr<opentelemetry::v1::trace::TracerProvider>;
 
 namespace alicaTracing
 {
@@ -38,8 +38,7 @@ struct TraceFactory::TraceFactoryImpl
 
     std::optional<std::string> _globalContext;
 
-    OTLTracerProviderPtr _provider;
-    OTLTracerPtr _tracer;
+    OTELTracerProviderPtr _provider;
 };
 
 TraceFactory::TraceFactory(
@@ -53,14 +52,17 @@ TraceFactory::TraceFactory(
         auto configYAML = YAML::LoadFile(configFilePath);
 
         jaeger::JaegerExporterOptions options;
-        options.endpoint = configYAML["reporter.server_addr"].as<std::string>();
-        options.server_port = configYAML["reporter.server_port"].as<uint16_t>();
-
+        options.endpoint = configYAML["reporter"]["server_addr"].as<std::string>();
+        options.server_port = configYAML["reporter"]["server_port"].as<uint16_t>();
         auto exporter = jaeger::JaegerExporterFactory::Create(options);
-        auto processor = sdktrace::SimpleSpanProcessorFactory::Create(std::move(exporter));
+
+        auto processor_opts = sdk::trace::BatchSpanProcessorOptions();
+        processor_opts.max_export_batch_size = 5;
+        processor_opts.max_queue_size = 5;
+        processor_opts.schedule_delay_millis = std::chrono::milliseconds(256);
+        auto processor = sdktrace::BatchSpanProcessorFactory::Create(std::move(exporter), processor_opts);
 
         _impl->_provider = sdktrace::TracerProviderFactory::Create(std::move(processor));
-        _impl->_tracer = _impl->_provider->GetTracer(_impl->_serviceName);
     } catch (std::exception& e) {
         alica::Logging::logInfo(LOGNAME) << __func__ << " Failed to initialize OTLP " << e.what();
         throw e;
@@ -109,7 +111,7 @@ SpanWrapper TraceFactory::createSpan(const std::string& opName, std::optional<co
 {
     assert(!opName.empty());
 
-    OTLSpanPtr span;
+    OTELSpanPtr span;
 
     if (_impl->_initialized) {
         if (parent) {
@@ -117,9 +119,9 @@ SpanWrapper TraceFactory::createSpan(const std::string& opName, std::optional<co
                     opentelemetry::trace::TraceState::FromHeader(parent->trace_state));
             trace::StartSpanOptions options;
             options.parent = context;
-            span = _impl->_tracer->StartSpan(opName, options);
+            span = nostd::shared_ptr<OTELSpan>(_impl->_provider->GetTracer(_impl->_serviceName)->StartSpan(opName, options).get());
         } else {
-            span = _impl->_tracer->StartSpan(opName);
+            span = nostd::shared_ptr<OTELSpan>(_impl->_provider->GetTracer(_impl->_serviceName)->StartSpan(opName).get());
         }
     }
 

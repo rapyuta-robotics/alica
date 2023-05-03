@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_tracing)
+include(CTest)
 add_compile_options(-std=c++17)
 
 
@@ -19,6 +20,7 @@ find_package(CURL REQUIRED)
 include_directories(
   include
   ${alica_engine_INCLUDE_DIRS}
+  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
   SYSTEM
 )
 
@@ -28,17 +30,14 @@ include_directories(
 
 # Declare a C++ library with project namespace to avoid naming collision
 add_library(
-  ${PROJECT_NAME} SHARED
-  src/tracing/SpanWrapper.hpp
+  ${PROJECT_NAME} SHARED  
   src/tracing/Trace.cpp
-  src/tracing/TraceFactory.cpp
-  src/tracing/TraceUtils.hpp
+  src/tracing/TraceFactory.cpp  
 )
 
 target_include_directories(alica_tracing PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
-  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
 )
 
 
@@ -56,6 +55,23 @@ target_link_libraries(
   curl
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
 )
+
+if(BUILD_TESTING)
+    find_package(GTest)
+    include(GoogleTest)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    
+    add_executable(${PROJECT_NAME}-test test/alica_tracing_test.cpp)
+    
+    target_link_libraries(${PROJECT_NAME}-test
+      ${PROJECT_NAME}
+      Threads::Threads
+      ${GTEST_LIBRARIES}
+    )
+
+    add_test(NAME TestAmrTracing.TestAmrTracingInit COMMAND ${PROJECT_NAME}-tests --gtest_filter=TestAmrTracing.TestAmrTracingInit)
+endif()
 
 #############
 ## Install ##

@@ -20,9 +20,9 @@ namespace sdktrace = opentelemetry::sdk::trace;
 namespace trace = opentelemetry::trace;
 
 // Value can be numeric types, strings, or bools.
-using OTLTraceValue = opentelemetry::v1::common::AttributeValue;
-using OTLSpan = opentelemetry::trace::Span;
-using OTLSpanPtr = opentelemetry::nostd::shared_ptr<OTLSpan>;
+using OTELTraceValue = opentelemetry::v1::common::AttributeValue;
+using OTELSpan = opentelemetry::trace::Span;
+using OTELSpanPtr = opentelemetry::nostd::shared_ptr<OTELSpan>;
 
 namespace alicaTracing
 {
@@ -39,21 +39,21 @@ Trace::~Trace()
 
 void Trace::setTag(std::string_view key, TraceValue value)
 {
-    _span->_span->SetAttribute(prepareStringView(key), prepareOTLTraceValue(extractVariant(std::move(value))));
+    _span->_span->SetAttribute(prepareStringView(key), prepareOTELTraceValue(extractVariant(std::move(value))));
 }
 
-// void Trace::setTag(const std::string& key, const OTLTraceValue& value)
+// void Trace::setTag(const std::string& key, const OTELTraceValue& value)
 // {
 //     _span->_span->SetAttribute(key, value);
 // }
 
 void Trace::log(const std::unordered_map<std::string_view, TraceValue>& fields, const std::string& event_name)
 {
-    using RawFields = std::vector<std::pair<nostd::string_view, OTLTraceValue>>;
+    using RawFields = std::vector<std::pair<nostd::string_view, OTELTraceValue>>;
     RawFields raw_fields;
     raw_fields.reserve(fields.size());
     std::transform(begin(fields), end(fields), std::back_inserter(raw_fields),
-            [](const auto& v) { return std::make_pair(prepareStringView(v.first), prepareOTLTraceValue(extractVariant(v.second))); });
+            [](const auto& v) { return std::make_pair(prepareStringView(v.first), prepareOTELTraceValue(extractVariant(v.second))); });
     _span->_span->AddEvent(event_name, raw_fields);
 }
 
@@ -81,7 +81,7 @@ alica::TraceContext Trace::context() const
 void Trace::finish()
 {
     _span->_span->SetAttribute(prepareStringView("endTime"),
-            OTLTraceValue(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
+            OTELTraceValue(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
     _span->_span->End();
 }
 
