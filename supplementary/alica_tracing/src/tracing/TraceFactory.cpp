@@ -25,6 +25,7 @@ using OTELTraceValue = opentelemetry::v1::common::AttributeValue;
 
 using OTELSpan = opentelemetry::trace::Span;
 using OTELSpanPtr = opentelemetry::nostd::shared_ptr<OTELSpan>;
+using OTELTracerPtr = opentelemetry::nostd::shared_ptr<opentelemetry::v1::trace::Tracer>;
 using OTELTracerProviderPtr = opentelemetry::nostd::shared_ptr<opentelemetry::v1::trace::TracerProvider>;
 
 namespace alicaTracing
@@ -39,6 +40,7 @@ struct TraceFactory::TraceFactoryImpl
     std::optional<std::string> _globalContext;
 
     OTELTracerProviderPtr _provider;
+    OTELTracerPtr _tracer;
 };
 
 TraceFactory::TraceFactory(
@@ -63,6 +65,7 @@ TraceFactory::TraceFactory(
         auto processor = sdktrace::BatchSpanProcessorFactory::Create(std::move(exporter), processor_opts);
 
         _impl->_provider = sdktrace::TracerProviderFactory::Create(std::move(processor));
+        _impl->_tracer = _impl->_provider->GetTracer(_impl->_serviceName);
     } catch (std::exception& e) {
         alica::Logging::logInfo(LOGNAME) << __func__ << " Failed to initialize OTLP " << e.what();
         throw e;
@@ -119,9 +122,9 @@ SpanWrapper TraceFactory::createSpan(const std::string& opName, std::optional<co
                     opentelemetry::trace::TraceState::FromHeader(parent->trace_state));
             trace::StartSpanOptions options;
             options.parent = context;
-            span = nostd::shared_ptr<OTELSpan>(_impl->_provider->GetTracer(_impl->_serviceName)->StartSpan(opName, options).get());
+            span = _impl->_tracer->StartSpan(opName, options);
         } else {
-            span = nostd::shared_ptr<OTELSpan>(_impl->_provider->GetTracer(_impl->_serviceName)->StartSpan(opName).get());
+            span = _impl->_tracer->StartSpan(opName);
         }
     }
 
