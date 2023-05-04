@@ -25,7 +25,7 @@ find_package(CURL REQUIRED)
 add_library(
   ${PROJECT_NAME} SHARED
   src/tracing/Trace.cpp
-  src/tracing/TraceFactory.cpp  
+  src/tracing/TraceFactory.cpp
 )
 
 target_include_directories(alica_tracing PUBLIC
@@ -57,9 +57,9 @@ if(BUILD_TESTING)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
     find_package(alica_solver_interface REQUIRED)
-    
+
     add_executable(${PROJECT_NAME}-test test/alica_tracing_test.cpp)
-    
+
     target_link_libraries(${PROJECT_NAME}-test
       ${PROJECT_NAME}
       ${alica_engine_LIBRARIES}
