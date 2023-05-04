@@ -13,8 +13,6 @@ Behaviour::Behaviour()
         , _runtimeCondition(nullptr)
         , _postCondition(nullptr)
         , _frequency(1)
-        , _deferring(0)
-        , _eventDriven(false)
         , AbstractPlan()
         , _blackboardBlueprint(nullptr)
         , _libraryName("")
@@ -27,9 +25,7 @@ std::string Behaviour::toString(std::string indent) const
 {
     std::stringstream ss;
     ss << indent << "#Behaviour: " << getName() << " " << getId() << std::endl;
-    ss << indent << "\teventDriven: " << (_eventDriven ? "true" : "false") << std::endl;
     ss << indent << "\tfrequency: " << _frequency << std::endl;
-    ss << indent << "\tdeferring: " << _deferring << std::endl;
     if (this->_preCondition != nullptr) {
         ss << this->_preCondition->toString(indent + "\t");
     }
@@ -44,20 +40,9 @@ std::string Behaviour::toString(std::string indent) const
     return ss.str();
 }
 
-void Behaviour::setEventDriven(bool eventDriven)
-{
-    _eventDriven = eventDriven;
-    _frequency = (_eventDriven ? 0 : _frequency);
-}
-
 void Behaviour::setFrequency(int frequency)
 {
-    _frequency = (_eventDriven ? 0 : frequency);
-}
-
-void Behaviour::setDeferring(int deferring)
-{
-    _deferring = deferring;
+    _frequency = frequency;
 }
 
 } // namespace alica

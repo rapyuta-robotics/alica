@@ -44,18 +44,6 @@ void TestContext::startEngine()
     _engine->start();
 }
 
-bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
-{
-    assert(_initCalled == false &&
-            "[TestContext] The method makeBehaviourEventDriven(behaviourID) must be called, before the TestContext is initialised via its init-Method!");
-    const Behaviour* constBehaviour = _engine->getPlanRepository().getBehaviours().find(behaviourID);
-    if (constBehaviour == nullptr) {
-        return false;
-    }
-    const_cast<Behaviour*>(constBehaviour)->setEventDriven(true);
-    return true;
-}
-
 int TestContext::getTeamSize()
 {
     return Util::getTeamSize(_engine.get());
