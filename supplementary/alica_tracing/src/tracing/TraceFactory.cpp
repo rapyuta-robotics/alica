@@ -79,7 +79,6 @@ TraceFactory::~TraceFactory()
     alica::Logging::logInfo(LOGNAME) << __func__ << " Terminating tracing for service " << _impl->_serviceName;
     // allow termination to propogate,
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    _impl->_provider = trace::Provider::GetTracerProvider();
     if (_impl->_provider) {
         static_cast<sdktrace::TracerProvider*>(_impl->_provider.get())->ForceFlush();
     }
