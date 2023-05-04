@@ -290,6 +290,6 @@
       "synchronisation": null
     }
   ],
-  "utilityThreshold": 0.0,
+  "utilityThreshold": -1.0,
   "variables": []
 }
