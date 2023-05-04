@@ -68,15 +68,6 @@ public:
             int64_t state, std::chrono::duration<Rep, Period> timeout);
 
     /**
-     * IMPORTANT: This method must be called, before the TestContext is initialised via its init-Method!
-     *
-     * This method changes the eventDriven property of the referenced behaviour to be true.
-     * @param behaviourID The ID of the behaviour that should be changed to execute in an event driven fashion.
-     * @return True, if the property could be set. False, otherwise.
-     */
-    bool makeBehaviourEventDriven(int64_t behaviourID);
-
-    /**
      * Allows to retrieve the name of an AlicaElement.
      * @param elementID The ID of the AlicaElement, whose name is requested.
      * @return The name of the element.

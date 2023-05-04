@@ -78,8 +78,6 @@ public:
     bool isSuccess() const { return _behResult.load() == BehResult::SUCCESS; };
     bool isFailure() const { return _behResult.load() == BehResult::FAILURE; };
 
-    void doTrigger();
-
 protected:
     using RunnableObject::getTrace;
     using RunnableObject::getTraceFactory;
@@ -112,12 +110,9 @@ private:
     void doRun() override;
     void doTerminate() override;
 
-    bool isEventDriven() const { return _behaviour->isEventDriven(); }
-    bool isTriggeredRunFinished();
     void setResult(BehResult result);
 
     const Behaviour* _behaviour;
     std::atomic<BehResult> _behResult;
-    std::atomic<bool> _triggeredJobRunning;
 };
 } /* namespace alica */
