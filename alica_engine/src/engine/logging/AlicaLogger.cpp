@@ -8,6 +8,11 @@ namespace alica
 {
 class IAlicaLogger;
 
+void AlicaLogger::destroy()
+{
+    _logger.reset();
+}
+
 IAlicaLogger* AlicaLogger::instance()
 {
     assert(_logger);

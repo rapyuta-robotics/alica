@@ -336,7 +336,7 @@ protected:
 
 namespace alica::test
 {
-class SingleAgentTestFixture : public ::testing::Test
+class SingleAgentUninitializedTestFixture : public ::testing::Test
 {
 public:
     virtual void SetUp() override
@@ -347,13 +347,14 @@ public:
         path = THIS_PACKAGE_DIR;
         path += "/etc/";
 #endif
-        _tc = std::make_unique<TestContext>("hairy", std::vector<std::string>{path}, "Roleset", "TestMasterPlan", true, 1);
+        _tc = std::make_unique<TestContext>(agentName(), std::vector<std::string>{path}, "Roleset", "TestMasterPlan", true, 1);
         ASSERT_TRUE(_tc->isValid());
-        const YAML::Node& config = _tc->getConfig();
+    }
 
+    void initialize()
+    {
         _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         _tc->setTimerFactory<alica::AlicaSystemTimerFactory>();
-        _tc->setLogger<alica::AlicaDefaultLogger>();
 
         AlicaCreators creators{std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
                 std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
@@ -366,9 +367,26 @@ public:
 
     virtual void TearDown() override {}
 
+    std::string agentName() const { return "hairy"; }
+
 protected:
     std::unique_ptr<TestContext> _tc;
 };
+
+class SingleAgentTestFixture : public SingleAgentUninitializedTestFixture
+{
+    using Base = SingleAgentUninitializedTestFixture;
+
+public:
+    virtual void SetUp() override
+    {
+        Base::SetUp();
+        Base::initialize();
+    }
+
+    virtual void TearDown() override { Base::TearDown(); }
+};
+
 } // namespace alica::test
 
 extern std::jmp_buf restore_point;

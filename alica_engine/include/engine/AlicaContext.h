@@ -448,19 +448,18 @@ private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
 
-    std::string _localAgentName;
-    YAML::Node _configRootNode;
-
-    std::atomic<uint32_t> _validTag;
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
+    const AlicaContextParams _alicaContextParams;
+    std::string _localAgentName;
+    YAML::Node _configRootNode;
+    std::atomic<uint32_t> _validTag;
     std::unique_ptr<AlicaClock> _clock;
     std::unique_ptr<IAlicaCommunication> _communicator;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
-    const AlicaContextParams _alicaContextParams;
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 
     bool _initialized = false;
@@ -586,7 +585,7 @@ void AlicaContext::setLogger(Args&&... args)
             verbosity = it->second;
         }
     }
-    AlicaLogger::create<LoggerType>(verbosity, _localAgentName, std::forward<Args>(args)...);
+    AlicaLogger::set<LoggerType>(verbosity, _localAgentName, std::forward<Args>(args)...);
 }
 
 // Some options can be set before AlicaContext::init but become available only after the init is called
