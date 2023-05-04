@@ -78,6 +78,13 @@ public:
     alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb._impl; }
 };
 
+TEST_F(SingleAgentTestFixture, testGlobalBlackboard)
+{
+    // Checks if the global blackboard can be accessed from the context
+    LockedBlackboardRW(_tc->editGlobalBlackboard()).set("global_test_key", 123);
+    ASSERT_EQ(LockedBlackboardRO(_tc->getGlobalBlackboard()).get<int64_t>("global_test_key"), 123);
+}
+
 TEST_F(SingleAgentTestFixture, testValueMappingBehaviours)
 {
     // Checks if value mapping for behaviours succeeds
