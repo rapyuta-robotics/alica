@@ -5,7 +5,7 @@
 
 #include <exception>
 
-#include "opentelemetry/exporters/jaeger/jaeger_exporter_factory.h"
+#include "opentelemetry/exporters/otlp/otlp_grpc_exporter_factory.h"
 #include "opentelemetry/sdk/trace/batch_span_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 #include "opentelemetry/sdk/trace/tracer_provider_factory.h"
@@ -15,7 +15,7 @@
 #include "SpanWrapper.hpp"
 #include "TraceUtils.hpp"
 
-namespace jaeger = opentelemetry::exporter::jaeger;
+namespace otlp = opentelemetry::exporter::otlp;
 namespace nostd = opentelemetry::nostd;
 namespace sdktrace = opentelemetry::sdk::trace;
 namespace trace = opentelemetry::trace;
@@ -53,10 +53,11 @@ TraceFactory::TraceFactory(
     try {
         auto configYAML = YAML::LoadFile(configFilePath);
 
-        jaeger::JaegerExporterOptions options;
-        options.endpoint = configYAML["reporter"]["server_addr"].as<std::string>();
-        options.server_port = configYAML["reporter"]["server_port"].as<uint16_t>();
-        auto exporter = jaeger::JaegerExporterFactory::Create(options);
+        otlp::OtlpGrpcExporterOptions opts;
+        opts.endpoint = configYAML["reporter"]["server_addr"].as<std::string>() + std::string(":") + configYAML["reporter"]["server_port"].as<std::string>();
+        opts.use_ssl_credentials = true;
+        opts.ssl_credentials_cacert_as_string = "ssl-certificate";
+        auto exporter = otlp::OtlpGrpcExporterFactory::Create(opts); 
 
         auto processor_opts = sdk::trace::BatchSpanProcessorOptions();
         processor_opts.max_export_batch_size = 5;

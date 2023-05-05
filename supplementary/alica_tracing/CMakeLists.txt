@@ -15,7 +15,8 @@ find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
 
 find_package(opentelemetry-cpp CONFIG REQUIRED)
-find_package(CURL REQUIRED)
+find_package(gRPC REQUIRED)
+find_package(Protobuf REQUIRED)
 
 ###########
 ## Build ##
@@ -38,17 +39,10 @@ target_include_directories(alica_tracing PUBLIC
 
 # Specify libraries to link a library or executable target against
 target_link_libraries(
-  ${PROJECT_NAME} PUBLIC
+  ${PROJECT_NAME} PRIVATE
   ${YAML_CPP_LIBRARIES}
-  opentelemetry_exporter_ostream_span
-  opentelemetry_trace
-  opentelemetry_common
-  opentelemetry_http_client_curl
-  opentelemetry_resources
-  opentelemetry_exporter_jaeger_trace
-  thrift
-  curl
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
+  ${OPENTELEMETRY_CPP_LIBRARIES}
 )
 
 if(BUILD_TESTING)
