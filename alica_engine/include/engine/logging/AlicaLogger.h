@@ -9,17 +9,13 @@ class AlicaLogger
 {
 public:
     template <class LoggerType, class... Args>
-    static void create(Args&&... args)
+    static void set(Args&&... args)
     {
         static_assert(std::is_base_of_v<IAlicaLogger, LoggerType>, "LoggerType needs to inherit from IAlicaLogger");
-        if (_logger) {
-            _logger->log("Logger has already been created!", alica::Verbosity::WARNING);
-            return;
-        }
-
         _logger = std::make_unique<LoggerType>(std::forward<decltype(args)>(args)...);
     }
 
+    static void destroy();
     static IAlicaLogger* instance();
     static bool isInitialized();
 
