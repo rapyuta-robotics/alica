@@ -667,6 +667,118 @@
       "id": 4547372457936774346,
       "libraryName": "alica-tests",
       "name": "TestTracingMasterCondition"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 261446297627404117,
+          "key": "value",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4292488527327751514,
+      "libraryName": "alica-tests",
+      "name": "GlobalCounterEqualTo"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 426726420116126994,
+      "libraryName": "alica-tests",
+      "name": "BehaviourRunSchedulingCheck"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4429205959943237683,
+      "libraryName": "alica-tests",
+      "name": "PlanBRunCalled"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 1244954264125400578,
+      "libraryName": "alica-tests",
+      "name": "BehState2BehInSubPlanState"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3762845332633931097,
+      "libraryName": "alica-tests",
+      "name": "OrderedRunSuccessCond"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3215254540654402385,
+      "libraryName": "alica-tests",
+      "name": "PlanAState2PlanBState"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3764260668215998774,
+          "key": "value",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2789879638684607620,
+      "libraryName": "alica-tests",
+      "name": "GlobalCounterLessThan"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4328856649263190886,
+      "libraryName": "alica-tests",
+      "name": "PlanARunCalled"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 46572335183297310,
+      "libraryName": "alica-tests",
+      "name": "BehInSubPlanState2BehState"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 4464104950388146459,
+      "libraryName": "alica-tests",
+      "name": "OrderedRunFailureCond"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 389558729662584235,
+      "libraryName": "alica-tests",
+      "name": "PlanBState2PlanAState"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3359410945086905900,
+      "libraryName": "alica-tests",
+      "name": "OrderedSchedulingCheck"
     }
   ],
   "id": 0,

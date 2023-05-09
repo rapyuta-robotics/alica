@@ -17,6 +17,13 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 754979557833243222,
+      "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 1487451634780526767,
       "key": "ChooseTestState2PlanSuccessTestState",
       "type": "bool"
@@ -59,8 +66,8 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 754979557833243222,
-      "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
+      "id": 805305087691207519,
+      "key": "ChooseTestState2SchedulingTestState",
       "type": "bool"
     }
   ],
@@ -149,6 +156,36 @@
       "positionWeb": {
         "x": 686,
         "y": 1200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SameInParallelTestPlan.pml#1081380659938409775",
+          "comment": "",
+          "configuration": null,
+          "id": 3961906970306592359,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1650974423326226019,
+      "inTransitions": [
+        2394621718823101117
+      ],
+      "name": "SameInParallelTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1400
       },
       "type": "State",
       "variableBindings": []
@@ -284,11 +321,12 @@
         846865468084822174,
         978339276131155715,
         1234148291059202190,
+        2394621718823101117,
         2841206023261337744,
         3651332618963874336,
-        2394621718823101117,
         3815101160319869321,
-        4120890224163547783
+        4120890224163547783,
+        573304012554311312
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -332,10 +370,10 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "SameInParallelTestPlan.pml#1081380659938409775",
+          "abstractPlan": "SchedulingTestPlan.pml#500355457826444680",
           "comment": "",
           "configuration": null,
-          "id": 3961906970306592359,
+          "id": 4495039635310670274,
           "keyMapping": {
             "input": [],
             "output": []
@@ -344,16 +382,16 @@
         }
       ],
       "entryPoint": null,
-      "id": 1650974423326226019,
+      "id": 2381329973460465246,
       "inTransitions": [
-        2394621718823101117
+        573304012554311312
       ],
-      "name": "SameInParallelTestState",
+      "name": "SchedulingTestState",
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 686,
-        "y": 1400
+        "x": 700,
+        "y": 1597.7889150943395
       },
       "type": "State",
       "variableBindings": []
@@ -459,6 +497,41 @@
         "conditionString": "",
         "enabled": true,
         "id": 4560357964186391260,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 2394621718823101117,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2SameInParallelTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1650974423326226019,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1429
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3406651877691983425,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -609,31 +682,31 @@
     {
       "comment": "",
       "condition": "ConditionRepository.cnd#3592699233854318376",
-      "id": 2394621718823101117,
+      "id": 573304012554311312,
       "inState": 4098979167613947533,
       "keyMapping": {
         "input": [
           {
             "childKey": "result",
-            "parentKey": "ChooseTestState2SameInParallelTestState",
+            "parentKey": "ChooseTestState2SchedulingTestState",
             "value": null
           }
         ],
         "output": []
       },
       "name": "",
-      "outState": 1650974423326226019,
+      "outState": 2381329973460465246,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 1429
+          "x": 445.2830188679245,
+          "y": 1507.2228773584907
         }
       ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3406651877691983425,
+        "id": 163485902144909851,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
