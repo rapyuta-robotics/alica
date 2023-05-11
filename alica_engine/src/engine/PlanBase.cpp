@@ -7,7 +7,6 @@
 #include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/Logger.h"
 #include "engine/RuleBook.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
@@ -30,14 +29,13 @@ namespace alica
  * Constructs the PlanBase given a top-level plan to execute
  * @param masterplan A Plan
  */
-PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
+PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
         const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
         const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
-        , _clock(clock)
-        , _logger(log)
+        , _clock(clock)        
         , _communicator(communicator)
         , _roleAssignment(roleAssignment)
         , _syncModule(syncModule)
@@ -57,7 +55,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _mainThread(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
-        , _ruleBook(configChangeListener, log, syncModule, teamObserver, teamManager, planRepository, this)
+        , _ruleBook(configChangeListener, syncModule, teamObserver, teamManager, planRepository, this)
         , _treeDepth(0)
         , _running(false)
         , _isWaiting(false)
@@ -136,11 +134,9 @@ void PlanBase::start(const Plan* masterPlan)
 void PlanBase::run(const Plan* masterPlan)
 {
     Logging::logDebug(LOGNAME) << "Run-Method of PlanBase started.";
-    Logger& log = _logger;
 
     while (_running) {
         AlicaTime beginTime = _clock.now();
-        log.iterationStarts();
 
         if (_stepEngine) {
 #ifdef ALICA_DEBUG_ENABLED
@@ -260,9 +256,7 @@ void PlanBase::run(const Plan* masterPlan)
                 _lastSentStatusTime = _clock.now();
             }
         }
-
-        log.iterationEnds(_rootNode);
-
+        
         //_ae->iterationComplete(); TODO modify when AlicaEngine::iterationComplete will be written
 
         now = _clock.now();

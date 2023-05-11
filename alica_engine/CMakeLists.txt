@@ -39,9 +39,7 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/DefaultUtilityFunction.cpp
   src/engine/FileSystem.cpp
   src/engine/IAlicaCommunication.cpp
-  src/engine/IRoleAssignment.cpp
-  src/engine/Logger.cpp
-  src/engine/Logging.cpp
+  src/engine/IRoleAssignment.cpp  
   src/engine/PlanBase.cpp
   src/engine/PlanRepository.cpp
   src/engine/RuleBook.cpp

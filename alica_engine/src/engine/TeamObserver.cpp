@@ -3,7 +3,6 @@
 #include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/Logger.h"
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
@@ -27,10 +26,9 @@ using std::map;
 using std::mutex;
 using std::pair;
 
-TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
+TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
         const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
-        : _logger(logger)
-        , _roleAssignment(roleAssigment)
+        : _roleAssignment(roleAssigment)
         , _communicator(communicator)
         , _clock(clock)
         , _planRepository(planRepository)
@@ -89,7 +87,7 @@ void TeamObserver::tick(RunningPlan* root)
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (someChanges) {
         _roleAssignment.update();
-        _logger.eventOccurred("TeamChanged");
+        // _logger.eventOccurred("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);

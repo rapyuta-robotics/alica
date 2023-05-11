@@ -35,17 +35,16 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _modelManager(_configChangeListener, alicaContextParams.configPaths, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
-        , _teamManager(_configChangeListener, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(), getMasterPlanId(),
+        , _teamManager(_configChangeListener, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getVersion(), getMasterPlanId(),
                   _ctx.getLocalAgentName(), alicaContextParams.agentID)
         , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
-        , _log(_configChangeListener, getTeamManager(), _teamObserver, getPlanRepository(), _ctx.getAlicaClock(), _ctx.getLocalAgentName())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
         , _teamObserver(
-                  _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
+                  _configChangeListener, editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
-        , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
+        , _planBase(_configChangeListener, _ctx.getAlicaClock(), _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
                   editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, editGlobalBlackboard(), editResultStore(),
                   _ctx.getSolvers(), getTimerFactory(), getTraceFactory())
 {
@@ -124,7 +123,6 @@ void AlicaEngine::terminate()
     _auth.close();
     _syncModul.close();
     _teamObserver.close();
-    _log.close();
     _variableSyncModule->close();
     _initialized = false;
 }

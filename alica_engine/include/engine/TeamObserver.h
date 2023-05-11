@@ -11,7 +11,6 @@
 namespace alica
 {
 
-class Logger;
 class SuccessCollection;
 class TeamManager;
 class Agent;
@@ -30,7 +29,7 @@ class ConfigChangeListener;
 class TeamObserver
 {
 public:
-    TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
+    TeamObserver(ConfigChangeListener& configChangeListener, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
             const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager);
     ~TeamObserver();
 
@@ -54,8 +53,7 @@ private:
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
-
-    Logger& _logger;
+    
     IRoleAssignment& _roleAssignment;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
