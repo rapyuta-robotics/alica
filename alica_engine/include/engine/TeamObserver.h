@@ -29,8 +29,8 @@ class ConfigChangeListener;
 class TeamObserver
 {
 public:
-    TeamObserver(ConfigChangeListener& configChangeListener, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
-            const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager);
+    TeamObserver(ConfigChangeListener& configChangeListener, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator, const AlicaClock& clock,
+            const PlanRepository& planRepository, TeamManager& teamManager);
     ~TeamObserver();
 
     void tick(RunningPlan* root);
@@ -53,7 +53,7 @@ private:
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
-    
+
     IRoleAssignment& _roleAssignment;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;

@@ -47,7 +47,7 @@ public:
 
 private:
     static constexpr const char* LOGNAME = "Rulebook";
-    
+
     SyncModule& _syncModule;
     const TeamManager& _teamManager;
     std::unique_ptr<PlanSelector> _ps;

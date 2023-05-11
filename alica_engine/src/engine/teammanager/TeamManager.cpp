@@ -316,7 +316,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     }
 
     agentInfo = new Agent(_planRepository, _clock, _teamTimeOut, agentRole, aa);
-    agentInfo->setTimeLastMsgReceived(_clock.now());    
+    agentInfo->setTimeLastMsgReceived(_clock.now());
     if (!_agentsCache.addAgent(agentInfo)) {
         // already existed
         delete agentInfo;

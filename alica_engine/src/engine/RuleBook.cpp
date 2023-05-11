@@ -185,7 +185,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
                                   << " suggested is " << possibleUtil << " | "
                                   << " threshold " << p->getUtilityThreshold() << "\n"
                                   << "DynAlloc in " << p->getName();
-        
+
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -204,7 +204,7 @@ PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
     }
 
     if (r.getCycleManagement().isOverridden()) {
-        if (r.editCycleManagement().applyAssignment()) {            
+        if (r.editCycleManagement().applyAssignment()) {
             Logging::logDebug(LOGNAME) << "Authorative set assignment of " << r.getActivePlan()->getName() << " is:" << r.getAssignment();
             return PlanChange::InternalChange;
         }
@@ -234,7 +234,7 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
         Logging::logDebug(LOGNAME) << "PlanAbort-Rule called.";
         Logging::logDebug(LOGNAME) << "PlanAbort RP \n" << r;
         Logging::logDebug(LOGNAME) << "PlanAbort " << r.getActivePlan()->getName();
-        r.addFailure();        
+        r.addFailure();
         return PlanChange::FailChange;
     }
     return PlanChange::NoChange;
@@ -274,7 +274,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
     r.setAllocationNeeded(true);
 
     Logging::logDebug(LOGNAME) << "PlanRedoRule executed for " << r.getActivePlan()->getName();
-    
+
     return PlanChange::InternalChange;
 }
 
@@ -305,7 +305,7 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
     r.setFailureHandlingNeeded(false);
 
     Logging::logDebug(LOGNAME) << "PlanReplace" << r.getActivePlan()->getName();
-    
+
     return PlanChange::FailChange;
 }
 /**
@@ -328,7 +328,7 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
     r.setFailureHandlingNeeded(false);
 
     Logging::logDebug(LOGNAME) << "PlanPropagation " << r.getActivePlan()->getName();
-    
+
     return PlanChange::FailChange;
 }
 
@@ -394,7 +394,7 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
         r.clearFailedChildren();
 
         Logging::logDebug(LOGNAME) << "PlanTopFail " << r.getActivePlan()->getName();
-        
+
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;

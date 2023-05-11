@@ -35,7 +35,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
         const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
-        , _clock(clock)        
+        , _clock(clock)
         , _communicator(communicator)
         , _roleAssignment(roleAssignment)
         , _syncModule(syncModule)
@@ -256,7 +256,7 @@ void PlanBase::run(const Plan* masterPlan)
                 _lastSentStatusTime = _clock.now();
             }
         }
-        
+
         //_ae->iterationComplete(); TODO modify when AlicaEngine::iterationComplete will be written
 
         now = _clock.now();

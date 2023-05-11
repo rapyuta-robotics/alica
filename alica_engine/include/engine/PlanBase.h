@@ -44,8 +44,8 @@ class ISolverBase;
 class PlanBase
 {
 public:
-    PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const IAlicaCommunication& communicator,
-            IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
+    PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const IAlicaCommunication& communicator, IRoleAssignment& roleAssignment,
+            SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
             const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
             VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
             const IAlicaTraceFactory* traceFactory);
@@ -85,7 +85,7 @@ private:
      */
 
     ConfigChangeListener& _configChangeListener;
-    const AlicaClock& _clock;    
+    const AlicaClock& _clock;
     const IAlicaCommunication& _communicator;
     IRoleAssignment& _roleAssignment;
     SyncModule& _syncModule;
