@@ -2,7 +2,6 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/ConfigChangeListener.h"
-#include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
 #include "engine/UtilityFunction.h"
@@ -29,10 +28,9 @@ namespace alica
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
+RuleBook::RuleBook(ConfigChangeListener& configChangeListener, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
         const PlanRepository& planRepository, PlanBase* pb)
-        : _logger(log)
-        , _syncModule(syncModule)
+        : _syncModule(syncModule)
         , _teamManager(teamManager)
         , _pb(pb)
         , _ps(std::make_unique<PlanSelector>(teamObserver, teamManager, pb))
@@ -78,7 +76,6 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
     main->editAssignment().setAllToInitialState(agents.begin(), agents.end(), defep);
     main->activate();
     main->useEntryPoint(defep);
-    _logger.eventOccurred("Init");
     return main;
 }
 
@@ -189,7 +186,6 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
                                   << " threshold " << p->getUtilityThreshold() << "\n"
                                   << "DynAlloc in " << p->getName();
 
-        _logger.eventOccurred("DynAlloc(", p->getName(), ")");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -209,7 +205,6 @@ PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
 
     if (r.getCycleManagement().isOverridden()) {
         if (r.editCycleManagement().applyAssignment()) {
-            _logger.eventOccurred("AuthorityOverride(", r.getActivePlan()->getName(), ")");
             Logging::logDebug(LOGNAME) << "Authorative set assignment of " << r.getActivePlan()->getName() << " is:" << r.getAssignment();
             return PlanChange::InternalChange;
         }
@@ -240,7 +235,6 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
         Logging::logDebug(LOGNAME) << "PlanAbort RP \n" << r;
         Logging::logDebug(LOGNAME) << "PlanAbort " << r.getActivePlan()->getName();
         r.addFailure();
-        _logger.eventOccurred("PAbort(", r.getActivePlan()->getName(), ")");
         return PlanChange::FailChange;
     }
     return PlanChange::NoChange;
@@ -281,7 +275,6 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
 
     Logging::logDebug(LOGNAME) << "PlanRedoRule executed for " << r.getActivePlan()->getName();
 
-    _logger.eventOccurred("PRedo(", r.getActivePlan()->getName(), ")");
     return PlanChange::InternalChange;
 }
 
@@ -313,7 +306,6 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
 
     Logging::logDebug(LOGNAME) << "PlanReplace" << r.getActivePlan()->getName();
 
-    _logger.eventOccurred("PReplace(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
 }
 /**
@@ -337,7 +329,6 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 
     Logging::logDebug(LOGNAME) << "PlanPropagation " << r.getActivePlan()->getName();
 
-    _logger.eventOccurred("PProp(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
 }
 
@@ -368,7 +359,6 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     rp.addChildren(children);
 
     if (!children.empty()) {
-        _logger.eventOccurred("PlanAlloc(", rp.getActivePlan()->getName(), " in State ", rp.getActiveState()->getName(), ")");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -405,7 +395,6 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
 
         Logging::logDebug(LOGNAME) << "PlanTopFail " << r.getActivePlan()->getName();
 
-        _logger.eventOccurred("TopFail");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -447,7 +436,6 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     r.moveState(nextState);
 
     r.setAllocationNeeded(true);
-    _logger.eventOccurred("Transition(", r.getActivePlan()->getName(), " to State ", r.getActiveState()->getName(), ")");
     if (r.getActiveState()->isSuccessState())
         return PlanChange::SuccesChange;
     else if (r.getActiveState()->isFailureState())
@@ -499,7 +487,6 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
     rp.setAllocationNeeded(true);
 
     Logging::logDebug(LOGNAME) << "Follow synchronised transition in plan " << rp.getActivePlan()->getName();
-    _logger.eventOccurred("SynchTrans(", rp.getActivePlan()->getName(), ")");
 
     if (rp.getActiveState()->isSuccessState())
         return PlanChange::SuccesChange;

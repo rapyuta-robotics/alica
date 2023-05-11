@@ -7,7 +7,6 @@
 
 namespace alica
 {
-// IAlicaLogger has nothing to do with engine/Logger.h
 
 enum class Verbosity
 {
