@@ -119,17 +119,11 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#4292488527327751514",
+      "condition": "ConditionRepository.cnd#2062958764563158269",
       "id": 332255503511535936,
       "inState": 3490852498214130330,
       "keyMapping": {
-        "input": [
-          {
-            "childKey": "value",
-            "parentKey": null,
-            "value": 10
-          }
-        ],
+        "input": [],
         "output": []
       },
       "name": "",

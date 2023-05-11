@@ -7,11 +7,6 @@
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
 
-namespace alica_test
-{
-class SchedWM;
-}
-
 namespace alica
 {
 class PlanA : public AlicaTestsPlan<PlanA>
@@ -26,7 +21,6 @@ protected:
 
 private:
     std::atomic<bool> _inRunContext;
-    std::shared_ptr<alica_test::SchedWM> _wm;
 };
 
 BOOST_DLL_ALIAS(alica::PlanA::create, PlanA)

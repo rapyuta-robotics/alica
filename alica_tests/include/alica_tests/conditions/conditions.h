@@ -45,6 +45,19 @@ bool IsAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::Runn
 bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 bool IsAnyChildStatus(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 bool TestHasNoError(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool GlobalCounterEqualTo(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool GlobalCounterLessThan(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool PlanARunCalled(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool PlanBRunCalled(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool OrderedRunFailureCond(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool OrderedRunSuccessCond(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool BehState2BehInSubPlanState(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool BehInSubPlanState2BehState(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool BehaviourRunSchedulingCheck(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool OrderedSchedulingCheck(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool PlanAState2PlanBState(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool PlanBState2PlanAState(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool ExecuteBehaviourTestSuccessCond(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 
 BOOST_DLL_ALIAS(alica::Entry2Wait, Entry2Wait)
 BOOST_DLL_ALIAS(alica::FailurePlan2FailureHandled, FailurePlan2FailureHandled)
@@ -84,4 +97,17 @@ BOOST_DLL_ALIAS(alica::IsAnyChildTaskSuccessfull, IsAnyChildTaskSuccessfull)
 BOOST_DLL_ALIAS(alica::IsAnyChildStatusFailed, IsAnyChildStatusFailed)
 BOOST_DLL_ALIAS(alica::IsAnyChildStatus, IsAnyChildStatus)
 BOOST_DLL_ALIAS(alica::TestHasNoError, TestHasNoError)
+BOOST_DLL_ALIAS(alica::GlobalCounterEqualTo, GlobalCounterEqualTo)
+BOOST_DLL_ALIAS(alica::GlobalCounterLessThan, GlobalCounterLessThan)
+BOOST_DLL_ALIAS(alica::PlanARunCalled, PlanARunCalled)
+BOOST_DLL_ALIAS(alica::PlanBRunCalled, PlanBRunCalled)
+BOOST_DLL_ALIAS(alica::OrderedRunFailureCond, OrderedRunFailureCond)
+BOOST_DLL_ALIAS(alica::OrderedRunSuccessCond, OrderedRunSuccessCond)
+BOOST_DLL_ALIAS(alica::BehState2BehInSubPlanState, BehState2BehInSubPlanState)
+BOOST_DLL_ALIAS(alica::BehInSubPlanState2BehState, BehInSubPlanState2BehState)
+BOOST_DLL_ALIAS(alica::BehaviourRunSchedulingCheck, BehaviourRunSchedulingCheck)
+BOOST_DLL_ALIAS(alica::OrderedSchedulingCheck, OrderedSchedulingCheck)
+BOOST_DLL_ALIAS(alica::PlanAState2PlanBState, PlanAState2PlanBState)
+BOOST_DLL_ALIAS(alica::PlanBState2PlanAState, PlanBState2PlanAState)
+BOOST_DLL_ALIAS(alica::ExecuteBehaviourTestSuccessCond, ExecuteBehaviourTestSuccessCond)
 } /* namespace alica */

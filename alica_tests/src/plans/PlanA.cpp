@@ -1,5 +1,4 @@
 #include <alica_tests/plans/PlanA.h>
-#include <alica_tests/test_sched_world_model.h>
 
 namespace alica
 {
@@ -10,23 +9,26 @@ PlanA::PlanA(PlanContext& context)
 }
 void PlanA::onInit()
 {
-    _wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    _wm->execOrder += "PlanA::Init\n";
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    gb.set("execOrder", (gb.hasValue("execOrder") ? gb.get<std::string>("execOrder") : "") + getName() + "::Init\n");
+    gb.set("counter", (gb.hasValue("counter") ? gb.get<int64_t>("counter") + 1 : 1));
     _inRunContext = true;
 }
 
 void PlanA::run()
 {
-    _wm->planARunCalled = true;
     if (!_inRunContext) {
-        _wm->planARunOutOfOrder = true;
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunOutOfOrder", true);
+    } else {
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunCalled", true);
     }
 }
 
 void PlanA::onTerminate()
 {
     _inRunContext = false;
-    _wm->execOrder += "PlanA::Term\n";
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    gb.set("execOrder", gb.get<std::string>("execOrder") + getName() + "::Term\n");
 }
 
 } // namespace alica

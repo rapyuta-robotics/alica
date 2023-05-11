@@ -3,11 +3,6 @@
 #include <boost/dll/alias.hpp>
 #include <engine/BasicBehaviour.h>
 
-namespace alica_test
-{
-class SchedWM;
-}
-
 namespace alica
 {
 class BehBAA : public BasicBehaviour
@@ -23,9 +18,6 @@ public:
 protected:
     virtual void initialiseParameters();
     virtual void onTermination();
-
-private:
-    std::shared_ptr<alica_test::SchedWM> _wm;
 };
 BOOST_DLL_ALIAS(alica::BehBAA::create, BehBAA)
 } /* namespace alica */

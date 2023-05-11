@@ -14,18 +14,20 @@ BehBAA::BehBAA(BehaviourContext& context)
 BehBAA::~BehBAA() {}
 void BehBAA::run()
 {
-    ++runCount;
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    gb.set(getName() + "RunCount", gb.get<int64_t>(getName() + "RunCount") + 1);
 }
 void BehBAA::initialiseParameters()
 {
-    _wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    _wm->execOrder += "BehBAA::Init\n";
-    runCount = 0;
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    gb.set(getName() + "RunCount", 0);
+    gb.set("execOrder", gb.get<std::string>("execOrder") + getName() + "::Init\n");
 }
 void BehBAA::onTermination()
 {
-    runCount = 0;
-    _wm->execOrder += "BehBAA::Term\n";
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    gb.set(getName() + "RunCount", 0);
+    gb.set("execOrder", gb.get<std::string>("execOrder") + getName() + "::Term\n");
 }
 std::unique_ptr<BehBAA> BehBAA::create(alica::BehaviourContext& context)
 {
