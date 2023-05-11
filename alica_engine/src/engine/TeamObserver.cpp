@@ -86,8 +86,7 @@ void TeamObserver::tick(RunningPlan* root)
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (someChanges) {
-        _roleAssignment.update();
-        // _logger.eventOccurred("TeamChanged");
+        _roleAssignment.update();        
     }
 
     cleanOwnSuccessMarks(root);
