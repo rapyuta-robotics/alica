@@ -31,8 +31,6 @@ public:
 
     std::string toString(std::string indent = "") const;
 
-    int getDeferring() const { return _deferring; }
-    bool isEventDriven() const { return _eventDriven; }
     int getFrequency() const { return _frequency; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
@@ -45,23 +43,11 @@ private:
     friend BehaviourFactory;
     friend alica::test::TestContext;
 
-    void setDeferring(int deferring);
-    void setEventDriven(bool eventDriven);
     void setFrequency(int frequency);
     /**
-     * Specifies whether this Behaviour is run eventDriven. If it is not event driven, a timer will call it according to
-     * Frequency and Deferring.
-     */
-    bool _eventDriven;
-    /**
-     * The frequency with which this Behaviour is called in case it is not EventDriven.
+     * The frequency with which this Behaviour is called.
      */
     int _frequency;
-    /**
-     * The time in ms to wait before this Behaviour is executed for the first time after entering the corresponding
-     * state. Has only effect for Behaviours not running in EventDriven mode.
-     */
-    int _deferring;
 
     /**
      * This behaviour's runtime condition.

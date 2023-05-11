@@ -26,9 +26,8 @@ BasicBehaviour::BasicBehaviour(BehaviourContext& context)
         : RunnableObject(context.globalBlackboard, context.traceFactory, context.name)
         , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
-        , _triggeredJobRunning(false)
 {
-    if (_behaviour->getFrequency() < 1 || _behaviour->isEventDriven()) {
+    if (_behaviour->getFrequency() < 1) {
         // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
         setInterval(0);
     } else {
@@ -49,11 +48,6 @@ AgentId BasicBehaviour::getOwnId() const
     return getTeamManager().getLocalAgentID();
 }
 
-bool BasicBehaviour::isTriggeredRunFinished()
-{
-    return !_triggeredJobRunning.load();
-}
-
 void BasicBehaviour::doInit()
 {
     try {
@@ -70,7 +64,6 @@ void BasicBehaviour::doRun()
     } catch (...) {
         handleException("run", std::current_exception());
     }
-    _triggeredJobRunning = false;
 }
 
 void BasicBehaviour::doTerminate()
@@ -81,18 +74,6 @@ void BasicBehaviour::doTerminate()
         handleException("terminate", std::current_exception());
     }
     _behResult.store(BehResult::UNKNOWN);
-}
-
-void BasicBehaviour::doTrigger()
-{
-    if (!_behaviour->isEventDriven()) {
-        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", Error: Trying to trigger a behaviour that is not event driven";
-    } else if (!isTriggeredRunFinished()) {
-        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", Error: Cannot trigger behaviour because the previous run is not yet finished";
-    } else {
-        _triggeredJobRunning = true;
-        doRun();
-    }
 }
 
 void BasicBehaviour::setSuccess()

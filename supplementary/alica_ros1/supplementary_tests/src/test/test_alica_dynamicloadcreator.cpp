@@ -38,7 +38,7 @@ namespace
 class AlicaDynamicLoading : public ::testing::Test
 {
 public:
-    AlicaDynamicLoading() { AlicaLogger::create<alica::AlicaDefaultLogger>(Verbosity::DEBUG, "TEST"); }
+    AlicaDynamicLoading() { AlicaLogger::set<alica::AlicaDefaultLogger>(Verbosity::DEBUG, "TEST"); }
 
     std::string getRootPath() const
     {

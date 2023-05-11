@@ -57,7 +57,6 @@ if(BUILD_TESTING)
         src/test_alica.cpp
         src/test/test_main.cpp
         src/test/test_alica_authority.cpp
-        src/test/test_alica_behaviourtrigger.cpp
         src/test/test_alica_condition_plan.cpp
         src/test/test_alica_condition_plantype.cpp
         src/test/test_alica_engine_plan_parser.cpp
@@ -84,7 +83,6 @@ if(BUILD_TESTING)
         src/test/test_inherit_blackboard.cpp
         src/test/test_failure_handling.cpp
         src/test/test_alica_logger.cpp
-        src/test/test_alica_engine_worldmodel.cpp
         src/test/test_success.cpp
         src/test/test_standard_library_conditions.cpp
         src/test/test_alica_parallel_execution.cpp
