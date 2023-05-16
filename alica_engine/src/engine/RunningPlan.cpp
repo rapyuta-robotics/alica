@@ -75,63 +75,35 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
-        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard, TeamObserver& teamObserver,
+        TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
+        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const RuntimePlanFactory& runTimePlanFactory,
+        const RuntimeBehaviourFactory& runTimeBehaviourFactory, const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper)
         : _clock(clock)
         , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
-        , _resultStore(resultStore)
-        , _solvers(solvers)
-        , _planType(nullptr)
-        , _behaviour(false)
-        , _assignment(plan)
-        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
-        , _basicPlan(runTimePlanFactory.create(plan->getId(), plan))
-        , _parent(nullptr)
-{
-    _activeTriple.abstractPlan = plan;
-}
-
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
-        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt)
-        : _clock(clock)
-        , _globalBlackboard(globalBlackboard)
-        , _runTimePlanFactory(runTimePlanFactory)
-        , _teamObserver(teamObserver)
-        , _teamManager(teamManager)
-        , _resultStore(resultStore)
-        , _solvers(solvers)
-        , _planType(pt)
         , _behaviour(false)
         , _assignment()
-        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
-        , _parent(nullptr)
-{
-}
-
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
-        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
-        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b)
-        : _clock(clock)
-        , _globalBlackboard(globalBlackboard)
-        , _runTimePlanFactory(runTimePlanFactory)
-        , _teamObserver(teamObserver)
-        , _teamManager(teamManager)
         , _planType(nullptr)
-        , _activeTriple(b, nullptr, nullptr)
-        , _behaviour(true)
-        , _assignment()
-        , _basicBehaviour(runTimeBehaviourFactory.create(b->getId(), b))
         , _resultStore(resultStore)
         , _solvers(solvers)
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
+        , _wrapper(wrapper)
 {
+    if (auto behaviour = dynamic_cast<const Behaviour*>(abstractPlan)) {
+        _behaviour = true;
+        _basicBehaviour = runTimeBehaviourFactory.create(behaviour->getId(), behaviour);
+        _activeTriple.abstractPlan = behaviour;
+    } else if (auto plan = dynamic_cast<const Plan*>(abstractPlan)) {
+        _basicPlan = runTimePlanFactory.create(plan->getId(), plan);
+        _activeTriple.abstractPlan = plan;
+        _assignment = Assignment(plan);
+    } else if (auto planType = dynamic_cast<const PlanType*>(abstractPlan)) {
+        _planType = planType;
+    }
 }
 
 bool RunningPlan::isDeleteable() const
@@ -905,6 +877,12 @@ int64_t RunningPlan::getParentWrapperId(const RunningPlan* rp) const
 TeamManager& RunningPlan::getTeamManager() const
 {
     return _teamManager;
+}
+
+const KeyMapping* RunningPlan::getKeyMapping() const
+{
+    assert(_wrapper);
+    return _wrapper->getKeyMapping();
 }
 
 } /* namespace alica */

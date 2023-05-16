@@ -12,7 +12,8 @@ std::unique_ptr<BlackboardBlueprint> BlackboardBlueprintFactory::create(const YA
     for (const auto& entry : node) {
         auto key = getValue<std::string>(entry, Strings::key);
         auto type = getValue<std::string>(entry, Strings::stateType);
-        blueprint->addKey(key, type);
+        auto access = getValue<std::string>(entry, Strings::access);
+        blueprint->addKey(key, type, access);
     }
     return blueprint;
 }

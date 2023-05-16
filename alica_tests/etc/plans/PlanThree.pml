@@ -59,7 +59,6 @@
   "masterPlan": false,
   "name": "PlanThree",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

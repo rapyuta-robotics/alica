@@ -36,13 +36,17 @@ CycleManager::CycleManager(ConfigChangeListener& configChangeListener, const Ali
         , _newestAllocationDifference(0)
         , _runningPlan(rp)
         , _myID(_teamManager.getLocalAgentID())
+        , _configChangeListener(configChangeListener)
 {
     auto reloadFunctionPtr = std::bind(&CycleManager::reload, this, std::placeholders::_1);
-    configChangeListener.subscribe(reloadFunctionPtr);
+    _reloadCallbackId = configChangeListener.subscribe(reloadFunctionPtr);
     reload(configChangeListener.getConfig());
 }
 
-CycleManager::~CycleManager() {}
+CycleManager::~CycleManager()
+{
+    _configChangeListener.unsubscribe(_reloadCallbackId);
+}
 
 void CycleManager::reload(const YAML::Node& config)
 {

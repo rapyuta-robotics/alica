@@ -11,7 +11,6 @@
   "name": "TriggerA",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "Behaviour",
   "runtimeCondition": null,
   "variables": []
 }

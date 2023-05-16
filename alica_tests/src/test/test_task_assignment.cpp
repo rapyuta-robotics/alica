@@ -76,18 +76,18 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     ae->editTeamObserver().tick(nullptr);
     ae->editRoleAssignment().tick();
 
-    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
-    // fake inform the team observer about roles of none existing robots
-    auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
-            ae->getPlanBase().getRuntimePlanFactory(), ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
-            ae->getPlanRepository().getPlans().find(1407152758497));
-
-    // fake inform the team
-
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     auto wrapper = std::make_unique<ConfAbstractPlanWrapper>();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
     inputWrappers.push_back(wrapper.get());
+
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
+    // fake inform the team observer about roles of none existing robots
+    auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(), ae->editTeamObserver(),
+            ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers, ae->getPlanBase().getRuntimePlanFactory(),
+            ae->getPlanBase().getRuntimeBehaviourFactory(), ae->getPlanRepository().getPlans().find(1407152758497), wrapper.get());
+
+    // fake inform the team
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
@@ -132,17 +132,18 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     ae->editTeamObserver().tick(nullptr);
     ae->editRoleAssignment().tick();
 
-    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
-    // fake inform the team observer about roles of none existing robots
-    auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
-            ae->getPlanBase().getRuntimePlanFactory(), ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
-            ae->getPlanRepository().getPlans().find(1407152758497));
-
-    // fake inform the team observer about roles of none existing robots
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     auto wrapper = std::make_unique<ConfAbstractPlanWrapper>();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
     inputWrappers.push_back(wrapper.get());
+
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
+    // fake inform the team observer about roles of none existing robots
+    auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(), ae->editTeamObserver(),
+            ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers, ae->getPlanBase().getRuntimePlanFactory(),
+            ae->getPlanBase().getRuntimeBehaviourFactory(), ae->getPlanRepository().getPlans().find(1407152758497), wrapper.get());
+
+    // fake inform the team observer about roles of none existing robots
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;

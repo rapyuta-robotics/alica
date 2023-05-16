@@ -4,40 +4,39 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 177437342277134781,
+      "id": 1747181955620635504,
       "isDynamic": false,
-      "maxCardinality": 1,
-      "minCardinality": 1,
-      "name": "EntryPoint",
-      "plan": 3254486013443203397,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "",
+      "plan": 2039053377176713134,
       "positionWeb": {
         "x": 200,
         "y": 212
       },
-      "state": 338845808462999166,
+      "state": 72643319450343579,
       "successRequired": false,
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 3254486013443203397,
-  "implementationName": "",
+  "id": 2039053377176713134,
+  "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
-  "libraryName": "alica-tests",
-  "masterPlan": true,
-  "name": "AdjacentSuccessMasterPlan",
+  "libraryName": "alica_standard_library",
+  "masterPlan": false,
+  "name": "AdjacentSuccessTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "AdjacentSuccessSubPlan.pml#1682631238618360548",
+          "abstractPlan": "SuccessOnCondPlan.pml#3153116020668535682",
           "comment": "",
           "configuration": null,
-          "id": 1587789133681493604,
+          "id": 704656399979191907,
           "keyMapping": {
             "input": [],
             "output": []
@@ -45,19 +44,19 @@
           "name": ""
         }
       ],
-      "entryPoint": 177437342277134781,
-      "id": 338845808462999166,
+      "entryPoint": 1747181955620635504,
+      "id": 72643319450343579,
       "inTransitions": [
-        1914245867924544479
+        4586149331725958934
       ],
-      "name": "EntryState",
+      "name": "SuccessOnCondStateA",
       "outTransitions": [
-        3345031375302716643
+        1124111964911548913
       ],
-      "parentPlan": 3254486013443203397,
+      "parentPlan": 2039053377176713134,
       "positionWeb": {
-        "x": 319.0441826215022,
-        "y": 308.9558173784978
+        "x": 428,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -66,10 +65,10 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "AdjacentSuccessSubPlan.pml#1682631238618360548",
+          "abstractPlan": "SuccessOnCondPlan.pml#3153116020668535682",
           "comment": "",
           "configuration": null,
-          "id": 1193245213581698231,
+          "id": 1427847311614550547,
           "keyMapping": {
             "input": [],
             "output": []
@@ -78,15 +77,15 @@
         }
       ],
       "entryPoint": null,
-      "id": 1114306208475690481,
+      "id": 1813014648904251459,
       "inTransitions": [
-        3345031375302716643
+        1124111964911548913
       ],
-      "name": "SecondState",
+      "name": "SuccessOnCondStateB",
       "outTransitions": [
-        1914245867924544479
+        4586149331725958934
       ],
-      "parentPlan": 3254486013443203397,
+      "parentPlan": 2039053377176713134,
       "positionWeb": {
         "x": 686,
         "y": 200
@@ -99,21 +98,26 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#330238006348384830",
-      "id": 1914245867924544479,
-      "inState": 1114306208475690481,
+      "condition": "ConditionRepository.cnd#2",
+      "id": 1124111964911548913,
+      "inState": 72643319450343579,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 338845808462999166,
-      "pointsWeb": [],
+      "outState": 1813014648904251459,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 29
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 289358204208851392,
+        "id": 3227220237533699258,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -123,21 +127,26 @@
     },
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#330238006348384830",
-      "id": 3345031375302716643,
-      "inState": 338845808462999166,
+      "condition": "ConditionRepository.cnd#2",
+      "id": 4586149331725958934,
+      "inState": 1813014648904251459,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 1114306208475690481,
-      "pointsWeb": [],
+      "outState": 72643319450343579,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 807250359520655888,
+        "id": 3590963618136517342,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

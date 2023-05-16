@@ -27,9 +27,28 @@
   "masterPlan": false,
   "name": "IsChildSuccessTestPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 4068992413297046586,
+      "inTransitions": [
+        2590151640025681691
+      ],
+      "name": "SuccessState",
+      "outTransitions": [],
+      "parentPlan": 2027765331130289429,
+      "positionWeb": {
+        "x": 928,
+        "y": 340
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
+    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -58,26 +77,6 @@
         "y": 306
       },
       "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 4068992413297046586,
-      "inTransitions": [
-        2590151640025681691
-      ],
-      "name": "SuccessState",
-      "outTransitions": [],
-      "parentPlan": 2027765331130289429,
-      "positionWeb": {
-        "x": 928,
-        "y": 340
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
       "variableBindings": []
     }
   ],

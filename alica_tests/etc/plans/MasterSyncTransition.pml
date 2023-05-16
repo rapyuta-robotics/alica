@@ -43,7 +43,6 @@
   "masterPlan": false,
   "name": "MasterSyncTransition",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

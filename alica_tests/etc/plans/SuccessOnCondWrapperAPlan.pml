@@ -35,7 +35,6 @@
   "masterPlan": false,
   "name": "SuccessOnCondWrapperAPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

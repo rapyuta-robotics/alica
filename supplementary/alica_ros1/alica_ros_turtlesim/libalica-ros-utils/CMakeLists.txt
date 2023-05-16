@@ -6,6 +6,7 @@ alica_compile_flags()
 
 add_library(${PROJECT_NAME} SHARED
   src/WaitForTrigger.cpp
+  src/WaitForMsg.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -19,5 +20,4 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
 )

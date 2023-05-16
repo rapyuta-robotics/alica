@@ -3,7 +3,6 @@
 #include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/Logger.h"
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
@@ -27,10 +26,9 @@ using std::map;
 using std::mutex;
 using std::pair;
 
-TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
+TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
         const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
-        : _logger(logger)
-        , _roleAssignment(roleAssigment)
+        : _roleAssignment(roleAssigment)
         , _communicator(communicator)
         , _clock(clock)
         , _planRepository(planRepository)
@@ -64,17 +62,19 @@ bool TeamObserver::updateTeamPlanTrees()
                 if (sptEntry != _simplePlanTrees.end()) {
                     sptEntry->second = std::move(spt);
                 } else {
-                    _simplePlanTrees.emplace(spt->getAgentId(), std::move(spt));
+                    _simplePlanTrees[spt->getAgentId()] = std::move(spt);
                 }
             }
         }
         _msgQueue.clear();
     }
 
-    std::vector<AgentId> deactivatedAgentIds;
-    bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
-    for (auto agent : deactivatedAgentIds) {
-        _simplePlanTrees.erase(agent);
+    bool changedSomeAgent = _tm.updateAgents();
+
+    for (auto it = _simplePlanTrees.begin(); it != _simplePlanTrees.end(); /*No increment*/) {
+        AgentId agentId = it->first;
+        // delete msgs of inactive agents, increment iterator in both cases
+        (!_tm.isAgentActive(agentId)) ? it = _simplePlanTrees.erase(it) : it++;
     }
 
     return changedSomeAgent;
@@ -87,7 +87,6 @@ void TeamObserver::tick(RunningPlan* root)
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (someChanges) {
         _roleAssignment.update();
-        _logger.eventOccurred("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);

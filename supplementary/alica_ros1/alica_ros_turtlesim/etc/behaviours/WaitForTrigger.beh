@@ -19,7 +19,6 @@
   "name": "WaitForTrigger",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "behaviours",
   "runtimeCondition": null,
   "variables": []
 }

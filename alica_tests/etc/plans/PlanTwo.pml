@@ -59,7 +59,6 @@
   "masterPlan": false,
   "name": "PlanTwo",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

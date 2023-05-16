@@ -26,7 +26,6 @@ struct AgentQuery;
 class ConfigChangeListener;
 class PlanRepository;
 class IAlicaCommunication;
-class Logger;
 
 // A read optimized cache for multi writer and readers.
 class AgentsCache
@@ -50,7 +49,7 @@ class TeamManager
 {
 public:
     TeamManager(ConfigChangeListener& configChangeListener, const PlanRepository& planRepository, const IAlicaCommunication& communicator,
-            const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName, AgentId agentID);
+            const AlicaClock& clock, int version, uint64_t masterPlanId, const std::string& localAgentName, AgentId agentID);
     virtual ~TeamManager();
 
     void reload(const YAML::Node& config);
@@ -74,7 +73,7 @@ public:
     const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
-    bool updateAgents(AgentGrp& deactivatedAgents);
+    bool updateAgents();
     void handleAgentQuery(const AgentQuery& pq) const;
     void handleAgentAnnouncement(const AgentAnnouncement& aa);
     void init();
@@ -100,7 +99,6 @@ private:
     const PlanRepository& _planRepository;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
-    Logger& _log;
     std::atomic<bool> _useAutoDiscovery;
     AgentId _localAgentID;
     int _version;

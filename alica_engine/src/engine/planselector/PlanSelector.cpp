@@ -64,9 +64,11 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
     _pap.reset();
     try {
         if (rp.getPlanType() == nullptr) {
-            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, robots, &rp, nullptr, o_currentUtility);
+            return createRunningPlan(
+                    rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, robots, &rp, nullptr, o_currentUtility, rp.getConfAbstractPlanWrapper());
         } else {
-            return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), robots, &rp, rp.getPlanType(), o_currentUtility);
+            return createRunningPlan(
+                    rp.getParent(), rp.getPlanType()->getPlans(), robots, &rp, rp.getPlanType(), o_currentUtility, rp.getConfAbstractPlanWrapper());
         }
     } catch (const PoolExhaustedException& pee) {
         Logging::logError(LOGNAME) << pee.what();
@@ -92,7 +94,7 @@ bool PlanSelector::getPlansForState(
 }
 
 RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp,
-        const PlanType* relevantPlanType, double& o_oldUtility)
+        const PlanType* relevantPlanType, double& o_oldUtility, const ConfAbstractPlanWrapper* wrapper)
 {
     PlanGrp newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
@@ -115,7 +117,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     RunningPlan* rp;
     if (oldRp == nullptr) {
         // preassign other robots, because we dont need a similar assignment
-        rp = _pb->makeRunningPlan(relevantPlanType);
+        rp = _pb->makeRunningPlan(relevantPlanType, wrapper);
         ta.preassignOtherAgents();
     } else {
         if (!oldRp->getAssignment().isValid() || !oldRp->isRuntimeConditionValid()) {
@@ -129,7 +131,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
             o_oldUtility = oldPlan->getUtilityFunction()->eval(ptemp, &oldRp->getAssignment(), _globalBlackboard).getMax();
         }
         // dont preassign other robots, because we need a similar assignment (not the same)
-        rp = _pb->makeRunningPlan(oldRp->getPlanType());
+        rp = _pb->makeRunningPlan(oldRp->getPlanType(), wrapper);
         oldAss = &oldRp->getAssignment();
     }
 
@@ -203,14 +205,14 @@ bool PlanSelector::getPlansForStateInternal(
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {
-            RunningPlan* rp = _pb->makeRunningPlan(beh);
+            RunningPlan* rp = _pb->makeRunningPlan(beh, wrapper);
             // A Behaviour is a Plan too (in this context)
             rp->usePlan(beh);
             o_plans.push_back(rp);
             rp->setParent(planningParent);
         } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) {
             double zeroValue;
-            RunningPlan* rp = createRunningPlan(planningParent, {p}, robotIDs, nullptr, nullptr, zeroValue);
+            RunningPlan* rp = createRunningPlan(planningParent, {p}, robotIDs, nullptr, nullptr, zeroValue, wrapper);
             if (!rp) {
                 Logging::logDebug(LOGNAME) << "It was not possible to create a RunningPlan for the Plan " << p->getName() << "!";
                 return false;
@@ -218,7 +220,7 @@ bool PlanSelector::getPlansForStateInternal(
             o_plans.push_back(rp);
         } else if (const PlanType* pt = dynamic_cast<const PlanType*>(ap)) {
             double zeroVal;
-            RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt, zeroVal);
+            RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt, zeroVal, wrapper);
             if (!rp) {
                 Logging::logInfo(LOGNAME) << "It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!";
                 return false;

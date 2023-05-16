@@ -22,7 +22,6 @@ namespace alica
 class Plan;
 class TeamObserver;
 class IRoleAssignment;
-class Logger;
 class AuthorityManager;
 class SyncModule;
 class IAlicaCommunication;
@@ -45,8 +44,8 @@ class ISolverBase;
 class PlanBase
 {
 public:
-    PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
-            IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
+    PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const IAlicaCommunication& communicator, IRoleAssignment& roleAssignment,
+            SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
             const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
             VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
             const IAlicaTraceFactory* traceFactory);
@@ -62,15 +61,14 @@ public:
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
 
-    // factory functions
-    RunningPlan* makeRunningPlan(const Plan* plan);
-    RunningPlan* makeRunningPlan(const Behaviour* behaviour);
-    RunningPlan* makeRunningPlan(const PlanType* planType);
+    // factory function
+    RunningPlan* makeRunningPlan(const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper);
 
     void reload(const YAML::Node& config);
     void init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator, std::unique_ptr<IPlanCreator>&& planCreator);
 
     const RuntimePlanFactory& getRuntimePlanFactory() const { return _runTimePlanFactory; }
+    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return _runTimeBehaviourFactory; }
 
     void stepNotify();
 
@@ -88,7 +86,6 @@ private:
 
     ConfigChangeListener& _configChangeListener;
     const AlicaClock& _clock;
-    Logger& _logger;
     const IAlicaCommunication& _communicator;
     IRoleAssignment& _roleAssignment;
     SyncModule& _syncModule;

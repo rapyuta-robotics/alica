@@ -70,8 +70,8 @@ namespace alica::test
 class Util
 {
 public:
-    static BasicBehaviour* getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, int64_t configurationID);
-    static BasicPlan* getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t configurationId);
+    static BasicBehaviour* getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID);
+    static BasicPlan* getBasicPlan(alica::AlicaEngine* ae, int64_t planId);
     static bool hasPlanSucceeded(alica::AlicaEngine* ae, int64_t id);
     static bool isStateActive(alica::AlicaEngine* ae, int64_t id);
     static bool isPlanActive(alica::AlicaEngine* ae, int64_t id);

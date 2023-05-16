@@ -28,7 +28,6 @@ ReferenceList Factory::epStateReferences;
 ReferenceList Factory::epTaskReferences;
 ReferenceList Factory::planTypePlanReferences;
 ReferenceList Factory::wrapperAbstractPlanReferences;
-ReferenceList Factory::wrapperConfigurationReferences;
 TripleReferenceList Factory::roleTaskReferences;
 ModelManager* Factory::modelManager;
 
@@ -83,7 +82,6 @@ void Factory::setModelManager(alica::ModelManager* modelManager)
     epTaskReferences.clear();
     planTypePlanReferences.clear();
     wrapperAbstractPlanReferences.clear();
-    wrapperConfigurationReferences.clear();
     roleTaskReferences.clear();
     Factory::modelManager = modelManager;
 }

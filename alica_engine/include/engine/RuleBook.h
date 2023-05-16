@@ -11,7 +11,6 @@ namespace alica
 {
 class SyncModule;
 class PlanSelector;
-class Logger;
 class RunningPlan;
 class Plan;
 class PlanBase;
@@ -34,7 +33,7 @@ class PlanRepository;
 class RuleBook
 {
 public:
-    RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
+    RuleBook(ConfigChangeListener& configChangeListener, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
             const PlanRepository& planRepository, PlanBase* pb);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
@@ -49,7 +48,6 @@ public:
 private:
     static constexpr const char* LOGNAME = "Rulebook";
 
-    Logger& _logger;
     SyncModule& _syncModule;
     const TeamManager& _teamManager;
     std::unique_ptr<PlanSelector> _ps;

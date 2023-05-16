@@ -38,6 +38,7 @@ static const std::string output = "output";
 static const std::string parentKey = "parentKey";
 static const std::string childKey = "childKey";
 static const std::string value = "value";
+static const std::string access = "access";
 
 static const std::string id = "id";
 static const std::string name = "name";
@@ -72,8 +73,6 @@ static const std::string failOnSyncTimeout = "failOnSyncTimeout";
 static const std::string syncTimeout = "syncTimeout";
 static const std::string talkTimeout = "talkTimeout";
 static const std::string frequency = "frequency";
-static const std::string deferring = "deferring";
-static const std::string eventDriven = "eventDriven";
 static const std::string tasks = "tasks";
 static const std::string roles = "roles";
 static const std::string annotatedPlans = "annotatedPlans";

@@ -5,7 +5,7 @@
 
 namespace alica::test
 {
-BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, [[maybe_unused]] int64_t configurationID)
+BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID)
 {
     return getBasicBehaviourHelper(ae->editPlanBase().getRootNode(), behaviourID);
 }
@@ -31,7 +31,7 @@ BasicBehaviour* Util::getBasicBehaviourHelper(const RunningPlan* rp, int64_t beh
     return nullptr;
 }
 
-BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, [[maybe_unused]] int64_t configurationId)
+BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId)
 {
     return getBasicPlanHelper(ae->getPlanBase().getRootNode(), planId);
 }

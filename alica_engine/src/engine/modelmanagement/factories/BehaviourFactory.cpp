@@ -18,8 +18,6 @@ Behaviour* BehaviourFactory::create(const YAML::Node& node)
     AbstractPlanFactory::setVariables(node, behaviour);
 
     behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
-    behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
-    behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
 
     if (Factory::isValid(node[alica::Strings::libraryName])) {
         behaviour->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");

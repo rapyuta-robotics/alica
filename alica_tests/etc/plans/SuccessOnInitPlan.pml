@@ -27,7 +27,6 @@
   "masterPlan": false,
   "name": "SuccessOnInitPlan",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

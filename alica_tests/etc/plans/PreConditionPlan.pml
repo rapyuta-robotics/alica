@@ -36,7 +36,6 @@
     "quantifiers": [],
     "variables": []
   },
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

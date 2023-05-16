@@ -27,7 +27,6 @@
   "masterPlan": true,
   "name": "MultiAgentTestMaster",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
     {

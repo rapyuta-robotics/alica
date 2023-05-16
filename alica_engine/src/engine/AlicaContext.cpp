@@ -18,12 +18,16 @@ constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
 constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
-        : _validTag(ALICA_CTX_GOOD)
-        , _configRootNode(initConfig(alicaContextParams.configPaths, alicaContextParams.agentName))
-        , _alicaContextParams(alicaContextParams)
-        , _clock(std::make_unique<AlicaClock>())
+        : /* set the default logger using the comma operator before anything else. Note: the vebosity is set to INFO initially because the config file has not
+             been parsed yet. The logger is initialized here so that logs during construction are reported, specifically the logs while reading the config */
+        _alicaContextParams((AlicaLogger::set<AlicaDefaultLogger>(Verbosity::INFO, alicaContextParams.agentName), alicaContextParams))
         , _localAgentName(alicaContextParams.agentName)
+        , _configRootNode(initConfig(alicaContextParams.configPaths, alicaContextParams.agentName))
+        , _validTag(ALICA_CTX_GOOD)
+        , _clock(std::make_unique<AlicaClock>())
 {
+    // reset the logger but this time the config is read
+    setLogger<AlicaDefaultLogger>();
 }
 
 AlicaContext::~AlicaContext()
@@ -32,6 +36,7 @@ AlicaContext::~AlicaContext()
         terminate();
     }
     _validTag = ALICA_CTX_BAD;
+    AlicaLogger::destroy();
 }
 
 int AlicaContext::init(AlicaCreators& creatorCtx)
@@ -43,10 +48,6 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
-    if (!Logging::isInitialized()) {
-        setLogger<AlicaDefaultLogger>();
-    }
-
     if (_initialized) {
         Logging::logWarn(LOGNAME) << "Context already initialized.";
         return -1;
