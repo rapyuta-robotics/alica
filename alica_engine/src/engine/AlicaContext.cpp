@@ -108,10 +108,20 @@ void AlicaContext::stepEngine()
     _engine->stepNotify();
     constexpr const auto timeout = std::chrono::seconds(2);
     auto start = std::chrono::system_clock::now();
+    int64_t current_state = 0;
+    if (_engine->getPlanBase().getDeepestNode() && _engine->getPlanBase().getDeepestNode()->getActiveState()) {
+        current_state = _engine->getPlanBase().getDeepestNode()->getActiveState()->getId();
+    }
     do {
         _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(ALICA_LOOP_TIME_ESTIMATE));
-        if (std::chrono::system_clock::now() > start + timeout) {
-            Logging::logWarn(LOGNAME) << "Got stuck trying to step engine for too long";
+
+        if (std::chrono::system_clock::now() > start + timeout && _stuck_in_state != current_state) {
+            _stuck_in_state = current_state;
+            Logging::logWarn(LOGNAME) << "Got stuck trying to step engine for too long in state " << current_state;
+        }
+
+        if (_stuck_in_state != current_state) {
+            _stuck_in_state = 0;
         }
     } while (!_engine->editPlanBase().isWaiting());
 }
