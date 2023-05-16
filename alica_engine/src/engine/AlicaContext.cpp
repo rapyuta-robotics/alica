@@ -111,7 +111,7 @@ void AlicaContext::stepEngine()
     do {
         _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(ALICA_LOOP_TIME_ESTIMATE));
         if (std::chrono::system_clock::now() > start + timeout) {
-            throw std::runtime_error("Got stuck trying to step engine");
+            Logging::logWarn(LOGNAME) << "Got stuck trying to step engine for too long";
         }
     } while (!_engine->editPlanBase().isWaiting());
 }
