@@ -463,7 +463,6 @@ private:
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 
     bool _initialized = false;
-    int64_t _stuck_in_state = 0;
 
     /**
      * Initializes yaml configuration.
