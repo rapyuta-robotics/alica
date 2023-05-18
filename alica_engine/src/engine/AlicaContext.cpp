@@ -112,14 +112,10 @@ void AlicaContext::stepEngine()
     bool wasStuck = false;
     do {
         _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(ALICA_LOOP_TIME_ESTIMATE));
-        if (std::chrono::system_clock::now() > start + timeout) {
-            if (!wasStuck) {
-                // avoid spamming by logging only the first step we're stuck
-                Logging::logWarn(LOGNAME) << "Got stuck trying to step engine for too long";
-                wasStuck = true;
-            }
-        } else {
-            wasStuck = false;
+        if (std::chrono::system_clock::now() > start + timeout && !wasStuck) {
+            // avoid spamming by logging only the first step we're stuck
+            Logging::logWarn(LOGNAME) << "Got stuck trying to step engine for too long";
+            wasStuck = true;
         }
     } while (!_engine->editPlanBase().isWaiting());
 }
