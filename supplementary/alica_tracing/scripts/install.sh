@@ -30,24 +30,25 @@ cd ~/temp
 git clone https://github.com/google/benchmark.git
 cd benchmark && cmake -E make_directory "build" && cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ && cmake --build "build" --config Release --target install
 
+# This installs googletest with C++17 which is necessary for some packages
 cd ~/temp
-version=v1.13.0 git clone https://github.com/google/googletest.git -b $version
+git clone https://github.com/google/googletest.git -b v1.13.0
 cd googletest && mkdir build && cd build && cmake .. -DCMAKE_CXX_STANDARD=17 && make && make install
 
-# cd ~/temp
-# curl https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.zip
-# unzip protobuf-cpp-3.6.1.zip -d .
-# cd protobuf-3.6.1 && cd cmake && mkdir build && cd build
-# cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release .. && make install
-
-# cd ~/temp
-# git clone -b v1.54.0 https://github.com/grpc/grpc && cd grpc && git submodule update --init && ./test/distrib/cpp/run_distrib_test_cmake.sh
+# This installs grpc and its dependencies inside the `build` folder in grpc
+# This is extremely important because this is what makes us to isolate Protobuf and not expose this version 
+# to the simulation packages
+cd ~/temp
+git clone -b v1.54.0 git@github.com:rogeriofonteles/grpc.git && cd grpc && git submodule update --init && 
+cmake -DCMAKE_BUILD_TYPE=Release -DgRPC_INSTALL=ON -DgRPC_SSL_PROVIDER=package -DgRPC_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=.  ../..
 
 cd ~/temp
-version=v1.9.0 && git clone --recurse-submodules -b $version https://github.com/open-telemetry/opentelemetry-cpp
+git clone --recurse-submodules -b v1.9.0 git@github.com:rogeriofonteles/opentelemetry-cpp.git
 cd opentelemetry-cpp && mkdir build && cd build &&
-cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DWITH_JAEGER:BOOL=true -DCMAKE_CXX_STANDARD=17 && cmake --build . --target all && cmake --install .
+cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DWITH_OTLP:BOOL=true -DCMAKE_CXX_STANDARD=17 -DBUILD_SHARED_LIBS=ON \
+         -DWITH_STL:BOOL=true -DBUILD_TESTING:BOOL=false -DWITH_EXAMPLES:BOOL=true &&
+cmake --build . --target all && cmake --install .
 
-rm -rf ~/temp/grpc ~/temp/protobuf-3.6.1 ~/temp/googletest ~/temp/benchmark ~/temp/opentelemetry ~/temp/thrift ~/temp/json
+rm -rf ~/temp/thrift ~/temp/json
 
 ldconfig

@@ -19,6 +19,7 @@ namespace otlp = opentelemetry::exporter::otlp;
 namespace nostd = opentelemetry::nostd;
 namespace sdktrace = opentelemetry::sdk::trace;
 namespace trace = opentelemetry::trace;
+namespace resource = opentelemetry::sdk::resource;
 
 // Value can be numeric types, strings, or bools.
 using OTELTraceValue = opentelemetry::v1::common::AttributeValue;
@@ -54,9 +55,7 @@ TraceFactory::TraceFactory(
         auto configYAML = YAML::LoadFile(configFilePath);
 
         otlp::OtlpGrpcExporterOptions opts;
-        opts.endpoint = configYAML["reporter"]["server_addr"].as<std::string>() + std::string(":") + configYAML["reporter"]["server_port"].as<std::string>();
-        opts.use_ssl_credentials = true;
-        opts.ssl_credentials_cacert_as_string = "ssl-certificate";
+        opts.endpoint = configYAML["reporter"]["server_addr"].as<std::string>() + std::string(":") + configYAML["reporter"]["server_port"].as<std::string>();        
         auto exporter = otlp::OtlpGrpcExporterFactory::Create(opts); 
 
         auto processor_opts = sdk::trace::BatchSpanProcessorOptions();
@@ -65,7 +64,10 @@ TraceFactory::TraceFactory(
         processor_opts.schedule_delay_millis = std::chrono::milliseconds(256);
         auto processor = sdktrace::BatchSpanProcessorFactory::Create(std::move(exporter), processor_opts);
 
-        _impl->_provider = sdktrace::TracerProviderFactory::Create(std::move(processor));
+        resource::ResourceAttributes attributes = {{"service.name", _impl->_serviceName}};
+        auto resource = resource::Resource::Create(attributes);
+        _impl->_provider = sdktrace::TracerProviderFactory::Create(std::move(processor), resource);
+
         _impl->_tracer = _impl->_provider->GetTracer(_impl->_serviceName);
     } catch (std::exception& e) {
         alica::Logging::logInfo(LOGNAME) << __func__ << " Failed to initialize OTLP " << e.what();

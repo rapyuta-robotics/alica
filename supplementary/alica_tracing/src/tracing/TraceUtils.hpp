@@ -25,7 +25,7 @@ struct TraceValueConverter
     auto operator()(std::string_view value) const
     {
         // The rest of the tracing process didn't work properly with string views, so construct the string here.
-        return OTELTraceValue(std::string(value));
+        return OTELTraceValue(value);
     }
 };
 

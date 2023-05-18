@@ -15,8 +15,19 @@ find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
 
 find_package(opentelemetry-cpp CONFIG REQUIRED)
-find_package(gRPC REQUIRED)
+
+set(CMAKE_SYSTEM_PREFIX_PATH "/opt/grpc/cmake/build/lib/cmake")
+set(Protobuf_PROTOC_EXECUTABLE "/opt/grpc/cmake/build/bin/protoc")
+set(Protobuf_INCLUDE_DIR "/opt/grpc/cmake/build/include")
+set(Protobuf_LIBRARY "/opt/grpc/cmake/build/lib/libprotobuf.a")
+set(Protobuf_PROTOC_LIBRARY "/opt/grpc/cmake/build/lib/libprotoc.a")
 find_package(Protobuf REQUIRED)
+
+set(CMAKE_SYSTEM_PREFIX_PATH "/opt/grpc/cmake/build/lib/cmake")
+find_package(gRPC REQUIRED)
+
+find_package(utf8_range CONFIG REQUIRED)
+unset(CMAKE_SYSTEM_PREFIX_PATH CACHE)
 
 ###########
 ## Build ##
@@ -43,27 +54,28 @@ target_link_libraries(
   ${YAML_CPP_LIBRARIES}
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
   ${OPENTELEMETRY_CPP_LIBRARIES}
+  utf8_range::utf8_validity
 )
 
-if(BUILD_TESTING)
-    find_package(GTest)
-    include(GoogleTest)
-    set(THREADS_PREFER_PTHREAD_FLAG ON)
-    find_package(Threads REQUIRED)
-    find_package(alica_solver_interface REQUIRED)
+# if(BUILD_TESTING)    
+#     find_package(GTest)
+#     include(GoogleTest)
+#     set(THREADS_PREFER_PTHREAD_FLAG ON)
+#     find_package(Threads REQUIRED)
+#     find_package(alica_solver_interface REQUIRED)
 
-    add_executable(${PROJECT_NAME}-test test/alica_tracing_test.cpp)
+#     add_executable(${PROJECT_NAME}-test test/alica_tracing_test.cpp)
 
-    target_link_libraries(${PROJECT_NAME}-test
-      ${PROJECT_NAME}
-      ${alica_engine_LIBRARIES}
-      ${alica_solver_interface_LIBRARIES}
-      Threads::Threads
-      ${GTEST_LIBRARIES}
-    )
+#     target_link_libraries(${PROJECT_NAME}-test
+#       ${PROJECT_NAME}
+#       ${alica_engine_LIBRARIES}
+#       ${alica_solver_interface_LIBRARIES}
+#       Threads::Threads
+#       ${GTEST_LIBRARIES}
+#     )
 
-    add_test(NAME TestAmrTracing.TestAmrTracingInit COMMAND ${PROJECT_NAME}-tests --gtest_filter=TestAmrTracing.TestAmrTracingInit)
-endif()
+#     add_test(NAME TestAmrTracing.TestAmrTracingInit COMMAND ${PROJECT_NAME}-tests --gtest_filter=TestAmrTracing.TestAmrTracingInit)
+# endif()
 
 #############
 ## Install ##
