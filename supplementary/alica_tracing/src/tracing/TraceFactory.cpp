@@ -104,7 +104,12 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
         applicableParent = _impl->_globalContext; // Note: _globalContext may be intentionally empty
     }
 
-    std::unique_ptr<Trace> trace = std::unique_ptr<Trace>(new Trace(createSpan(opName, applicableParent)));
+    // std::optional<const alica::TraceContext> parent_trace_context;
+    // if (applicableParent)
+    //     parent_trace_context = 
+
+    std::unique_ptr<Trace> trace = std::unique_ptr<Trace>(
+            new Trace(createSpan(opName, applicableParent ? std::make_optional<const alica::TraceContext>(alica::TraceContext(*applicableParent)) : std::nullopt)));
     for (const auto& defaultTag : _impl->_defaultTags) {
         trace->setTag(defaultTag.first, defaultTag.second);
     }

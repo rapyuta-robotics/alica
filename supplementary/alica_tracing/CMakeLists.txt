@@ -57,7 +57,7 @@ target_link_libraries(
   utf8_range::utf8_validity
 )
 
-# if(BUILD_TESTING)    
+# if(BUILD_TESTING)
 #     find_package(GTest)
 #     include(GoogleTest)
 #     set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -65,6 +65,8 @@ target_link_libraries(
 #     find_package(alica_solver_interface REQUIRED)
 
 #     add_executable(${PROJECT_NAME}-test test/alica_tracing_test.cpp)
+
+#     target_compile_definitions(${PROJECT_NAME}-test PUBLIC "THIS_PACKAGE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 #     target_link_libraries(${PROJECT_NAME}-test
 #       ${PROJECT_NAME}
@@ -74,7 +76,7 @@ target_link_libraries(
 #       ${GTEST_LIBRARIES}
 #     )
 
-#     add_test(NAME TestAmrTracing.TestAmrTracingInit COMMAND ${PROJECT_NAME}-tests --gtest_filter=TestAmrTracing.TestAmrTracingInit)
+#     gtest_discover_tests(${PROJECT_NAME}-test)
 # endif()
 
 #############

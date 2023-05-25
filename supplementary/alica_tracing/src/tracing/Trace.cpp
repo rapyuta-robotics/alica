@@ -5,6 +5,9 @@
 #include <string_view>
 #include <utility>
 #include <variant>
+#include <iostream>
+
+#include "engine/logging/Logging.h"
 
 #include "opentelemetry/sdk/trace/simple_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider.h"
@@ -70,15 +73,22 @@ alica::TraceContext Trace::context() const
     }
 
     alica::TraceContext amrCtx;
-    amrCtx.trace_id.resize(16);
-    _span->_span->GetContext().trace_id().CopyBytesTo(nostd::span<uint8_t, 16UL>(amrCtx.trace_id.data(), amrCtx.trace_id.size()));
-    amrCtx.span_id.resize(8);
-    _span->_span->GetContext().span_id().CopyBytesTo(nostd::span<uint8_t, 8UL>(amrCtx.span_id.data(), amrCtx.span_id.size()));
-    std::vector<uint8_t> trace_flags_vec;
-    trace_flags_vec.resize(1);
-    _span->_span->GetContext().trace_flags().CopyBytesTo(nostd::span<uint8_t, 1UL>(trace_flags_vec.data(), trace_flags_vec.size()));
-    amrCtx.trace_flags = trace_flags_vec[0];
-    amrCtx.trace_state = _span->_span->GetContext().trace_state()->ToHeader();
+
+    try {
+        amrCtx.trace_id.resize(16);
+        _span->_span->GetContext().trace_id().CopyBytesTo(nostd::span<uint8_t, 16UL>(amrCtx.trace_id.data(), amrCtx.trace_id.size()));
+        amrCtx.span_id.resize(8);
+        _span->_span->GetContext().span_id().CopyBytesTo(nostd::span<uint8_t, 8UL>(amrCtx.span_id.data(), amrCtx.span_id.size()));
+        std::vector<uint8_t> trace_flags_vec;
+        trace_flags_vec.resize(1);
+        _span->_span->GetContext().trace_flags().CopyBytesTo(nostd::span<uint8_t, 1UL>(trace_flags_vec.data(), trace_flags_vec.size()));
+        amrCtx.trace_flags = trace_flags_vec[0];
+        amrCtx.trace_state = _span->_span->GetContext().trace_state()->ToHeader();
+    } catch (std::exception& e) {
+        alica::Logging::logInfo("Trace") << "Failed to convert context to amr_interfaces::TraceContext: " << e.what();
+        throw e;
+    }
+
     return amrCtx;
 }
 
