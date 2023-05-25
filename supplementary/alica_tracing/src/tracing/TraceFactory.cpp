@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "opentelemetry/exporters/otlp/otlp_grpc_exporter_factory.h"
-#include "opentelemetry/sdk/trace/simple_processor_factory.h"
+#include "opentelemetry/sdk/trace/batch_span_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 #include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/trace/provider.h"
@@ -58,7 +58,11 @@ TraceFactory::TraceFactory(
         opts.endpoint = configYAML["reporter"]["server_addr"].as<std::string>() + std::string(":") + configYAML["reporter"]["server_port"].as<std::string>();        
         auto exporter = otlp::OtlpGrpcExporterFactory::Create(opts); 
 
-        auto processor = sdktrace::SimpleSpanProcessorFactory::Create(std::move(exporter));
+        auto processor_opts = sdk::trace::BatchSpanProcessorOptions();
+        processor_opts.max_export_batch_size = 10000;
+        processor_opts.max_queue_size = 10000;
+        processor_opts.schedule_delay_millis = std::chrono::milliseconds(200);
+        auto processor = sdktrace::BatchSpanProcessorFactory::Create(std::move(exporter), processor_opts);
 
         resource::ResourceAttributes attributes = {{"service.name", _impl->_serviceName}};
         auto resource = resource::Resource::Create(attributes);
@@ -100,12 +104,9 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
         applicableParent = _impl->_globalContext; // Note: _globalContext may be intentionally empty
     }
 
-    // std::optional<const alica::TraceContext> parent_trace_context;
-    // if (applicableParent)
-    //     parent_trace_context = 
-
     std::unique_ptr<Trace> trace = std::unique_ptr<Trace>(
             new Trace(createSpan(opName, applicableParent ? std::make_optional<const alica::TraceContext>(alica::TraceContext(*applicableParent)) : std::nullopt)));
+            
     for (const auto& defaultTag : _impl->_defaultTags) {
         trace->setTag(defaultTag.first, defaultTag.second);
     }
@@ -118,6 +119,8 @@ SpanWrapper TraceFactory::createSpan(const std::string& opName, std::optional<co
     assert(!opName.empty());
 
     OTELSpanPtr span;
+
+    std::lock_guard<std::mutex> lock(_mutex);
 
     if (_impl->_initialized) {
         if (parent) {
