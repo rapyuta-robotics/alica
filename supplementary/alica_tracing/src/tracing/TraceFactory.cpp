@@ -55,8 +55,8 @@ TraceFactory::TraceFactory(
         auto configYAML = YAML::LoadFile(configFilePath);
 
         otlp::OtlpGrpcExporterOptions opts;
-        opts.endpoint = configYAML["reporter"]["server_addr"].as<std::string>() + std::string(":") + configYAML["reporter"]["server_port"].as<std::string>();        
-        auto exporter = otlp::OtlpGrpcExporterFactory::Create(opts); 
+        opts.endpoint = configYAML["reporter"]["server_addr"].as<std::string>() + std::string(":") + configYAML["reporter"]["server_port"].as<std::string>();
+        auto exporter = otlp::OtlpGrpcExporterFactory::Create(opts);
 
         auto processor_opts = sdk::trace::BatchSpanProcessorOptions();
         processor_opts.max_export_batch_size = 10000;
@@ -104,9 +104,9 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
         applicableParent = _impl->_globalContext; // Note: _globalContext may be intentionally empty
     }
 
-    std::unique_ptr<Trace> trace = std::unique_ptr<Trace>(
-            new Trace(createSpan(opName, applicableParent ? std::make_optional<const alica::TraceContext>(alica::TraceContext(*applicableParent)) : std::nullopt)));
-            
+    std::unique_ptr<Trace> trace = std::unique_ptr<Trace>(new Trace(
+            createSpan(opName, applicableParent ? std::make_optional<const alica::TraceContext>(alica::TraceContext(*applicableParent)) : std::nullopt)));
+
     for (const auto& defaultTag : _impl->_defaultTags) {
         trace->setTag(defaultTag.first, defaultTag.second);
     }

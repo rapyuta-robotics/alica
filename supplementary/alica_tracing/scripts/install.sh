@@ -24,30 +24,40 @@ CXX=$CXX CC=$CC cmake -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true . && make -j $
 
 cd ~/temp
 version=0.11.0 && git clone --depth 1 -b $version https://github.com/apache/thrift.git
-cd thrift && CXX=$CXX CC=$CC ./bootstrap.sh && CXX=$CXX CC=$CC ./configure --with-nodejs=no --with-php=no --with-java=no --with-go=no --with-qt5=no --enable-tests=no --enable-tutorial=no && make -j $CPUS install
+cd thrift && CXX=$CXX CC=$CC ./bootstrap.sh &&
+CXX=$CXX CC=$CC ./configure --with-nodejs=no --with-php=no --with-java=no --with-go=no --with-qt5=no --enable-tests=no --enable-tutorial=no &&
+make -j $CPUS install
 
 cd ~/temp
 git clone https://github.com/google/benchmark.git
-cd benchmark && cmake -E make_directory "build" && cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ && cmake --build "build" --config Release --target install
+cd benchmark && cmake -E make_directory "build" &&
+cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ &&
+cmake --build "build" --config Release --target install
 
 # This installs googletest with C++17 which is necessary for some packages
 cd ~/temp
 git clone https://github.com/google/googletest.git -b v1.13.0
-cd googletest && mkdir build && cd build && cmake .. -DCMAKE_CXX_STANDARD=17 && make && make install
+cd googletest && mkdir build && cd build &&
+cmake .. -DCMAKE_CXX_STANDARD=17 &&
+make &&
+make install
 
 # This installs grpc and its dependencies inside the `build` folder in grpc
-# This is extremely important because this is what makes us to isolate Protobuf and not expose this version 
+# This is extremely important because this is what makes us to isolate Protobuf and not expose this version
 # to the simulation packages
 cd ~/temp
-git clone -b v1.54.0 git@github.com:rogeriofonteles/grpc.git && cd grpc && git submodule update --init && 
+git clone -b v1.54.0 git@github.com:rogeriofonteles/grpc.git && cd grpc && git submodule update --init &&
+mkdir -p cmake/build && cd cmake/build &&
 cmake -DCMAKE_BUILD_TYPE=Release -DgRPC_INSTALL=ON -DgRPC_SSL_PROVIDER=package -DgRPC_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=.  ../..
 
+#This install opentelemetry from our forked repo of opentelemetry
 cd ~/temp
 git clone --recurse-submodules -b v1.9.0 git@github.com:rogeriofonteles/opentelemetry-cpp.git
 cd opentelemetry-cpp && mkdir build && cd build &&
 cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DWITH_OTLP:BOOL=true -DCMAKE_CXX_STANDARD=17 -DBUILD_SHARED_LIBS=ON \
          -DWITH_STL:BOOL=true -DBUILD_TESTING:BOOL=false -DWITH_EXAMPLES:BOOL=true &&
-cmake --build . --target all && cmake --install .
+cmake --build . --target all &&
+cmake --install .
 
 rm -rf ~/temp/thrift ~/temp/json
 

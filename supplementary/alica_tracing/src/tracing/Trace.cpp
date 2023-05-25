@@ -1,11 +1,11 @@
 #include "tracing/Trace.h"
 
 #include <algorithm>
+#include <iostream>
 #include <iterator>
 #include <string_view>
 #include <utility>
 #include <variant>
-#include <iostream>
 
 #include "engine/logging/Logging.h"
 
