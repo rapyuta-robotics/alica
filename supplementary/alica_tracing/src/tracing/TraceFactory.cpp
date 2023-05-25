@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "opentelemetry/exporters/otlp/otlp_grpc_exporter_factory.h"
-#include "opentelemetry/sdk/trace/batch_span_processor_factory.h"
+#include "opentelemetry/sdk/trace/simple_processor_factory.h"
 #include "opentelemetry/sdk/trace/tracer_provider.h"
 #include "opentelemetry/sdk/trace/tracer_provider_factory.h"
 #include "opentelemetry/trace/provider.h"
@@ -58,11 +58,7 @@ TraceFactory::TraceFactory(
         opts.endpoint = configYAML["reporter"]["server_addr"].as<std::string>() + std::string(":") + configYAML["reporter"]["server_port"].as<std::string>();        
         auto exporter = otlp::OtlpGrpcExporterFactory::Create(opts); 
 
-        auto processor_opts = sdk::trace::BatchSpanProcessorOptions();
-        processor_opts.max_export_batch_size = 5;
-        processor_opts.max_queue_size = 5;
-        processor_opts.schedule_delay_millis = std::chrono::milliseconds(256);
-        auto processor = sdktrace::BatchSpanProcessorFactory::Create(std::move(exporter), processor_opts);
+        auto processor = sdktrace::SimpleSpanProcessorFactory::Create(std::move(exporter));
 
         resource::ResourceAttributes attributes = {{"service.name", _impl->_serviceName}};
         auto resource = resource::Resource::Create(attributes);
@@ -125,7 +121,11 @@ SpanWrapper TraceFactory::createSpan(const std::string& opName, std::optional<co
 
     if (_impl->_initialized) {
         if (parent) {
-            trace::SpanContext context(trace::TraceId(parent->trace_id), trace::SpanId(parent->span_id), trace::TraceFlags(parent->trace_flags), true,
+            std::vector<uint8_t> trace_id = parent->trace_id;
+            trace_id.resize(16, 0);
+            std::vector<uint8_t> span_id = parent->span_id;
+            span_id.resize(8, 0);
+            trace::SpanContext context(trace::TraceId(trace_id), trace::SpanId(span_id), trace::TraceFlags(parent->trace_flags), true,
                     opentelemetry::trace::TraceState::FromHeader(parent->trace_state));
             trace::StartSpanOptions options;
             options.parent = context;
