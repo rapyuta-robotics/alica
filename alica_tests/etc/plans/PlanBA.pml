@@ -48,7 +48,9 @@
       "id": 1629896094706,
       "inTransitions": [],
       "name": "BehBAA",
-      "outTransitions": [],
+      "outTransitions": [
+        1433587281699428693
+      ],
       "parentPlan": 1629895873188,
       "positionWeb": {
         "x": 428,
@@ -56,10 +58,60 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 2164308778216412252,
+      "inTransitions": [
+        1433587281699428693
+      ],
+      "name": "",
+      "outTransitions": [],
+      "parentPlan": 1629895873188,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
     }
   ],
   "synchronisations": [],
-  "transitions": [],
+  "transitions": [
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#2",
+      "id": 1433587281699428693,
+      "inState": 1629896094706,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "SuccessState",
+      "outState": 2164308778216412252,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3672994099534071266,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    }
+  ],
   "utilityThreshold": 0.0,
   "variables": []
 }

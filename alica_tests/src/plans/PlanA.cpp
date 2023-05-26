@@ -10,8 +10,14 @@ PlanA::PlanA(PlanContext& context)
 void PlanA::onInit()
 {
     LockedBlackboardRW gb(*getGlobalBlackboard());
-    gb.set("execOrder", (gb.hasValue("execOrder") ? gb.get<std::string>("execOrder") : "") + getName() + "::Init\n");
-    gb.set("counter", (gb.hasValue("counter") ? gb.get<int64_t>("counter") + 1 : 1));
+    if (gb.hasValue("execOrder")) {
+        std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+        execOrder.emplace_back(getName() + "::Init");
+    } else {
+        std::vector<std::string> execOrder;
+        execOrder.emplace_back(getName() + "::Init");
+        gb.set("execOrder", execOrder);
+    }
     _inRunContext = true;
 }
 
@@ -28,7 +34,8 @@ void PlanA::onTerminate()
 {
     _inRunContext = false;
     LockedBlackboardRW gb(*getGlobalBlackboard());
-    gb.set("execOrder", gb.get<std::string>("execOrder") + getName() + "::Term\n");
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Term");
 }
 
 } // namespace alica

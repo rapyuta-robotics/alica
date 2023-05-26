@@ -14,29 +14,29 @@ BehAAA::BehAAA(BehaviourContext& context)
 BehAAA::~BehAAA() {}
 void BehAAA::run()
 {
-    LockedBlackboardRW gb(*getGlobalBlackboard());
-    gb.set(getName() + "RunCount", gb.get<int64_t>(getName() + "RunCount") + 1);
-    if (!_inRunContext) {
-        gb.set(getName() + "RunOutOfOrder", true);
+    if (isSuccess()) {
+        return;
     }
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Run");
+    setSuccess();
 }
 void BehAAA::initialiseParameters()
 {
     LockedBlackboardRW gb(*getGlobalBlackboard());
-    gb.set(getName() + "RunCount", 0);
-    gb.set(getName() + "RunCalled", true);
-    gb.set("execOrder", gb.hasValue("execOrder") ? gb.get<std::string>("execOrder") + getName() + "::Init\n" : getName() + "::Init\n");
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Init");
 
     _inRunContext = true;
 }
 
 void BehAAA::onTermination()
 {
-    runCount = 0;
     _inRunContext = false;
     LockedBlackboardRW gb(*getGlobalBlackboard());
-    gb.set(getName() + "RunCount", 0);
-    gb.set("execOrder", gb.get<std::string>("execOrder") + getName() + "::Term\n");
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Term");
 }
 
 std::unique_ptr<BehAAA> BehAAA::create(alica::BehaviourContext& context)

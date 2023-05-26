@@ -31,39 +31,6 @@
   "states": [
     {
       "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "TestBehaviour.beh#55178365253414982",
-          "comment": "",
-          "configuration": null,
-          "id": 1617910099941462436,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": 4098998217189528063,
-      "id": 3490852498214130330,
-      "inTransitions": [
-        1489555807089946561
-      ],
-      "name": "BehState",
-      "outTransitions": [
-        332255503511535936,
-        4565965325116608332
-      ],
-      "parentPlan": 3848527741370035673,
-      "positionWeb": {
-        "x": 466,
-        "y": 279.828125
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
       "confAbstractPlanWrappers": [],
       "entryPoint": null,
       "id": 43551935622382040,
@@ -113,6 +80,39 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "TestBehaviour.beh#55178365253414982",
+          "comment": "",
+          "configuration": null,
+          "id": 1617910099941462436,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": 4098998217189528063,
+      "id": 3490852498214130330,
+      "inTransitions": [
+        1489555807089946561
+      ],
+      "name": "BehState",
+      "outTransitions": [
+        332255503511535936,
+        4565965325116608332
+      ],
+      "parentPlan": 3848527741370035673,
+      "positionWeb": {
+        "x": 466,
+        "y": 279.828125
+      },
+      "type": "State",
+      "variableBindings": []
     }
   ],
   "synchronisations": [],
@@ -143,31 +143,7 @@
     },
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#1244954264125400578",
-      "id": 4565965325116608332,
-      "inState": 3490852498214130330,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 323918347171847765,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 3320803912990003693,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#46572335183297310",
+      "condition": null,
       "id": 1489555807089946561,
       "inState": 323918347171847765,
       "keyMapping": {
@@ -187,6 +163,30 @@
         "conditionString": "",
         "enabled": true,
         "id": 2450557420251369157,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": null,
+      "id": 4565965325116608332,
+      "inState": 3490852498214130330,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 323918347171847765,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3320803912990003693,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

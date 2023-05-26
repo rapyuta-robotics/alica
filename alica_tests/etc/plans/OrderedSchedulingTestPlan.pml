@@ -141,7 +141,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "ConditionRepository.cnd#3215254540654402385",
+      "condition": null,
       "id": 1629895758611,
       "inState": 1629895681520,
       "keyMapping": {
@@ -170,7 +170,7 @@
     },
     {
       "comment": "MISSING_COMMENT",
-      "condition": "ConditionRepository.cnd#389558729662584235",
+      "condition": null,
       "id": 1629895768181,
       "inState": 1629895684249,
       "keyMapping": {
@@ -199,42 +199,7 @@
     },
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#4292488527327751514",
-      "id": 694002433690351298,
-      "inState": 1629895684249,
-      "keyMapping": {
-        "input": [
-          {
-            "childKey": "value",
-            "parentKey": null,
-            "value": 20
-          }
-        ],
-        "output": []
-      },
-      "name": "",
-      "outState": 3432579755629291493,
-      "pointsWeb": [
-        {
-          "x": 844,
-          "y": 429
-        }
-      ],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 3195499981885855124,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#3359410945086905900",
+      "condition": null,
       "id": 200267174688903928,
       "inState": 3432579755629291493,
       "keyMapping": {
@@ -263,17 +228,40 @@
     },
     {
       "comment": "",
-      "condition": "ConditionRepository.cnd#4292488527327751514",
+      "condition": null,
+      "id": 694002433690351298,
+      "inState": 1629895684249,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 3432579755629291493,
+      "pointsWeb": [
+        {
+          "x": 844,
+          "y": 429
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3195499981885855124,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": null,
       "id": 3753727146437722291,
       "inState": 1629895681520,
       "keyMapping": {
-        "input": [
-          {
-            "childKey": "value",
-            "parentKey": null,
-            "value": 20
-          }
-        ],
+        "input": [],
         "output": []
       },
       "name": "",

@@ -222,130 +222,34 @@ bool TestHasNoError(const Blackboard* input, const RunningPlan* rp, const Blackb
     LockedBlackboardRO globalBlackboard(*gb);
     return !globalBlackboard.get<std::optional<std::string>>("testError").has_value();
 }
-bool GlobalCounterEqualTo(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+bool ExecOrderVectorSizeCheck(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     LockedBlackboardRO globalBlackboard(*gb);
     LockedBlackboardRO localBlackboard(*input);
-    return globalBlackboard.hasValue("counter") && globalBlackboard.get<int64_t>("counter") == localBlackboard.get<int64_t>("value");
+    if (!globalBlackboard.hasValue("execOrder")) {
+        Logging::logError("execOrder not created yet in condition...");
+        return false;
+    }
+    std::vector<std::string> execOrder = globalBlackboard.get<std::vector<std::string>>("execOrder");
+    Logging::logWarn("") << execOrder.size() << "/" << localBlackboard.get<int64_t>("expected");
+    return execOrder.size() == localBlackboard.get<int64_t>("expected");
 }
-bool GlobalCounterLessThan(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+bool ContinueExecOrderTestCheck(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     LockedBlackboardRO globalBlackboard(*gb);
     LockedBlackboardRO localBlackboard(*input);
-    return globalBlackboard.hasValue("counter") && globalBlackboard.get<int64_t>("counter") < localBlackboard.get<int64_t>("value");
+    std::vector<std::string> execOrder = globalBlackboard.get<std::vector<std::string>>("execOrder");
+    Logging::logWarn("") << execOrder.size() << "/" << localBlackboard.get<int64_t>("expected") << " " << (rp->amISuccessfulInAnyChild());
+    return execOrder.size() < localBlackboard.get<int64_t>("expected") && rp->amISuccessfulInAnyChild();
 }
-bool PlanAState2PlanBState(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+bool InitsNotFinishedCheck(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     LockedBlackboardRO globalBlackboard(*gb);
-    std::string execOrder = globalBlackboard.get<std::string>("execOrder");
-    std::string suffix = "BehAAA::Init\n";
-    return globalBlackboard.get<int64_t>("counter") < 20 && execOrder.size() >= suffix.size() &&
-           0 == execOrder.compare(execOrder.size() - suffix.size(), suffix.size(), suffix);
-}
-bool PlanBState2PlanAState(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRO globalBlackboard(*gb);
-    std::string execOrder = globalBlackboard.get<std::string>("execOrder");
-    std::string suffix = "BehBAA::Init\n";
-    return globalBlackboard.get<int64_t>("counter") < 20 && execOrder.size() >= suffix.size() &&
-           0 == execOrder.compare(execOrder.size() - suffix.size(), suffix.size(), suffix);
-}
-bool PlanARunCalled(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRO globalBlackboard(*gb);
-    return globalBlackboard.hasValue("BehAAARunCount") && globalBlackboard.get<int64_t>("BehAAARunCount") > 0;
-}
-bool PlanBRunCalled(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRW globalBlackboard(*const_cast<Blackboard*>(gb));
-    if (!globalBlackboard.hasValue("transitionCount")) {
-        globalBlackboard.set("transitionCount", 0);
-    }
-    if (globalBlackboard.get<int64_t>("transitionCount") < 10 && globalBlackboard.hasValue("BehBAARunCount") &&
-            globalBlackboard.get<int64_t>("BehBAARunCount") > 0) {
-        globalBlackboard.set("transitionCount", globalBlackboard.get<int64_t>("transitionCount") + 1);
+    LockedBlackboardRO localBlackboard(*input);
+    if (!globalBlackboard.hasValue("execOrder")) {
         return true;
     }
-    return false;
-}
-bool OrderedRunFailureCond(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRO globalBlackboard(*gb);
-
-    if (globalBlackboard.hasValue("transitionCount") && globalBlackboard.get<int64_t>("transitionCount") < 10) {
-        // do more transitions before evaluating
-        return false;
-    }
-    if (globalBlackboard.hasValue("BehAAARunOutOfOrder") && globalBlackboard.get<bool>("BehAAARunOutOfOrder")) {
-        return true;
-    }
-    if (globalBlackboard.hasValue("PlanARunOutOfOrder") && globalBlackboard.get<bool>("PlanARunOutOfOrder")) {
-        return true;
-    }
-    return !globalBlackboard.hasValue("BehAAARunCalled") || !globalBlackboard.get<bool>("BehAAARunCalled");
-}
-bool OrderedRunSuccessCond(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRO globalBlackboard(*gb);
-    if (globalBlackboard.hasValue("transitionCount") && globalBlackboard.get<int64_t>("transitionCount") < 10) {
-        // do more transitions before evaluating
-        return false;
-    }
-    if (globalBlackboard.hasValue("BehAAARunOutOfOrder") && globalBlackboard.get<bool>("BehAAARunOutOfOrder")) {
-        return false;
-    }
-    if (globalBlackboard.hasValue("PlanARunOutOfOrder") && globalBlackboard.get<bool>("PlanARunOutOfOrder")) {
-        return false;
-    }
-    return globalBlackboard.hasValue("BehAAARunCalled") && globalBlackboard.get<bool>("BehAAARunCalled");
-}
-bool BehState2BehInSubPlanState(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRO globalBlackboard(*gb);
-    if (globalBlackboard.hasValue("transitionCounter") && globalBlackboard.get<int64_t>("transitionCounter") >= 10) {
-        return false;
-    }
-    std::string execOrder = globalBlackboard.get<std::string>("execOrder");
-    std::string suffix = "TestBehaviour::Init\nTestBehaviour::Run\n";
-    return execOrder.size() >= suffix.size() && 0 == execOrder.compare(execOrder.size() - suffix.size(), suffix.size(), suffix);
-}
-bool BehInSubPlanState2BehState(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRW globalBlackboard(*const_cast<Blackboard*>(gb));
-    std::string execOrder = globalBlackboard.get<std::string>("execOrder");
-    std::string suffix = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
-    if (execOrder.size() >= suffix.size() && 0 == execOrder.compare(execOrder.size() - suffix.size(), suffix.size(), suffix)) {
-        globalBlackboard.set("transitionCounter", globalBlackboard.hasValue("transitionCounter") ? globalBlackboard.get<int64_t>("transitionCounter") + 1 : 1);
-        return true;
-    }
-    return false;
-}
-bool BehaviourRunSchedulingCheck(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRO globalBlackboard(*gb);
-    return globalBlackboard.get<int64_t>("BehAAARunCount") >= 10;
-}
-bool OrderedSchedulingCheck(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    LockedBlackboardRO globalBlackboard(*gb);
-    std::stringstream expectedOrder;
-    for (int i = 0; i < 5; i++) {
-        expectedOrder << "PlanA::Init\nPlanAA::Init\nBehAAA::Init\n"
-                         "BehAAA::Term\nPlanAA::Term\nPlanA::Term\n"
-                         "PlanB::Init\nPlanBA::Init\nBehBAA::Init\n"
-                         "BehBAA::Term\nPlanBA::Term\nPlanB::Term\n";
-    }
-    std::string execOrder = globalBlackboard.get<std::string>("execOrder");
-    return execOrder == expectedOrder.str();
-}
-bool ExecuteBehaviourTestSuccessCond(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    Logging::logInfo("execBehSucc");
-    LockedBlackboardRW globalBlackboard(*const_cast<Blackboard*>(gb));
-    if (globalBlackboard.hasValue("transitionCounter")) {
-        Logging::logInfo("counter:") << globalBlackboard.get<int64_t>("transitionCounter");
-    }
-
-    return globalBlackboard.hasValue("transitionCounter") && globalBlackboard.get<int64_t>("transitionCounter") >= 10;
+    std::vector<std::string> execOrder = globalBlackboard.get<std::vector<std::string>>("execOrder");
+    return execOrder.size() < localBlackboard.get<int64_t>("expected");
 }
 } /* namespace alica */

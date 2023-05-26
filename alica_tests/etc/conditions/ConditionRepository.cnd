@@ -123,22 +123,6 @@
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
-      "id": 655002160731734731,
-      "libraryName": "alica-tests",
-      "name": "PlanB2PlanA"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 682216470625774387,
-      "libraryName": "alica-tests",
-      "name": "PlanA2PlanB"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
       "id": 711536493236439192,
       "libraryName": "alica-tests",
       "name": "IsAnyChildStatusFailed"
@@ -392,6 +376,14 @@
       "name": "ValueMappingCondition"
     },
     {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2062958764563158269,
+      "libraryName": "alica-tests",
+      "name": "ExecuteBehaviourTestSuccessCond"
+    },
+    {
       "blackboard": [
         {
           "access": "input",
@@ -432,14 +424,6 @@
       "name": "Init2Start"
     },
     {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 2452554857659522052,
-      "libraryName": "alica-tests",
-      "name": "Start2ExecBehaviourTest"
-    },
-    {
       "blackboard": [
         {
           "access": "input",
@@ -461,14 +445,6 @@
       "id": 2618711924921632178,
       "libraryName": "alica_standard_library",
       "name": "IsEqualInt64"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 2619422076497988080,
-      "libraryName": "alica-tests",
-      "name": "Start2ExecOrderTest"
     },
     {
       "blackboard": [],
@@ -617,14 +593,6 @@
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
-      "id": 4108042962123065459,
-      "libraryName": "alica-tests",
-      "name": "Start2ExecOrderedSchedulingTest"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
       "id": 4244459279660861567,
       "libraryName": "alica-tests",
       "name": "ExecBehaviour2SubPlan"
@@ -673,120 +641,64 @@
         {
           "access": "input",
           "comment": "",
-          "id": 261446297627404117,
-          "key": "value",
+          "id": 3389293809385623999,
+          "key": "expected",
           "type": "int64"
         }
       ],
       "comment": "",
       "conditionRepository": 0,
-      "id": 4292488527327751514,
+      "id": 2985374601173748991,
       "libraryName": "alica-tests",
-      "name": "GlobalCounterEqualTo"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 426726420116126994,
-      "libraryName": "alica-tests",
-      "name": "BehaviourRunSchedulingCheck"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 4429205959943237683,
-      "libraryName": "alica-tests",
-      "name": "PlanBRunCalled"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 1244954264125400578,
-      "libraryName": "alica-tests",
-      "name": "BehState2BehInSubPlanState"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3762845332633931097,
-      "libraryName": "alica-tests",
-      "name": "OrderedRunSuccessCond"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3215254540654402385,
-      "libraryName": "alica-tests",
-      "name": "PlanAState2PlanBState"
+      "name": "ContinueExecOrderTestCheck"
     },
     {
       "blackboard": [
         {
           "access": "input",
           "comment": "",
-          "id": 3764260668215998774,
-          "key": "value",
+          "id": 2423941618748335792,
+          "key": "expected",
           "type": "int64"
         }
       ],
       "comment": "",
       "conditionRepository": 0,
-      "id": 2789879638684607620,
+      "id": 3677391121921226485,
       "libraryName": "alica-tests",
-      "name": "GlobalCounterLessThan"
+      "name": "ExecOrderVectorSizeCheck"
     },
     {
-      "blackboard": [],
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1999642097123177760,
+          "key": "expected",
+          "type": "int64"
+        }
+      ],
       "comment": "",
       "conditionRepository": 0,
-      "id": 2062958764563158269,
+      "id": 3642911512363445478,
       "libraryName": "alica-tests",
-      "name": "ExecuteBehaviourTestSuccessCond"
+      "name": "ExecOrderVectorSizeSmaller"
     },
     {
-      "blackboard": [],
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3439523896613891265,
+          "key": "expected",
+          "type": "int64"
+        }
+      ],
       "comment": "",
       "conditionRepository": 0,
-      "id": 4328856649263190886,
+      "id": 909673041355119516,
       "libraryName": "alica-tests",
-      "name": "PlanARunCalled"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 46572335183297310,
-      "libraryName": "alica-tests",
-      "name": "BehInSubPlanState2BehState"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 4464104950388146459,
-      "libraryName": "alica-tests",
-      "name": "OrderedRunFailureCond"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 389558729662584235,
-      "libraryName": "alica-tests",
-      "name": "PlanBState2PlanAState"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3359410945086905900,
-      "libraryName": "alica-tests",
-      "name": "OrderedSchedulingCheck"
+      "name": "InitsNotFinishedCheck"
     }
   ],
   "id": 0,

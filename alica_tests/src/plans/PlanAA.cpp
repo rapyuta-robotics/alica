@@ -10,12 +10,14 @@ PlanAA::PlanAA(PlanContext& context)
 void PlanAA::onInit()
 {
     LockedBlackboardRW gb(*getGlobalBlackboard());
-    gb.set("execOrder", gb.get<std::string>("execOrder") + getName() + "::Init\n");
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Init");
 }
 
 void PlanAA::onTerminate()
 {
     LockedBlackboardRW gb(*getGlobalBlackboard());
-    gb.set("execOrder", gb.get<std::string>("execOrder") + getName() + "::Term\n");
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Term");
 }
 } // namespace alica
