@@ -31,6 +31,44 @@
   "states": [
     {
       "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1209111954261567822,
+      "inTransitions": [
+        444990720774939114
+      ],
+      "name": "",
+      "outTransitions": [],
+      "parentPlan": 523433959791172508,
+      "positionWeb": {
+        "x": 662,
+        "y": 382.625
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1907664681300098997,
+      "inTransitions": [
+        1309706687175053027
+      ],
+      "name": "FailureState",
+      "outTransitions": [],
+      "parentPlan": 523433959791172508,
+      "positionWeb": {
+        "x": 500,
+        "y": 543.625
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
       "confAbstractPlanWrappers": [
         {
           "abstractPlan": "PlanA.pml#1629895837159",
@@ -59,44 +97,6 @@
       },
       "type": "State",
       "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 1907664681300098997,
-      "inTransitions": [
-        1309706687175053027
-      ],
-      "name": "FailureState",
-      "outTransitions": [],
-      "parentPlan": 523433959791172508,
-      "positionWeb": {
-        "x": 500,
-        "y": 543.625
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 1209111954261567822,
-      "inTransitions": [
-        444990720774939114
-      ],
-      "name": "",
-      "outTransitions": [],
-      "parentPlan": 523433959791172508,
-      "positionWeb": {
-        "x": 662,
-        "y": 382.625
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
-      "variableBindings": []
     }
   ],
   "synchronisations": [],
@@ -107,7 +107,13 @@
       "id": 444990720774939114,
       "inState": 4345760372867415186,
       "keyMapping": {
-        "input": [],
+        "input": [
+          {
+            "childKey": "expected",
+            "parentKey": null,
+            "value": 3
+          }
+        ],
         "output": []
       },
       "name": "",

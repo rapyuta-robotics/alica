@@ -148,6 +148,22 @@
         {
           "access": "input",
           "comment": "",
+          "id": 3439523896613891265,
+          "key": "expected",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 909673041355119516,
+      "libraryName": "alica-tests",
+      "name": "InitsNotFinishedCheck"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
           "id": 2553683918549651059,
           "key": "right",
           "type": "int64"
@@ -479,6 +495,22 @@
       "name": "CounterCalled"
     },
     {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3389293809385623999,
+          "key": "expected",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 2985374601173748991,
+      "libraryName": "alica-tests",
+      "name": "ContinueExecOrderTestCheck"
+    },
+    {
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
@@ -558,6 +590,38 @@
       "name": "IsAnyChildStatusSuccess"
     },
     {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1999642097123177760,
+          "key": "expected",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3642911512363445478,
+      "libraryName": "alica-tests",
+      "name": "ExecOrderVectorSizeSmaller"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 2423941618748335792,
+          "key": "expected",
+          "type": "int64"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3677391121921226485,
+      "libraryName": "alica-tests",
+      "name": "ExecOrderVectorSizeCheck"
+    },
+    {
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
@@ -635,70 +699,6 @@
       "id": 4547372457936774346,
       "libraryName": "alica-tests",
       "name": "TestTracingMasterCondition"
-    },
-    {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
-          "id": 3389293809385623999,
-          "key": "expected",
-          "type": "int64"
-        }
-      ],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 2985374601173748991,
-      "libraryName": "alica-tests",
-      "name": "ContinueExecOrderTestCheck"
-    },
-    {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
-          "id": 2423941618748335792,
-          "key": "expected",
-          "type": "int64"
-        }
-      ],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3677391121921226485,
-      "libraryName": "alica-tests",
-      "name": "ExecOrderVectorSizeCheck"
-    },
-    {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
-          "id": 1999642097123177760,
-          "key": "expected",
-          "type": "int64"
-        }
-      ],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3642911512363445478,
-      "libraryName": "alica-tests",
-      "name": "ExecOrderVectorSizeSmaller"
-    },
-    {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
-          "id": 3439523896613891265,
-          "key": "expected",
-          "type": "int64"
-        }
-      ],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 909673041355119516,
-      "libraryName": "alica-tests",
-      "name": "InitsNotFinishedCheck"
     }
   ],
   "id": 0,
