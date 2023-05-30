@@ -12,7 +12,7 @@ TEST_F(SingleAgentTestFixture, transitionAfterInitTest)
 
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
-    STEP_UNTIL(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "TransitionAfterInitTestState")) << _tc->getLastFailure();
 
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TransitionAfterInitTestPlan"));
@@ -25,7 +25,7 @@ TEST_F(SingleAgentTestFixture, execOrderSinglePlanTest)
 
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
-    STEP_UNTIL(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "SchedulingPlanTestState")) << _tc->getLastFailure();
     auto plan = _tc->getActivePlan("SchedulingTestPlan");
     ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
@@ -52,7 +52,7 @@ TEST_F(SingleAgentTestFixture, testRepeatedRunSchedulingTest)
 
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
-    STEP_UNTIL(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "RepeatedRunCallsTestState")) << _tc->getLastFailure();
     auto plan = _tc->getActivePlan("SchedulingTestPlan");
     ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
@@ -67,7 +67,7 @@ TEST_F(SingleAgentTestFixture, execOrderTransitionBetweenPlansTest)
 
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
-    STEP_UNTIL(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "PlanAState")) << _tc->getLastFailure();
     auto plan = _tc->getActivePlan("SchedulingTestPlan");
     ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
