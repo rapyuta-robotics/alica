@@ -2,7 +2,6 @@
 
 #include "engine/AlicaContext.h"
 #include "engine/ConfigChangeListener.h"
-#include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
@@ -24,7 +23,6 @@ namespace alica
 {
 struct AlicaCreators;
 class Plan;
-class Logger;
 class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
@@ -57,9 +55,6 @@ public:
     // Module Access:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
-
-    const Logger& getLog() const { return _log; }
-    Logger& editLog() { return _log; }
 
     const PlanBase& getPlanBase() const { return _planBase; }
     PlanBase& editPlanBase() { return _planBase; }
@@ -135,7 +130,6 @@ private:
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
     SyncModule _syncModul;
-    Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     TeamObserver _teamObserver;
     ExpressionHandler _expressionHandler;

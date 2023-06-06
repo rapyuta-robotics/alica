@@ -3,7 +3,6 @@
 #include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/Logger.h"
 #include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
@@ -51,12 +50,11 @@ bool AgentsCache::addAgent(Agent* agent)
 }
 
 TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const PlanRepository& planRepository, const IAlicaCommunication& communicator,
-        const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName, AgentId agentID)
+        const AlicaClock& clock, int version, uint64_t masterPlanId, const std::string& localAgentName, AgentId agentID)
         : _localAgent(nullptr)
         , _planRepository(planRepository)
         , _communicator(communicator)
         , _clock(clock)
-        , _log(log)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
@@ -319,7 +317,6 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     agentInfo = new Agent(_planRepository, _clock, _teamTimeOut, agentRole, aa);
     agentInfo->setTimeLastMsgReceived(_clock.now());
-    _log.eventOccurred("New Agent(", aa.senderID, ")");
     if (!_agentsCache.addAgent(agentInfo)) {
         // already existed
         delete agentInfo;
