@@ -13,10 +13,11 @@ TEST_F(SingleAgentTestFixture, transitionAfterInitTest)
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    auto plan = _tc->getActivePlan("SchedulingTestPlan");
     ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "TransitionAfterInitTestState")) << _tc->getLastFailure();
 
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TransitionAfterInitTestPlan"));
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    // Step until the test plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
 }
 
 TEST_F(SingleAgentTestFixture, execOrderSinglePlanTest)
@@ -36,14 +37,16 @@ TEST_F(SingleAgentTestFixture, execOrderSinglePlanTest)
     // evaluate execOrder vector
     LockedBlackboardRO bb(_tc->getGlobalBlackboard());
     std::vector<std::string> execOrder = bb.get<std::vector<std::string>>("execOrder");
-    ASSERT_EQ(execOrder.size(), 7);
+    ASSERT_EQ(execOrder.size(), 6);
     ASSERT_EQ(execOrder.at(0), "PlanA::Init");
     ASSERT_EQ(execOrder.at(1), "PlanAA::Init");
     ASSERT_EQ(execOrder.at(2), "BehAAA::Init");
-    ASSERT_EQ(execOrder.at(3), "BehAAA::Run");
-    ASSERT_EQ(execOrder.at(4), "BehAAA::Term");
-    ASSERT_EQ(execOrder.at(5), "PlanAA::Term");
-    ASSERT_EQ(execOrder.at(6), "PlanA::Term");
+    ASSERT_EQ(execOrder.at(3), "BehAAA::Term");
+    ASSERT_EQ(execOrder.at(4), "PlanAA::Term");
+    ASSERT_EQ(execOrder.at(5), "PlanA::Term");
+
+    ASSERT_TRUE(bb.get<bool>("BehAAARunCalled"));
+    ASSERT_FALSE(bb.hasValue("BehAAARunOutOfOrder"));
 }
 
 TEST_F(SingleAgentTestFixture, testRepeatedRunSchedulingTest)
@@ -84,37 +87,33 @@ TEST_F(SingleAgentTestFixture, execOrderTransitionBetweenPlansTest)
     ASSERT_EQ(execOrder.at(0), "PlanA::Init");
     ASSERT_EQ(execOrder.at(1), "PlanAA::Init");
     ASSERT_EQ(execOrder.at(2), "BehAAA::Init");
-    ASSERT_EQ(execOrder.at(3), "BehAAA::Run");
     // Leave A
-    ASSERT_EQ(execOrder.at(4), "BehAAA::Term");
-    ASSERT_EQ(execOrder.at(5), "PlanAA::Term");
-    ASSERT_EQ(execOrder.at(6), "PlanA::Term");
+    ASSERT_EQ(execOrder.at(3), "BehAAA::Term");
+    ASSERT_EQ(execOrder.at(4), "PlanAA::Term");
+    ASSERT_EQ(execOrder.at(5), "PlanA::Term");
     // Enter B
-    ASSERT_EQ(execOrder.at(7), "PlanB::Init");
-    ASSERT_EQ(execOrder.at(8), "PlanBA::Init");
-    ASSERT_EQ(execOrder.at(9), "BehBAA::Init");
-    ASSERT_EQ(execOrder.at(10), "BehBAA::Run");
+    ASSERT_EQ(execOrder.at(6), "PlanB::Init");
+    ASSERT_EQ(execOrder.at(7), "PlanBA::Init");
+    ASSERT_EQ(execOrder.at(8), "BehBAA::Init");
 
     // Transition between B and A 5 times
-    for (int i = 0; i <= 4; ++i) {
+    for (int i = 0; i <= 5; ++i) {
         // Leave B
-        ASSERT_EQ(execOrder.at(11 + 14 * i), "BehBAA::Term");
-        ASSERT_EQ(execOrder.at(12 + 14 * i), "PlanBA::Term");
-        ASSERT_EQ(execOrder.at(13 + 14 * i), "PlanB::Term");
+        ASSERT_EQ(execOrder.at(9 + 12 * i), "BehBAA::Term");
+        ASSERT_EQ(execOrder.at(10 + 12 * i), "PlanBA::Term");
+        ASSERT_EQ(execOrder.at(11 + 12 * i), "PlanB::Term");
         // Enter A
-        ASSERT_EQ(execOrder.at(14 + 14 * i), "PlanA::Init");
-        ASSERT_EQ(execOrder.at(15 + 14 * i), "PlanAA::Init");
-        ASSERT_EQ(execOrder.at(16 + 14 * i), "BehAAA::Init");
-        ASSERT_EQ(execOrder.at(17 + 14 * i), "BehAAA::Run");
+        ASSERT_EQ(execOrder.at(12 + 12 * i), "PlanA::Init");
+        ASSERT_EQ(execOrder.at(13 + 12 * i), "PlanAA::Init");
+        ASSERT_EQ(execOrder.at(14 + 12 * i), "BehAAA::Init");
         // Leave A
-        ASSERT_EQ(execOrder.at(18 + 14 * i), "BehAAA::Term");
-        ASSERT_EQ(execOrder.at(19 + 14 * i), "PlanAA::Term");
-        ASSERT_EQ(execOrder.at(20 + 14 * i), "PlanA::Term");
+        ASSERT_EQ(execOrder.at(15 + 12 * i), "BehAAA::Term");
+        ASSERT_EQ(execOrder.at(16 + 12 * i), "PlanAA::Term");
+        ASSERT_EQ(execOrder.at(17 + 12 * i), "PlanA::Term");
         // Enter B
-        ASSERT_EQ(execOrder.at(21 + 14 * i), "PlanB::Init");
-        ASSERT_EQ(execOrder.at(22 + 14 * i), "PlanBA::Init");
-        ASSERT_EQ(execOrder.at(23 + 14 * i), "BehBAA::Init");
-        ASSERT_EQ(execOrder.at(24 + 14 * i), "BehBAA::Run");
+        ASSERT_EQ(execOrder.at(18 + 12 * i), "PlanB::Init");
+        ASSERT_EQ(execOrder.at(19 + 12 * i), "PlanBA::Init");
+        ASSERT_EQ(execOrder.at(20 + 12 * i), "BehBAA::Init");
     }
 
     // Leave B
@@ -123,6 +122,9 @@ TEST_F(SingleAgentTestFixture, execOrderTransitionBetweenPlansTest)
     ASSERT_EQ(execOrder.at(83), "PlanB::Term");
 
     ASSERT_EQ(execOrder.size(), 84);
+
+    ASSERT_TRUE(bb.get<bool>("BehAAARunCalled"));
+    ASSERT_FALSE(bb.hasValue("BehAAARunOutOfOrder"));
 }
 
 } // namespace alica::test

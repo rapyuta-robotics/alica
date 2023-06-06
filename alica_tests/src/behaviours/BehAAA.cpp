@@ -17,9 +17,11 @@ void BehAAA::run()
     if (isSuccess()) {
         return;
     }
-    LockedBlackboardRW gb(*getGlobalBlackboard());
-    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
-    execOrder.emplace_back(getName() + "::Run");
+    if (!_inRunContext) {
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunOutOfOrder", true);
+    } else {
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunCalled", true);
+    }
     setSuccess();
 }
 void BehAAA::initialiseParameters()

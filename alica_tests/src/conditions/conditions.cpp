@@ -227,11 +227,9 @@ bool ExecOrderVectorSizeCheck(const Blackboard* input, const RunningPlan* rp, co
     LockedBlackboardRO globalBlackboard(*gb);
     LockedBlackboardRO localBlackboard(*input);
     if (!globalBlackboard.hasValue("execOrder")) {
-        Logging::logError("execOrder not created yet in condition...");
         return false;
     }
     std::vector<std::string> execOrder = globalBlackboard.get<std::vector<std::string>>("execOrder");
-    Logging::logWarn("") << execOrder.size() << "/" << localBlackboard.get<int64_t>("expected");
     return execOrder.size() == localBlackboard.get<int64_t>("expected");
 }
 bool ContinueExecOrderTestCheck(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
@@ -239,7 +237,6 @@ bool ContinueExecOrderTestCheck(const Blackboard* input, const RunningPlan* rp, 
     LockedBlackboardRO globalBlackboard(*gb);
     LockedBlackboardRO localBlackboard(*input);
     std::vector<std::string> execOrder = globalBlackboard.get<std::vector<std::string>>("execOrder");
-    Logging::logWarn("") << execOrder.size() << "/" << localBlackboard.get<int64_t>("expected") << " " << (rp->amISuccessfulInAnyChild());
     return execOrder.size() < localBlackboard.get<int64_t>("expected") && rp->amISuccessfulInAnyChild();
 }
 bool InitsNotFinishedCheck(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
