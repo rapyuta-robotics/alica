@@ -15,7 +15,7 @@
   "id": 3461702414433362536,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica-turtlesim",
   "name": "Idle",
   "postCondition": null,
   "preCondition": null,

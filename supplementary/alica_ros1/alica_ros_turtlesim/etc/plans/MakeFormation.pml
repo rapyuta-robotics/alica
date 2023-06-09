@@ -39,7 +39,7 @@
   "id": 1889749086610694100,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica-turtlesim",
   "masterPlan": false,
   "name": "MakeFormation",
   "preCondition": null,

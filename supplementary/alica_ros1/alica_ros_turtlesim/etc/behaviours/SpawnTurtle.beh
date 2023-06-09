@@ -7,7 +7,7 @@
   "id": 1689864767393644654,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica-turtlesim",
   "name": "SpawnTurtle",
   "postCondition": null,
   "preCondition": null,

@@ -22,7 +22,7 @@
   "id": 2797939494274869075,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica-turtlesim",
   "name": "GoTo",
   "postCondition": null,
   "preCondition": null,
