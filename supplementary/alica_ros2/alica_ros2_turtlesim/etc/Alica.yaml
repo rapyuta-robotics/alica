@@ -28,11 +28,6 @@ Alica:
   AllowIdling: false
   UseStaticRoles: true
 
-  #relative to ES_ROOT env variable or absolute:
-  PlanDir: plans
-  RoleDir: roles
-  TaskDir: tasks
-
   TeamBlackList:
     InitiallyFull: false
 
@@ -45,7 +40,7 @@ Alica:
     LogFolder: log/temp
 
   Logging:
-    Verbosity: INFO
+    Verbosity: DEBUG
 
   CycleDetection:
     Enabled: true

@@ -1,0 +1,24 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "Time to idle in seconds",
+      "id": 2537936451223247195,
+      "key": "time",
+      "type": "double"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 3461702414433362536,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-turtlesim",
+  "name": "Idle",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}

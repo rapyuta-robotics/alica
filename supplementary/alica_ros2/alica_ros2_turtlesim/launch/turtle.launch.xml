@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <let name="launch_prefix" value=""/>
-    <arg name="master_plan"    default="Master" />
+    <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find-pkg-share alica_ros2_turtlesim)" />
 
