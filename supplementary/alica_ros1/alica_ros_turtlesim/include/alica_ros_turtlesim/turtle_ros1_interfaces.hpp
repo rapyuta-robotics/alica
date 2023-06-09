@@ -1,6 +1,8 @@
 #pragma once
 
 #include <ros/ros.h>
+#include <string>
+#include <turtle_interfaces.hpp>
 #include <turtlesim/Pose.h>
 
 namespace turtlesim
@@ -13,15 +15,15 @@ namespace turtlesim
         - ServiceClient: turtleX/teleport_absolute
         - Parameter: name
 */
-class TurtleInterfaces
+class TurtleRos1Interfaces : public TurtleInterfaces
 {
 public:
-    TurtleInterfaces(const std::string& name);
-    bool teleport(const float x, const float y);                  // teleport turtle to (x,y)
-    bool spawn();                                                 // Spawn the turtle in the middle of the map
-    bool moveTowardPosition(const float x, const float y) const;  // publish cmd_vel based on input(x,y) and current pose
-    PoseConstPtr getCurrentPose() const { return _currentPose; }; // Retrieve current pose if available
-    void rotate(const float dYaw);
+    TurtleRos1Interfaces(const std::string& name);
+    bool teleport(const float x, const float y) override;                 // teleport turtle to (x,y)
+    bool spawn() override;                                                // Spawn the turtle in the middle of the map
+    bool moveTowardPosition(const float x, const float y) const override; // publish cmd_vel based on input(x,y) and current pose
+    // PoseConstPtr getCurrentPose() const { return _currentPose; }; // Retrieve current pose if available
+    void rotate(const float dYaw) override;
 
 private:
     void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim

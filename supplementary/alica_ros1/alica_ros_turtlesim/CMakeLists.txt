@@ -27,11 +27,12 @@ find_package(constraintsolver REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 find_package(alica_dynamic_loading REQUIRED)
+find_package(turtle_interface REQUIRED)
 
 catkin_package(
     CATKIN_DEPENDS ${PKG_DEPS}
     INCLUDE_DIRS include
-    DEPENDS autodiff alica_dynamic_loading
+    DEPENDS autodiff alica_dynamic_loading turtle_interface
 
 )
 
@@ -49,6 +50,7 @@ include_directories(
 add_executable(${PROJECT_NAME}
     src/base_node.cpp
     src/base.cpp
+    src/turtle_ros1_interfaces.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -60,9 +62,9 @@ target_link_libraries(${PROJECT_NAME}
                         alica_dynamic_loading
                         autodiff
                         constraintsolver
+                        turtle_interface
 )
 
-add_subdirectory(libalica-turtlesim)
 add_subdirectory(libalica-ros-utils)
 
 ##########
@@ -80,7 +82,8 @@ if (CATKIN_ENABLE_TESTING)
         ${YAML_CPP_LIBRARIES}
         alica_dynamic_loading
         autodiff
-        constraintsolver)
+        constraintsolver
+        turtle_interface)
 endif()
 
 #############

@@ -6,6 +6,7 @@
 #include <DynamicTransitionConditionCreator.h>
 #include <DynamicUtilityFunctionCreator.h>
 #include <alica_ros_turtlesim/base.hpp>
+#include <alica_ros_turtlesim/turtle_ros1_interfaces.hpp>
 #include <clock/AlicaROSClock.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaRosCommunication.h>
@@ -28,6 +29,10 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>();
+
+    LockedBlackboardRW bb(ac->editGlobalBlackboard());
+    bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleRos1Interfaces>(name));
+    bb.set("spawned", false);
 }
 
 void Base::start()

@@ -7,7 +7,7 @@
   "id": 4054297592460872311,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica-turtlesim",
   "name": "GoToCalculatedResult",
   "postCondition": null,
   "preCondition": null,
