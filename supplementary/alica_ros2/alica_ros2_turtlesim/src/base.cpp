@@ -6,6 +6,7 @@
 #include <DynamicTransitionConditionCreator.h>
 #include <DynamicUtilityFunctionCreator.h>
 #include <alica_ros2_turtlesim/base.hpp>
+#include <alica_ros2_turtlesim/turtle_ros2_interfaces.hpp>
 #include <boost/dll/import.hpp> // for import_alias
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaContext.h>
@@ -38,6 +39,10 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
 
     spinThread = std::thread([this]() { spinner.spin(); });
+
+    LockedBlackboardRW bb(ac->editGlobalBlackboard());
+    bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleRos2Interfaces>(name));
+    bb.set("spawned", false);
 }
 
 void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)

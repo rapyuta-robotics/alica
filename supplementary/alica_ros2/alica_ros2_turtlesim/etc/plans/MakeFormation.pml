@@ -37,12 +37,12 @@
   ],
   "frequency": 0,
   "id": 1889749086610694100,
+  "implementationName": "",
   "inheritBlackboard": false,
+  "libraryName": "alica-turtlesim",
   "masterPlan": false,
-  "libraryName": "alica-ros2-turtlesim",
-  "name": "Move",
+  "name": "MakeFormation",
   "preCondition": null,
-  "relativeDirectory": "",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",
@@ -70,7 +70,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/GoTo.beh#4054297592460872311",
+          "abstractPlan": "GoToCalculatedResult.beh#4054297592460872311",
           "comment": "",
           "configuration": null,
           "id": 3768390995110815611,
@@ -98,7 +98,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/GoTo.beh#4054297592460872311",
+          "abstractPlan": "GoToCalculatedResult.beh#4054297592460872311",
           "comment": "",
           "configuration": null,
           "id": 139589851715028435,
