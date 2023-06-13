@@ -594,22 +594,6 @@
         {
           "access": "input",
           "comment": "",
-          "id": 1999642097123177760,
-          "key": "expected",
-          "type": "int64"
-        }
-      ],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3642911512363445478,
-      "libraryName": "alica-tests",
-      "name": "ExecOrderVectorSizeSmaller"
-    },
-    {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
           "id": 2423941618748335792,
           "key": "expected",
           "type": "int64"

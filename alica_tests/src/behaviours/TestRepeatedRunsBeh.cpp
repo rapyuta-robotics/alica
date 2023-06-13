@@ -7,6 +7,7 @@ namespace alica
 TestRepeatedRunsBeh::TestRepeatedRunsBeh(BehaviourContext& context)
         : BasicBehaviour(context)
 {
+    _frequency = context.behaviourModel->getFrequency();
 }
 void TestRepeatedRunsBeh::run()
 {
@@ -20,10 +21,11 @@ void TestRepeatedRunsBeh::run()
 
     _callCounter++;
 
-    if (_callCounter >= 10) {
+    // run for one second
+    if (_callCounter >= _frequency) {
         _end = getPlanContext()->getAlicaClock().now();
         AlicaTime duration = _end - _start;
-        if (_callCounter >= (duration.inMilliseconds() / (1000 / 30))) {
+        if (_callCounter >= duration.inMilliseconds() * _frequency / 1000) {
             setSuccess();
         } else {
             setFailure();
