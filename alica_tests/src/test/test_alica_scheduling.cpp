@@ -83,10 +83,8 @@ TEST_F(SingleAgentTestFixture, execOrderTransitionBetweenPlansTest)
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "ExecOrderTestState")) << _tc->getLastFailure();
-    // STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("ExecOrderTestPlan"));
-    STEP_UNTIL(_tc, _tc->getActivePlan("ExecOrderTestPlan"));
-    ASSERT_TRUE(_tc->getActivePlan("ExecOrderTestPlan")) << _tc->getLastFailure();
-    // ASSERT_TRUE(_tc->setTransitionCond("ExecOrderTestPlan", "EntryState", "PlanAState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("ExecOrderTestPlan"));
+    ASSERT_TRUE(_tc->setTransitionCond("ExecOrderTestPlan", "EntryState", "PlanAState")) << _tc->getLastFailure();
     auto plan = _tc->getActivePlan("SchedulingTestPlan");
     ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
 

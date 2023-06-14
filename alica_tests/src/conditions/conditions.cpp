@@ -84,10 +84,6 @@ bool PlanA2PlanB(const Blackboard* input, const RunningPlan* rp, const Blackboar
     std::shared_ptr<alica_test::SchedWM> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     return worldModel->planA2PlanB;
 }
-bool Default2EndTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    return CounterClass::called == 4;
-}
 bool SecondTaskFirstState2SecondTaskSecondState(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
@@ -104,10 +100,6 @@ bool Init2Fail(const Blackboard* input, const RunningPlan* rp, const Blackboard*
 {
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     return worldModel->isTransitionCondition1446293122737278544();
-}
-bool Start2Init(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    return CounterClass::called == 0;
 }
 bool StateOne2StateTwo(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
@@ -142,11 +134,6 @@ bool FirstTaskFirstState2FirstTaskSecondState(const Blackboard* input, const Run
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     return worldModel->isTransitionCondition1418825427317();
 }
-bool BehaviourSubPlan2ExecuteBehaviour(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    std::shared_ptr<alica_test::SchedWM> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    return worldModel->transitionToExecuteBehaviour;
-}
 bool Init2Start(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
@@ -161,10 +148,6 @@ bool Start2ExecOrderTest(const Blackboard* input, const RunningPlan* rp, const B
 {
     std::shared_ptr<alica_test::SchedWM> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     return worldModel->execOrderTest;
-}
-bool Init2End(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    return CounterClass::called == 8;
 }
 bool CounterCalled(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
@@ -185,10 +168,6 @@ bool TriggerFromInputCond(const Blackboard* input, const RunningPlan* rp, const 
     LockedBlackboardRO bb(*input);
     return bb.get<bool>("result");
 }
-bool Start2Default(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    return CounterClass::called == 1;
-}
 bool SimpleSwitchIsSet(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     LockedBlackboardRO bb(*input);
@@ -201,11 +180,6 @@ bool BehaviourInSubPlan2EndTest(const Blackboard* input, const RunningPlan* rp, 
 bool Start2ExecOrderedSchedulingTest(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     return false;
-}
-bool ExecBehaviour2SubPlan(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    std::shared_ptr<alica_test::SchedWM> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    return worldModel->transitionToExecuteBehaviourInSubPlan;
 }
 bool Other2NewSuccessStateOne(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {

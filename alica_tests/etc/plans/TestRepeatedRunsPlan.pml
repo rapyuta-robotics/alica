@@ -39,24 +39,6 @@
   "states": [
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": 2547426852461060425,
-      "id": 4549281436324771447,
-      "inTransitions": [],
-      "name": "EntryState",
-      "outTransitions": [
-        1167813446747500893
-      ],
-      "parentPlan": 1546990961149934975,
-      "positionWeb": {
-        "x": 343,
-        "y": 226.7125015258789
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
       "confAbstractPlanWrappers": [
         {
           "abstractPlan": "TestRepeatedRunsBeh.beh#2555589216511791234",
@@ -105,6 +87,24 @@
       "postCondition": null,
       "success": true,
       "type": "TerminalState",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 2547426852461060425,
+      "id": 4549281436324771447,
+      "inTransitions": [],
+      "name": "EntryState",
+      "outTransitions": [
+        1167813446747500893
+      ],
+      "parentPlan": 1546990961149934975,
+      "positionWeb": {
+        "x": 343,
+        "y": 226.7125015258789
+      },
+      "type": "State",
       "variableBindings": []
     }
   ],

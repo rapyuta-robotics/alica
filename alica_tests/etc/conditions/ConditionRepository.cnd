@@ -186,14 +186,6 @@
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
-      "id": 1013158988206959873,
-      "libraryName": "alica-tests",
-      "name": "Default2EndTest"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
       "id": 1221637895518338620,
       "libraryName": "alica-tests",
       "name": "SecondTaskFirstState2SecondTaskSecondState"
@@ -213,14 +205,6 @@
       "id": 1291995818541962959,
       "libraryName": "alica-tests",
       "name": "Init2Fail"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 1311087067347475449,
-      "libraryName": "alica-tests",
-      "name": "Start2Init"
     },
     {
       "blackboard": [],
@@ -392,14 +376,6 @@
       "name": "ValueMappingCondition"
     },
     {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 2062958764563158269,
-      "libraryName": "alica-tests",
-      "name": "ExecuteBehaviourTestSuccessCond"
-    },
-    {
       "blackboard": [
         {
           "access": "input",
@@ -422,14 +398,6 @@
       "id": 2171152220550556375,
       "libraryName": "alica-tests",
       "name": "FirstTaskFirstState2FirstTaskSecondState"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 2205566100638019970,
-      "libraryName": "alica-tests",
-      "name": "BehaviourSubPlan2ExecuteBehaviour"
     },
     {
       "blackboard": [],
@@ -461,14 +429,6 @@
       "id": 2618711924921632178,
       "libraryName": "alica_standard_library",
       "name": "IsEqualInt64"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 2711102114821139213,
-      "libraryName": "alica-tests",
-      "name": "Init2End"
     },
     {
       "blackboard": [],
@@ -606,14 +566,6 @@
       "name": "ExecOrderVectorSizeCheck"
     },
     {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3726136276355540527,
-      "libraryName": "alica-tests",
-      "name": "Start2Default"
-    },
-    {
       "blackboard": [
         {
           "access": "input",
@@ -636,14 +588,6 @@
       "id": 3828316183435191952,
       "libraryName": "alica-tests",
       "name": "BehaviourInSubPlan2EndTest"
-    },
-    {
-      "blackboard": [],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 4244459279660861567,
-      "libraryName": "alica-tests",
-      "name": "ExecBehaviour2SubPlan"
     },
     {
       "blackboard": [],
