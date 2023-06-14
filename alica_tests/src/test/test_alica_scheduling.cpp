@@ -138,6 +138,8 @@ TEST_F(SingleAgentTestFixture, execOrderTransitionBetweenPlansTest)
 
     ASSERT_TRUE(bb.get<bool>("BehAAARunCalled"));
     ASSERT_FALSE(bb.hasValue("BehAAARunOutOfOrder"));
+    ASSERT_TRUE(bb.get<bool>("BehBAARunCalled"));
+    ASSERT_FALSE(bb.hasValue("BehBAARunOutOfOrder"));
     ASSERT_TRUE(bb.get<bool>("PlanARunCalled"));
     ASSERT_FALSE(bb.hasValue("PlanARunOutOfOrder"));
     ASSERT_TRUE(bb.get<bool>("PlanBRunCalled"));
