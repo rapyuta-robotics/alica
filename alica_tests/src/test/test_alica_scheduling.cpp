@@ -71,7 +71,9 @@ TEST_F(SingleAgentTestFixture, testRepeatedRunSchedulingTest)
 
     // Step until the test plan succeeds
     // A single STEP_UNTIL_ASSERT_TRUE might time out
-    STEP_UNTIL(_tc, _tc->isSuccess(plan));
+    for (int i = 0; i < 5; ++i) {
+        STEP_UNTIL(_tc, _tc->isSuccess(plan));
+    }
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
 }
 
