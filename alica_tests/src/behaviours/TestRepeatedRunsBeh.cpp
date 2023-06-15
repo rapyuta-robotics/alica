@@ -21,10 +21,14 @@ void TestRepeatedRunsBeh::run()
 
     _callCounter++;
 
+    Logging::logInfo("TestRepeatedRunsBeh::Run") << "CallCounter: " << _callCounter;
+
     // run for one second
     if (_callCounter >= _frequency) {
         _end = getPlanContext()->getAlicaClock().now();
         AlicaTime duration = _end - _start;
+        Logging::logInfo("TestRepeatedRunsBeh::Run") << "CallCounter: " << _callCounter;
+        Logging::logInfo("TestRepeatedRunsBeh::Run") << "Expected: " << duration.inMilliseconds() * _frequency / 1000;
         if (std::abs(_callCounter - duration.inMilliseconds() * _frequency / 1000) < 5) {
             setSuccess();
         } else {
