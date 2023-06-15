@@ -21,8 +21,6 @@ void TestRepeatedRunsBeh::run()
 
     _callCounter++;
 
-    Logging::logInfo("TestRepeatedRunsBeh::Run") << "Current count: " << _callCounter;
-
     // run for one second
     if (_callCounter >= _frequency) {
         _end = getPlanContext()->getAlicaClock().now();
