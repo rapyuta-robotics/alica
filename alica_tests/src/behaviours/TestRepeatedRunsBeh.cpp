@@ -6,9 +6,11 @@ namespace alica
 {
 TestRepeatedRunsBeh::TestRepeatedRunsBeh(BehaviourContext& context)
         : BasicBehaviour(context)
+        , _callCounter(0)
+        , _frequency(context.behaviourModel->getFrequency())
 {
-    _frequency = context.behaviourModel->getFrequency();
 }
+
 void TestRepeatedRunsBeh::run()
 {
     if (isSuccess()) {
