@@ -1,5 +1,7 @@
 #include "WaitForMsg.h"
 
+#include "turtle_interfaces.hpp"
+
 namespace ros_utils
 {
 
@@ -11,9 +13,8 @@ WaitForMsg::WaitForMsg(alica::BehaviourContext& context)
 void WaitForMsg::initialiseParameters()
 {
     alica::LockedBlackboardRO bb{*getBlackboard()};
-    _topic = bb.get<std::string>("topic");
-    ROS_INFO_STREAM_NAMED(__func__, "Waiting for msg on " << _topic);
-    _sub = ros::NodeHandle("~").subscribe(_topic, 1, &WaitForMsg::onMsg, this);
+    auto turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
+    turtle->subOnMsg(bb.get<std::string>("topic"), getGlobalBlackboard());
 }
 
 std::unique_ptr<WaitForMsg> WaitForMsg::create(alica::BehaviourContext& context)
@@ -21,15 +22,15 @@ std::unique_ptr<WaitForMsg> WaitForMsg::create(alica::BehaviourContext& context)
     return std::make_unique<WaitForMsg>(context);
 }
 
-void WaitForMsg::onMsg(const std_msgs::String& msg)
+void WaitForMsg::run()
 {
     if (isSuccess()) {
         return;
     }
-    ROS_INFO_STREAM_NAMED(__func__, "Msg received on " << _topic);
-    alica::LockedBlackboardRW bb{*getBlackboard()};
-    bb.set("msg", msg.data);
-    setSuccess();
+    alica::LockedBlackboardRO gb(*getGlobalBlackboard());
+    if (gb.hasValue("msg")) {
+        setSuccess();
+    }
 }
 
 } // namespace ros_utils

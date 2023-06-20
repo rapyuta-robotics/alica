@@ -37,9 +37,11 @@ void SpawnTurtle::initialiseParameters()
     if (turtleInterfaces->spawn()) {
         Logging::logInfo("SpawnTurtle") << name << " was spawned";
         g_bb.set("spawned", true);
+        Logging::logWarn("SpawnTurtle") << "set success";
         setSuccess();
     } else {
         Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";
+        Logging::logWarn("SpawnTurtle") << "set success";
         setSuccess();
     }
 }

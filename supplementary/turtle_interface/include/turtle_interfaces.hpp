@@ -4,6 +4,11 @@
 // #include <turtlesim/Pose.h>
 #include <string>
 
+namespace alica
+{
+class Blackboard;
+}
+
 namespace turtlesim
 {
 /*
@@ -23,6 +28,8 @@ public:
     virtual bool moveTowardPosition(const float x, const float y) const = 0; // publish cmd_vel based on input(x,y) and current pose
     // PoseConstPtr getCurrentPose() const { return _currentPose; }; // Retrieve current pose if available
     virtual void rotate(const float dYaw) = 0;
+    virtual void subOnMsg(const std::string& topic, alica::Blackboard* globalBlackboard) = 0;
+    virtual void subOnTrigger(const std::string& topic, alica::Blackboard* globalBlackboard) = 0;
 
 protected:
     // void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim

@@ -19,6 +19,10 @@
 #include <turtlesim/srv/kill.hpp>
 #include <turtlesim/srv/spawn.hpp>
 
+#include <chrono>
+#include <future>
+using namespace std::chrono_literals;
+
 namespace turtlesim
 {
 
@@ -38,7 +42,11 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
 
-    spinThread = std::thread([this]() { spinner.spin(); });
+    spinThread = std::thread([this]() {
+        std::cerr << "########## START SPINNING" << std::endl;
+        spinner.spin();
+        std::cerr << "########## STOPPED SPINNING" << std::endl;
+    });
 
     LockedBlackboardRW bb(ac->editGlobalBlackboard());
     bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleRos2Interfaces>(name));
@@ -52,26 +60,10 @@ void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
             nh->create_client<turtlesim::srv::Kill>("/kill", rmw_qos_profile_services_default, killCallback);
     auto request = std::make_shared<turtlesim::srv::Kill::Request>();
     request->name = name;
-    auto result = kill_client->async_send_request(request);
+    auto result = kill_client->async_send_request(std::move(request));
     RCLCPP_INFO(nh->get_logger(), "Requested to Kill: %s", name.c_str());
     result.wait();
     RCLCPP_INFO(nh->get_logger(), "Request to Kill: %s complete", name.c_str());
-}
-
-void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
-{
-    rclcpp::CallbackGroup::SharedPtr spawnCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client =
-            nh->create_client<turtlesim::srv::Spawn>("/spawn", rmw_qos_profile_services_default, spawnCallback);
-    auto request = std::make_shared<turtlesim::srv::Spawn_Request>();
-    request->x = 1;
-    request->y = 1;
-    request->theta = 0;
-    request->name = name;
-    auto result = spawn_client->async_send_request(request);
-    RCLCPP_INFO(nh->get_logger(), "Request to spawn %s", name.c_str());
-    result.wait();
-    RCLCPP_INFO(nh->get_logger(), "Spawned %s", name.c_str());
 }
 
 void Base::start()
@@ -80,8 +72,8 @@ void Base::start()
             std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
             std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
-    killMyTurtle(_name, _nh);
-    spawnMyTurtle(_name, _nh);
+    // TODO: kill turtle on startup
+    // killMyTurtle(_name, _nh);
     ac->init(std::move(creators));
     ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
 }

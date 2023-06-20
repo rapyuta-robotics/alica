@@ -21,5 +21,6 @@
   <depend>constraintsolver</depend>
   <depend>alica_solver_interface</depend>
   <depend>autodiff</depend>
+  <depend>turtle_interface</depend>
 
 </package>

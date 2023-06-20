@@ -4,6 +4,9 @@ project(alica-turtlesim)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
+add_compile_options(-std=c++17)
+set(CMAKE_BUILD_TYPE Debug)
+
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
@@ -12,6 +15,7 @@ find_package(alica_engine REQUIRED)
 find_package(constraintsolver REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
+find_package(turtle_interface REQUIRED)
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 if (NOT Boost_FOUND)
@@ -31,8 +35,10 @@ add_library(${PROJECT_NAME} SHARED
   src/RotateTurtle.cpp
   src/SpawnTurtle.cpp
   src/Teleport.cpp
+  src/WaitForTrigger.cpp
+  src/WaitForMsg.cpp
 )
-target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver alica_solver_interface autodiff)
+target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver alica_solver_interface autodiff turtle_interface)
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
