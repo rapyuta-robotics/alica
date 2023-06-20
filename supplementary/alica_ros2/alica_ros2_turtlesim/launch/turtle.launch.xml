@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <let name="launch_prefix" value=""/>
+    <let name="use_gdb" value="$(env GDB false)"/>
+    <let name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb -ex run --args" if="$(var use_gdb)"/>
+    <let name="launch_prefix" value="" unless="$(var use_gdb)"/>
     <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find-pkg-share alica_ros2_turtlesim)" />
