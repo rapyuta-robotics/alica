@@ -1,7 +1,6 @@
 #include <alica_tests/behaviours/TestBehaviour.h>
 #include <memory>
 
-#include <alica_tests/test_sched_world_model.h>
 namespace alica
 {
 TestBehaviour::TestBehaviour(BehaviourContext& context)
@@ -11,25 +10,25 @@ TestBehaviour::TestBehaviour(BehaviourContext& context)
 TestBehaviour::~TestBehaviour() {}
 void TestBehaviour::run()
 {
-    auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
+    LockedBlackboardRW gb(*getGlobalBlackboard());
 
-    if (wm->executeBehaviourRunCalled) {
+    if (gb.get<bool>("executeBehaviourRunCalled")) {
         return;
     }
-    wm->execOrder += "TestBehaviour::Run\n";
-    wm->executeBehaviourRunCalled = true;
+    gb.set("execOrder", gb.get<std::string>("execOrder") + "TestBehaviour::Run\n");
+    gb.set("executeBehaviourRunCalled", true);
 }
 void TestBehaviour::initialiseParameters()
 {
-    auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    wm->execOrder += "TestBehaviour::Init\n";
-    wm->executeBehaviourRunCalled = false;
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    gb.set("execOrder", gb.hasValue("execOrder") ? gb.get<std::string>("execOrder") + "TestBehaviour::Init\n" : "TestBehaviour::Init\n");
+    gb.set("executeBehaviourRunCalled", false);
 }
 
 void TestBehaviour::onTermination()
 {
-    auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    wm->execOrder += "TestBehaviour::Term\n";
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    gb.set("execOrder", gb.get<std::string>("execOrder") + "TestBehaviour::Term\n");
 }
 
 std::unique_ptr<TestBehaviour> TestBehaviour::create(alica::BehaviourContext& context)

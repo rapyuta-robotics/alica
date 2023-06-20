@@ -1,256 +1,151 @@
 #include "test_alica.h"
-#include <alica/test/CounterClass.h>
-#include <alica_tests/behaviours/BehAAA.h>
-#include <alica_tests/behaviours/BehBAA.h>
 
 #include <alica/test/Util.h>
-#include <alica_tests/test_sched_world_model.h>
 #include <gtest/gtest.h>
 
-namespace alica
-{
-namespace
+namespace alica::test
 {
 
-class AlicaSchedulingPlan : public AlicaSchedulingTestFixture
+TEST_F(SingleAgentTestFixture, transitionAfterInitTest)
 {
-protected:
-    const char* getMasterPlanName() const override { return "SchedulingTestMasterPlan"; }
-    bool stepEngine() const override { return true; }
-};
+    /**
+     * Checks if outgoing transitions are evaluated after all plans and behaviours in the init state
+     * (recursively until the leaf behaviour) have been initialized
+     */
 
-TEST_F(AlicaSchedulingPlan, scheduling)
-{
-    ae->start();
-    CounterClass::called = 0;
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    auto plan = _tc->getActivePlan("SchedulingTestPlan");
+    ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "TransitionAfterInitTestState")) << _tc->getLastFailure();
 
-    STEP_UNTIL(CounterClass::called == 1);
-    // init of scheduling plan 1
-    ASSERT_EQ(1, CounterClass::called);
-    CounterClass::called += 1; // allow transition
-
-    STEP_UNTIL(CounterClass::called == 4);
-    // init of scheduling plan 2 and 3
-    ASSERT_EQ(4, CounterClass::called);
-    CounterClass::called += 1; // allow transition
-
-    STEP_UNTIL(CounterClass::called == 7);
-    // onTermination of scheduling plan 2 and 3 called
-    ASSERT_EQ(7, CounterClass::called);
-    CounterClass::called += 1; // allow transition
-
-    STEP_UNTIL(CounterClass::called == 9);
-    // onTermination of scheduling plan 1 called
-    ASSERT_EQ(9, CounterClass::called);
+    // Step until the test plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
 }
 
-TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
+TEST_F(SingleAgentTestFixture, execOrderSinglePlanTest)
 {
-    CounterClass::called = -1;
-    ae->start();
+    // Checks if execution order of init, run and terminate is correct for a single plan
 
-    std::shared_ptr<alica_test::SchedWM> wm = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "SchedulingPlanTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingPlanTestPlan"));
+    ASSERT_TRUE(_tc->setTransitionCond("SchedulingPlanTestPlan", "EntryState", "CheckState")) << _tc->getLastFailure();
+    auto plan = _tc->getActivePlan("SchedulingTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
 
-    std::string planAInitOrder = "PlanA::Init\nPlanAA::Init\nBehAAA::Init\n";
-    std::string planATermOrder = "BehAAA::Term\nPlanAA::Term\nPlanA::Term\n";
-    std::string planBInitOrder = "PlanB::Init\nPlanBA::Init\nBehBAA::Init\n";
-    std::string planBTermOrder = "BehBAA::Term\nPlanBA::Term\nPlanB::Term\n";
+    // Step until the test plan succeeds
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
 
-    std::string expectedExecOrder = planAInitOrder;
-    wm->execOrderTest = true;
-    STEP_UNTIL(expectedExecOrder == wm->execOrder);
-    ASSERT_EQ(expectedExecOrder, wm->execOrder);
+    // evaluate execOrder vector
+    LockedBlackboardRO bb(_tc->getGlobalBlackboard());
+    std::vector<std::string> execOrder = bb.get<std::vector<std::string>>("execOrder");
+    ASSERT_EQ(execOrder.size(), 6);
+    ASSERT_EQ(execOrder.at(0), "PlanA::Init");
+    ASSERT_EQ(execOrder.at(1), "PlanAA::Init");
+    ASSERT_EQ(execOrder.at(2), "BehAAA::Init");
+    ASSERT_EQ(execOrder.at(3), "BehAAA::Term");
+    ASSERT_EQ(execOrder.at(4), "PlanAA::Term");
+    ASSERT_EQ(execOrder.at(5), "PlanA::Term");
 
-    for (int i = 0; i < 10; ++i) {
-        expectedExecOrder += planATermOrder + planBInitOrder;
-        wm->planA2PlanB = true;
-        wm->planB2PlanA = false;
-        STEP_UNTIL(expectedExecOrder == wm->execOrder);
-        ASSERT_EQ(expectedExecOrder, wm->execOrder);
+    ASSERT_TRUE(bb.get<bool>("BehAAARunCalled"));
+    ASSERT_FALSE(bb.hasValue("BehAAARunOutOfOrder"));
+    ASSERT_TRUE(bb.get<bool>("PlanARunCalled"));
+    ASSERT_FALSE(bb.hasValue("PlanARunOutOfOrder"));
+}
 
-        expectedExecOrder += planBTermOrder + planAInitOrder;
-        wm->planA2PlanB = false;
-        wm->planB2PlanA = true;
-        STEP_UNTIL(expectedExecOrder == wm->execOrder);
-        ASSERT_EQ(expectedExecOrder, wm->execOrder);
+TEST_F(SingleAgentTestFixture, testRepeatedRunSchedulingTest)
+{
+    // Checks if run is called at the expected frequency
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "RepeatedRunCallsTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TestRepeatedRunsPlan"));
+    ASSERT_TRUE(_tc->setTransitionCond("TestRepeatedRunsPlan", "EntryState", "CheckState")) << _tc->getLastFailure();
+    auto plan = _tc->getActivePlan("SchedulingTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the test plan succeeds
+    // A single STEP_UNTIL_ASSERT_TRUE might time out
+    for (int i = 0; i < 5; ++i) {
+        STEP_UNTIL(_tc, _tc->isSuccess(plan));
+    }
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+}
+
+TEST_F(SingleAgentTestFixture, execOrderTransitionBetweenPlansTest)
+{
+    // Checks if scheduling of init, run and terminate when transitioning between 2 plans is working
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SchedulingTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SchedulingTestPlan"));
+    ASSERT_TRUE(_tc->setTransitionCond("SchedulingTestPlan", "ChooseTestState", "ExecOrderTestState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("ExecOrderTestPlan"));
+    ASSERT_TRUE(_tc->setTransitionCond("ExecOrderTestPlan", "EntryState", "PlanAState")) << _tc->getLastFailure();
+    auto plan = _tc->getActivePlan("SchedulingTestPlan");
+    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+
+    // Step until the test plan succeeds
+    // A single STEP_UNTIL_ASSERT_TRUE might time out
+    STEP_UNTIL(_tc, _tc->isSuccess(plan));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+
+    LockedBlackboardRO bb(_tc->getGlobalBlackboard());
+    std::vector<std::string> execOrder = bb.get<std::vector<std::string>>("execOrder");
+
+    // Enter A
+    ASSERT_EQ(execOrder.at(0), "PlanA::Init");
+    ASSERT_EQ(execOrder.at(1), "PlanAA::Init");
+    ASSERT_EQ(execOrder.at(2), "BehAAA::Init");
+    // Leave A
+    ASSERT_EQ(execOrder.at(3), "BehAAA::Term");
+    ASSERT_EQ(execOrder.at(4), "PlanAA::Term");
+    ASSERT_EQ(execOrder.at(5), "PlanA::Term");
+    // Enter B
+    ASSERT_EQ(execOrder.at(6), "PlanB::Init");
+    ASSERT_EQ(execOrder.at(7), "PlanBA::Init");
+    ASSERT_EQ(execOrder.at(8), "BehBAA::Init");
+
+    // Transition between B and A 5 times
+    for (int i = 0; i <= 5; ++i) {
+        // Leave B
+        ASSERT_EQ(execOrder.at(9 + 12 * i), "BehBAA::Term");
+        ASSERT_EQ(execOrder.at(10 + 12 * i), "PlanBA::Term");
+        ASSERT_EQ(execOrder.at(11 + 12 * i), "PlanB::Term");
+        // Enter A
+        ASSERT_EQ(execOrder.at(12 + 12 * i), "PlanA::Init");
+        ASSERT_EQ(execOrder.at(13 + 12 * i), "PlanAA::Init");
+        ASSERT_EQ(execOrder.at(14 + 12 * i), "BehAAA::Init");
+        // Leave A
+        ASSERT_EQ(execOrder.at(15 + 12 * i), "BehAAA::Term");
+        ASSERT_EQ(execOrder.at(16 + 12 * i), "PlanAA::Term");
+        ASSERT_EQ(execOrder.at(17 + 12 * i), "PlanA::Term");
+        // Enter B
+        ASSERT_EQ(execOrder.at(18 + 12 * i), "PlanB::Init");
+        ASSERT_EQ(execOrder.at(19 + 12 * i), "PlanBA::Init");
+        ASSERT_EQ(execOrder.at(20 + 12 * i), "BehBAA::Init");
     }
 
-    wm->execOrder.clear();
-    wm->execOrder = planAInitOrder;
-    for (int i = 0; i < 10; ++i) {
-        wm->planA2PlanB = true;
-        wm->planB2PlanA = false;
-        ac->stepEngine();
-        wm->planA2PlanB = false;
-        wm->planB2PlanA = true;
-        ac->stepEngine();
-    }
-    ASSERT_EQ(expectedExecOrder, wm->execOrder);
+    // Leave B
+    ASSERT_EQ(execOrder.at(81), "BehBAA::Term");
+    ASSERT_EQ(execOrder.at(82), "PlanBA::Term");
+    ASSERT_EQ(execOrder.at(83), "PlanB::Term");
+
+    ASSERT_EQ(execOrder.size(), 84);
+
+    ASSERT_TRUE(bb.get<bool>("BehAAARunCalled"));
+    ASSERT_FALSE(bb.hasValue("BehAAARunOutOfOrder"));
+    ASSERT_TRUE(bb.get<bool>("BehBAARunCalled"));
+    ASSERT_FALSE(bb.hasValue("BehBAARunOutOfOrder"));
+    ASSERT_TRUE(bb.get<bool>("PlanARunCalled"));
+    ASSERT_FALSE(bb.hasValue("PlanARunOutOfOrder"));
+    ASSERT_TRUE(bb.get<bool>("PlanBRunCalled"));
+    ASSERT_FALSE(bb.hasValue("PlanBRunOutOfOrder"));
 }
 
-TEST_F(AlicaSchedulingPlan, orderedRunCheck)
-{
-    CounterClass::called = -1;
-    ae->start();
-
-    std::shared_ptr<alica_test::SchedWM> wm = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    wm->execOrderTest = true;
-    ac->stepEngine();
-
-    for (int i = 0; i < 10; ++i) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-
-        wm->planA2PlanB = true;
-        wm->planB2PlanA = false;
-        ac->stepEngine();
-
-        wm->planA2PlanB = false;
-        wm->planB2PlanA = true;
-        ac->stepEngine();
-    }
-    ASSERT_TRUE(wm->planARunCalled);
-    ASSERT_FALSE(wm->planARunOutOfOrder);
-    ASSERT_TRUE(wm->behAAARunCalled);
-    ASSERT_FALSE(wm->behAAARunOutOfOrder);
-}
-
-TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
-{
-    CounterClass::called = -1;
-    ae->start();
-
-    std::shared_ptr<alica_test::SchedWM> wm = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    wm->execOrderTest = true;
-    ac->stepEngine();
-
-    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    SLEEP_UNTIL(alica::test::Util::getBasicBehaviour(ae, 1629895901559) != nullptr);
-    auto behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559);
-    ASSERT_FALSE(wm->behAAASuccessInInit);
-    ASSERT_FALSE(wm->behAAAFailureInInit);
-    ASSERT_FALSE(behAAA->isSuccess());
-    ASSERT_FALSE(behAAA->isFailure());
-
-    wm->behAAASetSuccess = true;
-    ac->stepEngine();
-    SLEEP_UNTIL(behAAA->isSuccess());
-    ASSERT_TRUE(behAAA->isSuccess());
-    ASSERT_FALSE(behAAA->isFailure());
-    ASSERT_FALSE(wm->behAAASetSuccessFailed);
-
-    wm->behAAASetSuccess = false;
-    wm->behAAASetFailure = true;
-    ac->stepEngine();
-    SLEEP_UNTIL(behAAA->isFailure());
-    ASSERT_FALSE(behAAA->isSuccess());
-    ASSERT_TRUE(behAAA->isFailure());
-    ASSERT_FALSE(wm->behAAASetFailureFailed);
-
-    wm->planA2PlanB = true;
-    wm->planB2PlanA = false;
-    ac->stepEngine();
-    wm->behAAASetSuccess = false;
-    wm->behAAASetFailure = false;
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ASSERT_TRUE(wm->behAAASuccessInTerminate);
-    ASSERT_TRUE(wm->behAAAFailureInTerminate);
-
-    wm->planA2PlanB = false;
-    wm->planB2PlanA = true;
-    ac->stepEngine();
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559);
-    ASSERT_FALSE(wm->behAAASuccessInInit);
-    ASSERT_FALSE(wm->behAAAFailureInInit);
-    ASSERT_FALSE(behAAA->isSuccess());
-    ASSERT_FALSE(behAAA->isFailure());
-
-    wm->behAAASetSuccess = true;
-    SLEEP_UNTIL(behAAA->isSuccess());
-    ASSERT_TRUE(behAAA->isSuccess());
-    ASSERT_FALSE(behAAA->isFailure());
-    ASSERT_FALSE(wm->behAAASetSuccessFailed);
-    wm->behAAABlockRun = true;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    wm->planA2PlanB = true;
-    wm->planB2PlanA = false;
-    wm->behAAABlockRun = false;
-    ac->stepEngine();
-    ASSERT_TRUE(wm->behAAASuccessInTerminate);
-    ASSERT_TRUE(wm->behAAAFailureInTerminate);
-}
-
-TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
-{
-    CounterClass::called = -1;
-    ae->start();
-
-    std::shared_ptr<alica_test::SchedWM> wm = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    wm->execOrderTest = true;
-    ac->stepEngine();
-
-    for (int i = 0; i < 10; ++i) {
-
-        STEP_UNTIL(alica::BehAAA::runCount >= 1);
-        SLEEP_UNTIL(alica::BehAAA::runCount >= 10);
-        ASSERT_GE(alica::BehAAA::runCount, 10);
-
-        wm->planA2PlanB = true;
-        wm->planB2PlanA = false;
-        STEP_UNTIL(alica::BehAAA::runCount == 0);
-
-        ASSERT_EQ(alica::BehAAA::runCount, 0);
-
-        STEP_UNTIL(alica::BehBAA::runCount >= 1);
-        SLEEP_UNTIL(alica::BehBAA::runCount >= 10);
-        ASSERT_GE(alica::BehBAA::runCount, 10);
-
-        wm->planA2PlanB = false;
-        wm->planB2PlanA = true;
-        STEP_UNTIL(alica::BehBAA::runCount == 0);
-        ASSERT_EQ(alica::BehBAA::runCount, 0);
-    }
-}
-
-TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
-{
-    CounterClass::called = -1;
-    ae->start();
-
-    std::shared_ptr<alica_test::SchedWM> wm = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-
-    wm->execBehaviourTest = true;
-    std::string orderString = "TestBehaviour::Init\nTestBehaviour::Run\n";
-    STEP_UNTIL(wm->execOrder == orderString);
-    EXPECT_EQ(wm->execOrder, orderString);
-
-    wm->transitionToExecuteBehaviour = false;
-    wm->transitionToExecuteBehaviourInSubPlan = true;
-    orderString += "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
-    STEP_UNTIL(wm->execOrder == orderString);
-    EXPECT_EQ(wm->execOrder, orderString);
-
-    std::string execOrderBeforeTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
-    std::string execOrderAfterTransition = execOrderBeforeTransition + "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
-
-    for (int i = 0; i < 10; i++) {
-        wm->execOrder = "";
-
-        wm->transitionToExecuteBehaviourInSubPlan = false;
-        wm->transitionToExecuteBehaviour = true;
-        STEP_UNTIL(wm->execOrder == execOrderBeforeTransition);
-        EXPECT_EQ(wm->execOrder, execOrderBeforeTransition);
-
-        wm->transitionToExecuteBehaviour = false;
-        wm->transitionToExecuteBehaviourInSubPlan = true;
-        STEP_UNTIL(wm->execOrder == execOrderAfterTransition);
-        EXPECT_EQ(wm->execOrder, execOrderAfterTransition);
-    }
-
-    wm->transitionToEndTest = true;
-}
-
-} // namespace
-} // namespace alica
+} // namespace alica::test
