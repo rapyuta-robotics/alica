@@ -4,6 +4,9 @@ project(alica_ros2_turtlesim)
 include(../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
+add_compile_options(-std=c++17)
+set(CMAKE_BUILD_TYPE Debug)
+
 ##################
 ## Dependencies ##
 ##################
