@@ -1,6 +1,10 @@
 #include "alica_ros_turtlesim/turtle_ros1_interfaces.hpp"
 
+#include <engine/blackboard/Blackboard.h>
+
 #include <geometry_msgs/Twist.h>
+#include <std_msgs/Empty.h>
+#include <std_msgs/String.h>
 #include <turtlesim/Spawn.h>
 #include <turtlesim/TeleportAbsolute.h>
 
@@ -99,6 +103,22 @@ bool TurtleRos1Interfaces::moveTowardPosition(float x, float y) const
     _velPub.publish(msg);
 
     return isReachGoal;
+}
+
+void TurtleRos1Interfaces::subOnMsg(const std::string& topic, alica::Blackboard* globalBlackboard)
+{
+    _subOnMsg = ros::NodeHandle("~").subscribe<std_msgs::String>(topic, 1, [&](const std_msgs::StringConstPtr& msg) {
+        alica::LockedBlackboardRW gb(*globalBlackboard);
+        gb.set("msg", msg->data);
+    });
+}
+
+void TurtleRos1Interfaces::subOnTrigger(const std::string& topic, alica::Blackboard* globalBlackboard)
+{
+    _subOnTrigger = ros::NodeHandle("~").subscribe<std_msgs::Empty>(topic, 1, [&](const std_msgs::EmptyConstPtr& msg) {
+        alica::LockedBlackboardRW gb(*globalBlackboard);
+        gb.set("triggered", true);
+    });
 }
 
 } // namespace turtlesim

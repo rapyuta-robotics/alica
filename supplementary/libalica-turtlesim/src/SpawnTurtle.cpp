@@ -20,7 +20,6 @@ SpawnTurtle::SpawnTurtle(alica::BehaviourContext& context)
 
 void SpawnTurtle::initialiseParameters()
 {
-    std::cerr << "INIT PARAMS CALLED; SPAWNING" << std::endl;
     // When we spawn the turtle, instantiate turtle interface into the global blackboard
     // These interface will be retrieved from global blackboard and used by other plans using the turtle
 
@@ -28,20 +27,15 @@ void SpawnTurtle::initialiseParameters()
     alica::LockedBlackboardRW g_bb(*getGlobalBlackboard());
     auto name = g_bb.get<std::string>("agentName");
     if (g_bb.hasValue("spawned") && g_bb.get<bool>("spawned")) {
-        Logging::logWarn("SpawnTurtle") << name << " was already spawned";
         setFailure();
         return;
     }
     auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     if (turtleInterfaces->spawn()) {
-        Logging::logInfo("SpawnTurtle") << name << " was spawned";
         g_bb.set("spawned", true);
-        Logging::logWarn("SpawnTurtle") << "set success";
         setSuccess();
     } else {
-        Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";
-        Logging::logWarn("SpawnTurtle") << "set success";
         setSuccess();
     }
 }
