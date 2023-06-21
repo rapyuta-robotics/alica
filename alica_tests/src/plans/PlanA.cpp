@@ -1,5 +1,4 @@
 #include <alica_tests/plans/PlanA.h>
-#include <alica_tests/test_sched_world_model.h>
 
 namespace alica
 {
@@ -10,23 +9,33 @@ PlanA::PlanA(PlanContext& context)
 }
 void PlanA::onInit()
 {
-    _wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    _wm->execOrder += "PlanA::Init\n";
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    if (gb.hasValue("execOrder")) {
+        std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+        execOrder.emplace_back(getName() + "::Init");
+    } else {
+        std::vector<std::string> execOrder;
+        execOrder.emplace_back(getName() + "::Init");
+        gb.set("execOrder", execOrder);
+    }
     _inRunContext = true;
 }
 
 void PlanA::run()
 {
-    _wm->planARunCalled = true;
     if (!_inRunContext) {
-        _wm->planARunOutOfOrder = true;
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunOutOfOrder", true);
+    } else {
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunCalled", true);
     }
 }
 
 void PlanA::onTerminate()
 {
     _inRunContext = false;
-    _wm->execOrder += "PlanA::Term\n";
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Term");
 }
 
 } // namespace alica

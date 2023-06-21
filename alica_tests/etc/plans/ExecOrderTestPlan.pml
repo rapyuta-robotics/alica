@@ -1,31 +1,39 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 1592696283737954035,
+      "key": "EntryState2PlanAState",
+      "type": "bool"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
-      "id": 1629895738193,
+      "id": 3081710972011240518,
       "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
-      "name": "1629895738193",
-      "plan": 1629895582410,
+      "name": "",
+      "plan": 3264434119601111942,
       "positionWeb": {
-        "x": 200,
-        "y": 212
+        "x": -11.882591093117409,
+        "y": 217.10979432326096
       },
-      "state": 1629895681520,
+      "state": 1499196400105849381,
       "successRequired": false,
-      "task": "taskrepository.tsk#1613371619454"
+      "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 1629895582410,
+  "id": 3264434119601111942,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
-  "name": "OrderedSchedulingTestPlan",
+  "name": "ExecOrderTestPlan",
   "preCondition": null,
   "runtimeCondition": null,
   "states": [
@@ -33,30 +41,48 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "PlanA.pml#1629895837159",
+          "abstractPlan": "PlanB.pml#1629895853508",
           "comment": "",
           "configuration": null,
-          "id": 1629895930356,
+          "id": 329278439059332417,
           "keyMapping": {
             "input": [],
             "output": []
           },
-          "name": "1629895930356"
+          "name": ""
         }
       ],
-      "entryPoint": 1629895738193,
-      "id": 1629895681520,
+      "entryPoint": null,
+      "id": 1169226780739813167,
       "inTransitions": [
-        1629895768181
+        1937475276147842179
       ],
-      "name": "PlanAState",
+      "name": "PlanBState",
       "outTransitions": [
-        1629895758611,
-        3753727146437722291
+        493677033086680687,
+        2746610331342381508
       ],
-      "parentPlan": 1629895582410,
+      "parentPlan": 3264434119601111942,
       "positionWeb": {
-        "x": 428,
+        "x": 716,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 3081710972011240518,
+      "id": 1499196400105849381,
+      "inTransitions": [],
+      "name": "EntryState",
+      "outTransitions": [
+        1613013324428941308
+      ],
+      "parentPlan": 3264434119601111942,
+      "positionWeb": {
+        "x": 200,
         "y": 200
       },
       "type": "State",
@@ -66,31 +92,31 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "PlanB.pml#1629895853508",
+          "abstractPlan": "PlanA.pml#1629895837159",
           "comment": "",
           "configuration": null,
-          "id": 1629895934743,
+          "id": 3082238635369072637,
           "keyMapping": {
             "input": [],
             "output": []
           },
-          "name": "1629895934743"
+          "name": ""
         }
       ],
       "entryPoint": null,
-      "id": 1629895684249,
+      "id": 3083796984126971274,
       "inTransitions": [
-        1629895758611
+        1613013324428941308,
+        2746610331342381508
       ],
-      "name": "PlanBState",
+      "name": "PlanAState",
       "outTransitions": [
-        1629895768181,
-        694002433690351298
+        1937475276147842179
       ],
-      "parentPlan": 1629895582410,
+      "parentPlan": 3264434119601111942,
       "positionWeb": {
-        "x": 686,
-        "y": 400
+        "x": 458,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -99,126 +125,53 @@
       "comment": "",
       "confAbstractPlanWrappers": [],
       "entryPoint": null,
-      "id": 3402337965458468818,
+      "id": 3313013107349346212,
       "inTransitions": [
-        200267174688903928
+        493677033086680687
       ],
       "name": "SuccessState",
       "outTransitions": [],
-      "parentPlan": 1629895582410,
+      "parentPlan": 3264434119601111942,
       "positionWeb": {
-        "x": 1202,
-        "y": 400
+        "x": 974,
+        "y": 200
       },
       "postCondition": null,
       "success": true,
       "type": "TerminalState",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 3432579755629291493,
-      "inTransitions": [
-        694002433690351298,
-        3753727146437722291
-      ],
-      "name": "StringCompareState",
-      "outTransitions": [
-        200267174688903928
-      ],
-      "parentPlan": 1629895582410,
-      "positionWeb": {
-        "x": 944,
-        "y": 400
-      },
-      "type": "State",
       "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
     {
-      "comment": "MISSING_COMMENT",
-      "condition": null,
-      "id": 1629895758611,
-      "inState": 1629895681520,
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3677391121921226485",
+      "id": 493677033086680687,
+      "inState": 1169226780739813167,
       "keyMapping": {
-        "input": [],
+        "input": [
+          {
+            "childKey": "expected",
+            "parentKey": null,
+            "value": 81
+          }
+        ],
         "output": []
       },
-      "name": "FromPlanATo PlanB",
-      "outState": 1629895684249,
+      "name": "",
+      "outState": 3313013107349346212,
       "pointsWeb": [
         {
-          "x": 586,
+          "x": 874,
           "y": 229
         }
       ],
       "preCondition": {
         "comment": "",
-        "conditionString": null,
-        "enabled": true,
-        "id": 1629895758612,
-        "name": "1629895758612",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "MISSING_COMMENT",
-      "condition": null,
-      "id": 1629895768181,
-      "inState": 1629895684249,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "FromPlanBTo PlanA",
-      "outState": 1629895681520,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 429
-        }
-      ],
-      "preCondition": {
-        "comment": "",
-        "conditionString": null,
-        "enabled": true,
-        "id": 1629895768182,
-        "name": "1629895768182",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": null,
-      "id": 200267174688903928,
-      "inState": 3432579755629291493,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 3402337965458468818,
-      "pointsWeb": [
-        {
-          "x": 1102,
-          "y": 429
-        }
-      ],
-      "preCondition": {
-        "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 625966142166329558,
+        "id": 2144060677891213947,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -228,26 +181,32 @@
     },
     {
       "comment": "",
-      "condition": null,
-      "id": 694002433690351298,
-      "inState": 1629895684249,
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 1613013324428941308,
+      "inState": 1499196400105849381,
       "keyMapping": {
-        "input": [],
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "EntryState2PlanAState",
+            "value": null
+          }
+        ],
         "output": []
       },
       "name": "",
-      "outState": 3432579755629291493,
+      "outState": 3083796984126971274,
       "pointsWeb": [
         {
-          "x": 844,
-          "y": 429
+          "x": 358,
+          "y": 229
         }
       ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3195499981885855124,
+        "id": 2603548172229370814,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -257,26 +216,18 @@
     },
     {
       "comment": "",
-      "condition": null,
-      "id": 3753727146437722291,
-      "inState": 1629895681520,
+      "condition": "ConditionRepository.cnd#2",
+      "id": 1937475276147842179,
+      "inState": 3083796984126971274,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 3432579755629291493,
+      "outState": 1169226780739813167,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 29
-        },
-        {
-          "x": 715,
-          "y": 29
-        },
-        {
-          "x": 844,
+          "x": 616,
           "y": 29
         }
       ],
@@ -284,7 +235,42 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 4569564929046231736,
+        "id": 1507856381414068358,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#2985374601173748991",
+      "id": 2746610331342381508,
+      "inState": 1169226780739813167,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "expected",
+            "parentKey": null,
+            "value": 81
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3083796984126971274,
+      "pointsWeb": [
+        {
+          "x": 616,
+          "y": 229
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1053756108049156514,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

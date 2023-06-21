@@ -24,6 +24,6 @@ build
 
 RUN <<runtests
   source devel/setup.bash
-  GTEST_FILTER=-AlicaTurtlesimTest.* catkin run_tests --no-status || exit 1
+  CTEST_OUTPUT_ON_FAILURE=1 GTEST_FILTER=-AlicaTurtlesimTest.* catkin run_tests --no-status || exit 1
   catkin_test_results --verbose
 runtests

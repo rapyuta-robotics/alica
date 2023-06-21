@@ -6,11 +6,6 @@
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
 
-namespace alica_test
-{
-class SchedWM;
-}
-
 namespace alica
 {
 class PlanAA : public AlicaTestsPlan<PlanAA>
@@ -21,9 +16,6 @@ public:
 protected:
     virtual void onInit() override;
     virtual void onTerminate() override;
-
-private:
-    std::shared_ptr<alica_test::SchedWM> _wm;
 };
 
 BOOST_DLL_ALIAS(alica::PlanAA::create, PlanAA)

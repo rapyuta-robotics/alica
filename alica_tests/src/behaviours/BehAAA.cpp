@@ -14,65 +14,31 @@ BehAAA::BehAAA(BehaviourContext& context)
 BehAAA::~BehAAA() {}
 void BehAAA::run()
 {
-    ++runCount;
-    _wm->behAAARunCalled = true;
+    if (isSuccess()) {
+        return;
+    }
     if (!_inRunContext) {
-        _wm->behAAARunOutOfOrder = true;
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunOutOfOrder", true);
+    } else {
+        LockedBlackboardRW(*getGlobalBlackboard()).set(getName() + "RunCalled", true);
     }
-
-    if (_wm->behAAASetFailure) {
-        setFailure();
-        if (!isFailure()) {
-            _wm->behAAASetFailureFailed = true;
-        }
-    }
-    if (_wm->behAAASetSuccess) {
-        setSuccess();
-        if (!isSuccess()) {
-            _wm->behAAASetSuccessFailed = true;
-        }
-    }
-
-    while (_wm->behAAABlockRun) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
+    setSuccess();
 }
 void BehAAA::initialiseParameters()
 {
-    runCount = 0;
-    _wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
-    _wm->execOrder += "BehAAA::Init\n";
-    _inRunContext = true;
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Init");
 
-    if (isSuccess()) {
-        _wm->behAAASuccessInInit = true;
-    }
-    if (isFailure()) {
-        _wm->behAAAFailureInInit = true;
-    }
+    _inRunContext = true;
 }
 
 void BehAAA::onTermination()
 {
-    runCount = 0;
     _inRunContext = false;
-    _wm->execOrder += "BehAAA::Term\n";
-
-    if (isSuccess()) {
-        _wm->behAAASuccessInTerminate = true;
-    }
-    setSuccess();
-    if (isSuccess()) {
-        _wm->behAAASuccessInTerminate = true;
-    }
-
-    if (isFailure()) {
-        _wm->behAAAFailureInTerminate = true;
-    }
-    setFailure();
-    if (isFailure()) {
-        _wm->behAAAFailureInTerminate = true;
-    }
+    LockedBlackboardRW gb(*getGlobalBlackboard());
+    std::vector<std::string>& execOrder = gb.get<std::vector<std::string>>("execOrder");
+    execOrder.emplace_back(getName() + "::Term");
 }
 
 std::unique_ptr<BehAAA> BehAAA::create(alica::BehaviourContext& context)
