@@ -1,7 +1,5 @@
 #pragma once
 
-// #include <ros/ros.h>
-// #include <turtlesim/Pose.h>
 #include <string>
 
 namespace alica

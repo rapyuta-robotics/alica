@@ -65,8 +65,6 @@ target_link_libraries(${PROJECT_NAME}
                         turtle_interface
 )
 
-add_subdirectory(libalica-ros-utils)
-
 ##########
 ## Test ##
 ##########
