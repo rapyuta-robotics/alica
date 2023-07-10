@@ -1,0 +1,62 @@
+{
+  "comment": "",
+  "conditions": [
+    {
+      "blackboard": [],
+      "comment": "Is true if atleast 1 child attached to a state succeeds",
+      "conditionRepository": 0,
+      "id": 1,
+      "libraryName": "alica_standard_library",
+      "name": "AnyChildSuccess"
+    },
+    {
+      "blackboard": [],
+      "comment": "Is true if all children attached to a state succeed",
+      "conditionRepository": 0,
+      "id": 2,
+      "libraryName": "alica_standard_library",
+      "name": "AllChildSuccess"
+    },
+    {
+      "blackboard": [],
+      "comment": "AnyChildFailure",
+      "conditionRepository": 0,
+      "id": 3,
+      "libraryName": "alica_standard_library",
+      "name": "AnyChildFailure"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildFailure",
+      "conditionRepository": 0,
+      "id": 4,
+      "libraryName": "alica_standard_library",
+      "name": "AllChildFailure"
+    },
+    {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "id": 1522671554895393021,
+          "key": "left",
+          "type": "std::string"
+        },
+        {
+          "access": "input",
+          "comment": "",
+          "id": 3837414941606102992,
+          "key": "right",
+          "type": "std::string"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 976473172990372064,
+      "libraryName": "alica_standard_library",
+      "name": "IsEqualString"
+    }
+  ],
+  "id": 0,
+  "name": "ConditionRepository"
+}
