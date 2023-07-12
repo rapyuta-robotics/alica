@@ -25,7 +25,6 @@ find_package(alica_solver_interface)
 find_package(ament_cmake REQUIRED)
 find_package(alica_msgs REQUIRED)
 find_package(alica_dynamic_loading REQUIRED)
-find_package(turtle_interface REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 if (NOT Boost_FOUND)
       message(FATAL_ERROR "Fatal error: Boost required.\n")
@@ -36,6 +35,7 @@ endif (NOT Boost_FOUND)
 ###########
 
 include_directories(
+    ../include
     include
     ${turtlesim_INCLUDE_DIRS}
 )
@@ -57,8 +57,10 @@ target_link_libraries(${PROJECT_NAME}
     Boost::filesystem
     ${turtlesim_LIBRARIES}
     ${geometry_msgs_LIBRARIES}
-    turtle_interface
 )
+
+add_subdirectory(../libalica-turtlesim ../libalica-turtlesim)
+add_subdirectory(libalica-ros2-utils)
 
 ament_target_dependencies(alica_ros2_turtlesim
   rclcpp

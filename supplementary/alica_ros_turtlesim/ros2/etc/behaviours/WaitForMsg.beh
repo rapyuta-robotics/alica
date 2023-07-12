@@ -22,7 +22,7 @@
   "id": 2324679431617631864,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "libalica-ros-utils",
   "name": "WaitForMsg",
   "postCondition": null,
   "preCondition": null,

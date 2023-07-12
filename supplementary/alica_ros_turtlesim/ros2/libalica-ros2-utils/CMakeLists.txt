@@ -1,20 +1,14 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(libalica-turtlesim)
+project(libalica-ros2-utils)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake_flags/cflags.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 add_library(${PROJECT_NAME} SHARED
-  src/CircleRuntimeCondition.cpp
-  src/Idle.cpp
-  src/GoTo.cpp
-  src/GoToCalculatedResult.cpp
-  src/MakeFormation.cpp
-  src/RotateTurtle.cpp
-  src/SpawnTurtle.cpp
-  src/Teleport.cpp
+  src/WaitForTrigger.cpp
+  src/WaitForMsg.cpp
 )
-target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)
+target_link_libraries(${PROJECT_NAME} alica_engine ${geometry_msgs_LIBRARIES} alica_ros2_proxy)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 install(TARGETS ${PROJECT_NAME}
