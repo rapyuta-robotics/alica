@@ -22,7 +22,6 @@
   <depend>alica_ros2_proxy</depend>
   <depend>constraintsolver</depend>
   <depend>alica-turtlesim</depend>
-  <depend>turtle_interface</depend>
   <depend>alica_standard_library</depend>
   <export>
   <build_type>ament_cmake</build_type>

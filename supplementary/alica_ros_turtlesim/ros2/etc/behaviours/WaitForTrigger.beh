@@ -15,7 +15,7 @@
   "id": 1320667069122998665,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "libalica-ros-utils",
   "name": "WaitForTrigger",
   "postCondition": null,
   "preCondition": null,
