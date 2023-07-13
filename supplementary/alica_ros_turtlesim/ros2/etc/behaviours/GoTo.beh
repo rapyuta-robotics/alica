@@ -1,0 +1,31 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 489836023935790753,
+      "key": "goal_x",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 827646288361861518,
+      "key": "goal_y",
+      "type": "double"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 2797939494274869075,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "libalica-turtlesim",
+  "name": "GoTo",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}
