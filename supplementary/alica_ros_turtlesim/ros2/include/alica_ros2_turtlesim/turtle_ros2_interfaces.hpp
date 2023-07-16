@@ -37,16 +37,12 @@ public:
     bool spawn() override;                                                // Spawn the turtle in the middle of the map
     bool moveTowardPosition(const float x, const float y) const override; // publish cmd_vel based on input(x,y) and current pose
     void rotate(const float dYaw) override;
-    void subOnMsg(const std::string& topic, alica::Blackboard* globalBlackboard) override;
-    void subOnTrigger(const std::string& topic, alica::Blackboard* globalBlackboard) override;
 
 private:
-    std::string _name;                                                   // name of turtle
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _velPub;     // publish cmd_vel to the turtlesim
-    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr _poseSub;      // subscribe turtleX/pose from the turtlesim
-    rclcpp::Client<srv::TeleportAbsolute>::SharedPtr _teleportClient;    // client of teleportAbsolute service
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr _subOnMsg;    // subscribe to all msgs
-    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _subOnTrigger; // subscribe to empty trigger msg
+    std::string _name;                                                // name of turtle
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _velPub;  // publish cmd_vel to the turtlesim
+    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr _poseSub;   // subscribe turtleX/pose from the turtlesim
+    rclcpp::Client<srv::TeleportAbsolute>::SharedPtr _teleportClient; // client of teleportAbsolute service
     rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr _spawnClient;
     msg::Pose::ConstSharedPtr _current; // current position
     msg::Pose _goal;                    // goal position

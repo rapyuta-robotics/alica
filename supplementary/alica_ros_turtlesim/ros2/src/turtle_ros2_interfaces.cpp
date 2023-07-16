@@ -119,20 +119,4 @@ bool TurtleRos2Interfaces::moveTowardPosition(float x, float y) const
     return isReachGoal;
 }
 
-void TurtleRos2Interfaces::subOnMsg(const std::string& topic, alica::Blackboard* globalBlackboard)
-{
-    _subOnMsg = _nh->create_subscription<std_msgs::msg::String>(topic, 10, [&](const std_msgs::msg::String& msg) {
-        alica::LockedBlackboardRW gb(*globalBlackboard);
-        gb.set("msg", msg.data);
-    });
-}
-
-void TurtleRos2Interfaces::subOnTrigger(const std::string& topic, alica::Blackboard* globalBlackboard)
-{
-    _subOnTrigger = _nh->create_subscription<std_msgs::msg::Empty>(topic, 10, [&](const std_msgs::msg::Empty& msg) {
-        alica::LockedBlackboardRW gb(*globalBlackboard);
-        gb.set("triggered", true);
-    });
-}
-
 } // namespace turtlesim
