@@ -35,7 +35,7 @@ private:
     ros::Subscriber _poseSub;                      // subscribe turtleX/pose from the turtlesim
     ros::ServiceClient _teleportClient;            // client of teleportAbsolute service
     ros::ServiceClient _spawnClient;
-    PoseConstPtr _currentPose;     // current position
+    PoseConstPtr _currentPose; // current position
     std::string _name;
 };
 
