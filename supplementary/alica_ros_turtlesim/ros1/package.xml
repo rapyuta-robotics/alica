@@ -21,7 +21,5 @@
   <depend>alica_ros_proxy</depend>
   <depend>alica_standard_library</depend>
   <depend>constraintsolver</depend>
-  <depend>alica-turtlesim</depend>
-  <depend>turtle_interface</depend>
 
 </package>
