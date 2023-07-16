@@ -1,7 +1,5 @@
 #include "SpawnTurtle.h"
 
-// #include <ros/ros.h>
-
 #include <memory>
 #include <random>
 

@@ -28,8 +28,6 @@ public:
     bool spawn() override;                                                // Spawn the turtle in the middle of the map
     bool moveTowardPosition(const float x, const float y) const override; // publish cmd_vel based on input(x,y) and current pose
     void rotate(const float dYaw) override;
-    void subOnMsg(const std::string& topic, alica::Blackboard* globalBlackboard) override;
-    void subOnTrigger(const std::string& topic, alica::Blackboard* globalBlackboard) override;
 
 private:
     void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim
@@ -37,8 +35,6 @@ private:
     ros::Subscriber _poseSub;                      // subscribe turtleX/pose from the turtlesim
     ros::ServiceClient _teleportClient;            // client of teleportAbsolute service
     ros::ServiceClient _spawnClient;
-    ros::Subscriber _subOnMsg;     // subscribe to all msgs
-    ros::Subscriber _subOnTrigger; // subscribe to empty trigger msg
     PoseConstPtr _currentPose;     // current position
     std::string _name;
 };
