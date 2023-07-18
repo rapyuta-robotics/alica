@@ -188,7 +188,6 @@ private:
         }
     };
 
-    bool _initCalled;
     mutable std::string _lastFailureInfo;
 };
 
