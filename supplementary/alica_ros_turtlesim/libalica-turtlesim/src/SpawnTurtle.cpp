@@ -25,6 +25,7 @@ void SpawnTurtle::initialiseParameters()
     alica::LockedBlackboardRW g_bb(*getGlobalBlackboard());
     auto name = g_bb.get<std::string>("agentName");
     if (g_bb.hasValue("spawned") && g_bb.get<bool>("spawned")) {
+        Logging::logWarn("SpawnTurtle") << name << " was already spawned";
         setFailure();
         return;
     }
@@ -35,6 +36,7 @@ void SpawnTurtle::initialiseParameters()
         g_bb.set("spawned", true);
         setSuccess();
     } else {
+        Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";
         setSuccess();
     }
 }
