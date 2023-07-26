@@ -31,6 +31,7 @@ void SpawnTurtle::initialiseParameters()
     auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     if (turtleInterfaces->spawn()) {
+        Logging::logInfo("SpawnTurtle") << name << " was spawned";
         g_bb.set("spawned", true);
         setSuccess();
     } else {
