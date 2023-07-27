@@ -3,7 +3,7 @@
 #include <memory>
 #include <random>
 
-#include "turtle_interfaces.hpp"
+#include <alica_turtlesim/turtle_interfaces.hpp>
 #include <engine/logging/Logging.h>
 
 using Logging = alica::Logging;
@@ -25,18 +25,15 @@ void SpawnTurtle::initialiseParameters()
     alica::LockedBlackboardRW g_bb(*getGlobalBlackboard());
     auto name = g_bb.get<std::string>("agentName");
     if (g_bb.hasValue("spawned") && g_bb.get<bool>("spawned")) {
-        Logging::logWarn("SpawnTurtle") << name << " was already spawned";
         setFailure();
         return;
     }
     auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     if (turtleInterfaces->spawn()) {
-        Logging::logInfo("SpawnTurtle") << name << " was spawned";
         g_bb.set("spawned", true);
         setSuccess();
     } else {
-        Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";
         setSuccess();
     }
 }
