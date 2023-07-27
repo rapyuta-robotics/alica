@@ -41,7 +41,6 @@ catkin_package(
 ###########
 
 include_directories(
-    ../include
     include
     ${catkin_INCLUDE_DIRS}
     ${YAML_CPP_INCLUDE_DIR}
