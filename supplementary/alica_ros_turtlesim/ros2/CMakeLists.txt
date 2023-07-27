@@ -4,9 +4,6 @@ project(alica_ros2_turtlesim)
 include(../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
-add_compile_options(-std=c++17)
-set(CMAKE_BUILD_TYPE Debug)
-
 ##################
 ## Dependencies ##
 ##################
@@ -35,7 +32,6 @@ endif (NOT Boost_FOUND)
 ###########
 
 include_directories(
-    ../include
     include
     ${turtlesim_INCLUDE_DIRS}
 )
@@ -55,11 +51,13 @@ target_link_libraries(${PROJECT_NAME}
     alica_dynamic_loading
     Boost::system
     Boost::filesystem
+    alica_turtlesim
     ${turtlesim_LIBRARIES}
     ${geometry_msgs_LIBRARIES}
 )
 
 add_subdirectory(../libalica-turtlesim ../libalica-turtlesim)
+add_subdirectory(../alica_turtlesim ../alica_turtlesim)
 add_subdirectory(libalica-ros2-utils)
 
 ament_target_dependencies(alica_ros2_turtlesim
@@ -75,7 +73,7 @@ ament_export_dependencies(alica_ros2_turtlesim
     alica_ros2_proxy
 )
 
-#############
+#############<
 ## Install ##
 #############
 
@@ -87,7 +85,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION include/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch etc ../etc
+install(DIRECTORY launch etc
     DESTINATION share/${PROJECT_NAME}
 )
 
