@@ -14,7 +14,7 @@ add_library(${PROJECT_NAME} SHARED
   src/SpawnTurtle.cpp
   src/Teleport.cpp
 )
-target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)
+target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver alica_turtlesim)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 install(TARGETS ${PROJECT_NAME}

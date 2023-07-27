@@ -62,9 +62,11 @@ target_link_libraries(${PROJECT_NAME}
                         alica_dynamic_loading
                         autodiff
                         constraintsolver
+                        alica_turtlesim
 )
 
 add_subdirectory(../libalica-turtlesim ../libalica-turtlesim)
+add_subdirectory(../alica_turtlesim ../alica_turtlesim)
 add_subdirectory(libalica-ros-utils)
 
 ##########
@@ -93,10 +95,10 @@ install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY include/${PROJECT_NAME}/ ../include
+install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
-install(DIRECTORY launch etc ../etc
+install(DIRECTORY launch etc
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
