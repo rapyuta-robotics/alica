@@ -14,6 +14,7 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <utility>
 #include <variant>
 #include <yaml-cpp/yaml.h>
 
@@ -411,7 +412,7 @@ public:
     bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
 
 protected:
-    decltype(B::_impl)& _impl;
+    decltype((std::declval<B>()._impl))& _impl;
 };
 
 template <typename B = Blackboard>
