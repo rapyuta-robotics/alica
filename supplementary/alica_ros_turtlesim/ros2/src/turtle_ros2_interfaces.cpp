@@ -85,10 +85,10 @@ bool TurtleRos2Interfaces::moveTowardPosition(float x, float y) const
         return false;
     }
     // Transform goal position into coordinates of turtle body frame
-    float cosTheta = std::cos(_current->theta);
-    float sinTheta = std::sin(_current->theta);
-    float dx = x - _current->x;
-    float dy = y - _current->y;
+    const float cosTheta = std::cos(_current->theta);
+    const float sinTheta = std::sin(_current->theta);
+    const float dx = x - _current->x;
+    const float dy = y - _current->y;
 
     // Calculate goal distance and return true if reach goal
     constexpr float goalTolerance = 0.01;
