@@ -8,7 +8,6 @@
 #include <std_msgs/msg/empty.hpp>
 
 #include <atomic>
-#include <memory>
 
 namespace ros_utils
 {

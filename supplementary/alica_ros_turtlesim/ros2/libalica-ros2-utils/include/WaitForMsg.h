@@ -6,9 +6,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
-#include <atomic>
-#include <memory>
-
 namespace ros_utils
 {
 
