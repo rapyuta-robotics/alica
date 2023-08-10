@@ -346,13 +346,16 @@ private:
     };
 };
 
+template <typename B>
+class UnlockedBlackboardROImpl;
 } // namespace internal
 
 class Blackboard
 {
     friend class LockedBlackboardRW;
     friend class LockedBlackboardRO;
-    friend class UnlockedBlackboard;
+    template <typename B>
+    friend class internal::UnlockedBlackboardROImpl;
     friend class BlackboardUtil;
     friend class TestBlackboard;
 
@@ -380,6 +383,50 @@ private:
     internal::BlackboardImpl _impl;
     mutable std::shared_mutex _mtx;
 };
+
+namespace internal
+{
+template <typename B = const Blackboard>
+class UnlockedBlackboardROImpl
+{
+public:
+    explicit UnlockedBlackboardROImpl(B& bb)
+            : _impl(bb._impl)
+    {
+    }
+
+    UnlockedBlackboardROImpl(const UnlockedBlackboardROImpl&) = delete;
+    UnlockedBlackboardROImpl(UnlockedBlackboardROImpl&&) = delete;
+    UnlockedBlackboardROImpl& operator=(const UnlockedBlackboardROImpl&) = delete;
+    UnlockedBlackboardROImpl& operator=(UnlockedBlackboardROImpl&&) = delete;
+
+    template <typename T>
+    decltype(auto) get(const std::string& key) const
+    {
+        return _impl.template get<T>(key);
+    }
+
+    bool empty() const { return _impl.empty(); }
+    size_t size() const { return _impl.size(); }
+    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
+
+protected:
+    decltype(B::_impl)& _impl;
+};
+
+template <typename B = Blackboard>
+class UnlockedBlackboardRWImpl : public UnlockedBlackboardROImpl<B>
+{
+public:
+    using UnlockedBlackboardROImpl<B>::UnlockedBlackboardROImpl;
+
+    template <typename T>
+    void set(const std::string& key, T&& value)
+    {
+        UnlockedBlackboardRWImpl::_impl.set(key, std::forward<T>(value));
+    }
+};
+} // namespace internal
 
 class LockedBlackboardRO
 {
@@ -448,42 +495,6 @@ private:
     internal::BlackboardImpl& _impl;
 };
 
-class UnlockedBlackboard
-{
-public:
-    UnlockedBlackboard(Blackboard& bb)
-            : _impl(bb._impl)
-    {
-    }
-    UnlockedBlackboard(const UnlockedBlackboard&) = delete;
-    UnlockedBlackboard(UnlockedBlackboard&&) = delete;
-    UnlockedBlackboard& operator=(const UnlockedBlackboard&) = delete;
-    UnlockedBlackboard& operator=(UnlockedBlackboard&&) = delete;
-
-    template <typename T>
-    decltype(auto) get(const std::string& key) const
-    {
-        return _impl.get<T>(key);
-    }
-
-    template <typename T>
-    decltype(auto) get(const std::string& key)
-    {
-        return _impl.get<T>(key);
-    }
-
-    template <typename T>
-    void set(const std::string& key, T&& value)
-    {
-        _impl.set(key, std::forward<T>(value));
-    }
-
-    bool empty() const { return _impl.empty(); }
-    size_t size() const { return _impl.size(); }
-    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
-
-private:
-    internal::BlackboardImpl& _impl;
-};
-
+using UnlockedBlackboardRO = internal::UnlockedBlackboardROImpl<>;
+using UnlockedBlackboard = internal::UnlockedBlackboardRWImpl<>;
 } // namespace alica
