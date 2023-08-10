@@ -99,17 +99,17 @@ bool TurtleRos2Interfaces::moveTowardPosition(float x, float y) const
     }
 
     // Transform to turtle body frame
-    float txG = dx * cosTheta + dy * sinTheta;
-    float tyG = -dx * sinTheta + dy * cosTheta;
+    const float txG = dx * cosTheta + dy * sinTheta;
+    const float tyG = -dx * sinTheta + dy * cosTheta;
 
     // Simple proposional control
     constexpr float kLin = 2.0;
     constexpr float kAng = 2.0;
 
-    float linearX = kLin * txG;
-    float linearY = kLin * tyG;
-    float headingError = std::atan2(linearY, linearX);
-    float angular = kAng * headingError;
+    const float linearX = kLin * txG;
+    const float linearY = kLin * tyG;
+    const float headingError = std::atan2(linearY, linearX);
+    const float angular = kAng * headingError;
 
     geometry_msgs::msg::Twist msg;
     msg.linear.x = linearX;
