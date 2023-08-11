@@ -36,7 +36,6 @@ private:
     ros::ServiceClient _teleportClient;            // client of teleportAbsolute service
     ros::ServiceClient _spawnClient;
     PoseConstPtr _currentPose; // current position
-    std::string _name;
 };
 
 } // namespace turtlesim
