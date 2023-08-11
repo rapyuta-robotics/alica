@@ -20,7 +20,8 @@ namespace turtlesim
 class TurtleInterfaces
 {
 public:
-    TurtleInterfaces(const std::string& name){};
+    TurtleInterfaces(const std::string& name)
+            : _name(name){};
     virtual bool teleport(const float x, const float y) = 0;                 // teleport turtle to (x,y)
     virtual bool spawn() = 0;                                                // Spawn the turtle in the middle of the map
     virtual bool moveTowardPosition(const float x, const float y) const = 0; // publish cmd_vel based on input(x,y) and current pose
