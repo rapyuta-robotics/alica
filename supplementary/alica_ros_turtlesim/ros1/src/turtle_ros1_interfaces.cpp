@@ -13,7 +13,6 @@ namespace turtlesim
 
 TurtleRos1Interfaces::TurtleRos1Interfaces(const std::string& name)
         : TurtleInterfaces(name)
-        , _name(name)
 {
     // initialize publisher, subscriber and service client.
     ros::NodeHandle nh("~");
