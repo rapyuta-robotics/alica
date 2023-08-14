@@ -27,7 +27,7 @@ public:
     bool teleport(const float x, const float y) override;                 // teleport turtle to (x,y)
     bool spawn() override;                                                // Spawn the turtle in the middle of the map
     bool moveTowardPosition(const float x, const float y) const override; // publish cmd_vel based on input(x,y) and current pose
-    void rotate(const float dYaw) override;
+    void rotate(const float dYaw) override;                               // publish rotating speed of turtle based on (dYaw)
 
 private:
     void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim
