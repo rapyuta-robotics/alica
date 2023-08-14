@@ -25,7 +25,7 @@ public:
     virtual bool teleport(const float x, const float y) = 0;                 // teleport turtle to (x,y)
     virtual bool spawn() = 0;                                                // Spawn the turtle in the middle of the map
     virtual bool moveTowardPosition(const float x, const float y) const = 0; // publish cmd_vel based on input(x,y) and current pose
-    virtual void rotate(const float dYaw) = 0;
+    virtual void rotate(const float dYaw) = 0;                               // publish rotating speed of turtle based on (dYaw)
 
 protected:
     std::string _name;
