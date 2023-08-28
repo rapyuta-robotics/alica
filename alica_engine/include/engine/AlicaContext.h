@@ -87,31 +87,6 @@ struct AlicaContextParams
 {
     /**
      * @param agentName Name of the local agent.
-     * @param configPath Path to the configuration folder.
-     * @param roleSetName Name of the roleSet.
-     * @param masterPlanName Name of the masterPlan
-     * @param stepEngine Signify engine is trigger based. Defaults to false.
-     * @param agentID Identifier of the local Agent. If no identifier is given,
-     * the engine will try to read the local agent's identifier from the
-     * Alica.yaml config instead. If no identifier is specified in the
-     * config as well, the engine will generate a random identifier.
-     *
-     * @note The configPaths are the paths containing the plans, roles and tasks.
-     */
-    [[deprecated("Use AlicaContextParams(agentName, configPaths, ...) instead")]] AlicaContextParams(const std::string& agentName,
-            const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine = false,
-            const AgentId agentID = InvalidAgentID)
-            : agentName(agentName)
-            , configPaths{configPath}
-            , roleSetName(roleSetName)
-            , masterPlanName(masterPlanName)
-            , stepEngine(stepEngine)
-            , agentID(agentID)
-    {
-    }
-
-    /**
-     * @param agentName Name of the local agent.
      * @param configPaths Paths to the configuration folders.
      * @param roleSetName Name of the roleSet.
      * @param masterPlanName Name of the masterPlan
@@ -211,17 +186,6 @@ public:
 
     AlicaContext(const AlicaContext& other) = delete;
     AlicaContext& operator=(const AlicaContext& other) = delete;
-
-    /**
-     * Initialize alica framework and related modules.
-     *
-     * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
-     *
-     * @return Return code '0' stands for success, any other for corresponding error
-     *
-     * @see AlicaCreators
-     */
-    [[deprecated("call init(std::move(creators)) instead")]] int init(AlicaCreators& creatorCtx);
 
     /**
      * Initialize alica framework and related modules.

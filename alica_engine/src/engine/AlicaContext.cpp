@@ -39,13 +39,6 @@ AlicaContext::~AlicaContext()
     AlicaLogger::destroy();
 }
 
-int AlicaContext::init(AlicaCreators& creatorCtx)
-{
-    AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
-            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator), std::move(creatorCtx.transitionConditionCreator));
-    return init(std::move(creators));
-}
-
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
