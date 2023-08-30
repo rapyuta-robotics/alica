@@ -1,0 +1,52 @@
+{
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 3706990525099241821,
+      "key": "boolValue",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 1222393410146565572,
+      "key": "doubleValue",
+      "type": "double"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 3560798916678625481,
+      "key": "intValue",
+      "type": "int64"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 4545092499539927335,
+      "key": "stringValue",
+      "type": "std::string"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 20670761374664944,
+      "key": "uintValue",
+      "type": "uint64"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 563281824642724619,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-tests",
+  "name": "BlackboardExceptionTestBeh",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}

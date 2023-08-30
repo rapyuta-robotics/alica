@@ -1,0 +1,24 @@
+{
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 3617953517100981902,
+      "key": "anyValue",
+      "type": "std::any"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 215712651194641312,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-tests",
+  "name": "SetAsAnyTestBeh",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}
