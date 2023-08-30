@@ -247,7 +247,7 @@ private:
                 return i + 1;
             }
         }
-        return {};
+        return std::nullopt;
     }
 
     static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "uint64", "double", "std::string"};

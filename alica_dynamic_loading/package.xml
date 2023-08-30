@@ -9,8 +9,9 @@
   <license>MIT</license>
 
   <depend>alica_engine</depend>
+  <depend>yaml-cpp</depend>
 
-<buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>cmake</buildtool_depend>
 
   <export>
     <build_type>cmake</build_type>

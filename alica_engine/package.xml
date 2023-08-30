@@ -15,6 +15,7 @@
     <build_type>cmake</build_type>
   </export>
   <depend>alica_solver_interface</depend>
+  <depend>yaml-cpp</depend>
 
   <test_depend>gtest</test_depend>
 </package>
