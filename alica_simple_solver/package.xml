@@ -10,6 +10,7 @@
 
   <depend>alica_solver_interface</depend>
   <depend>alica_engine</depend>
+  <depend>yaml-cpp</depend>
 
   <buildtool_depend>cmake</buildtool_depend>
 

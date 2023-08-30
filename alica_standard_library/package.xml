@@ -15,5 +15,6 @@
   </export>
   <depend>alica_engine</depend>
   <depend>alica_solver_interface</depend>
+  <depend>yaml-cpp</depend>
 
 </package>

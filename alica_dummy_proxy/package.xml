@@ -17,5 +17,6 @@
     <build_type>cmake</build_type>
   </export>
   <depend>alica_engine</depend>
+  <depend>yaml-cpp</depend>
 
 </package>
