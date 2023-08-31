@@ -602,17 +602,21 @@ TEST_F(SingleAgentTestFixture, testBlackboardInheritance)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "InheritFromParentTestState")) << _tc->getLastFailure();
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("InheritFromParentTestPlan")) << _tc->getLastFailure();
 
-    // Ensure that InheritFromParentATestPlan inherits its blackboard from InheritFromParentTestPlan
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("InheritFromParentATestPlan", "RunChildState")) << _tc->getLastFailure();
+    // start test
+    ASSERT_TRUE(_tc->setTransitionCond("InheritFromParentTestPlan", "WaitForStartState", "RunChildState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("InheritFromParentATestPlan")) << _tc->getLastFailure();
 
-    // Ensure that NotInheritFromParentBTestPlan does not inherit blackboard from InheritFromParentTestPlan,
-    // but the child of NotInheritFromParentBTestPlan, can inherit from it again.
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("NotInheritFromParentBTestPlan")));
+    // Check that child B inherits bb from parent A
+    ASSERT_TRUE(_tc->setTransitionCond("InheritFromParentATestPlan", "WaitForChildCheckState", "BoolCheckState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("InheritFromParentATestPlan", "WaitState")) << _tc->getLastFailure();
 
-    // Ensure that value updates from child are shared with its parent when inheriting
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("InheritFromParentATestPlan")));
+    // Check that child C does not inherit bb from B, but child D does inherit bb from C
+    ASSERT_TRUE(_tc->setTransitionCond("InheritFromParentATestPlan", "WaitState", "RunChildState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("InheritFromParentTestPlan", "WaitForCheckState")) << _tc->getLastFailure();
 
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardTestPlan")));
+    // // Check that changes to bb done by B are reflected in bb of A
+    ASSERT_TRUE(_tc->setTransitionCond("InheritFromParentTestPlan", "WaitForCheckState", "CheckBoolState")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardTestPlan"))) << _tc->getLastFailure();
 }
 
 TEST_F(SingleAgentTestFixture, testBlackboardExceptions)
@@ -635,16 +639,16 @@ TEST_F(SingleAgentTestFixture, testOverwriteAnyValueWithDifferentType)
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
     STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("BlackboardTestPlan")) << _tc->getLastFailure();
-    // ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "BlackboardAnyTestState")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "ChooseBlackboardTestState", "BlackboardAnyTestState")) << _tc->getLastFailure();
 
-    // // Enter any test plan
-    // STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("BlackboardAnyTestPlan")) << _tc->getLastFailure();
+    // Enter any test plan
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("BlackboardAnyTestPlan")) << _tc->getLastFailure();
 
-    // // Transition into test
-    // ASSERT_TRUE(_tc->setTransitionCond("BlackboardAnyTestPlan", "ChooseTestState", "OverwriteValueWithDifferentTypeTestState")) << _tc->getLastFailure();
+    // Transition into test
+    ASSERT_TRUE(_tc->setTransitionCond("BlackboardAnyTestPlan", "ChooseTestState", "OverwriteValueWithDifferentTypeTestState")) << _tc->getLastFailure();
 
-    // // Ensure that any value van be overwritten with a different internal type
-    // STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardAnyTestPlan")));
+    // Ensure that any value can be overwritten with a different internal type
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardTestPlan")));
 }
 
 TEST_F(SingleAgentTestFixture, testSetAnyValueOnBlackboard)
@@ -663,12 +667,12 @@ TEST_F(SingleAgentTestFixture, testSetAnyValueOnBlackboard)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardAnyTestPlan", "ChooseTestState", "SetAsAnyTestState")) << _tc->getLastFailure();
 
     // Ensure that a value of type std::any can be set as a value directly
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardAnyTestPlan")));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardTestPlan")));
 }
 
 TEST_F(SingleAgentTestFixture, testSetAnyWithSpecifyingType)
 {
-    // Checks if a blackboard value of type std::any<T> can be set with specifying the type, e.g. bb.set<PlanStatus>("planStatus", PlanStatus::Success);
+    // Checks if a blackboard value of type std::any can be set with specifying the type, e.g. bb.set<PlanStatus>("planStatus", PlanStatus::Success);
 
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
@@ -682,12 +686,12 @@ TEST_F(SingleAgentTestFixture, testSetAnyWithSpecifyingType)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardAnyTestPlan", "ChooseTestState", "SetWithSpecifyingTypeTestState")) << _tc->getLastFailure();
 
     // Ensure that a value of type std::any<T> can be set with specifying the type
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardAnyTestPlan")));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardTestPlan")));
 }
 
 TEST_F(SingleAgentTestFixture, testAccessBlackboardValueAsAny)
 {
-    // Checks if a blackboard value of type std::any<T> can be accessed as an any value, e.g. bb.get<std::any<PlanStatus>>("planStatus");
+    // Checks if a blackboard value of type std::any can be accessed as an any value, e.g. bb.get<std::any>("planStatus");
 
     // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
@@ -701,7 +705,7 @@ TEST_F(SingleAgentTestFixture, testAccessBlackboardValueAsAny)
     ASSERT_TRUE(_tc->setTransitionCond("BlackboardAnyTestPlan", "ChooseTestState", "AccessAsAnyTestState")) << _tc->getLastFailure();
 
     // Ensure that a value of type std::any<T> can be accessed as an any value directly
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardAnyTestPlan")));
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(_tc->getActivePlan("BlackboardTestPlan")));
 }
 
 } // namespace alica::test
