@@ -66,7 +66,7 @@ git clone https://github.com/rapyuta-robotics/alica.git
 
 ```
 cd src/alica/supplementary
-rm -r alica_ros_turtlesim/etc/
+rm -r alica_ros1/alica_ros_turtlesim/etc/
 ```
 
 ## 5. Setup of the ALICA Plan Designer
@@ -126,7 +126,7 @@ On the top left you will see a tab for your newly created Master Plan.
       at the top of the state.
    3. Drag your mouse to the `Simulation` state. Let go of your mouse when your cursor is on the plus symbol
       inside the circle appearing at the top of the state `Simulation`.
-   4. Select the transition from `SpawnTurtle` to `Simulation`, press delete to delete the generated condition and create a new one.
+   4. Select the transition from `SpawnTurtle` to `Simulation`. You can delete it by pressing delete. If you did it please create new one.
    5. Select the `Condition` icon on the top right corner to create a new condition & fill in the details
    6. Drag the condition to the transition that it needs to be attached to
 
@@ -141,7 +141,7 @@ On the top left you will see a tab for your newly created Master Plan.
 
 1. Create the `MakeFormation` plan in the same way as the Master plan
 2. Create two states `Move2Center` and `AlignCircle`.
-3. Create two entrypoints with new tasks `Leader` and `Follower`.
+3. Create two tasks `Leader` and `Follower` from the right panel. Add them as entrypoints.
 4. For the Leader entrypoint, select it and set the value of "Minimum Cardinality" and "Maximum Cardinality" both to 1.
 5. For the Follower entrypoint, select it and set the value of "Minimum Cardinality" to 0 and the value of "Maximum Cardinality" to 2147483647.
 6. Connect the `LeaderTask` Task-Entrypoint to `Move2Center` and the `FollowerTask` Task-EntryPoint to `AlignCircle`.
@@ -158,6 +158,9 @@ On the top left you will see a tab for your newly created Master Plan.
 
 1. Create the Simulation plan state machine as shown in the figure above by following the a similar procedure as outlined above for other plans
 2. Additionally, in the Simulation plan, select Blackboard in the right bottom menu. Click on setup blackboard. A blackboard is essentially a data store for plans/behaviours & can be used to pass data from parent to child or child to parent via key mapping
+
+![Find Blackboard](doc/Choose_Simulation_Blackboard.png)
+
 3. Add 2 blackboard keys: `join_formation_topic` & `leave_formation_topic` as shown in the figure below
 
 ![Blackboard setup](doc/blackboard_setup.png)
@@ -175,8 +178,10 @@ On the top left you will see a tab for your newly created Master Plan.
 2. Select the "Roleset" tab and create a RoleSet with the name `RoleSet` and check the
    'Default Role Set' checkbox.
 3. Repeat step 1. and create a role with the name `Turtle`. Select `RoleSet` as your Role Set.
-4. Go to the tab `Task Priorities`, click on `Apply Task Priority`. Select the task `Follower` and set the
+4. Select `Turtle` Role from the right panel. Go to the tab `Task Priorities`, click on `Apply Task Priority`. Select the task `Follower` and set the
    priority to 0.1.
+
+![Apply Task Priority](doc/Apply_Task_Priority.png)
 
 ## 7. Logic
 
