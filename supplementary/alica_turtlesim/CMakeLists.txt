@@ -13,6 +13,12 @@ find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(constraintsolver REQUIRED)
 
+find_package(catkin QUIET)
+if (catkin_FOUND)
+catkin_package()
+endif()
+
+
 include_directories(include)
 
 add_library(libalica-turtlesim SHARED
