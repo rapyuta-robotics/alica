@@ -11,6 +11,7 @@ alica_compile_flags()
 
 find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
+find_package(constraintsolver REQUIRED)
 
 include_directories(include)
 
@@ -52,6 +53,11 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
+
+install(DIRECTORY etc
+    DESTINATION share/${PROJECT_NAME}/
+)
+
 
 #Installing files to make a find_package()-able package
 write_basic_package_version_file(
