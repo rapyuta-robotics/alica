@@ -23,6 +23,7 @@ endif (NOT Boost_FOUND)
 find_package(yaml-cpp REQUIRED)
 find_package(alica_solver_interface)
 find_package(alica_engine REQUIRED)
+find_package(alica_turtlesim REQUIRED)
 find_package(constraintsolver REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
@@ -61,11 +62,9 @@ target_link_libraries(${PROJECT_NAME}
                         alica_dynamic_loading
                         autodiff
                         constraintsolver
-                        alica_turtlesim
+                        libalica-turtlesim
 )
 
-add_subdirectory(../libalica-turtlesim ../libalica-turtlesim)
-add_subdirectory(../alica_turtlesim ../alica_turtlesim)
 add_subdirectory(libalica-ros-utils)
 
 ##########

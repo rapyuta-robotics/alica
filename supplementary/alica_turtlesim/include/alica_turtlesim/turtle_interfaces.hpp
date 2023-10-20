@@ -10,7 +10,7 @@ class Blackboard;
 namespace turtlesim
 {
 /*
-    - Turtle control class for ALICA ros turtlesim which interfaces between ALICA and ROS
+    - Turtle control class for ALICA which provides interface to real world or simulation
     - ROS:
         - Publish: turtleX/cmd_vel
         - Subscribe: turtleX/pose
