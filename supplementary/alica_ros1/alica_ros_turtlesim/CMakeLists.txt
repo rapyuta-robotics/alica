@@ -40,9 +40,9 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-
 include_directories(
     include
+    ${alica_turtlesim_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
     ${YAML_CPP_INCLUDE_DIR}
 )
@@ -62,7 +62,6 @@ target_link_libraries(${PROJECT_NAME}
                         alica_dynamic_loading
                         autodiff
                         constraintsolver
-                        libalica-turtlesim
 )
 
 add_subdirectory(libalica-ros-utils)

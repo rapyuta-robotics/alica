@@ -15,7 +15,7 @@ find_package(constraintsolver REQUIRED)
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-catkin_package()
+catkin_package(INCLUDE_DIRS include)
 endif()
 
 
@@ -71,11 +71,13 @@ write_basic_package_version_file(
   VERSION 1.0.0
   COMPATIBILITY SameMajorVersion
 )
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 configure_package_config_file(
   ${CMAKE_PROJECT_NAME}Config.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION ${ConfigPackageLocation}
+  PATH_VARS INCLUDE_INSTALL_DIR
 )
 
 install(FILES
