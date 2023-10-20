@@ -11,6 +11,7 @@ alica_compile_flags()
 
 find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
+find_package(autodiff REQUIRED)
 find_package(constraintsolver REQUIRED)
 
 find_package(catkin QUIET)
@@ -19,7 +20,13 @@ catkin_package(INCLUDE_DIRS include)
 endif()
 
 
-include_directories(include)
+include_directories(
+  include
+  ${alica_engine_INCLUDE_DIRS}
+  ${alica_solver_interface_INCLUDE_DIRS}
+  ${autodiff_INCLUDE_DIRS}
+  ${constraintsolver_INCLUDE_DIRS}
+)
 
 add_library(libalica-turtlesim SHARED
   libalica-turtlesim/src/CircleRuntimeCondition.cpp

@@ -14,8 +14,8 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>alica_engine</depend>
-  <depend>alica_dynamic_loading</depend>
-  <depend>alica_standard_library</depend>
+  <depend>autodiff</depend>
   <depend>constraintsolver</depend>
+  <exec_depend>alica_standard_library</exec_depend>
 
 </package>
