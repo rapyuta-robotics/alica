@@ -5,7 +5,8 @@
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
     <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
-    <arg name="alica_path"     default="$(find alica_ros_turtlesim)" />
+    <arg name="turtlesim_lib_path"     default="$(find alica_turtlesim)/etc/" />
+    <arg name="turtlesim_ros_path"     default="$(find alica_ros_turtlesim)/etc/" />
 
     <node pkg="turtlesim" type="turtlesim_node" name="turtlesim" />
 
@@ -14,7 +15,8 @@
         <param name="agent_id"     value="1" />
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="roleset"      value="$(arg roleset)" />
-        <param name="alica_path"   value="$(arg alica_path)" />
+        <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
+        <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
 
      <node name="turtle2" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
@@ -22,7 +24,8 @@
         <param name="agent_id"     value="2" />
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="roleset"      value="$(arg roleset)" />
-        <param name="alica_path"   value="$(arg alica_path)" />
+        <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
+        <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
 
     <node name="turtle3" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
@@ -30,7 +33,8 @@
         <param name="agent_id"     value="3" />
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="roleset"      value="$(arg roleset)" />
-        <param name="alica_path"   value="$(arg alica_path)" />
+        <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
+        <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
 
     <node name="turtle4" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
@@ -38,7 +42,8 @@
         <param name="agent_id"     value="4" />
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="roleset"      value="$(arg roleset)" />
-        <param name="alica_path"   value="$(arg alica_path)" />
+        <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
+        <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
 
     <test name="all_tests" test-name="all_tests" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim-test" time-limit="100" launch-prefix="$(arg launch_prefix)"/>
