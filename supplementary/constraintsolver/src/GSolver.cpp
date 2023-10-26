@@ -322,7 +322,7 @@ void GSolver::initialPoint(const autodiff::Tape& tape, ResultView o_res, const s
     bool found;
     // Give up if we can't find a valid initial value after 50 tries
     // Malformed constraints can lead to this situation
-    size_t maxIter = 50;
+    constexpr size_t maxIter = 50;
     size_t iter = 0;
     do {
         iter++;
