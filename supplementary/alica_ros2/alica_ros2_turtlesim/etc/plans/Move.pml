@@ -43,28 +43,7 @@
   "name": "Move",
   "preCondition": null,
   "relativeDirectory": "",
-  "runtimeCondition": {
-    "comment": "",
-    "conditionString": "",
-    "enabled": false,
-    "id": 1288817888979746811,
-    "name": "CircleRuntimeCondition",
-    "pluginName": "DefaultPlugin",
-    "quantifiers": [
-      {
-        "comment": "",
-        "id": 4131856376940334089,
-        "name": "",
-        "quantifierType": "all",
-        "scope": 1889749086610694100,
-        "sorts": [
-          "x",
-          "y"
-        ]
-      }
-    ],
-    "variables": []
-  },
+  "runtimeCondition": null,
   "states": [
     {
       "comment": "",

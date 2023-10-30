@@ -73,6 +73,9 @@ RunningPlan::~RunningPlan()
     if (_parent) {
         _parent->removeChild(this);
     }
+    if (isBehaviour()) {
+        alica::Logging::logError("VEERAJ") << "Saying goodbye to " << this << ", behaviour ptr= " << _basicBehaviour.get() << ", address of unique_ptr= " << &_basicBehaviour;
+    }
 }
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard, TeamObserver& teamObserver,
@@ -96,6 +99,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
     if (auto behaviour = dynamic_cast<const Behaviour*>(abstractPlan)) {
         _behaviour = true;
         _basicBehaviour = runTimeBehaviourFactory.create(behaviour->getId(), behaviour);
+        alica::Logging::logError("VEERAJ") << "behaviour with ptr= " << _basicBehaviour.get() << " created";
         _activeTriple.abstractPlan = behaviour;
     } else if (auto plan = dynamic_cast<const Plan*>(abstractPlan)) {
         _basicPlan = runTimePlanFactory.create(plan->getId(), plan);
@@ -467,7 +471,6 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
  */
 void RunningPlan::deactivate()
 {
-    _status.active = PlanActivity::Retired;
     revokeAllConstraints();
     deactivateChildren();
 
@@ -477,6 +480,7 @@ void RunningPlan::deactivate()
         _teamObserver.notifyRobotLeftPlan(_activeTriple.abstractPlan);
         _basicPlan->stop();
     }
+    _status.active = PlanActivity::Retired;
 }
 
 /**

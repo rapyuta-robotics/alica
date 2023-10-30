@@ -5,17 +5,17 @@ namespace ros_utils
 
 WaitForTrigger::WaitForTrigger(alica::BehaviourContext& context)
         : alica::BasicBehaviour(context)
-        , _triggered{false}
 {
 }
 
 void WaitForTrigger::initialiseParameters()
 {
-    _triggered = false;
-    alica::LockedBlackboardRO bb{*getBlackboard()};
-    _topic = bb.get<std::string>("topic");
-    ROS_INFO_STREAM_NAMED(__func__, "Waiting for trigger on " << _topic);
-    _triggerSub = ros::NodeHandle("~").subscribe(_topic, 1, &WaitForTrigger::onTrigger, this);
+    _start = ros::Time::now();
+    // _triggered = false;
+    // alica::LockedBlackboardRO bb{*getBlackboard()};
+    // _topic = bb.get<std::string>("topic");
+    // ROS_INFO_STREAM_NAMED(__func__, "Waiting for trigger on " << _topic);
+    // _triggerSub = ros::NodeHandle("~").subscribe(_topic, 1, &WaitForTrigger::onTrigger, this);
 }
 
 void WaitForTrigger::run()
@@ -24,9 +24,12 @@ void WaitForTrigger::run()
         return;
     }
 
-    if (_triggered) {
+    //if (ros::Time::now() - _start > ros::Duration(0.25)) {
         setSuccess();
-    }
+    //}
+    //if (_triggered) {
+    //    setSuccess();
+    //}
 }
 
 std::unique_ptr<WaitForTrigger> WaitForTrigger::create(alica::BehaviourContext& context)
@@ -36,8 +39,8 @@ std::unique_ptr<WaitForTrigger> WaitForTrigger::create(alica::BehaviourContext& 
 
 void WaitForTrigger::onTrigger(const std_msgs::Empty& triggerMsg)
 {
-    ROS_INFO_STREAM_NAMED(__func__, "Trigger received on " << _topic);
-    _triggered = true;
+    //ROS_INFO_STREAM_NAMED(__func__, "Trigger received on " << _topic);
+    //_triggered = true;
 }
 
 } // namespace ros_utils

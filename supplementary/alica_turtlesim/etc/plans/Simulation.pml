@@ -48,17 +48,6 @@
             "output": []
           },
           "name": ""
-        },
-        {
-          "abstractPlan": "MakeFormation.pml#1889749086610694100",
-          "comment": "",
-          "configuration": null,
-          "id": 496472308860171093,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
         }
       ],
       "entryPoint": null,

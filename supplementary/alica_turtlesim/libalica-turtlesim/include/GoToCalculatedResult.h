@@ -20,9 +20,9 @@ public:
     static std::unique_ptr<GoToCalculatedResult> create(alica::BehaviourContext& context);
 
 private:
-    std::shared_ptr<turtlesim::TurtleInterfaces> _turtle;
-    alica::Query _query;
-    std::vector<double> _results;
+    // std::shared_ptr<turtlesim::TurtleInterfaces> _turtle;
+    // alica::Query _query;
+    // std::vector<double> _results;
 };
 BOOST_DLL_ALIAS(turtlesim::GoToCalculatedResult::create, GoToCalculatedResult)
 

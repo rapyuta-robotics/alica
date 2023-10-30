@@ -23,9 +23,10 @@ public:
 private:
     void onTrigger(const std_msgs::Empty& triggerMsg);
 
-    std::string _topic;
-    std::atomic<bool> _triggered;
-    ros::Subscriber _triggerSub;
+    // std::string _topic;
+    // std::atomic<bool> _triggered;
+    // ros::Subscriber _triggerSub;
+    ros::Time _start;
 };
 BOOST_DLL_ALIAS(ros_utils::WaitForTrigger::create, WaitForTrigger)
 

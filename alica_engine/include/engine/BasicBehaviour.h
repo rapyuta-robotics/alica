@@ -38,7 +38,6 @@ class BasicBehaviour : private RunnableObject
 {
 public:
     BasicBehaviour(BehaviourContext& context);
-    virtual ~BasicBehaviour(){};
 
     // Use of private inheritance and explicitly making members public
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
@@ -58,6 +57,11 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
+
+    virtual ~BasicBehaviour()
+    {
+        alica::Logging::logError("VEERAJ") << "Basic behaviour going in for annhilation " << this << ", name=" << getName();
+    }
 
     virtual void run() {}
     /**
