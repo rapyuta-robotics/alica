@@ -26,20 +26,23 @@ std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanCo
         throw DynamicLoadingException{"plan", planId, context.name, context.planModel->getImplementationName(), context.planModel->getLibraryName(), ex.what()};
     }
 
+    std::string completeSymbolName = completeLibraryName + context.planModel->getImplementationName();
+    if (auto it = _planCreatorMap.find(completeSymbolName); it != _planCreatorMap.end()) {
+        return it->second(context);
+    }
+
     try {
-        _planCreator = boost::dll::import_alias<PlanCreatorType>( // type of imported symbol must be explicitly specified
-                completeLibraryName,                              // complete path to library also with file name
-                context.planModel->getImplementationName(),       // symbol to import
-                boost::dll::load_mode::append_decorations         // do append extensions and prefixes
+        _planCreatorMap[completeSymbolName] = boost::dll::import_alias<PlanCreatorType>( // type of imported symbol must be explicitly specified
+                completeLibraryName,                                                     // complete path to library also with file name
+                context.planModel->getImplementationName(),                              // symbol to import
+                boost::dll::load_mode::append_decorations                                // do append extensions and prefixes
         );
     } catch (const std::exception& ex) {
         throw DynamicLoadingException{"plan", planId, context.name, context.planModel->getImplementationName(), context.planModel->getLibraryName(), ex.what()};
     }
 
-    std::unique_ptr<BasicPlan> createdPlan = _planCreator(context);
-
-    // TODO: Reenable if we can avoid creating running plans every time we do an assignment evaluation
-    // Logging::logDebug("DynamicLoading") << "Loaded plan " << context.planModel->getName();
+    std::unique_ptr<BasicPlan> createdPlan = _planCreatorMap.at(completeSymbolName)(context);
+    Logging::logDebug("DynamicLoading") << "Loaded plan " << context.planModel->getName();
 
     return createdPlan;
 }

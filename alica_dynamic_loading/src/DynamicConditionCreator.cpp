@@ -24,17 +24,22 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_
         throw DynamicLoadingException{"condition", conditionConfId, context.name, "", context.libraryName, ex.what()};
     }
 
+    std::string completeSymbolName = completeLibraryName + context.name;
+    if (auto it = _conditionCreatorMap.find(completeSymbolName); it != _conditionCreatorMap.end()) {
+        return it->second(context);
+    }
+
     try {
-        _conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
-                completeLibraryName,                                        // complete path to library also with file name
-                context.name,                                               // symbol to import
-                boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
+        _conditionCreatorMap[completeSymbolName] = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
+                completeLibraryName,                                                               // complete path to library also with file name
+                context.name,                                                                      // symbol to import
+                boost::dll::load_mode::append_decorations                                          // do append extensions and prefixes
         );
     } catch (const std::exception& ex) {
         throw DynamicLoadingException{"condition", conditionConfId, context.name, "", context.libraryName, ex.what()};
     }
 
-    std::shared_ptr<BasicCondition> createdCondition = _conditionCreator(context);
+    std::shared_ptr<BasicCondition> createdCondition = _conditionCreatorMap.at(completeSymbolName)(context);
     Logging::logDebug("DynamicLoading") << "Loaded condition " << context.name;
 
     return createdCondition;
