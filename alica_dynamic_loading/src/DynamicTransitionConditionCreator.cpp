@@ -24,14 +24,20 @@ TransitionConditionCallback DynamicTransitionConditionCreator::createConditions(
         throw DynamicLoadingException{"transitionCondition", conditionId, context.name, "", context.libraryName, ex.what()};
     }
 
+    std::string completeSymbolName = completeLibraryName + context.name;
+    if (auto it = _transitionConditionMap.find(completeSymbolName); it != _transitionConditionMap.end()) {
+        return it->second;
+    }
+
     try {
-        auto fun = boost::dll::import_alias<transitionConditionFunctionType>( // type of imported symbol must be explicitly specified
-                completeLibraryName,                                          // complete path to library also with file name
-                context.name,                                                 // symbol to import
-                boost::dll::load_mode::append_decorations                     // do append extensions and prefixes
-        );
+        _transitionConditionMap[completeSymbolName] =
+                boost::dll::import_alias<transitionConditionFunctionType>( // type of imported symbol must be explicitly specified
+                        completeLibraryName,                               // complete path to library also with file name
+                        context.name,                                      // symbol to import
+                        boost::dll::load_mode::append_decorations          // do append extensions and prefixes
+                );
         Logging::logDebug("DynamicLoading") << "Loaded transition condition " << context.name;
-        return fun;
+        return _transitionConditionMap.at(completeSymbolName);
     } catch (const std::exception& ex) {
         throw DynamicLoadingException{"transitionCondition", conditionId, context.name, "", context.libraryName, ex.what()};
     }

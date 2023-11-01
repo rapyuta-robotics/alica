@@ -27,11 +27,16 @@ std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t
                 "behaviour", behaviourId, context.name, context.behaviourModel->getImplementationName(), context.behaviourModel->getLibraryName(), ex.what()};
     }
 
+    std::string completeSymbolName = completeLibraryName + context.behaviourModel->getImplementationName();
+    if (auto it = _behaviourCreatorMap.find(completeSymbolName); it != _behaviourCreatorMap.end()) {
+        return it->second(context);
+    }
+
     try {
-        _behaviourCreator = boost::dll::import_alias<behaviourCreatorType>( // type of imported symbol must be explicitly specified
-                completeLibraryName,                                        // complete path to library also with file name
-                context.behaviourModel->getImplementationName(),            // symbol to import
-                boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
+        _behaviourCreatorMap[completeSymbolName] = boost::dll::import_alias<behaviourCreatorType>( // type of imported symbol must be explicitly specified
+                completeLibraryName,                                                               // complete path to library also with file name
+                context.behaviourModel->getImplementationName(),                                   // symbol to import
+                boost::dll::load_mode::append_decorations                                          // do append extensions and prefixes
         );
     } catch (const std::exception& ex) {
         // import_alias can throw boost::system::system_error or std::bad_alloc, this block handles both since each of them derives from std::exception
@@ -39,7 +44,7 @@ std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t
                 "behaviour", behaviourId, context.name, context.behaviourModel->getImplementationName(), context.behaviourModel->getLibraryName(), ex.what()};
     }
 
-    std::unique_ptr<BasicBehaviour> createdBehaviour = _behaviourCreator(context);
+    std::unique_ptr<BasicBehaviour> createdBehaviour = _behaviourCreatorMap.at(completeSymbolName)(context);
     Logging::logDebug("DynamicLoading") << "Loaded behavior " << context.behaviourModel->getName();
 
     return createdBehaviour;

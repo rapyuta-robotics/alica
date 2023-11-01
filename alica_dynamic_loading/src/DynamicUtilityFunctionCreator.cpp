@@ -26,17 +26,24 @@ std::shared_ptr<BasicUtilityFunction> DynamicUtilityFunctionCreator::createUtili
         throw DynamicLoadingException{"utilityFunction", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
     }
 
+    std::string completeSymbolName = completeLibraryName + symbolName;
+    if (auto it = _utilityFunctionCreatorMap.find(completeSymbolName); it != _utilityFunctionCreatorMap.end()) {
+        return it->second(context);
+    }
+
     try {
-        _utilityFunctionCreator = boost::dll::import_alias<utilityFunctionCreatorType>( // type of imported symbol must be explicitly specified
-                completeLibraryName,                                                    // complete path to library also with file name
-                symbolName,
-                boost::dll::load_mode::append_decorations // do append extensions and prefixes
-        );
+        _utilityFunctionCreatorMap[completeSymbolName] =
+                boost::dll::import_alias<utilityFunctionCreatorType>( // type of imported symbol must be explicitly specified
+                        completeLibraryName,                          // complete path to library also with file name
+                        symbolName,
+                        boost::dll::load_mode::append_decorations // do append extensions and prefixes
+                );
     } catch (const std::exception& ex) {
         throw DynamicLoadingException{"utilityFunction", utilityFunctionConfId, symbolName, "", context.libraryName, ex.what()};
     }
 
-    std::shared_ptr<BasicUtilityFunction> createdUtilityFunction = _utilityFunctionCreator(context);
+    std::shared_ptr<BasicUtilityFunction> createdUtilityFunction = _utilityFunctionCreatorMap.at(completeSymbolName)(context);
+    Logging::logDebug("DynamicLoading") << "Loaded utility function " << context.name << "UtilityFunction";
 
     return createdUtilityFunction;
 }
