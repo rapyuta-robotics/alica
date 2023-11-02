@@ -3,6 +3,8 @@
 
 #include <functional>
 #include <memory>
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace alica
@@ -19,7 +21,7 @@ public:
 
 private:
     typedef std::unique_ptr<BasicPlan>(PlanCreatorType)(PlanContext&);
-    std::function<PlanCreatorType> _planCreator;
+    std::unordered_map<std::string, std::function<PlanCreatorType>> _planCreatorMap; // See DynamicBehaviourCreator for an explanation
     std::vector<std::string> _libraryPath;
 };
 

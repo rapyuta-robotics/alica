@@ -3,6 +3,8 @@
 
 #include <functional>
 #include <memory>
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace alica
@@ -19,6 +21,7 @@ public:
 
 private:
     typedef bool(transitionConditionFunctionType)(const Blackboard*, const RunningPlan*, const Blackboard*);
+    std::unordered_map<std::string, TransitionConditionCallback> _transitionConditionMap; // See DynamicBehaviourCreator for an explanation
     std::vector<std::string> _libraryPath;
 };
 

@@ -3,6 +3,8 @@
 
 #include <functional>
 #include <memory>
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace alica
@@ -19,7 +21,7 @@ public:
 
 private:
     typedef std::shared_ptr<BasicConstraint>(constraintCreatorType)(ConstraintContext&);
-    std::function<constraintCreatorType> _constraintCreator;
+    std::unordered_map<std::string, std::function<constraintCreatorType>> _constraintCreatorMap; // See DynamicBehaviourCreator for an explanation
     std::vector<std::string> _libraryPath;
 };
 

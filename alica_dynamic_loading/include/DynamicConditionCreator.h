@@ -3,6 +3,8 @@
 
 #include <functional>
 #include <memory>
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace alica
@@ -19,7 +21,7 @@ public:
 
 private:
     typedef std::shared_ptr<BasicCondition>(conditionCreatorType)(ConditionContext&);
-    std::function<conditionCreatorType> _conditionCreator;
+    std::unordered_map<std::string, std::function<conditionCreatorType>> _conditionCreatorMap; // see DynamicBehaviourCreator for an explanation
     std::vector<std::string> _libraryPath;
 };
 
