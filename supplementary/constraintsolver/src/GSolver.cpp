@@ -320,7 +320,12 @@ void GSolver::initialPoint(const autodiff::Tape& tape, ResultView o_res, const s
 {
     const int dim = o_res.dim();
     bool found;
+    // Give up if we can't find a valid initial value after 50 tries
+    // Malformed constraints can lead to this situation
+    constexpr size_t maxIter = 50;
+    size_t iter = 0;
     do {
+        iter++;
         for (int i = 0; i < dim; ++i) {
             o_res.editPoint()[i] = ((double) rand() / RAND_MAX) * limits[i].size() + limits[i].getMin();
         }
@@ -333,7 +338,7 @@ void GSolver::initialPoint(const autodiff::Tape& tape, ResultView o_res, const s
                 break;
             }
         }
-    } while (!found);
+    } while (!found && iter < maxIter);
     o_res.setUtil(o_value[0]);
 }
 
@@ -356,6 +361,12 @@ void GSolver::rPropLoop(const autodiff::Tape& tape, const double* seed, const st
         initialPointFromSeed(tape, seed, o_result, limits, curGradient);
     } else {
         initialPoint(tape, o_result, limits, curGradient);
+    }
+    for (int i = 1; i <= dim; ++i) {
+        if (std::isnan(curGradient[i])) {
+            o_result.setAborted();
+            return;
+        }
     }
 
     memcpy(formerGradient, curGradient, sizeof(double) * (dim + 1));
