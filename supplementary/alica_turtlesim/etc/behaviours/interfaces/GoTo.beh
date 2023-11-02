@@ -27,5 +27,6 @@
   "postCondition": null,
   "preCondition": null,
   "runtimeCondition": null,
-  "variables": []
+  "variables": [],
+  "interface": true
 }

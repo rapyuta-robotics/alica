@@ -5,6 +5,8 @@
 #include "engine/PlanRepository.h"
 #include "engine/logging/Logging.h"
 #include "engine/model/Behaviour.h"
+#include "engine/model/Placeholder.h"
+#include "engine/model/PlaceholderMapping.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/Quantifier.h"
@@ -14,6 +16,8 @@
 #include "engine/model/Variable.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/BehaviourFactory.h"
+#include "engine/modelmanagement/factories/PlaceholderFactory.h"
+#include "engine/modelmanagement/factories/PlaceholderMappingFactory.h"
 #include "engine/modelmanagement/factories/PlanFactory.h"
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
@@ -36,11 +40,20 @@ ModelManager::ModelManager(ConfigChangeListener& configChangeListener, const std
     Factory::setModelManager(this);
 }
 
-Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
+Plan* ModelManager::loadPlanTree(const std::string& masterPlanName, std::optional<std::string> placeholderMapping)
 {
     std::string masterPlanPath;
     if (masterPlanPath = findFile(masterPlanName + alica::Strings::plan_extension); masterPlanPath.empty()) {
         AlicaEngine::abort(LOGNAME, "Cannot find MasterPlan '", masterPlanName, "'");
+    }
+
+    std::string placeholderMappingPath;
+    if (placeholderMapping.has_value()) {
+        if (placeholderMappingPath = findFile(placeholderMapping.value() + alica::Strings::placeholderMappingExtension); placeholderMappingPath.empty()) {
+            AlicaEngine::abort(LOGNAME, "Cannot find placeholder mapping file '", placeholderMapping.value(), "'");
+        }
+        filesParsed.push_back(placeholderMapping.value() + alica::Strings::placeholderMappingExtension);
+        parseFile(placeholderMappingPath, alica::Strings::placeholderMapping);
     }
 
     filesParsed.push_back(masterPlanName + alica::Strings::plan_extension);
@@ -67,6 +80,8 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
             parseFile(fileToParse, alica::Strings::transitionCondition);
         } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::roleset_extension)) {
             AlicaEngine::abort(LOGNAME, "Cannot have multiple rolesets");
+        } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::placeholderExtension)) {
+            parseFile(fileToParse, alica::Strings::placeholder);
         } else {
             AlicaEngine::abort(LOGNAME, "Cannot parse file type: ", fileToParse);
         }
@@ -163,6 +178,12 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         TransitionConditionRepository* conditionRepository = TransitionConditionRepositoryFactory::create(node);
         conditionRepository->setFileName(currentFile);
         return conditionRepository;
+    } else if (alica::Strings::placeholder.compare(type) == 0) {
+        Placeholder* placeholder = PlaceholderFactory::create(node);
+        return placeholder;
+    } else if (alica::Strings::placeholderMapping.compare(type) == 0) {
+        PlaceholderMapping* placeholderMapping = PlaceholderMappingFactory::create(node);
+        return placeholderMapping;
     } else {
         AlicaEngine::abort(LOGNAME, "Parsing type not handled: ", type);
         return nullptr;
@@ -185,6 +206,8 @@ const AlicaElement* ModelManager::getElement(const int64_t id)
 
 void ModelManager::attachReferences()
 {
+    // the placeholder mappings must be resolved first, so that later the placeholders can be replaced by their corresponding implementations
+    PlaceholderMappingFactory::attachReferences();
     // these methods call recursively other factories for the job
     PlanFactory::attachReferences();
     PlanTypeFactory::attachReferences();

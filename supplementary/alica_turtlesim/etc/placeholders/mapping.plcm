@@ -1,0 +1,15 @@
+{
+  "comment": "",
+  "id": 1111111111111111113,
+  "name": "placeholderMappings",
+  "mapping": [
+    {
+      "placeholder": "IMove.plc#1111111111111111111",
+      "implementation": "MoveToCorners.pml#2955879459958169673"
+    },
+    {
+      "placeholder": "IGoTo.plc#1111111111111111112",
+      "implementation": "Teleport.beh#4085572422059465423"
+    }
+  ]
+}

@@ -4,6 +4,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include <functional>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -30,7 +31,7 @@ class ModelManager
 {
 public:
     ModelManager(ConfigChangeListener& configChangeListener, const std::vector<std::string>& domainConfigFolders, PlanRepository& planRepository);
-    Plan* loadPlanTree(const std::string& masterPlanName);
+    Plan* loadPlanTree(const std::string& masterPlanName, std::optional<std::string> placeholderMapping = std::nullopt);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
     bool idExists(const int64_t id) const;

@@ -23,13 +23,14 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "alica_turtle_base_node");
     ROS_INFO("Started Turtle Base Node.");
-    std::string name, roleset, masterPlan, turtlesimRosPath, turtlesimLibPath;
+    std::string name, roleset, masterPlan, turtlesimRosPath, turtlesimLibPath, placeholderMapping;
     int agentId;
 
     ros::NodeHandle nh, privNh("~");
     privNh.getParam("name", name);
     privNh.getParam("roleset", roleset);
     privNh.getParam("master_plan", masterPlan);
+    privNh.getParam("placeholder_mapping", placeholderMapping);
     privNh.getParam("turtlesim_ros_path", turtlesimRosPath);
     privNh.getParam("turtlesim_lib_path", turtlesimLibPath);
     privNh.getParam("agent_id", agentId);
@@ -37,6 +38,7 @@ int main(int argc, char** argv)
     ROS_INFO_STREAM("HostName    : " << name);
     ROS_INFO_STREAM("Roleset     : " << (roleset.empty() ? "Default" : roleset));
     ROS_INFO_STREAM("Master Plan : " << masterPlan);
+    ROS_INFO_STREAM("Mapping     : " << placeholderMapping);
     ROS_INFO_STREAM("ROS Turtlesim lib path  : " << turtlesimRosPath);
     ROS_INFO_STREAM("Base Turtlesim lib path  : " << turtlesimLibPath);
     ROS_INFO_STREAM("Agent ID    : " << agentId);
@@ -49,7 +51,8 @@ int main(int argc, char** argv)
     // kill turtle if same name turtle already exist
     killMyTurtle(name, privNh);
 
-    turtlesim::Base base(nh, privNh, name, agentId, roleset, masterPlan, {turtlesimRosPath, turtlesimLibPath});
+    std::optional<std::string> maybeMapping = placeholderMapping.empty() ? std::optional<std::string>{} : std::optional<std::string>{placeholderMapping};
+    turtlesim::Base base(nh, privNh, name, agentId, roleset, masterPlan, {turtlesimRosPath, turtlesimLibPath}, maybeMapping);
 
     ROS_INFO("Starting ALICA turtle Base.......");
     base.start();

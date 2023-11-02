@@ -126,5 +126,6 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "interface": true
 }

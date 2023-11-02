@@ -42,6 +42,8 @@ protected:
     static ReferenceList epTaskReferences;
     static ReferenceList planTypePlanReferences;
     static ReferenceList wrapperAbstractPlanReferences;
+    static ReferenceList placeholderReferences;
+    static ReferenceList placeholderAbstractPlanReferences;
     static TripleReferenceList roleTaskReferences;
     static ModelManager* modelManager;
 

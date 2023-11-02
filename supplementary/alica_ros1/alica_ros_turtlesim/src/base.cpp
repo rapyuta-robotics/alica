@@ -20,11 +20,11 @@ namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::vector<std::string>& paths)
+        const std::string& master_plan, const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping)
         : spinner(0)
 {
     // Initialize Alica
-    ac = new alica::AlicaContext(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id));
+    ac = new alica::AlicaContext(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id, placeholderMapping));
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();

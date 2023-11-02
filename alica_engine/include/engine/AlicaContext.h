@@ -24,6 +24,7 @@
 #include <atomic>
 #include <cassert>
 #include <memory>
+#include <optional>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -105,6 +106,7 @@ struct AlicaContextParams
             , configPaths{configPath}
             , roleSetName(roleSetName)
             , masterPlanName(masterPlanName)
+            , placeholderMapping()
             , stepEngine(stepEngine)
             , agentID(agentID)
     {
@@ -120,15 +122,19 @@ struct AlicaContextParams
      * the engine will try to read the local agent's identifier from the
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
+     * @param placeholderMapping The file name of the placeholder mapping file. File should be in a sub-folder of configPaths. By default an empty value is used
+     * meaning there are no placeholders in the plan tree
      *
      * @note The configPaths are the paths containing the plans, roles and tasks.
      */
     AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName,
-            const std::string& masterPlanName, bool stepEngine = false, const AgentId agentID = InvalidAgentID)
+            const std::string& masterPlanName, bool stepEngine = false, const AgentId agentID = InvalidAgentID,
+            std::optional<std::string> placeholderMapping = std::nullopt)
             : agentName(agentName)
             , configPaths(configPaths)
             , roleSetName(roleSetName)
             , masterPlanName(masterPlanName)
+            , placeholderMapping(placeholderMapping)
             , stepEngine(stepEngine)
             , agentID(agentID)
     {
@@ -141,14 +147,18 @@ struct AlicaContextParams
      * the engine will try to read the local agent's identifier from the
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
+     * @param placeholderMapping The file name of the placeholder mapping file. File should be in a sub-folder of configPaths. By default an empty value is used
+     * meaning there are no placeholders in the plan tree
      *
      * @note The configPaths are the paths containing the plans, roles and tasks.
      */
-    AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const AgentId agentID = InvalidAgentID)
+    AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const AgentId agentID = InvalidAgentID,
+            std::optional<std::string> placeholderMapping = std::nullopt)
             : agentName(agentName)
             , configPaths(configPaths)
             , roleSetName("RoleSet")
             , masterPlanName("MasterPlan")
+            , placeholderMapping(placeholderMapping)
             , stepEngine(false)
             , agentID(agentID)
     {
@@ -158,6 +168,7 @@ struct AlicaContextParams
     std::vector<std::string> configPaths;
     std::string roleSetName;
     std::string masterPlanName;
+    std::optional<std::string> placeholderMapping;
     bool stepEngine;
     AgentId agentID;
 };

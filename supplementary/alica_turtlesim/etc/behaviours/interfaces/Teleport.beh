@@ -4,21 +4,21 @@
       "access": "input",
       "comment": "",
       "id": 2065859497513016259,
-      "key": "y",
+      "key": "goal_x",
       "type": "double"
     },
     {
       "access": "input",
       "comment": "",
       "id": 2249915898478593688,
-      "key": "x",
+      "key": "goal_y",
       "type": "double"
     }
   ],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
-  "frequency": 0,
+  "frequency": 5,
   "id": 4085572422059465423,
   "implementationName": "",
   "inheritBlackboard": false,
@@ -27,5 +27,6 @@
   "postCondition": null,
   "preCondition": null,
   "runtimeCondition": null,
-  "variables": []
+  "variables": [],
+  "interface": true
 }

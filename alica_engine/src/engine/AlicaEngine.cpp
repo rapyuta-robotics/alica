@@ -33,7 +33,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
         , _modelManager(_configChangeListener, alicaContextParams.configPaths, _planRepository)
-        , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
+        , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName, alicaContextParams.placeholderMapping))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
         , _teamManager(_configChangeListener, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getVersion(), getMasterPlanId(),
                   _ctx.getLocalAgentName(), alicaContextParams.agentID)
