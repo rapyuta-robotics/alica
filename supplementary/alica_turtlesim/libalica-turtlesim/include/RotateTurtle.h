@@ -5,25 +5,23 @@
 
 #include <boost/dll/alias.hpp>
 
-#include "turtle_interfaces.hpp"
+#include <alica_turtlesim/turtle_interfaces.hpp>
 
 namespace turtlesim
 {
 
-class GoTo : public alica::BasicBehaviour
+class RotateTurtle : public alica::BasicBehaviour
 {
 public:
-    GoTo(alica::BehaviourContext& context);
+    RotateTurtle(alica::BehaviourContext& context);
     void initialiseParameters() override;
     void run() override;
-    static std::unique_ptr<GoTo> create(alica::BehaviourContext& context);
+    static std::unique_ptr<RotateTurtle> create(alica::BehaviourContext& context);
 
 private:
     std::shared_ptr<turtlesim::TurtleInterfaces> _turtle;
-    double _goal_x;
-    double _goal_y;
 };
 
-BOOST_DLL_ALIAS(turtlesim::GoTo::create, GoTo)
+BOOST_DLL_ALIAS(turtlesim::RotateTurtle::create, RotateTurtle)
 
 } /* namespace turtlesim */

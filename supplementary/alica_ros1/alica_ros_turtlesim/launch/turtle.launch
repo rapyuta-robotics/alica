@@ -5,7 +5,8 @@
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
     <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
-    <arg name="alica_path"     default="$(find alica_ros_turtlesim)" />
+    <arg name="turtlesim_lib_path"     default="$(find alica_turtlesim)/etc/" />
+    <arg name="turtlesim_ros_path"     default="$(find alica_ros_turtlesim)/etc/" />
 
     <arg name="turtles"        default="1"/>
 
@@ -15,7 +16,8 @@
         <param name="agent_id"     value="$(arg turtles)" />
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="roleset"      value="$(arg roleset)" />
-        <param name="alica_path"   value="$(arg alica_path)" />
+        <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
+        <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
 
     <include file="$(dirname)/turtle.launch"   if="$(eval turtles > 1)">
@@ -23,7 +25,8 @@
         <arg name="use_gdb"         value="$(arg use_gdb)"/>
         <arg name="master_plan"     value="$(arg master_plan)" />
         <arg name="roleset"         value="$(arg roleset)" />
-        <arg name="alica_path"      value="$(arg alica_path)" />
+        <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
+        <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </include>
 
 </launch>

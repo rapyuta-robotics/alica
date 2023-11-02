@@ -1,24 +1,28 @@
-#include "turtle_interfaces.hpp"
+#include "alica_ros_turtlesim/turtle_ros1_interfaces.hpp"
+
+#include <engine/blackboard/Blackboard.h>
 
 #include <geometry_msgs/Twist.h>
+#include <std_msgs/Empty.h>
+#include <std_msgs/String.h>
 #include <turtlesim/Spawn.h>
 #include <turtlesim/TeleportAbsolute.h>
 
 namespace turtlesim
 {
 
-TurtleInterfaces::TurtleInterfaces(const std::string& name)
-        : _name(name)
+TurtleRos1Interfaces::TurtleRos1Interfaces(const std::string& name)
+        : TurtleInterfaces(name)
 {
     // initialize publisher, subscriber and service client.
     ros::NodeHandle nh("~");
     _velPub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-    _poseSub = nh.subscribe("pose", 1, &TurtleInterfaces::poseSubCallback, this);
+    _poseSub = nh.subscribe("pose", 1, &TurtleRos1Interfaces::poseSubCallback, this);
     _teleportClient = nh.serviceClient<TeleportAbsolute>("teleport_absolute");
     _spawnClient = nh.serviceClient<Spawn>("/spawn");
 }
 
-bool TurtleInterfaces::teleport(float x, float y)
+bool TurtleRos1Interfaces::teleport(float x, float y)
 {
     TeleportAbsolute srv;
     srv.request.x = x;
@@ -32,7 +36,7 @@ bool TurtleInterfaces::teleport(float x, float y)
     }
 }
 
-bool TurtleInterfaces::spawn()
+bool TurtleRos1Interfaces::spawn()
 {
     turtlesim::Spawn spawnSrv;
     spawnSrv.request.x = 5;
@@ -46,19 +50,19 @@ bool TurtleInterfaces::spawn()
     }
 }
 
-void TurtleInterfaces::poseSubCallback(const PoseConstPtr& msg)
+void TurtleRos1Interfaces::poseSubCallback(const PoseConstPtr& msg)
 {
     _currentPose = msg;
 }
 
-void TurtleInterfaces::rotate(const float dYaw)
+void TurtleRos1Interfaces::rotate(const float dYaw)
 {
     geometry_msgs::Twist msg;
     msg.angular.z = dYaw;
     _velPub.publish(msg);
 }
 
-bool TurtleInterfaces::moveTowardPosition(float x, float y) const
+bool TurtleRos1Interfaces::moveTowardPosition(float x, float y) const
 {
     if (!_currentPose) {
         ROS_WARN_THROTTLE(5, "Waiting for valid pose");

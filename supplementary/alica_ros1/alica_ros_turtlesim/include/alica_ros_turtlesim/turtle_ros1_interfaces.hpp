@@ -1,7 +1,14 @@
 #pragma once
 
+#include <alica_turtlesim/turtle_interfaces.hpp>
 #include <ros/ros.h>
+#include <string>
 #include <turtlesim/Pose.h>
+
+namespace alica
+{
+class Blackboard;
+}
 
 namespace turtlesim
 {
@@ -13,15 +20,14 @@ namespace turtlesim
         - ServiceClient: turtleX/teleport_absolute
         - Parameter: name
 */
-class TurtleInterfaces
+class TurtleRos1Interfaces : public TurtleInterfaces
 {
 public:
-    TurtleInterfaces(const std::string& name);
-    bool teleport(const float x, const float y);                  // teleport turtle to (x,y)
-    bool spawn();                                                 // Spawn the turtle in the middle of the map
-    bool moveTowardPosition(const float x, const float y) const;  // publish cmd_vel based on input(x,y) and current pose
-    PoseConstPtr getCurrentPose() const { return _currentPose; }; // Retrieve current pose if available
-    void rotate(const float dYaw);
+    TurtleRos1Interfaces(const std::string& name);
+    bool teleport(const float x, const float y) override;                 // teleport turtle to (x,y)
+    bool spawn() override;                                                // Spawn the turtle in the middle of the map
+    bool moveTowardPosition(const float x, const float y) const override; // publish cmd_vel based on input(x,y) and current pose
+    void rotate(const float dYaw) override;                               // publish rotating speed of turtle based on (dYaw)
 
 private:
     void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim
@@ -30,7 +36,6 @@ private:
     ros::ServiceClient _teleportClient;            // client of teleportAbsolute service
     ros::ServiceClient _spawnClient;
     PoseConstPtr _currentPose; // current position
-    std::string _name;
 };
 
 } // namespace turtlesim

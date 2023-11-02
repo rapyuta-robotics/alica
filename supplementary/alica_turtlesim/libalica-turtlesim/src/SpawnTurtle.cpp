@@ -1,11 +1,9 @@
 #include "SpawnTurtle.h"
 
-#include <ros/ros.h>
-
 #include <memory>
 #include <random>
 
-#include "turtle_interfaces.hpp"
+#include <alica_turtlesim/turtle_interfaces.hpp>
 #include <engine/logging/Logging.h>
 
 using Logging = alica::Logging;
@@ -26,17 +24,16 @@ void SpawnTurtle::initialiseParameters()
     // TODO: Detect and fail if this behavior is called twice
     alica::LockedBlackboardRW g_bb(*getGlobalBlackboard());
     auto name = g_bb.get<std::string>("agentName");
-    if (g_bb.hasValue("turtle")) {
+    if (g_bb.hasValue("spawned") && g_bb.get<bool>("spawned")) {
         Logging::logWarn("SpawnTurtle") << name << " was already spawned";
         setFailure();
         return;
     }
-    g_bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleInterfaces>(name));
-
     auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     if (turtleInterfaces->spawn()) {
         Logging::logInfo("SpawnTurtle") << name << " was spawned";
+        g_bb.set("spawned", true);
         setSuccess();
     } else {
         Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";

@@ -23,6 +23,7 @@ endif (NOT Boost_FOUND)
 find_package(yaml-cpp REQUIRED)
 find_package(alica_solver_interface)
 find_package(alica_engine REQUIRED)
+find_package(alica_turtlesim REQUIRED)
 find_package(constraintsolver REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
@@ -39,9 +40,9 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-
 include_directories(
     include
+    ${alica_turtlesim_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
     ${YAML_CPP_INCLUDE_DIR}
 )
@@ -49,6 +50,7 @@ include_directories(
 add_executable(${PROJECT_NAME}
     src/base_node.cpp
     src/base.cpp
+    src/turtle_ros1_interfaces.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -62,7 +64,6 @@ target_link_libraries(${PROJECT_NAME}
                         constraintsolver
 )
 
-add_subdirectory(libalica-turtlesim)
 add_subdirectory(libalica-ros-utils)
 
 ##########
