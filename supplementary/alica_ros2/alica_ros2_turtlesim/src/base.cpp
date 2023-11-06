@@ -6,6 +6,7 @@
 #include <DynamicTransitionConditionCreator.h>
 #include <DynamicUtilityFunctionCreator.h>
 #include <alica_ros2_turtlesim/base.hpp>
+#include <alica_ros2_turtlesim/turtle_ros2_interfaces.hpp>
 #include <boost/dll/import.hpp> // for import_alias
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaContext.h>
@@ -31,11 +32,15 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     spinner.add_node(nh);
 
     // Initialize Alica
-    ac = new alica::AlicaContext(AlicaContextParams(name, {path + "/etc/"}, roleset, master_plan, false, agent_id));
+    ac = new alica::AlicaContext(AlicaContextParams(name, std::vector<std::string>{path + "/etc/"}, roleset, master_plan, false, agent_id));
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
+
+    LockedBlackboardRW bb(ac->editGlobalBlackboard());
+    bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleRos2Interfaces>(name));
+    bb.set("spawned", false);
 
     spinThread = std::thread([this]() { spinner.spin(); });
 }
