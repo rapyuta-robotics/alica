@@ -48,6 +48,7 @@ int main(int argc, char** argv)
 
     RCLCPP_INFO(nh->get_logger(), "Starting ALICA turtle Base.......");
     base.start();
+    rclcpp::shutdown();
     
     return 0;
 }

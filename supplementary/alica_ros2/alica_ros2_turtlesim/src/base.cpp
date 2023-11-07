@@ -32,7 +32,7 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     spinner.add_node(nh);
 
     // Initialize Alica
-    ac = new alica::AlicaContext(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id));
+    ac = std::make_unique<alica::AlicaContext>(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id));
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
@@ -89,7 +89,6 @@ Base::~Base()
 {
     spinner.cancel();
     ac->terminate();
-    delete ac;
 }
 
 } // namespace turtlesim
