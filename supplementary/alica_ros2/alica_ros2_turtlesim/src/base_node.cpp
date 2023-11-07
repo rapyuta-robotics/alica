@@ -48,18 +48,6 @@ int main(int argc, char** argv)
 
     RCLCPP_INFO(nh->get_logger(), "Starting ALICA turtle Base.......");
     base.start();
-
-    // Wait for ctrl+c
-    sigset_t signal_set;
-    sigemptyset(&signal_set);
-    sigaddset(&signal_set, SIGINT);
-    int sig_number;
-    if (sigwait(&signal_set, &sig_number) != 0) {
-        RCLCPP_ERROR(nh->get_logger(), "<main> Error sigwait()");
-        exit(1);
-    }
-
-    // Ensure turtle is no longer visible
-    // killMyTurtle(name, priv_nh);
+    
     return 0;
 }

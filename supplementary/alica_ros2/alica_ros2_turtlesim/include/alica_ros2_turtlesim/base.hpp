@@ -28,7 +28,6 @@ public:
 private:
     rclcpp::executors::MultiThreadedExecutor spinner;
     alica::AlicaContext* ac;
-    std::thread spinThread;
     std::string _name;
     rclcpp::Node::SharedPtr _nh;
 };

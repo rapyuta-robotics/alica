@@ -41,8 +41,6 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     LockedBlackboardRW bb(ac->editGlobalBlackboard());
     bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleRos2Interfaces>(name));
     bb.set("spawned", false);
-
-    spinThread = std::thread([this]() { spinner.spin(); });
 }
 
 void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
@@ -54,7 +52,7 @@ void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
     request->name = name;
     auto result = kill_client->async_send_request(request);
     RCLCPP_INFO(nh->get_logger(), "Requested to Kill: %s", name.c_str());
-    result.wait();
+    spinner.spin_until_future_complete(result);
     RCLCPP_INFO(nh->get_logger(), "Request to Kill: %s complete", name.c_str());
 }
 
@@ -70,7 +68,7 @@ void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
     request->name = name;
     auto result = spawn_client->async_send_request(request);
     RCLCPP_INFO(nh->get_logger(), "Request to spawn %s", name.c_str());
-    result.wait();
+    spinner.spin_until_future_complete(result);
     RCLCPP_INFO(nh->get_logger(), "Spawned %s", name.c_str());
 }
 
@@ -84,13 +82,12 @@ void Base::start()
     spawnMyTurtle(_name, _nh);
     ac->init(std::move(creators));
     ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
+    spinner.spin();
 }
 
 Base::~Base()
 {
-    killMyTurtle(_name, _nh);
     spinner.cancel();
-    spinThread.join();
     ac->terminate();
     delete ac;
 }

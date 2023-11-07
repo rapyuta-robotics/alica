@@ -15,7 +15,7 @@
   "id": 1320667069122998665,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-ros-utils",
+  "libraryName": "libalica-ros2-utils",
   "name": "WaitForTrigger",
   "postCondition": null,
   "preCondition": null,

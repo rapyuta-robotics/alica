@@ -22,7 +22,7 @@
   "id": 2324679431617631864,
   "implementationName": "",
   "inheritBlackboard": false,
-  "libraryName": "libalica-ros-utils",
+  "libraryName": "libalica-ros2-utils",
   "name": "WaitForMsg",
   "postCondition": null,
   "preCondition": null,

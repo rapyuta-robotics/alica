@@ -56,6 +56,8 @@ target_link_libraries(${PROJECT_NAME}
     ${geometry_msgs_LIBRARIES}
 )
 
+add_subdirectory(libalica-ros2-utils)
+
 ament_target_dependencies(alica_ros2_turtlesim
   rclcpp
   geometry_msgs
