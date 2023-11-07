@@ -16,9 +16,8 @@ find_package(constraintsolver REQUIRED)
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-catkin_package(INCLUDE_DIRS include)
+  catkin_package(INCLUDE_DIRS include)
 endif()
-
 
 include_directories(
   include
@@ -71,7 +70,6 @@ install(DIRECTORY etc
     DESTINATION share/${PROJECT_NAME}/
 )
 
-
 #Installing files to make a find_package()-able package
 write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
@@ -92,3 +90,9 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}
 )
+
+find_package(ament_cmake QUIET)
+if (ament_cmake_FOUND)
+  find_package(ament_cmake REQUIRED)
+  ament_package()
+endif()

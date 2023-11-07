@@ -60,6 +60,7 @@ ament_target_dependencies(alica_ros2_turtlesim
   rclcpp
   geometry_msgs
   alica_ros2_proxy
+  alica_turtlesim
 )
 
 ament_export_dependencies(alica_ros2_turtlesim

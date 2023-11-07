@@ -19,7 +19,7 @@ class Base
 {
 public:
     Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
-            const std::string& path);
+            const std::vector<std::string>& paths);
     ~Base();
     void start();
     void killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr);
