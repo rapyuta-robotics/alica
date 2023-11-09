@@ -1,22 +1,27 @@
 #pragma once
 
 #include <engine/IAlicaTrace.h>
+#include <engine/util/TraceContext.h>
 
-#include <jaegertracing/Tracer.h>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 
+using AlicaTraceValue = alica::IAlicaTrace::TraceValue;
+
 namespace alicaTracing
 {
-// Value can be numeric types, strings, or bools.
-using RawTraceValue = opentracing::Value;
+
+class SpanWrapper;
 
 class TraceFactory : public alica::IAlicaTraceFactory
 {
+    class TraceFactoryImpl;
+
 public:
     TraceFactory(const std::string& serviceName, const std::string& configFilePath,
-            const std::unordered_map<std::string, RawTraceValue>& defaultTags = std::unordered_map<std::string, RawTraceValue>());
+            const std::unordered_map<std::string, AlicaTraceValue>& defaultTags = std::unordered_map<std::string, AlicaTraceValue>());
     TraceFactory(const TraceFactory&) = delete;
     TraceFactory(TraceFactory&&) = delete;
     TraceFactory& operator=(const TraceFactory&) = delete;
@@ -28,14 +33,12 @@ public:
     void unsetGlobalContext() override;
 
 private:
-    static constexpr const char* LOGNAME = "TraceFactory";
+    SpanWrapper createSpan(const std::string& opName, std::optional<const alica::TraceContext> parent = std::nullopt) const;
 
-    bool _initialized = false;
-    std::unordered_map<std::string, RawTraceValue> _defaultTags;
-    std::string _serviceName;
+    std::unique_ptr<TraceFactoryImpl> _impl;
 
     mutable std::mutex _mutex;
-    std::optional<std::string> _globalContext;
+    static constexpr const char* LOGNAME = "TraceFactory";
 };
 
 } // namespace alicaTracing

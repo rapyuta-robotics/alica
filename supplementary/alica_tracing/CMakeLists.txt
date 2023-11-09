@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_tracing)
+include(CTest)
 add_compile_options(-std=c++17)
 
 
@@ -13,12 +14,20 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
 
+find_package(opentelemetry-cpp CONFIG REQUIRED)
 
-include_directories(
-  include
-  ${alica_engine_INCLUDE_DIRS}
-  SYSTEM
-)
+set(CMAKE_SYSTEM_PREFIX_PATH "/opt/grpc/cmake/build/lib/cmake")
+set(Protobuf_PROTOC_EXECUTABLE "/opt/grpc/cmake/build/bin/protoc")
+set(Protobuf_INCLUDE_DIR "/opt/grpc/cmake/build/include")
+set(Protobuf_LIBRARY "/opt/grpc/cmake/build/lib/libprotobuf.a")
+set(Protobuf_PROTOC_LIBRARY "/opt/grpc/cmake/build/lib/libprotoc.a")
+find_package(Protobuf REQUIRED)
+
+set(CMAKE_SYSTEM_PREFIX_PATH "/opt/grpc/cmake/build/lib/cmake")
+find_package(gRPC REQUIRED)
+
+find_package(utf8_range CONFIG REQUIRED)
+unset(CMAKE_SYSTEM_PREFIX_PATH CACHE)
 
 ###########
 ## Build ##
@@ -32,6 +41,8 @@ add_library(
 )
 
 target_include_directories(alica_tracing PUBLIC
+  ${alica_engine_INCLUDE_DIRS}
+  ${OPENTELEMETRY_CPP_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
@@ -39,10 +50,11 @@ target_include_directories(alica_tracing PUBLIC
 
 # Specify libraries to link a library or executable target against
 target_link_libraries(
-  ${PROJECT_NAME}
+  ${PROJECT_NAME} PRIVATE
   ${YAML_CPP_LIBRARIES}
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
-  jaegertracing
+  ${OPENTELEMETRY_CPP_LIBRARIES}
+  utf8_range::utf8_validity
 )
 
 #############

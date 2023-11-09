@@ -191,7 +191,7 @@ void TraceRunnableObject::setupTraceContext(const std::string& name, RunningPlan
         auto parent = rp->getParent();
         for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTrace()); parent = parent->getParent())
             ;
-        _trace = _tf->create(name, (parent ? std::optional<std::string>(parent->getBasicPlan()->getTrace()->context()) : std::nullopt));
+        _trace = _tf->create(name, (parent ? std::optional<std::string>(parent->getBasicPlan()->getTrace()->context().toString()) : std::nullopt));
         break;
     }
     case TracingType::SKIP: {
