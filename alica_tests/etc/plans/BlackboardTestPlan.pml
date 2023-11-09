@@ -27,6 +27,34 @@
       "id": 3928341634460937152,
       "key": "ChooseBlackboardTestState2PopulateBlackboardTestState",
       "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 4605463773961363941,
+      "key": "ChooseBlackboardTestState2MappingFromTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 3574364347909149459,
+      "key": "ChooseBlackboardTestState2InheritFromParentTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 2623139515870155114,
+      "key": "ChooseBlackboardTestState2BlackboardExceptionTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "id": 2728662829030021930,
+      "key": "ChooseBlackboardTestState2BlackboardAnyTestState",
+      "type": "bool"
     }
   ],
   "comment": "",
@@ -127,7 +155,10 @@
         1591792576101512594,
         2025444659250378559,
         2898451417708501510,
-        3982256618930995182
+        3982256618930995182,
+        111722555649933745,
+        4058344073033619191,
+        3370611371440099521
       ],
       "parentPlan": 1633245244310547016,
       "positionWeb": {
@@ -242,7 +273,10 @@
         171823477339840252,
         543853498590134994,
         2617458369167221176,
-        3610708172177662828
+        3610708172177662828,
+        100553280754676548,
+        3470973237238019675,
+        2293502069296453618
       ],
       "name": "SuccessState",
       "outTransitions": [],
@@ -272,6 +306,128 @@
       "positionWeb": {
         "x": 686,
         "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "BlackboardExceptionTestBeh.beh#563281824642724619",
+          "comment": "",
+          "configuration": null,
+          "id": 1476937640286666693,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1789315807376094758,
+      "inTransitions": [
+        3370611371440099521
+      ],
+      "name": "BlackboardExceptionTestState",
+      "outTransitions": [
+        3470973237238019675
+      ],
+      "parentPlan": 1633245244310547016,
+      "positionWeb": {
+        "x": 725.8287449416673,
+        "y": 1200.6875812871745
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "BlackboardAnyTestPlan.pml#1578937713657933189",
+          "comment": "",
+          "configuration": null,
+          "id": 2471691759138797437,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 2615437904727714940,
+      "inTransitions": [
+        4058344073033619191
+      ],
+      "name": "BlackboardAnyTestState",
+      "outTransitions": [
+        2293502069296453618
+      ],
+      "parentPlan": 1633245244310547016,
+      "positionWeb": {
+        "x": 762.9870886342195,
+        "y": 1409.6442759846486
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "InheritFromParentTestPlan.pml#2157089947574819410",
+          "comment": "",
+          "configuration": null,
+          "id": 1441035851201364708,
+          "keyMapping": {
+            "input": [
+              {
+                "childKey": "boolValueA",
+                "parentKey": null,
+                "value": false
+              },
+              {
+                "childKey": "doubleValueA",
+                "parentKey": null,
+                "value": 1.0
+              },
+              {
+                "childKey": "intValueA",
+                "parentKey": null,
+                "value": 1
+              },
+              {
+                "childKey": "stringValueA",
+                "parentKey": null,
+                "value": "initString"
+              },
+              {
+                "childKey": "uintValueA",
+                "parentKey": null,
+                "value": 1
+              }
+            ],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1838328320763180289,
+      "inTransitions": [
+        111722555649933745
+      ],
+      "name": "InheritFromParentTestState",
+      "outTransitions": [
+        100553280754676548
+      ],
+      "parentPlan": 1633245244310547016,
+      "positionWeb": {
+        "x": 714.1216991963261,
+        "y": 1006.4042766934558
       },
       "type": "State",
       "variableBindings": []
@@ -554,6 +710,188 @@
         "conditionString": "",
         "enabled": true,
         "id": 124474551502599750,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 100553280754676548,
+      "inState": 1838328320763180289,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 3953151813073280186,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2314195684838070629,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 111722555649933745,
+      "inState": 950259230717695500,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseBlackboardTestState2InheritFromParentTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1838328320763180289,
+      "pointsWeb": [
+        {
+          "x": 468.4270952927669,
+          "y": 944.4065729047072
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4091662183874567066,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 3470973237238019675,
+      "inState": 1789315807376094758,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 3953151813073280186,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 376607052513038464,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 4058344073033619191,
+      "inState": 950259230717695500,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseBlackboardTestState2BlackboardAnyTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 2615437904727714940,
+      "pointsWeb": [
+        {
+          "x": 354.84764186491844,
+          "y": 1213.6725574962143
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1634134180605004094,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 2293502069296453618,
+      "inState": 2615437904727714940,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 3953151813073280186,
+      "pointsWeb": [
+        {
+          "x": 1082.0484815451414,
+          "y": 1305.98981331308
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4141968262457814305,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 3370611371440099521,
+      "inState": 950259230717695500,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseBlackboardTestState2BlackboardExceptionTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1789315807376094758,
+      "pointsWeb": [
+        {
+          "x": 419.73276569393704,
+          "y": 1050.2336253857477
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2856057307762913052,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

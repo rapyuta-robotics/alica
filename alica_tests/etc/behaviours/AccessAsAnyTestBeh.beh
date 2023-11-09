@@ -1,0 +1,16 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 103008403659174438,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "libraryName": "alica-tests",
+  "name": "AccessAsAnyTestBeh",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}
