@@ -41,7 +41,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "WaitForMsg.beh#2324679431617631864",
+          "abstractPlan": "WaitForMsg.plc#2324679431617631864",
           "comment": "",
           "configuration": null,
           "id": 2848149231989200191,
