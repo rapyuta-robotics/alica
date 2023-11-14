@@ -28,6 +28,7 @@ void PlaceholderMappingFactory::attachReferences()
             placeholderIt != placeholderReferences.end(); ++placeholderIt, ++abstractPlanIt) {
         assert(placeholderIt->first == abstractPlanIt->first);
         auto mapping = dynamic_cast<PlaceholderMapping*>(const_cast<AlicaElement*>(getElement(placeholderIt->first)));
+        assert(mapping);
         // TODO: verify that the placeholder & abstract plans are compatible
         mapping->_mapping.emplace(placeholderIt->second, dynamic_cast<const AbstractPlan*>(getElement(abstractPlanIt->second)));
     }

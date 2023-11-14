@@ -102,12 +102,12 @@ void Factory::setAttributes(const YAML::Node& node, alica::AlicaElement* ael)
 
 const AlicaElement* Factory::getElement(const int64_t id)
 {
-    auto& placeholders = Factory::modelManager->_planRepository._placeholders;
-    if (auto elem = placeholders.find(id); elem != placeholders.end()) {
+    const auto& placeholders = Factory::modelManager->_planRepository._placeholders;
+    if (const auto elem = placeholders.find(id); elem != placeholders.end()) {
         // Replace the placeholder with the corresponding abstract plan from the mapping
-        auto& mappings = Factory::modelManager->_planRepository._placeholderMappings;
-        for (auto& [mappingId, mapping] : mappings) {
-            if (auto abstractPlan = mapping->find(id); abstractPlan) {
+        const auto& mappings = Factory::modelManager->_planRepository._placeholderMappings;
+        for (const auto& [mappingId, mapping] : mappings) {
+            if (const auto abstractPlan = mapping->find(id); abstractPlan) {
                 return abstractPlan;
             }
         }

@@ -17,8 +17,7 @@ public:
 private:
     friend PlaceholderFactory;
     /**
-     * If nullptr, it will simply receive a reference to its parents Blackboard
-     * Otherwise, the mapped keys will be copied in and out of the plans Blackboard
+     * The blackboard mapping. This cannot be null, since placeholders cannot inherit the parent's blackboard
      */
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 };
