@@ -128,12 +128,12 @@
           "keyMapping": {
             "input": [
               {
-                "childKey": "goal_x",
+                "childKey": "x",
                 "parentKey": "x",
                 "value": null
               },
               {
-                "childKey": "goal_y",
+                "childKey": "y",
                 "parentKey": "y",
                 "value": null
               }

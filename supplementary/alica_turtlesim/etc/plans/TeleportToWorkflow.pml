@@ -62,13 +62,13 @@
           "keyMapping": {
             "input": [
               {
-                "childKey": "goal_x",
-                "parentKey": "target_x",
+                "childKey": "y",
+                "parentKey": "target_y",
                 "value": null
               },
               {
-                "childKey": "goal_y",
-                "parentKey": "target_y",
+                "childKey": "x",
+                "parentKey": "target_x",
                 "value": null
               }
             ],
