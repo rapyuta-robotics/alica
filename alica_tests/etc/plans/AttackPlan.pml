@@ -125,7 +125,6 @@
         "enabled": true,
         "id": 1402489460549,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [
           {
             "comment": "",
@@ -192,7 +191,6 @@
         "enabled": true,
         "id": 1402489462088,
         "name": "ConditionNameShootAttack",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": [
           1403772778288,

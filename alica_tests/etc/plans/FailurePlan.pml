@@ -108,7 +108,6 @@
         "enabled": true,
         "id": 2038762164340314344,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -132,7 +131,6 @@
         "enabled": true,
         "id": 4351457352348187886,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

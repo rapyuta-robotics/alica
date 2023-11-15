@@ -98,7 +98,6 @@
         "enabled": true,
         "id": 1414403842622,
         "name": "1414403842622",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

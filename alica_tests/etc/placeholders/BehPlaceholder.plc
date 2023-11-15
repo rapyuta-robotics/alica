@@ -1,0 +1,14 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 438575867201420768,
+      "key": "beh_key",
+      "type": "double"
+    }
+  ],
+  "comment": "",
+  "id": 1209933261934111920,
+  "name": "BehPlaceholder"
+}

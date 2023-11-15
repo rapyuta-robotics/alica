@@ -328,7 +328,6 @@
         "enabled": true,
         "id": 535013460795749320,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -357,7 +356,6 @@
         "enabled": true,
         "id": 4508134782915683308,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -392,7 +390,6 @@
         "enabled": true,
         "id": 4295754783734115472,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -427,7 +424,6 @@
         "enabled": true,
         "id": 1839484836184675310,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -456,7 +452,6 @@
         "enabled": true,
         "id": 87492245890234575,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -491,7 +486,6 @@
         "enabled": true,
         "id": 1720760597091928932,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -520,7 +514,6 @@
         "enabled": true,
         "id": 3708663340461492332,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -555,7 +548,6 @@
         "enabled": true,
         "id": 124474551502599750,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

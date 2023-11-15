@@ -180,7 +180,6 @@
         "enabled": true,
         "id": 1418825427317,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -204,7 +203,6 @@
         "enabled": true,
         "id": 1418825428924,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

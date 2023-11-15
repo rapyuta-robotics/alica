@@ -32,7 +32,6 @@
     "enabled": true,
     "id": 1418042929966,
     "name": "PreConditionPlanPreCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },

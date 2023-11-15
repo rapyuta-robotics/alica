@@ -33,7 +33,6 @@
     "enabled": false,
     "id": 1418042967134,
     "name": "RuntimeConditionPlanRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },

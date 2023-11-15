@@ -217,7 +217,6 @@
         "enabled": true,
         "id": 1402488519140,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -241,7 +240,6 @@
         "enabled": true,
         "id": 1402488520968,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -265,7 +263,6 @@
         "enabled": true,
         "id": 1402488558741,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -289,7 +286,6 @@
         "enabled": true,
         "id": 1409218319990,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

@@ -173,7 +173,6 @@
         "enabled": true,
         "id": 2144060677891213947,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -208,7 +207,6 @@
         "enabled": true,
         "id": 2603548172229370814,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -237,7 +235,6 @@
         "enabled": true,
         "id": 1507856381414068358,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -272,7 +269,6 @@
         "enabled": true,
         "id": 1053756108049156514,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

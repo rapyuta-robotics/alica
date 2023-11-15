@@ -49,7 +49,6 @@
     "enabled": false,
     "id": 1402489260911,
     "name": "MidFieldPlayPlanRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },
@@ -242,7 +241,6 @@
         "enabled": true,
         "id": 1402489258509,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -266,7 +264,6 @@
         "enabled": true,
         "id": 1402489278408,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -290,7 +287,6 @@
         "enabled": true,
         "id": 1402500844446,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

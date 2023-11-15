@@ -40,7 +40,6 @@
     "enabled": true,
     "id": 1412781707952,
     "name": "SimpleTestPlanPreCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },
@@ -50,7 +49,6 @@
     "enabled": false,
     "id": 1412781693884,
     "name": "SimpleTestPlanRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },
@@ -142,7 +140,6 @@
         "enabled": true,
         "id": 1412761926856,
         "name": "1412761926856",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

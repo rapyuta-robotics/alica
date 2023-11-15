@@ -98,7 +98,6 @@
         "enabled": true,
         "id": 1418042683692,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

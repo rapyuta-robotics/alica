@@ -32,7 +32,6 @@
     "enabled": true,
     "id": 1402489131988,
     "name": "GoalPlanPreCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },
@@ -42,7 +41,6 @@
     "enabled": false,
     "id": 1403773741874,
     "name": "GoalPlanRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [
       {
         "comment": "",
@@ -122,7 +120,6 @@
         "enabled": false,
         "id": 1402489620773,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -151,7 +148,6 @@
         "enabled": true,
         "id": 1402489174338,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -175,7 +171,6 @@
         "enabled": true,
         "id": 1402489206278,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -199,7 +194,6 @@
         "enabled": true,
         "id": 1402489218027,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

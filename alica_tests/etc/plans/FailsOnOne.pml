@@ -33,7 +33,6 @@
     "enabled": false,
     "id": 1530069251117,
     "name": "FailsOnOneRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },

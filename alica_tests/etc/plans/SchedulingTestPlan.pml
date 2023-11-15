@@ -17,15 +17,15 @@
     {
       "access": "protected",
       "comment": "",
-      "id": 3103901468860392175,
-      "key": "ChooseTestState2SchedulingPlanTestState",
+      "id": 1375412086750652826,
+      "key": "ChooseTestState2ExecOrderTestState",
       "type": "bool"
     },
     {
       "access": "protected",
       "comment": "",
-      "id": 1375412086750652826,
-      "key": "ChooseTestState2ExecOrderTestState",
+      "id": 3103901468860392175,
+      "key": "ChooseTestState2SchedulingPlanTestState",
       "type": "bool"
     }
   ],
@@ -154,9 +154,9 @@
       "name": "ChooseTestState",
       "outTransitions": [
         981095176145378775,
+        1821712422949873757,
         1846034327219291762,
-        4587239275124055604,
-        1821712422949873757
+        4587239275124055604
       ],
       "parentPlan": 500355457826444680,
       "positionWeb": {
@@ -270,7 +270,6 @@
         "enabled": true,
         "id": 298457776204856019,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -299,7 +298,6 @@
         "enabled": true,
         "id": 4499467508611410270,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -328,7 +326,35 @@
         "enabled": true,
         "id": 131515124962761221,
         "name": "",
-        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 1821712422949873757,
+      "inState": 3057463781729421980,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2ExecOrderTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3067509435331022119,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3398814735947491827,
+        "name": "",
         "quantifiers": [],
         "variables": []
       },
@@ -371,7 +397,6 @@
         "enabled": true,
         "id": 1418256055874275096,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -395,7 +420,6 @@
         "enabled": true,
         "id": 3979744909541153183,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -424,7 +448,6 @@
         "enabled": true,
         "id": 638117490984271054,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -467,37 +490,6 @@
         "enabled": true,
         "id": 3424614768652066646,
         "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "ConditionRepository.cnd#3592699233854318376",
-      "id": 1821712422949873757,
-      "inState": 3057463781729421980,
-      "keyMapping": {
-        "input": [
-          {
-            "childKey": "result",
-            "parentKey": "ChooseTestState2ExecOrderTestState",
-            "value": null
-          }
-        ],
-        "output": []
-      },
-      "name": "",
-      "outState": 3067509435331022119,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 3398814735947491827,
-        "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

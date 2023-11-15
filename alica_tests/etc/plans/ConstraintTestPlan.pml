@@ -33,7 +33,6 @@
     "enabled": false,
     "id": 1414068566297,
     "name": "ConstraintTestPlanRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": [
       1414068572540,
