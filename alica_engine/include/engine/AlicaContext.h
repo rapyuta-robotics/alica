@@ -122,8 +122,8 @@ struct AlicaContextParams
      * the engine will try to read the local agent's identifier from the
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
-     * @param placeholderMapping The file name of the placeholder mapping file. File should be in a sub-folder of configPaths. By default an empty value is used
-     * meaning there are no placeholders in the plan tree
+     * @param placeholderMapping A json encoded string that specifies the implementation to use for each placeholder in the plan tree. By default an empty
+     * value is used meaning there are no placeholders in the plan tree
      *
      * @note The configPaths are the paths containing the plans, roles and tasks.
      */
@@ -147,8 +147,8 @@ struct AlicaContextParams
      * the engine will try to read the local agent's identifier from the
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
-     * @param placeholderMapping The file name of the placeholder mapping file. File should be in a sub-folder of configPaths. By default an empty value is used
-     * meaning there are no placeholders in the plan tree
+     * @param placeholderMapping A json encoded string that specifies the implementation to use for each placeholder in the plan tree. By default an empty
+     * value is used meaning there are no placeholders in the plan tree
      *
      * @note The configPaths are the paths containing the plans, roles and tasks.
      */

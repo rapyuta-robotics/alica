@@ -21,9 +21,9 @@
   ],
   "frequency": 0,
   "id": 1853689935893516069,
-  "implementationName": "",
+  "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
-  "libraryName": "alica-tests",
+  "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "PlaceholderTestPlan",
   "preCondition": null,
@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "PlaceholderPlanImpl.pml#769233687233101247",
+          "abstractPlan": "PlanPlaceholder.plc#769233687233101247",
           "comment": "",
           "configuration": null,
           "id": 1162142437659322885,
@@ -42,7 +42,7 @@
               {
                 "childKey": "plan_key",
                 "parentKey": null,
-                "value": 3.14
+                "value": 3
               }
             ],
             "output": []

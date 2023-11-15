@@ -5,7 +5,7 @@
       "comment": "",
       "id": 1515319670549888806,
       "key": "plan_key",
-      "type": "double"
+      "type": "int64"
     }
   ],
   "comment": "",
@@ -17,7 +17,7 @@
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "",
-      "plan": 769233687233101247,
+      "plan": 1111111111111111112,
       "positionWeb": {
         "x": 364,
         "y": 305.3125
@@ -29,9 +29,9 @@
   ],
   "frequency": 0,
   "id": 1111111111111111112,
-  "implementationName": "",
+  "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
-  "libraryName": "alica-tests",
+  "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "PlaceholderPlanImpl",
   "preCondition": null,
@@ -41,7 +41,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "PlaceholderBehImpl.beh#1209933261934111920",
+          "abstractPlan": "BehPlaceholder.plc#1209933261934111920",
           "comment": "",
           "configuration": null,
           "id": 3637760735574134240,
@@ -63,7 +63,7 @@
       "inTransitions": [],
       "name": "PlaceholderBehState",
       "outTransitions": [],
-      "parentPlan": 769233687233101247,
+      "parentPlan": 1111111111111111112,
       "positionWeb": {
         "x": 540.796335154078,
         "y": 294.88229797117026

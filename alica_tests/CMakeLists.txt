@@ -86,6 +86,7 @@ if(BUILD_TESTING)
         src/test/test_success.cpp
         src/test/test_standard_library_conditions.cpp
         src/test/test_alica_parallel_execution.cpp
+        src/test/test_placeholders.cpp
     )
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
     target_compile_definitions(${PROJECT_NAME}-test PUBLIC "THIS_PACKAGE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")

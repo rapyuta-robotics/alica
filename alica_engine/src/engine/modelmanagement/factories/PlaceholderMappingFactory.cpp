@@ -1,5 +1,6 @@
 #include "engine/modelmanagement/factories/PlaceholderMappingFactory.h"
 
+#include "engine/model/AbstractPlan.h"
 #include "engine/model/PlaceholderMapping.h"
 #include "engine/modelmanagement/Strings.h"
 

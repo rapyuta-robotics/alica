@@ -26,7 +26,9 @@
 
 #include <csetjmp>
 #include <csignal>
+#include <fstream>
 #include <mutex>
+#include <sstream>
 #include <string>
 
 #define ASSERT_NO_SIGNAL ASSERT_EQ(setjmp(restore_point), 0);
@@ -345,9 +347,9 @@ public:
         std::string path;
 #if defined(THIS_PACKAGE_DIR)
         path = THIS_PACKAGE_DIR;
-        path += "/etc/";
 #endif
-        _tc = std::make_unique<TestContext>(agentName(), std::vector<std::string>{path}, "Roleset", "TestMasterPlan", true, 1);
+        _tc = std::make_unique<TestContext>(agentName(), std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1,
+                readPlaceholderMapping(path + "/config/placeholder_mapping.json"));
         ASSERT_TRUE(_tc->isValid());
     }
 
@@ -370,6 +372,22 @@ public:
     std::string agentName() const { return "hairy"; }
 
 protected:
+    std::optional<std::string> readPlaceholderMapping(const std::string& placeholderMappingFilePath)
+    {
+        std::optional<std::string> maybeMapping;
+        if (!placeholderMappingFilePath.empty()) {
+            std::ifstream mappingFileStream(placeholderMappingFilePath);
+            if (mappingFileStream) {
+                std::ostringstream ss;
+                ss << mappingFileStream.rdbuf();
+                maybeMapping.emplace(ss.str());
+            } else {
+                std::cerr << "Could not read mapping file" << std::endl;
+            }
+        }
+        return maybeMapping;
+    }
+
     std::unique_ptr<TestContext> _tc;
 };
 

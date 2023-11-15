@@ -20,8 +20,8 @@ TestContext::TestContext(const std::string& agentName, const std::string& config
 }
 
 TestContext::TestContext(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName,
-        const std::string& masterPlanName, bool stepEngine, const AgentId agentID)
-        : AlicaContext(AlicaContextParams(agentName, configPaths, roleSetName, masterPlanName, stepEngine, agentID))
+        const std::string& masterPlanName, bool stepEngine, const AgentId agentID, std::optional<std::string> placeholderMapping)
+        : AlicaContext(AlicaContextParams(agentName, configPaths, roleSetName, masterPlanName, stepEngine, agentID, placeholderMapping))
 {
 }
 

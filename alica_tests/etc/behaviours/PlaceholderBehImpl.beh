@@ -5,7 +5,7 @@
       "comment": "",
       "id": 438575867201420768,
       "key": "beh_key",
-      "type": "double"
+      "type": "int64"
     }
   ],
   "comment": "",
