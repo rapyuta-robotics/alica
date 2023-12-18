@@ -33,7 +33,7 @@
       "comment": "Make the formation. Leave the state if a trigger to do so is received",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "WaitForTrigger.plc#1320667069122998665",
+          "abstractPlan": "WaitForTrigger.plh#1320667069122998665",
           "comment": "",
           "configuration": null,
           "id": 428513459178575844,
@@ -83,7 +83,7 @@
       "comment": "Go to the corner and wait until a trigger to join the formation is received",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "WaitForTrigger.plc#1320667069122998665",
+          "abstractPlan": "WaitForTrigger.plh#1320667069122998665",
           "comment": "",
           "configuration": null,
           "id": 569238231169711866,

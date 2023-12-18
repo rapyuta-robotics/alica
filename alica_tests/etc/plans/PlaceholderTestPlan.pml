@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "PlanPlaceholder.plc#769233687233101247",
+          "abstractPlan": "PlanPlaceholder.plh#769233687233101247",
           "comment": "",
           "configuration": null,
           "id": 1162142437659322885,

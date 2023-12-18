@@ -41,7 +41,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "BehPlaceholder.plc#1209933261934111920",
+          "abstractPlan": "BehPlaceholder.plh#1209933261934111920",
           "comment": "",
           "configuration": null,
           "id": 3637760735574134240,

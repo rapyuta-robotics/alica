@@ -74,7 +74,7 @@
           "name": ""
         },
         {
-          "abstractPlan": "WaitForTrigger.plc#1320667069122998665",
+          "abstractPlan": "WaitForTrigger.plh#1320667069122998665",
           "comment": "",
           "configuration": null,
           "id": 3088308470338945807,
@@ -124,7 +124,7 @@
           "name": ""
         },
         {
-          "abstractPlan": "WaitForTrigger.plc#1320667069122998665",
+          "abstractPlan": "WaitForTrigger.plh#1320667069122998665",
           "comment": "",
           "configuration": null,
           "id": 4301939880152356767,
