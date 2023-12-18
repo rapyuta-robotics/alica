@@ -76,5 +76,5 @@
   "transitions": [],
   "utilityThreshold": 0.0,
   "variables": [],
-  "interface": true
+  "isInterface": true
 }
