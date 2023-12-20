@@ -40,7 +40,8 @@ public:
         return out;
     }
 
-    bool operator==(const BlackboardBlueprint& other) const {
+    bool operator==(const BlackboardBlueprint& other) const
+    {
         for (auto& [key, info] : _keyInfo) {
             auto it = other._keyInfo.find(key);
             if (it == other._keyInfo.end() || it->second.type != info.type || it->second.access != info.access) {
@@ -55,9 +56,7 @@ public:
         return true;
     }
 
-    bool operator!=(const BlackboardBlueprint& other) const {
-        return !(*this == other);
-    }
+    bool operator!=(const BlackboardBlueprint& other) const { return !(*this == other); }
 
 private:
     std::unordered_map<std::string, KeyInfo> _keyInfo;

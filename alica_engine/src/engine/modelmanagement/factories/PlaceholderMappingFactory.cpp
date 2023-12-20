@@ -1,12 +1,12 @@
 #include "engine/modelmanagement/factories/PlaceholderMappingFactory.h"
 
+#include "engine/blackboard/Blackboard.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Behaviour.h"
 #include "engine/model/Placeholder.h"
 #include "engine/model/PlaceholderMapping.h"
 #include "engine/model/Plan.h"
-#include "engine/model/Behaviour.h"
 #include "engine/modelmanagement/Strings.h"
-#include "engine/blackboard/Blackboard.h"
 
 namespace alica
 {
@@ -46,9 +46,9 @@ void PlaceholderMappingFactory::attachReferences()
                 AlicaEngine::abort(LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "'");
             }
         } else if (const Plan* plan = dynamic_cast<const Plan*>(abstractPlan)) {
-             if (*placeholder->getBlackboardBlueprint() != *plan->getBlackboardBlueprint()) {
+            if (*placeholder->getBlackboardBlueprint() != *plan->getBlackboardBlueprint()) {
                 AlicaEngine::abort(LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "'");
-             }
+            }
         }
         mapping->_mapping.emplace(placeholderIt->second, abstractPlan);
     }

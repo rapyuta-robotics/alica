@@ -341,10 +341,7 @@ namespace alica::test
 class SingleAgentUninitializedTestFixture : public ::testing::Test
 {
 public:
-    virtual std::string getPlaceholderMappingFileName() const
-    {
-        return "placeholder_mapping.json";
-    }
+    virtual std::string getPlaceholderMappingFileName() const { return "placeholder_mapping.json"; }
     virtual void SetUp() override
     {
         // Path to test configs set by CMake

@@ -2,34 +2,25 @@
 
 #include <gtest/gtest.h>
 
-#include <string>
 #include <optional>
+#include <string>
 
 namespace alica::test
 {
 
 class PlaceholderKeyNameNotMatchingFixture : public SingleAgentUninitializedTestFixture
 {
-    std::string getPlaceholderMappingFileName() const override
-    {
-        return "placeholder_mapping_keyname_not_matching.json";
-    }
+    std::string getPlaceholderMappingFileName() const override { return "placeholder_mapping_keyname_not_matching.json"; }
 };
 
 class PlaceholderKeyTypeNotMatchingFixture : public SingleAgentUninitializedTestFixture
 {
-    std::string getPlaceholderMappingFileName() const override
-    {
-        return "placeholder_mapping_keytype_not_matching.json";
-    }
+    std::string getPlaceholderMappingFileName() const override { return "placeholder_mapping_keytype_not_matching.json"; }
 };
 
 class PlaceholderMappingIncompleteFixture : public SingleAgentUninitializedTestFixture
 {
-    std::string getPlaceholderMappingFileName() const override
-    {
-        return "placeholder_mapping_incomplete.json";
-    }
+    std::string getPlaceholderMappingFileName() const override { return "placeholder_mapping_incomplete.json"; }
 };
 
 TEST_F(SingleAgentTestFixture, placeholdersTest)
@@ -62,17 +53,17 @@ TEST_F(SingleAgentTestFixture, placeholdersTest)
 
 TEST_F(PlaceholderKeyNameNotMatchingFixture, placeholdersKeyNameNotMatchingTest)
 {
-    ASSERT_DEATH({SingleAgentUninitializedTestFixture::initialize();}, "");
+    ASSERT_DEATH({ SingleAgentUninitializedTestFixture::initialize(); }, "");
 }
 
 TEST_F(PlaceholderKeyTypeNotMatchingFixture, placeholdersKeyTypeNotMatchingTest)
 {
-    ASSERT_DEATH({SingleAgentUninitializedTestFixture::initialize();}, "");
+    ASSERT_DEATH({ SingleAgentUninitializedTestFixture::initialize(); }, "");
 }
 
 TEST_F(PlaceholderMappingIncompleteFixture, placeholdersMappingIncompleteTest)
 {
-    ASSERT_DEATH({SingleAgentUninitializedTestFixture::initialize();}, "No implementation found");
+    ASSERT_DEATH({ SingleAgentUninitializedTestFixture::initialize(); }, "No implementation found");
 }
 
 } // namespace alica::test
