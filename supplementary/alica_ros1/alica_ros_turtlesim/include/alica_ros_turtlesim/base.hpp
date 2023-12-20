@@ -4,6 +4,11 @@
 
 #include <ros/ros.h>
 
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
 namespace turtlesim
 {
 class AlicaContext;
@@ -17,7 +22,7 @@ public:
 
 private:
     ros::AsyncSpinner spinner;
-    alica::AlicaContext* ac;
+    std::unique_ptr<alica::AlicaContext> ac;
 };
 
 } // namespace turtlesim

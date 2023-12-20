@@ -24,7 +24,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name
         : spinner(0)
 {
     // Initialize Alica
-    ac = new alica::AlicaContext(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id, placeholderMapping));
+    ac = std::make_unique<alica::AlicaContext>(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id, placeholderMapping));
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
@@ -50,7 +50,6 @@ Base::~Base()
 {
     spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
-    delete ac;
 }
 
 } // namespace turtlesim
