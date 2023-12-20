@@ -2,8 +2,35 @@
 
 #include <gtest/gtest.h>
 
+#include <string>
+#include <optional>
+
 namespace alica::test
 {
+
+class PlaceholderKeyNameNotMatchingFixture : public SingleAgentUninitializedTestFixture
+{
+    std::string getPlaceholderMappingFileName() const override
+    {
+        return "placeholder_mapping_keyname_not_matching.json";
+    }
+};
+
+class PlaceholderKeyTypeNotMatchingFixture : public SingleAgentUninitializedTestFixture
+{
+    std::string getPlaceholderMappingFileName() const override
+    {
+        return "placeholder_mapping_keytype_not_matching.json";
+    }
+};
+
+class PlaceholderMappingIncompleteFixture : public SingleAgentUninitializedTestFixture
+{
+    std::string getPlaceholderMappingFileName() const override
+    {
+        return "placeholder_mapping_incomplete.json";
+    }
+};
 
 TEST_F(SingleAgentTestFixture, placeholdersTest)
 {
@@ -31,6 +58,21 @@ TEST_F(SingleAgentTestFixture, placeholdersTest)
     // Check the plan heirarchy is as expected
     ASSERT_EQ(beh->getPlanContext()->getParent(), plan->getPlanContext());
     ASSERT_EQ(plan->getPlanContext()->getParent(), testPlan->getPlanContext());
+}
+
+TEST_F(PlaceholderKeyNameNotMatchingFixture, placeholdersKeyNameNotMatchingTest)
+{
+    ASSERT_DEATH({SingleAgentUninitializedTestFixture::initialize();}, "");
+}
+
+TEST_F(PlaceholderKeyTypeNotMatchingFixture, placeholdersKeyTypeNotMatchingTest)
+{
+    ASSERT_DEATH({SingleAgentUninitializedTestFixture::initialize();}, "");
+}
+
+TEST_F(PlaceholderMappingIncompleteFixture, placeholdersMappingIncompleteTest)
+{
+    ASSERT_DEATH({SingleAgentUninitializedTestFixture::initialize();}, "No implementation found");
 }
 
 } // namespace alica::test

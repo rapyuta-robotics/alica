@@ -23,6 +23,7 @@
   "id": 1402488893641,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "Defend",

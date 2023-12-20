@@ -1,7 +1,7 @@
 <launch>
     <arg name="use_gdb" default="$(optenv GDB false)"/>
     <arg name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" if="$(arg use_gdb)"/>
-    <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
+    <arg name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" unless="$(arg use_gdb)"/>
     <arg name="time_limit"    value="100000" if="$(arg use_gdb)" />
     <arg name="time_limit"    value="600" unless="$(arg use_gdb)" />
     <arg name="gtest_filter" default="*"/>

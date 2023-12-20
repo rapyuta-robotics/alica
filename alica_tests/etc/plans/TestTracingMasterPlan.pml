@@ -23,6 +23,7 @@
   "id": 691392966514374878,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "TestTracingMasterPlan",

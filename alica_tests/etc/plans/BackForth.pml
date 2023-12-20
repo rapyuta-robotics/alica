@@ -23,6 +23,7 @@
   "id": 1529456584982,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "BackForth",

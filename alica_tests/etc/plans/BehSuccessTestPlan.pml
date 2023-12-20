@@ -23,6 +23,7 @@
   "id": 2189867578804904568,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "BehSuccessTestPlan",

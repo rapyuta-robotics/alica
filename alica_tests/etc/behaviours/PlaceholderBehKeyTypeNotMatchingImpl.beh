@@ -3,21 +3,21 @@
     {
       "access": "input",
       "comment": "",
-      "id": 438575867201420125,
+      "id": 4452024279743045210,
       "key": "beh_key",
-      "type": "int64"
+      "type": "std::string"
     }
   ],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
   "frequency": 5,
-  "id": 1111111111111111111,
+  "id": 3229010769699579469,
   "implementationName": "",
   "inheritBlackboard": false,
   "isInterface": true,
-  "libraryName": "alica-tests",
-  "name": "PlaceholderBehImpl",
+  "libraryName": "",
+  "name": "PlaceholderBehKeyTypeNotMatchingImpl",
   "postCondition": null,
   "preCondition": null,
   "runtimeCondition": null,

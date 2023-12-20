@@ -341,6 +341,10 @@ namespace alica::test
 class SingleAgentUninitializedTestFixture : public ::testing::Test
 {
 public:
+    virtual std::string getPlaceholderMappingFileName() const
+    {
+        return "placeholder_mapping.json";
+    }
     virtual void SetUp() override
     {
         // Path to test configs set by CMake
@@ -348,8 +352,9 @@ public:
 #if defined(THIS_PACKAGE_DIR)
         path = THIS_PACKAGE_DIR;
 #endif
+        std::cerr << "create with " << path + "/config/" + getPlaceholderMappingFileName() << std::endl;
         _tc = std::make_unique<TestContext>(agentName(), std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1,
-                readPlaceholderMapping(path + "/config/placeholder_mapping.json"));
+                readPlaceholderMapping(path + "/config/" + getPlaceholderMappingFileName()));
         ASSERT_TRUE(_tc->isValid());
     }
 

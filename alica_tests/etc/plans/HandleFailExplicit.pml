@@ -38,6 +38,7 @@
   "id": 1530004915640,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "HandleFailExplicit",

@@ -31,6 +31,7 @@
   "id": 1179066429431332056,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "TestInheritBlackboardMaster",

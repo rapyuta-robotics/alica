@@ -29,6 +29,7 @@
   "id": 1629144600464136880,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "name": "AddToValueBeh",
   "postCondition": null,

@@ -1,8 +1,12 @@
 #include "engine/modelmanagement/factories/PlaceholderMappingFactory.h"
 
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Placeholder.h"
 #include "engine/model/PlaceholderMapping.h"
+#include "engine/model/Plan.h"
+#include "engine/model/Behaviour.h"
 #include "engine/modelmanagement/Strings.h"
+#include "engine/blackboard/Blackboard.h"
 
 namespace alica
 {
@@ -28,10 +32,25 @@ void PlaceholderMappingFactory::attachReferences()
     for (auto placeholderIt = placeholderReferences.begin(), abstractPlanIt = placeholderAbstractPlanReferences.begin();
             placeholderIt != placeholderReferences.end(); ++placeholderIt, ++abstractPlanIt) {
         assert(placeholderIt->first == abstractPlanIt->first);
+
         auto mapping = dynamic_cast<PlaceholderMapping*>(const_cast<AlicaElement*>(getElement(placeholderIt->first)));
         assert(mapping);
-        // TODO: verify that the placeholder & abstract plans are compatible
-        mapping->_mapping.emplace(placeholderIt->second, dynamic_cast<const AbstractPlan*>(getElement(abstractPlanIt->second)));
+        auto abstractPlan = dynamic_cast<const AbstractPlan*>(getElement(abstractPlanIt->second));
+        assert(abstractPlan);
+        auto placeholder = dynamic_cast<const Placeholder*>(getPlaceholder(placeholderIt->second));
+        assert(placeholder);
+
+        // for behaviors / plans which replace placeholders, the blackboard blueprint has to be the equal
+        if (const Behaviour* beh = dynamic_cast<const Behaviour*>(abstractPlan)) {
+            if (*placeholder->getBlackboardBlueprint() != *beh->getBlackboardBlueprint()) {
+                AlicaEngine::abort(LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "'");
+            }
+        } else if (const Plan* plan = dynamic_cast<const Plan*>(abstractPlan)) {
+             if (*placeholder->getBlackboardBlueprint() != *plan->getBlackboardBlueprint()) {
+                AlicaEngine::abort(LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "'");
+             }
+        }
+        mapping->_mapping.emplace(placeholderIt->second, abstractPlan);
     }
 }
 

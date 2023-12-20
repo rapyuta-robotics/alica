@@ -23,6 +23,7 @@
   "id": 1530069246103,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "FailsOnOne",

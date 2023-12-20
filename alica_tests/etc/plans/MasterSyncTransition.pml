@@ -39,6 +39,7 @@
   "id": 1418825395939,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "MasterSyncTransition",

@@ -23,6 +23,7 @@
   "id": 1522377375148,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "BehaviorSuccessSpamMaster",

@@ -45,6 +45,13 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 2253124628702855079,
+      "key": "ChooseTestState2PlaceholderTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 2321498751406550734,
       "key": "ChooseTestState2BlackboardTestState",
       "type": "bool"
@@ -68,13 +75,6 @@
       "comment": "",
       "id": 4056440268292823384,
       "key": "ChooseTestState2SameInParallelTestState",
-      "type": "bool"
-    },
-    {
-      "access": "protected",
-      "comment": "",
-      "id": 2253124628702855079,
-      "key": "ChooseTestState2PlaceholderTestState",
       "type": "bool"
     }
   ],
@@ -101,6 +101,7 @@
   "id": 2521443078354411465,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "TestMasterPlan",
@@ -321,6 +322,36 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
+          "abstractPlan": "PlaceholderTestPlan.pml#1853689935893516069",
+          "comment": "",
+          "configuration": null,
+          "id": 613756872782409608,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3812000826865765509,
+      "inTransitions": [
+        4296682352030406733
+      ],
+      "name": "PlaceholderTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 705.6935847303077,
+        "y": 1779.818147856097
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
           "abstractPlan": "MultiPlanInstanceSuccessTestPlan.pml#3392981108193862307",
           "comment": "",
           "configuration": null,
@@ -400,36 +431,6 @@
       "positionWeb": {
         "x": 686,
         "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "PlaceholderTestPlan.pml#1853689935893516069",
-          "comment": "",
-          "configuration": null,
-          "id": 613756872782409608,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 3812000826865765509,
-      "inTransitions": [
-        4296682352030406733
-      ],
-      "name": "PlaceholderTestState",
-      "outTransitions": [],
-      "parentPlan": 2521443078354411465,
-      "positionWeb": {
-        "x": 705.6935847303077,
-        "y": 1779.818147856097
       },
       "type": "State",
       "variableBindings": []

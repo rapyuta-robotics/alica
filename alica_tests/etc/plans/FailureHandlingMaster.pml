@@ -23,6 +23,7 @@
   "id": 4150733089768927549,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "FailureHandlingMaster",

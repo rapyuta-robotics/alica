@@ -80,6 +80,7 @@
   "id": 2264579918884483840,
   "implementationName": "PopulateBlackboard",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "PopulateBlackboardTestPlan",

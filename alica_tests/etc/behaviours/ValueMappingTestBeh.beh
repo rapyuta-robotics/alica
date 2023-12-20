@@ -43,6 +43,7 @@
   "id": 4427168067193548436,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "name": "ValueMappingTestBeh",
   "postCondition": null,

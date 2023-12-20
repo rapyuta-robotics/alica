@@ -7,6 +7,7 @@
   "id": 1629895901559,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "name": "BehAAA",
   "postCondition": null,

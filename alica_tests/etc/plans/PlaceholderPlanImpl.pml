@@ -31,6 +31,7 @@
   "id": 1111111111111111112,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": true,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "PlaceholderPlanImpl",
@@ -75,6 +76,5 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": [],
-  "isInterface": true
+  "variables": []
 }

@@ -23,6 +23,7 @@
   "id": 1418042656594,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "MasterPlanTestConditionPlanType",

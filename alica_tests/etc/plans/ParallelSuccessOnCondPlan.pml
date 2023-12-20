@@ -31,6 +31,7 @@
   "id": 3288843407985944525,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "ParallelSuccessOnCondPlan",

@@ -100,6 +100,11 @@ void Factory::setAttributes(const YAML::Node& node, alica::AlicaElement* ael)
     ael->_comment = getValue<std::string>(node, alica::Strings::comment, alica::Strings::no_comment);
 }
 
+const Placeholder* Factory::getPlaceholder(const int64_t id)
+{
+    return Factory::modelManager->_planRepository._placeholders.at(id);
+}
+
 const AlicaElement* Factory::getElement(const int64_t id)
 {
     const auto& placeholders = Factory::modelManager->_planRepository._placeholders;
@@ -107,7 +112,7 @@ const AlicaElement* Factory::getElement(const int64_t id)
         // Replace the placeholder with the corresponding abstract plan from the mapping
         const auto& mappings = Factory::modelManager->_planRepository._placeholderMappings;
         for (const auto& [mappingId, mapping] : mappings) {
-            if (const auto abstractPlan = mapping->find(id); abstractPlan) {
+            if (const auto abstractPlan = mapping->find(id)) {
                 return abstractPlan;
             }
         }

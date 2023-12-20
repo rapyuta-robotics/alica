@@ -73,6 +73,7 @@
   "id": 570949913365648849,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "StandardLibraryCompareConditionsPlan",

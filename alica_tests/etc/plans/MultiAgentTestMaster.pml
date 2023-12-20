@@ -23,6 +23,7 @@
   "id": 1413200842973,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "MultiAgentTestMaster",

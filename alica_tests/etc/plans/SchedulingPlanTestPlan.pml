@@ -31,6 +31,7 @@
   "id": 1655763442597171911,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "SchedulingPlanTestPlan",

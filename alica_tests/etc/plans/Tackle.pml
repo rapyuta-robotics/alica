@@ -23,6 +23,7 @@
   "id": 1402489318663,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "Tackle",

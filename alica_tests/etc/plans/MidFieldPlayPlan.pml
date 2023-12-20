@@ -39,6 +39,7 @@
   "id": 1402488770050,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "MidFieldPlayPlan",

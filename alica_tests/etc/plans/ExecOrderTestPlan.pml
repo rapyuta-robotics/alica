@@ -31,6 +31,7 @@
   "id": 3264434119601111942,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "ExecOrderTestPlan",

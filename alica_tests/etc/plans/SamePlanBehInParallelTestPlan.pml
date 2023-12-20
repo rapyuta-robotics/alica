@@ -59,6 +59,7 @@
   "id": 3509966476895996647,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "SamePlanBehInParallelTestPlan",

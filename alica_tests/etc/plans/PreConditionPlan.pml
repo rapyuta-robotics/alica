@@ -23,6 +23,7 @@
   "id": 1418042796751,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PreConditionPlan",
