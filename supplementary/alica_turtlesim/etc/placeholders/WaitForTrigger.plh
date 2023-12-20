@@ -10,5 +10,5 @@
   ],
   "comment": "Given the topic name as input, waits until an empty msg is published on that topic",
   "id": 1320667069122998665,
-  "name": "WaitForTrigger",
+  "name": "WaitForTrigger"
 }

@@ -23,6 +23,7 @@
   "id": 3047149772109767003,
   "implementationName": "TracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": true,
   "name": "RotatingTurtleTutorial",

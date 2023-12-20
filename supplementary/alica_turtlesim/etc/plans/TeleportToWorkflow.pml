@@ -45,6 +45,7 @@
   "id": 674771508287965487,
   "implementationName": "PopulateBlackboard",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "TeleportToWorkflow",
@@ -138,7 +139,6 @@
         "enabled": true,
         "id": 266662766236354683,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

@@ -29,6 +29,7 @@
   "id": 3356053372497284615,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "name": "GenerateRandom",
   "postCondition": null,

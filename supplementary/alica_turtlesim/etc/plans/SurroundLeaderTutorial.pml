@@ -23,6 +23,7 @@
   "id": 1449843163261594615,
   "implementationName": "TracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": true,
   "name": "SurroundLeaderTutorial",
@@ -110,7 +111,6 @@
         "enabled": true,
         "id": 1158412559413860996,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

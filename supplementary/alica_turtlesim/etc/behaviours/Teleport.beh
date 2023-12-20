@@ -22,6 +22,7 @@
   "id": 4085572422059465423,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "libalica-turtlesim",
   "name": "Teleport",
   "postCondition": null,

@@ -23,6 +23,7 @@
   "id": 2425328142973735249,
   "implementationName": "TracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "Simulation",
@@ -211,7 +212,6 @@
         "enabled": true,
         "id": 3392326148903943635,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -235,7 +235,6 @@
         "enabled": true,
         "id": 3077426683382044276,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -259,7 +258,6 @@
         "enabled": true,
         "id": 2389656767398160456,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -283,7 +281,6 @@
         "enabled": true,
         "id": 3360288480763978554,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
