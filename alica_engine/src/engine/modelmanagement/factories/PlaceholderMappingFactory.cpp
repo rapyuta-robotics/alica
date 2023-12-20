@@ -18,7 +18,8 @@ PlaceholderMapping* PlaceholderMappingFactory::create(const YAML::Node& node)
     storeElement(mapping, alica::Strings::placeholderMapping);
 
     YAML::Node mappingNode = node[alica::Strings::placeholderMapping];
-    for (YAML::Node entry : mappingNode) {
+
+    for (const YAML::Node& entry : mappingNode) {
         placeholderReferences.push_back({mapping->getId(), getReferencedId(entry[alica::Strings::placeholder])});
         placeholderAbstractPlanReferences.push_back({mapping->getId(), getReferencedId(entry[alica::Strings::placeholderImplementation])});
     }
