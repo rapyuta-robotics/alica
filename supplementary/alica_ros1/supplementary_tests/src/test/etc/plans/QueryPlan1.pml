@@ -23,18 +23,17 @@
   "id": 1479556074049,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "QueryPlan1",
   "preCondition": null,
-  "relativeDirectory": "ProblemModule",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",
     "enabled": false,
     "id": 1479556084493,
     "name": "QueryPlan1RuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [
       {
         "comment": "",

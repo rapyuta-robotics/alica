@@ -23,11 +23,11 @@
   "id": 1479718449392,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "QueryPlan2",
   "preCondition": null,
-  "relativeDirectory": "ProblemModule",
   "runtimeCondition": null,
   "states": [
     {

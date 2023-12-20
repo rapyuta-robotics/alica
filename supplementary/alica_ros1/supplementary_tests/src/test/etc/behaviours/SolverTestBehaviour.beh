@@ -7,11 +7,11 @@
   "id": 1417424455986,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "name": "SolverTestBehaviour",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "GSolver",
   "runtimeCondition": null,
   "variables": [
     {

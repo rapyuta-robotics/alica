@@ -23,11 +23,11 @@
   "id": 1479556022226,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "ProblemBuildingMaster",
   "preCondition": null,
-  "relativeDirectory": "ProblemModule",
   "runtimeCondition": null,
   "states": [
     {
@@ -128,7 +128,6 @@
         "enabled": true,
         "id": 1479557592662,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [
           {
             "comment": "",

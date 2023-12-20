@@ -4,7 +4,6 @@
   "defaultRoleSet": true,
   "id": 1410440904638,
   "name": "RolesetTA",
-  "relativeDirectory": "",
   "roles": [
     {
       "characteristics": [],

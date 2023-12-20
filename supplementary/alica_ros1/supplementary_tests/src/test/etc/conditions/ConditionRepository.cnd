@@ -7,8 +7,7 @@
       "conditionRepository": 0,
       "id": 1,
       "libraryName": "alica_standard_library",
-      "name": "AnyChildSuccess",
-      "relativeDirectory": "conditions"
+      "name": "AnyChildSuccess"
     },
     {
       "blackboard": [],
@@ -16,8 +15,7 @@
       "conditionRepository": 0,
       "id": 2,
       "libraryName": "alica_standard_library",
-      "name": "AllChildSuccess",
-      "relativeDirectory": "conditions"
+      "name": "AllChildSuccess"
     },
     {
       "blackboard": [],
@@ -25,8 +23,7 @@
       "conditionRepository": 0,
       "id": 3,
       "libraryName": "alica_standard_library",
-      "name": "AnyChildFailure",
-      "relativeDirectory": "conditions"
+      "name": "AnyChildFailure"
     },
     {
       "blackboard": [],
@@ -34,8 +31,7 @@
       "conditionRepository": 0,
       "id": 4,
       "libraryName": "alica_standard_library",
-      "name": "AllChildFailure",
-      "relativeDirectory": "conditions"
+      "name": "AllChildFailure"
     },
     {
       "blackboard": [],
@@ -43,8 +39,7 @@
       "conditionRepository": 0,
       "id": 295816226925111421,
       "libraryName": "supplementary-tests",
-      "name": "VariableHandlingStart",
-      "relativeDirectory": "conditions"
+      "name": "VariableHandlingStart"
     },
     {
       "blackboard": [],
@@ -52,11 +47,9 @@
       "conditionRepository": 0,
       "id": 2011598442725310989,
       "libraryName": "supplementary-tests",
-      "name": "DefaultCondition",
-      "relativeDirectory": "conditions"
+      "name": "DefaultCondition"
     }
   ],
   "id": 0,
-  "name": "ConditionRepository",
-  "relativeDirectory": ""
+  "name": "ConditionRepository"
 }

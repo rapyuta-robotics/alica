@@ -23,11 +23,11 @@
   "id": 1417423751087,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "GSolverMaster",
   "preCondition": null,
-  "relativeDirectory": "GSolver",
   "runtimeCondition": null,
   "states": [
     {

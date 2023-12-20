@@ -7,11 +7,11 @@
   "id": 1479556104511,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "name": "QueryBehaviour1",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "ProblemModule",
   "runtimeCondition": null,
   "variables": [
     {

@@ -39,18 +39,17 @@
   "id": 1524452793378,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "Lvl2",
   "preCondition": null,
-  "relativeDirectory": "VariableHandling",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "Lvl2 Runtime Condition",
     "enabled": false,
     "id": 1524453266123,
     "name": "Lvl2RuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [
       {
         "comment": "",
