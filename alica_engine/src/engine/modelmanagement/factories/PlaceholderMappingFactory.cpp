@@ -41,7 +41,7 @@ void PlaceholderMappingFactory::attachReferences()
         auto placeholder = dynamic_cast<const Placeholder*>(getPlaceholder(placeholderIt->second));
         assert(placeholder);
 
-        // for behaviors / plans which replace placeholders, the blackboard blueprint has to be the equal
+        // for behaviors / plans which replace placeholders, the blackboard blueprints have to be equal
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(abstractPlan)) {
             if (*placeholder->getBlackboardBlueprint() != *beh->getBlackboardBlueprint()) {
                 AlicaEngine::abort(LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "'");
