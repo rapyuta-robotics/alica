@@ -1,0 +1,10 @@
+[
+  {
+    "placeholder": "WaitForTrigger.plh#1320667069122998665",
+    "implementation": "WaitForTrigger.beh#1111111111111111111"
+  },
+  {
+    "placeholder": "WaitForMsg.plh#2324679431617631864",
+    "implementation": "WaitForMsg.beh#1111111111111111112"
+  }
+]

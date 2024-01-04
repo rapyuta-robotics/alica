@@ -23,6 +23,7 @@
   "id": 1414068495566,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "ConstraintTestMaster",

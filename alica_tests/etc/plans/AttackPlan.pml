@@ -23,6 +23,7 @@
   "id": 1402488634525,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "AttackPlan",
@@ -125,7 +126,6 @@
         "enabled": true,
         "id": 1402489460549,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [
           {
             "comment": "",
@@ -192,7 +192,6 @@
         "enabled": true,
         "id": 1402489462088,
         "name": "ConditionNameShootAttack",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": [
           1403772778288,

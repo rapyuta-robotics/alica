@@ -39,6 +39,7 @@
   "id": 1889749086610694100,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "libalica-turtlesim",
   "masterPlan": false,
   "name": "MakeFormation",
@@ -49,7 +50,6 @@
     "enabled": false,
     "id": 1288817888979746811,
     "name": "CircleRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [
       {
         "comment": "",

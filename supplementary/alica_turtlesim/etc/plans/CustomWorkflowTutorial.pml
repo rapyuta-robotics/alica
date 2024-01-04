@@ -31,6 +31,7 @@
   "id": 3523338962708569737,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": true,
   "name": "CustomWorkflowTutorial",
@@ -41,7 +42,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "WaitForMsg.beh#2324679431617631864",
+          "abstractPlan": "WaitForMsg.plh#2324679431617631864",
           "comment": "",
           "configuration": null,
           "id": 2848149231989200191,
@@ -175,7 +176,6 @@
         "enabled": true,
         "id": 3031003343149149669,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -204,7 +204,6 @@
         "enabled": true,
         "id": 3252002974980035492,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -233,7 +232,6 @@
         "enabled": true,
         "id": 3419746199760196530,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

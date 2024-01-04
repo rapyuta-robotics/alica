@@ -42,6 +42,8 @@ protected:
     static ReferenceList epTaskReferences;
     static ReferenceList planTypePlanReferences;
     static ReferenceList wrapperAbstractPlanReferences;
+    static ReferenceList placeholderReferences;
+    static ReferenceList placeholderAbstractPlanReferences;
     static TripleReferenceList roleTaskReferences;
     static ModelManager* modelManager;
 
@@ -50,6 +52,7 @@ protected:
     static int64_t getReferencedId(const YAML::Node& referenceNode);
     static void storeElement(AlicaElement* ael, const std::string& type);
     static void setAttributes(const YAML::Node& node, AlicaElement* ael);
+    static const Placeholder* getPlaceholder(const int64_t id);
 };
 
 template <typename T>

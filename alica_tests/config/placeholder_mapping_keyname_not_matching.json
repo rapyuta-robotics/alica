@@ -1,0 +1,10 @@
+[
+  {
+    "placeholder": "PlanPlaceholder.plh#769233687233101247",
+    "implementation": "PlaceholderBehImpl.beh#1111111111111111111"
+  },
+  {
+    "placeholder": "BehPlaceholder.plh#1209933261934111920",
+    "implementation": "PlaceholderPlanImpl.pml#1111111111111111112"
+  }
+]

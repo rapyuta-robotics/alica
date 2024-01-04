@@ -23,6 +23,7 @@
   "id": 1529456584982,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "BackForth",
@@ -114,7 +115,6 @@
         "enabled": true,
         "id": 1529456610697,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -138,7 +138,6 @@
         "enabled": true,
         "id": 1529456611916,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

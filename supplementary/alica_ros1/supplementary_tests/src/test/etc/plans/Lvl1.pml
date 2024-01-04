@@ -23,18 +23,17 @@
   "id": 1524452759599,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "Lvl1",
   "preCondition": null,
-  "relativeDirectory": "VariableHandling",
   "runtimeCondition": {
     "comment": "",
     "conditionString": "Lvl1 Runtime Condition",
     "enabled": false,
     "id": 1524453470580,
     "name": "Lvl1RuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": [
       1524453326397,
@@ -128,7 +127,6 @@
         "enabled": true,
         "id": 1524453491764,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [
           {
             "comment": "",

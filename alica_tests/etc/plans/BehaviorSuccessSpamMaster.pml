@@ -23,6 +23,7 @@
   "id": 1522377375148,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "BehaviorSuccessSpamMaster",
@@ -114,7 +115,6 @@
         "enabled": true,
         "id": 1522377944921,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -138,7 +138,6 @@
         "enabled": true,
         "id": 1522377946607,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

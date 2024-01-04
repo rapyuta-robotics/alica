@@ -23,6 +23,7 @@
   "id": 1626848999740,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "FrequencyTestPlan",

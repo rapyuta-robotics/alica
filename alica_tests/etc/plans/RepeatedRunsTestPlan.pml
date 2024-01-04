@@ -23,6 +23,7 @@
   "id": 3377141477132970540,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "RepeatedRunsTestPlan",

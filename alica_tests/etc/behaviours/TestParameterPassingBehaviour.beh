@@ -29,6 +29,7 @@
   "id": 831400441334251602,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "name": "TestParameterPassingBehaviour",
   "postCondition": null,

@@ -71,6 +71,7 @@
   "id": 1407152758497,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "MasterPlanTaskAssignment",

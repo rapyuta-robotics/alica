@@ -31,6 +31,7 @@
   "id": 1655763442597171911,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "SchedulingPlanTestPlan",
@@ -133,7 +134,6 @@
         "enabled": true,
         "id": 3252829040265282981,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -168,7 +168,6 @@
         "enabled": true,
         "id": 4285879219088263102,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

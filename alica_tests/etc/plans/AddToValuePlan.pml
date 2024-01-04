@@ -45,6 +45,7 @@
   "id": 1897460300157750096,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "AddToValuePlan",

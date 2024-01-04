@@ -71,6 +71,7 @@
   "id": 1225570798912217901,
   "implementationName": "TracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "FourCorners",

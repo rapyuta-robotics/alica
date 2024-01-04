@@ -1,0 +1,25 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 438575867201420125,
+      "key": "beh_key",
+      "type": "int64"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 1111111111111111111,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "isInterface": true,
+  "libraryName": "alica-tests",
+  "name": "PlaceholderBehImpl",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}

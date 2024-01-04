@@ -80,6 +80,7 @@
   "id": 2264579918884483840,
   "implementationName": "PopulateBlackboard",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "PopulateBlackboardTestPlan",
@@ -261,7 +262,6 @@
         "enabled": true,
         "id": 3983408236047742234,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -301,7 +301,6 @@
         "enabled": true,
         "id": 1039582954287951959,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -341,7 +340,6 @@
         "enabled": true,
         "id": 4163240752266831361,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -381,7 +379,6 @@
         "enabled": true,
         "id": 4328557078564248177,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -421,7 +418,6 @@
         "enabled": true,
         "id": 4158752398488433093,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -456,7 +452,6 @@
         "enabled": true,
         "id": 1905505569871034119,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

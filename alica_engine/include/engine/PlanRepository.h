@@ -27,6 +27,8 @@ class ExpressionHandler;
 class ModelManager;
 class TransitionCondition;
 class TransitionConditionRepository;
+class PlaceholderMapping;
+class Placeholder;
 
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
@@ -149,5 +151,7 @@ private:
     MapType<ConfAbstractPlanWrapper> _confAbstractPlanWrapperRepository;
     MapType<TransitionCondition> _transitionConditions;
     MapType<TransitionConditionRepository> _transitionConditionRepositories;
+    MapType<PlaceholderMapping> _placeholderMappings;
+    MapType<Placeholder> _placeholders;
 };
 } // namespace alica

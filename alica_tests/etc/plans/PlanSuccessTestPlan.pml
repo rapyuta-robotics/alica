@@ -23,6 +23,7 @@
   "id": 3870436056558842479,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PlanSuccessTestPlan",

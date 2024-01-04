@@ -23,6 +23,7 @@
   "id": 1413200842973,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "MultiAgentTestMaster",
@@ -130,7 +131,6 @@
         "enabled": true,
         "id": 1413201227586,
         "name": "1413201227586",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -154,7 +154,6 @@
         "enabled": true,
         "id": 1413201389955,
         "name": "1413201389955",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

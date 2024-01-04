@@ -23,6 +23,7 @@
   "id": 1418042806575,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "RuntimeConditionPlan",
@@ -33,7 +34,6 @@
     "enabled": false,
     "id": 1418042967134,
     "name": "RuntimeConditionPlanRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },

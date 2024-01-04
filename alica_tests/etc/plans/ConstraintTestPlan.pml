@@ -23,6 +23,7 @@
   "id": 1414068524245,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "ConstraintTestPlan",
@@ -33,7 +34,6 @@
     "enabled": false,
     "id": 1414068566297,
     "name": "ConstraintTestPlanRuntimeCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": [
       1414068572540,

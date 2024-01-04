@@ -4,6 +4,7 @@
     <arg name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" if="$(arg use_gdb)"/>
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
     <arg name="master_plan"    default="SurroundLeaderTutorial" />
+    <arg name="placeholder_mapping"        default="$(find alica_ros_turtlesim)/config/placeholder_mapping.json" />
     <arg name="roleset"        default="Roleset" />
     <arg name="turtlesim_lib_path"     default="$(find alica_turtlesim)/etc/" />
     <arg name="turtlesim_ros_path"     default="$(find alica_ros_turtlesim)/etc/" />
@@ -15,6 +16,7 @@
         <param name="name"         value="$(arg agent_name)" />
         <param name="agent_id"     value="$(arg turtles)" />
         <param name="master_plan"  value="$(arg master_plan)" />
+        <param name="placeholder_mapping" value = "$(arg placeholder_mapping)" />
         <param name="roleset"      value="$(arg roleset)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
@@ -24,6 +26,7 @@
         <arg name="turtles"         value="$(eval turtles - 1)" />
         <arg name="use_gdb"         value="$(arg use_gdb)"/>
         <arg name="master_plan"     value="$(arg master_plan)" />
+        <arg name="placeholder_mapping" value = "$(arg placeholder_mapping)" />
         <arg name="roleset"         value="$(arg roleset)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />

@@ -45,6 +45,13 @@
     {
       "access": "protected",
       "comment": "",
+      "id": 2253124628702855079,
+      "key": "ChooseTestState2PlaceholderTestState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
       "id": 2321498751406550734,
       "key": "ChooseTestState2BlackboardTestState",
       "type": "bool"
@@ -94,6 +101,7 @@
   "id": 2521443078354411465,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "TestMasterPlan",
@@ -314,6 +322,36 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
+          "abstractPlan": "PlaceholderTestPlan.pml#1853689935893516069",
+          "comment": "",
+          "configuration": null,
+          "id": 613756872782409608,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3812000826865765509,
+      "inTransitions": [
+        4296682352030406733
+      ],
+      "name": "PlaceholderTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 705.6935847303077,
+        "y": 1779.818147856097
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
           "abstractPlan": "MultiPlanInstanceSuccessTestPlan.pml#3392981108193862307",
           "comment": "",
           "configuration": null,
@@ -356,7 +394,8 @@
         2841206023261337744,
         3651332618963874336,
         3815101160319869321,
-        4120890224163547783
+        4120890224163547783,
+        4296682352030406733
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -428,7 +467,6 @@
         "enabled": true,
         "id": 163485902144909851,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -463,7 +501,6 @@
         "enabled": true,
         "id": 1879497210052616817,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -498,7 +535,6 @@
         "enabled": true,
         "id": 3320726945359323759,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -533,7 +569,6 @@
         "enabled": true,
         "id": 4560357964186391260,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -568,7 +603,6 @@
         "enabled": true,
         "id": 3406651877691983425,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -603,7 +637,6 @@
         "enabled": true,
         "id": 3883605426713053219,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -638,7 +671,6 @@
         "enabled": true,
         "id": 1434924428337492941,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -673,7 +705,6 @@
         "enabled": true,
         "id": 2822951189378292075,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -708,7 +739,40 @@
         "enabled": true,
         "id": 2733591692277574870,
         "name": "",
-        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#3592699233854318376",
+      "id": 4296682352030406733,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2PlaceholderTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3812000826865765509,
+      "pointsWeb": [
+        {
+          "x": 375.9875631268849,
+          "y": 1672.8864651739057
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2562455768962963214,
+        "name": "",
         "quantifiers": [],
         "variables": []
       },

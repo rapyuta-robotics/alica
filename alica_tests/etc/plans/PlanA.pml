@@ -23,6 +23,7 @@
   "id": 1629895837159,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PlanA",
@@ -100,7 +101,6 @@
         "enabled": true,
         "id": 778903744121544801,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

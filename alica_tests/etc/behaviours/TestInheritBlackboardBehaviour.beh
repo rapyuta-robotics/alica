@@ -7,6 +7,7 @@
   "id": 831400441334251600,
   "implementationName": "",
   "inheritBlackboard": true,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "name": "TestInheritBlackboardBehaviour",
   "postCondition": null,

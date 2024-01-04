@@ -45,6 +45,7 @@
   "id": 1467955996026918944,
   "implementationName": "UntracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "SameBehInParallelTestPlan",
@@ -221,7 +222,6 @@
         "enabled": true,
         "id": 1991345008466498526,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -261,7 +261,6 @@
         "enabled": true,
         "id": 3845638468168372992,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -296,7 +295,6 @@
         "enabled": true,
         "id": 2652811268841992962,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

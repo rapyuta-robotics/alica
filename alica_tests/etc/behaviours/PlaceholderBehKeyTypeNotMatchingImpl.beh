@@ -1,0 +1,25 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 4452024279743045210,
+      "key": "beh_key",
+      "type": "std::string"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 3229010769699579469,
+  "implementationName": "",
+  "inheritBlackboard": false,
+  "isInterface": true,
+  "libraryName": "",
+  "name": "PlaceholderBehKeyTypeNotMatchingImpl",
+  "postCondition": null,
+  "preCondition": null,
+  "runtimeCondition": null,
+  "variables": []
+}

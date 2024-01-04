@@ -39,6 +39,7 @@
   "id": 1407153611768,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PlanOne",

@@ -23,11 +23,11 @@
   "id": 1479557378264,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "ProbBuildingLevel1",
   "preCondition": null,
-  "relativeDirectory": "ProblemModule",
   "runtimeCondition": null,
   "states": [
     {

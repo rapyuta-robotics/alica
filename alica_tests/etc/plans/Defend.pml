@@ -23,6 +23,7 @@
   "id": 1402488893641,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "Defend",
@@ -166,7 +167,6 @@
         "enabled": true,
         "id": 1402488991641,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -190,7 +190,6 @@
         "enabled": true,
         "id": 1402488993122,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -214,7 +213,6 @@
         "enabled": true,
         "id": 1402489065962,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -238,7 +236,6 @@
         "enabled": true,
         "id": 1402489073613,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

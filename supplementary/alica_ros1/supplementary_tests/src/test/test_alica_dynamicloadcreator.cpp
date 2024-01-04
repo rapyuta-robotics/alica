@@ -155,12 +155,18 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 {
     std::string path = getRootPath();
 
-    YAML::Node node;
+    YAML::Node node, globalNode;
+    ASSERT_NO_THROW(globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml"));
     ASSERT_NO_THROW(node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml"));
+
+    // Load model
+    ConfigChangeListener configChangeListener(globalNode);
+    Plan* planModel = PlanFactory::create(configChangeListener, node);
+
     ASSERT_NO_THROW(node = node["runtimeCondition"]);
 
     // Load model
-    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
+    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, planModel);
 
     // Create condition from dll
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
@@ -177,15 +183,19 @@ TEST_F(AlicaDynamicLoading, condition_symbol_not_found)
 {
     std::string path = getRootPath();
 
-    YAML::Node node;
+    YAML::Node node, globalNode;
+    ASSERT_NO_THROW(globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml"));
     ASSERT_NO_THROW(node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml"));
-    ASSERT_NO_THROW(node = node["runtimeCondition"]);
+
+    // Load model
+    ConfigChangeListener configChangeListener(globalNode);
+    Plan* planModel = PlanFactory::create(configChangeListener, node);
 
     // ovewrite condition name to a value that we know doesn't exist
     node["name"] = "not_found";
 
     // Load model & verify if name has been overridden
-    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
+    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, planModel);
     ASSERT_EQ(conditionModel->getName(), "not_found");
 
     // should throw when we try to create the condition
@@ -298,12 +308,18 @@ TEST_F(AlicaDynamicLoading, simple_constraint_load)
 {
     std::string path = getRootPath();
 
-    YAML::Node node;
+    YAML::Node node, globalNode;
+    ASSERT_NO_THROW(globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml"));
     ASSERT_NO_THROW(node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml"));
+
+    // Load model
+    ConfigChangeListener configChangeListener(globalNode);
+    Plan* planModel = PlanFactory::create(configChangeListener, node);
+
     ASSERT_NO_THROW(node = node["runtimeCondition"]);
 
     // Load model
-    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
+    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, planModel);
 
     // Create constraint from dll. Note: constraint uses the same context values as the condition's context
     auto creator = std::make_unique<alica::DynamicConstraintCreator>();
@@ -319,15 +335,19 @@ TEST_F(AlicaDynamicLoading, constraint_symbol_not_found)
 {
     std::string path = getRootPath();
 
-    YAML::Node node;
+    YAML::Node node, globalNode;
+    ASSERT_NO_THROW(globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml"));
     ASSERT_NO_THROW(node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml"));
-    ASSERT_NO_THROW(node = node["runtimeCondition"]);
+
+    // Load model
+    ConfigChangeListener configChangeListener(globalNode);
+    Plan* planModel = PlanFactory::create(configChangeListener, node);
 
     // ovewrite condition name to a value that we know doesn't exist
     node["name"] = "not_found";
 
     // Load model & verify if name has been overridden
-    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
+    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, planModel);
     ASSERT_EQ(conditionModel->getName(), "not_found");
 
     // should throw when we try to create the condition

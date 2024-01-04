@@ -23,6 +23,7 @@
   "id": 1414403396328,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "AuthorityTestMaster",
@@ -98,7 +99,6 @@
         "enabled": true,
         "id": 1414403842622,
         "name": "1414403842622",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

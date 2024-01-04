@@ -59,6 +59,7 @@
   "id": 3938799313883693450,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "ValueMappingPlanTestPlan",
@@ -124,7 +125,6 @@
         "enabled": true,
         "id": 2746271972957018702,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

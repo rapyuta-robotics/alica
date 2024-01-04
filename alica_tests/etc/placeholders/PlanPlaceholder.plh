@@ -1,0 +1,14 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 1515319670549888806,
+      "key": "plan_key",
+      "type": "int64"
+    }
+  ],
+  "comment": "",
+  "id": 769233687233101247,
+  "name": "PlanPlaceholder"
+}

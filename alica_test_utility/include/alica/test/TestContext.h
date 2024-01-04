@@ -27,7 +27,7 @@ public:
             const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const AgentId agentID = InvalidAgentID);
 
     TestContext(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName, const std::string& masterPlanName,
-            bool stepEngine, const AgentId agentID = InvalidAgentID);
+            bool stepEngine, const AgentId agentID = InvalidAgentID, std::optional<std::string> placeholderMapping = std::nullopt);
 
     /**
      * Initialize alica framework and related modules. Note that this

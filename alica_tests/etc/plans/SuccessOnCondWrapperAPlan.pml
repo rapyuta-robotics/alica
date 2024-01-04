@@ -31,6 +31,7 @@
   "id": 673160616613514188,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "SuccessOnCondWrapperAPlan",
@@ -114,7 +115,6 @@
         "enabled": true,
         "id": 4605367163774150375,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

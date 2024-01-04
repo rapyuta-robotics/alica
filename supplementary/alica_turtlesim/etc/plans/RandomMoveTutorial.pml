@@ -38,6 +38,7 @@
   "id": 2768292828182334477,
   "implementationName": "TracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": true,
   "name": "RandomMoveTutorial",
@@ -252,7 +253,6 @@
         "enabled": true,
         "id": 906579184271078477,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -276,7 +276,6 @@
         "enabled": true,
         "id": 2482416891748399139,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -300,7 +299,6 @@
         "enabled": true,
         "id": 2472540819854080245,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -324,7 +322,6 @@
         "enabled": true,
         "id": 3454146765593914364,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

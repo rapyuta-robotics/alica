@@ -39,6 +39,7 @@
   "id": 1414403413451,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "AuthorityTest",

@@ -55,6 +55,7 @@
   "id": 1407153645238,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PlanTwo",

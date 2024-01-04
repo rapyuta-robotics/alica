@@ -7,6 +7,7 @@
   "id": 1522377401286,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "name": "SuccessSpam",
   "postCondition": null,

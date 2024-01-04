@@ -6,6 +6,8 @@
 #include "engine/model/AlicaElement.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/Placeholder.h"
+#include "engine/model/PlaceholderMapping.h"
 #include "engine/modelmanagement/Strings.h"
 
 #include <engine/FileSystem.h>
@@ -28,6 +30,8 @@ ReferenceList Factory::epStateReferences;
 ReferenceList Factory::epTaskReferences;
 ReferenceList Factory::planTypePlanReferences;
 ReferenceList Factory::wrapperAbstractPlanReferences;
+ReferenceList Factory::placeholderReferences;
+ReferenceList Factory::placeholderAbstractPlanReferences;
 TripleReferenceList Factory::roleTaskReferences;
 ModelManager* Factory::modelManager;
 
@@ -54,7 +58,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::plantype_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::condition_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::taskrepository_extension) &&
-                !essentials::FileSystem::endsWith(fileName, alica::Strings::roleset_extension)) {
+                !essentials::FileSystem::endsWith(fileName, alica::Strings::roleset_extension) &&
+                !essentials::FileSystem::endsWith(fileName, alica::Strings::placeholderExtension)) {
             Logging::logWarn(LOGNAME) << "Unknown file extension: " << fileName;
         } else if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileName) == std::end(modelManager->filesParsed) &&
                    std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileName) == std::end(modelManager->filesToParse)) {
@@ -82,6 +87,8 @@ void Factory::setModelManager(alica::ModelManager* modelManager)
     epTaskReferences.clear();
     planTypePlanReferences.clear();
     wrapperAbstractPlanReferences.clear();
+    placeholderReferences.clear();
+    placeholderAbstractPlanReferences.clear();
     roleTaskReferences.clear();
     Factory::modelManager = modelManager;
 }
@@ -93,8 +100,25 @@ void Factory::setAttributes(const YAML::Node& node, alica::AlicaElement* ael)
     ael->_comment = getValue<std::string>(node, alica::Strings::comment, alica::Strings::no_comment);
 }
 
+const Placeholder* Factory::getPlaceholder(const int64_t id)
+{
+    return Factory::modelManager->_planRepository._placeholders.at(id);
+}
+
 const AlicaElement* Factory::getElement(const int64_t id)
 {
+    const auto& placeholders = Factory::modelManager->_planRepository._placeholders;
+    if (const auto elem = placeholders.find(id); elem != placeholders.end()) {
+        // Replace the placeholder with the corresponding abstract plan from the mapping
+        const auto& mappings = Factory::modelManager->_planRepository._placeholderMappings;
+        for (const auto& [mappingId, mapping] : mappings) {
+            if (const auto abstractPlan = mapping->find(id)) {
+                return abstractPlan;
+            }
+        }
+        AlicaEngine::abort(LOGNAME, "No implementation found for the placeholder '", elem->second->getName(), "'");
+        return nullptr;
+    }
     auto mapEntry = Factory::modelManager->elements.find(id);
     if (mapEntry != Factory::modelManager->elements.end()) {
         return mapEntry->second.get();
@@ -153,6 +177,10 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
         Logging::logInfo(LOGNAME) << "Element type " << type << " is not stored in plan repository.";
+    } else if (alica::Strings::placeholderMapping.compare(type) == 0) {
+        modelManager->_planRepository._placeholderMappings.emplace(ael->getId(), (PlaceholderMapping*) ael);
+    } else if (alica::Strings::placeholder.compare(type) == 0) {
+        modelManager->_planRepository._placeholders.emplace(ael->getId(), (Placeholder*) ael);
     } else {
         AlicaEngine::abort(LOGNAME, "Element type unhandled for storing: Type is '" + type + "'");
     }

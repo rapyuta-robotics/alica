@@ -23,6 +23,7 @@
   "id": 2851720313998235716,
   "implementationName": "TracedPlan",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": true,
   "name": "FourCornersTutorial",
@@ -110,7 +111,6 @@
         "enabled": true,
         "id": 2629062799832896160,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

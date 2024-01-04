@@ -73,6 +73,7 @@
   "id": 570949913365648849,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "StandardLibraryCompareConditionsPlan",
@@ -376,7 +377,6 @@
         "enabled": true,
         "id": 2924642076521695534,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -411,7 +411,6 @@
         "enabled": true,
         "id": 1047898305021363246,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -451,7 +450,6 @@
         "enabled": true,
         "id": 855000311320764054,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -494,7 +492,6 @@
         "enabled": true,
         "id": 852000274527975769,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -534,7 +531,6 @@
         "enabled": true,
         "id": 1224247015051878961,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -563,7 +559,6 @@
         "enabled": true,
         "id": 3347053728260651190,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -603,7 +598,6 @@
         "enabled": true,
         "id": 1213722519075398657,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -643,7 +637,6 @@
         "enabled": true,
         "id": 1757990176379053066,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -683,7 +676,6 @@
         "enabled": true,
         "id": 4164263715291503935,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -723,7 +715,6 @@
         "enabled": true,
         "id": 2960597575116124097,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -752,7 +743,6 @@
         "enabled": true,
         "id": 4392364796298833008,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -792,7 +782,6 @@
         "enabled": true,
         "id": 3182085130989509059,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -832,7 +821,6 @@
         "enabled": true,
         "id": 3256088237934994159,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

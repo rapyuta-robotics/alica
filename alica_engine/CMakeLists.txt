@@ -87,6 +87,8 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/model/FailureState.cpp
   src/engine/model/ForallAgents.cpp
   src/engine/model/Parameter.cpp
+  src/engine/model/Placeholder.cpp
+  src/engine/model/PlaceholderMapping.cpp
   src/engine/model/Plan.cpp
   src/engine/model/PlanType.cpp
   src/engine/model/PostCondition.cpp
@@ -115,6 +117,8 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/modelmanagement/factories/EntryPointFactory.cpp
   src/engine/modelmanagement/factories/Factory.cpp
   src/engine/modelmanagement/factories/KeyMappingFactory.cpp
+  src/engine/modelmanagement/factories/PlaceholderFactory.cpp
+  src/engine/modelmanagement/factories/PlaceholderMappingFactory.cpp
   src/engine/modelmanagement/factories/PlanFactory.cpp
   src/engine/modelmanagement/factories/PlanTypeFactory.cpp
   src/engine/modelmanagement/factories/PostConditionFactory.cpp

@@ -23,6 +23,7 @@
   "id": 1418042796751,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PreConditionPlan",
@@ -32,7 +33,6 @@
     "enabled": true,
     "id": 1418042929966,
     "name": "PreConditionPlanPreCondition",
-    "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
   },

@@ -38,6 +38,7 @@
   "id": 1923957580593038667,
   "implementationName": "PopulateBlackboard",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica_standard_library",
   "masterPlan": false,
   "name": "CustomWorkflow",
@@ -197,7 +198,6 @@
         "enabled": true,
         "id": 2752986009859690318,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -226,7 +226,6 @@
         "enabled": true,
         "id": 872737776606686249,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -255,7 +254,6 @@
         "enabled": true,
         "id": 1837767846344475889,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },
@@ -295,7 +293,6 @@
         "enabled": true,
         "id": 4121802518090307623,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

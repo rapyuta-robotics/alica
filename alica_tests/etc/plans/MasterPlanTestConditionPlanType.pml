@@ -23,6 +23,7 @@
   "id": 1418042656594,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "MasterPlanTestConditionPlanType",
@@ -98,7 +99,6 @@
         "enabled": true,
         "id": 1418042683692,
         "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

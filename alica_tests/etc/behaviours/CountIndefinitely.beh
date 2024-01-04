@@ -7,6 +7,7 @@
   "id": 1529456643148,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "name": "CountIndefinitely",
   "postCondition": null,

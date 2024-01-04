@@ -23,6 +23,7 @@
   "id": 691392966514374878,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "TestTracingMasterPlan",
@@ -98,7 +99,6 @@
         "enabled": true,
         "id": 1840401110297459509,
         "name": "",
-        "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
       },

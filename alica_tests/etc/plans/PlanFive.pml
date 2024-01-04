@@ -71,6 +71,7 @@
   "id": 1407153703092,
   "implementationName": "",
   "inheritBlackboard": false,
+  "isInterface": false,
   "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "PlanFive",

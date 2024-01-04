@@ -40,6 +40,24 @@ public:
         return out;
     }
 
+    bool operator==(const BlackboardBlueprint& other) const
+    {
+        for (auto& [key, info] : _keyInfo) {
+            auto it = other._keyInfo.find(key);
+            if (it == other._keyInfo.end() || it->second.type != info.type || it->second.access != info.access) {
+                return false;
+            }
+        }
+        for (auto& [key, info] : other._keyInfo) {
+            if (auto it = _keyInfo.find(key); it == _keyInfo.end()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool operator!=(const BlackboardBlueprint& other) const { return !(*this == other); }
+
 private:
     std::unordered_map<std::string, KeyInfo> _keyInfo;
 };
