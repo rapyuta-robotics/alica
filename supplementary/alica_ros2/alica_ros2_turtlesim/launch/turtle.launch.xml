@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <let name="launch_prefix" value=""/>
-    <arg name="master_plan"    default="Master" />
+    <arg name="use_gdb" default="$(env GDB false)"/>
+    <let name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" if="$(var use_gdb)"/>
+    <let name="launch_prefix" value="" unless="$(var use_gdb)"/>
+    <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
-    <arg name="alica_path"     default="$(find-pkg-share alica_ros2_turtlesim)" />
+    <arg name="turtlesim_ros_path"     default="$(find-pkg-share alica_ros2_turtlesim)/etc/" />
+    <arg name="turtlesim_lib_path"     default="$(find-pkg-share alica_turtlesim)/etc/" />
 
     <arg name="turtles"        default="1"/>
 
@@ -13,10 +16,11 @@
         <param name="agent_id"     value="$(var turtles)" />
         <param name="master_plan"  value="$(var master_plan)" />
         <param name="roleset"      value="$(var roleset)" />
-        <param name="alica_path"   value="$(var alica_path)" />
+        <param name="turtlesim_ros_path"   value="$(var turtlesim_ros_path)" />
+        <param name="turtlesim_lib_path"   value="$(var turtlesim_lib_path)" />
     </node>
 
-    <include file="$(dirname)/turtle.launch.xml"   if="$(eval '\'$(var turtles)\' > \'1\'')">
+    <include file="$(dirname)/turtle.launch.xml"   if="$(eval '$(var turtles) > 1')">
         <arg name="turtles"     value="$(eval '$(var turtles) - 1')" />
     </include>
 
