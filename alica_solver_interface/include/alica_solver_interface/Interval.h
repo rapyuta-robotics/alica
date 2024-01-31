@@ -21,8 +21,8 @@ public:
     {
     }
 
-    Interval<T>(const Interval<T>& o) = default;
-    Interval<T>& operator=(const Interval<T>& o) = default;
+    Interval(const Interval& o) = default;
+    Interval& operator=(const Interval& o) = default;
 
     constexpr T getMin() const { return _min; }
     constexpr T getMidPoint() const { return (_max + _min) / 2; }
