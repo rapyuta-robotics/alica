@@ -66,8 +66,26 @@ void BasicBehaviour::doRun()
     }
 }
 
+std::string BasicBehaviour::resultToString(BehResult result)
+{
+    switch (result) {
+    case BehResult::SUCCESS:
+        return "Success";
+    case BehResult::FAILURE:
+        return "Failure";
+    case BehResult::UNKNOWN:
+        return "Unknown";
+    }
+    return ""; // should never reach
+}
+
 void BasicBehaviour::doTerminate()
 {
+    if (getTrace()) {
+        const std::string resultStr = resultToString(_behResult.load());
+        Logging::logInfo(LOGNAME) << "Behaviour: " << getName() << ", result: " << resultStr;
+        getTrace()->setTag("Result", resultStr);
+    }
     try {
         onTermination();
     } catch (...) {
@@ -91,11 +109,6 @@ void BasicBehaviour::setResult(BehResult result)
     auto prev = _behResult.exchange(result);
     if (prev != result) {
         _planBase->addFastPathEvent(getPlanContext());
-        if (getTrace()) {
-            const char* resultStr = (result == BehResult::SUCCESS ? "Success" : "Fail");
-            Logging::logInfo(LOGNAME) << "Behaviour: " << getName() << ", result: " << resultStr;
-            getTrace()->setTag("Result", resultStr);
-        }
     }
 }
 

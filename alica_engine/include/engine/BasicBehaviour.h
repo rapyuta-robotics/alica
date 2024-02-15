@@ -106,6 +106,8 @@ private:
         FAILURE
     };
 
+    static std::string resultToString(BehResult result);
+
     void doInit() override;
     void doRun() override;
     void doTerminate() override;
