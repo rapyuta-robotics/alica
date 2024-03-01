@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <utility>
 #include <variant>
+#include <vector>
 
 namespace alica
 {
@@ -57,10 +58,24 @@ protected:
     }
 };
 
+class SpanLink
+{
+public:
+    std::string context;
+    // Warning:  Ensure string_views in attributes are valid for the lifetime of the span link
+    std::unordered_map<std::string, IAlicaTrace::TraceValue> attributes;
+};
+
 class IAlicaTraceFactory
 {
 public:
-    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const = 0;
+    // Two argument version of create.  Deprecated.
+    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const { return nullptr; }
+    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent_context, const std::vector<SpanLink>&) const
+    {
+        // Concrete implementation provided for backwards compatibility
+        return nullptr;
+    }
     virtual void setGlobalContext(const std::string& globalContext) = 0;
     virtual void unsetGlobalContext() = 0;
     virtual ~IAlicaTraceFactory() = default;
