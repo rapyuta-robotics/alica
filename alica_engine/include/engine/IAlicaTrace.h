@@ -35,8 +35,7 @@ public:
         {
         }
 
-    private:
-        Variant variant;
+        const Variant variant;
     };
 
 public:
