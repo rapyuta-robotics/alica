@@ -58,23 +58,31 @@ protected:
     }
 };
 
-class SpanLink
+namespace tracing
 {
-public:
+struct SpanLink
+{
     std::string context;
     // Warning:  Ensure string_views in attributes are valid for the lifetime of the span link
     std::unordered_map<std::string, IAlicaTrace::TraceValue> attributes;
 };
+
+struct SpanStartOptions
+{
+    std::optional<std::string> parentContext;
+    std::vector<SpanLink> links;
+};
+} // namespace tracing
 
 class IAlicaTraceFactory
 {
 public:
     // Two argument version of create.  Deprecated.
     virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const { return nullptr; }
-    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent_context, const std::vector<SpanLink>&) const
+    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, const tracing::SpanStartOptions& options) const
     {
         // Concrete implementation provided for backwards compatibility
-        return nullptr;
+        return create(opName, options.parentContext);
     }
     virtual void setGlobalContext(const std::string& globalContext) = 0;
     virtual void unsetGlobalContext() = 0;

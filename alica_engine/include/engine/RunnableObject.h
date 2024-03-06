@@ -58,7 +58,7 @@ public:
 
     // Set the tracing type for this runnable object. customTraceContextGetter is required for custom tracing
     // & this method will be called to get the parent trace context before initialiseParameters is called
-    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
+    void setTracing(TracingType type, std::function<tracing::SpanStartOptions()> customTraceContextGetter = {});
     void setupTraceContext(const std::string& name, RunningPlan* rp);
     void cleanupTraceContext();
     void traceInitCall();
@@ -72,7 +72,7 @@ private:
     TracingType _tracingType;
     bool _runTraced; // True if the behaviour/plan's run method has already been logged in the trace
     const IAlicaTraceFactory* _tf;
-    std::function<std::optional<std::string>()> _customTraceContextGetter;
+    std::function<tracing::SpanStartOptions()> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
     const std::string& _name;
 };
@@ -94,10 +94,11 @@ protected:
     virtual void doRun() = 0;
     virtual void doTerminate() = 0;
 
-    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {})
+    void setTracing(TracingType type, std::function<tracing::SpanStartOptions()> customTraceContextGetter = {})
     {
         _runnableObjectTracer.setTracing(type, customTraceContextGetter);
     }
+
     const std::string& getName() const { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
     // Helper to allow applications to generate their own trace.

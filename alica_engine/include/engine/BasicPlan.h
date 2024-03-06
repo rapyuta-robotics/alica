@@ -53,7 +53,7 @@ public:
 protected:
     using RunnableObject::getTraceFactory;
 
-    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
+    void setTracing(TracingType type, std::function<tracing::SpanStartOptions(const BasicPlan*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
             RunnableObject::setTracing(
@@ -61,6 +61,14 @@ protected:
         } else {
             RunnableObject::setTracing(type, {});
         }
+    }
+    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter)
+    {
+        setTracing(type, [this, inner = std::move(customTraceContextGetter)](const BasicPlan*) -> tracing::SpanStartOptions {
+            tracing::SpanStartOptions options;
+            options.parentContext = inner(this);
+            return options;
+        });
     }
 
     virtual void onInit(){};

@@ -168,7 +168,7 @@ void RunnableObject::handleException(const std::string& exceptionOriginMethod, s
 }
 
 // Tracing methods
-void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
+void TraceRunnableObject::setTracing(TracingType type, std::function<tracing::SpanStartOptions()> customTraceContextGetter)
 {
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
