@@ -57,7 +57,7 @@ Trace::~Trace()
 
 void Trace::setTag(std::string_view key, TraceValue value)
 {
-    _rawTrace->SetTag(prepareStringView(key), prepareRawTraceValue(std::move(value).variant));
+    _rawTrace->SetTag(prepareStringView(key), prepareRawTraceValue(std::move(value.variant)));
 }
 
 void Trace::setTag(const std::string& key, const RawTraceValue& value)

@@ -33,7 +33,7 @@ public:
         {
         }
 
-        const Variant variant;
+        Variant variant;
     };
 
 public:
