@@ -62,7 +62,7 @@ private:
                     ss << v;
                     return std::move(ss).str();
                 },
-                extractVariant(val));
+                val.variant);
     }
 };
 

@@ -24,8 +24,6 @@ class IAlicaTrace
 public:
     class TraceValue
     {
-        friend IAlicaTrace;
-
         using Variant = std::variant<bool, long long int, unsigned long long int, double, std::string_view>;
 
     public:
@@ -48,13 +46,6 @@ public:
     // leave the trace in a valid but unspecified state. Calling context on a finished trace is a valid operation
     virtual void finish() = 0;
     virtual std::string context() const = 0;
-
-protected:
-    template <typename V>
-    static decltype(auto) extractVariant(V&& trace_value)
-    {
-        return (std::forward<V>(trace_value).variant);
-    }
 };
 
 namespace tracing
