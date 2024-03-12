@@ -57,7 +57,7 @@ Trace::~Trace()
 
 void Trace::setTag(std::string_view key, TraceValue value)
 {
-    _rawTrace->SetTag(prepareStringView(key), prepareRawTraceValue(extractVariant(std::move(value))));
+    _rawTrace->SetTag(prepareStringView(key), prepareRawTraceValue(std::move(value.variant)));
 }
 
 void Trace::setTag(const std::string& key, const RawTraceValue& value)
@@ -71,7 +71,7 @@ void Trace::log(const std::unordered_map<std::string_view, TraceValue>& fields)
     RawFields raw_fields;
     raw_fields.reserve(fields.size());
     std::transform(begin(fields), end(fields), std::back_inserter(raw_fields),
-            [](const auto& v) { return std::make_pair(prepareStringView(v.first), prepareRawTraceValue(extractVariant(v.second))); });
+            [](const auto& v) { return std::make_pair(prepareStringView(v.first), prepareRawTraceValue(v.second.variant)); });
     _rawTrace->Log(opentracing::SystemClock::now(), raw_fields);
 }
 

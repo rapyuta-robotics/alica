@@ -84,7 +84,7 @@ protected:
 
     AgentId getOwnId() const;
 
-    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
+    void setTracing(TracingType type, std::function<tracing::SpanStartOptions(const BasicBehaviour*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
             RunnableObject::setTracing(
@@ -93,7 +93,14 @@ protected:
             RunnableObject::setTracing(type, {});
         }
     }
-
+    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter)
+    {
+        setTracing(type, [this, inner = std::move(customTraceContextGetter)](const BasicBehaviour*) {
+            tracing::SpanStartOptions options;
+            options.parentContext = inner(this);
+            return options;
+        });
+    }
     void setSuccess();
     void setFailure();
 
