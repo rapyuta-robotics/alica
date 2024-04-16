@@ -2,7 +2,7 @@
 
 <package format="2">
   <name>alica_standard_library</name>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <description>Standard library of plans, conditions, behaviours for alica</description>
   <maintainer email="dale.koenig@rapyuta-robotics.com">Dale Koenig</maintainer>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>alica_tracing</name>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <description>Tracing for alica</description>
   <maintainer email="abhishek.sharma@rapyuta-robotics.com">Abhishek Sharma</maintainer>
   <license>MIT</license>

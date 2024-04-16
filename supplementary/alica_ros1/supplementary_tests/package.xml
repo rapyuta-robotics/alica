@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>supplementary_tests</name>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <description>The supplementary_tests package</description>
 
   <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
