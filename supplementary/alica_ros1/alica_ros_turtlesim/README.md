@@ -9,7 +9,7 @@ This tutorial is an extension of the [turtlesim ROS package](http://wiki.ros.org
 
 In this tutorial, you will create an application as shown in the picture below. The ALICA engine will assign the `Leader` task to one turtle and the `Follower` task to the other turtles. Further, the ALICA engine will move the turtles to their goal positions based on distance constraints.
 
-![overview](./doc/overview.png)
+![overview](../../alica_turtlesim/doc/overview.png)
 
 ## 2. Prerequisite
 
@@ -48,7 +48,7 @@ Developers can set constraints to plans. The ALICA engine can solve constraints 
 
 The world model represents the model of the world from the perspective of an agent. Further, the world model can be an interface between the ALICA engine and other software, e.g., ROS and lower API.
 
-![coreconcept](doc/coreconcept.png)
+![coreconcept](../../alica_turtlesim/doc/coreconcept.png)
 
 ## 4. Setup of the Catkin Workspace
 
@@ -89,7 +89,7 @@ http://localhost:3030.
 
 When you start the Plan Designer the first time, its main window should look like this:
 
-![Empty Plan Designer](doc/Empty-PlanDesigner.png)
+![Empty Plan Designer](../../alica_turtlesim/doc/Empty-PlanDesigner.png)
 
 ## 6. Create the Tutorial Plans with the Plan Designer
 
@@ -106,7 +106,7 @@ In this section, you will create plans using the ALICA plan designer.
 
 ### 6.2 Create the Master Plan
 
-![master_plan](doc/master_plan.png)
+![master_plan](../../alica_turtlesim/doc/master_plan.png)
 
 1. Click on the menu button "Plan" in the top right corner. This will open a window
    for creating a new plan on the right side of your browser window.
@@ -137,7 +137,7 @@ On the top left you will see a tab for your newly created Master Plan.
 
 ### 6.3 MakeFormation plan
 
-![make_formation](doc/make_formation_plan.png)
+![make_formation](../../alica_turtlesim/doc/make_formation_plan.png)
 
 1. Create the `MakeFormation` plan in the same way as the Master plan
 2. Create two states `Move2Center` and `AlignCircle`.
@@ -154,7 +154,7 @@ On the top left you will see a tab for your newly created Master Plan.
 
 ### 6.4 Simulation plan
 
-![Simulation](doc/Simulation.png)
+![Simulation](../../alica_turtlesim/doc/Simulation.png)
 
 1. Create the Simulation plan state machine as shown in the figure above by following the a similar procedure as outlined above for other plans
 2. Additionally, in the Simulation plan, select Blackboard in the right bottom menu. Click on setup blackboard. A blackboard is essentially a data store for plans/behaviours & can be used to pass data from parent to child or child to parent via key mapping
@@ -163,7 +163,7 @@ On the top left you will see a tab for your newly created Master Plan.
 
 3. Add 2 blackboard keys: `join_formation_topic` & `leave_formation_topic` as shown in the figure below
 
-![Blackboard setup](doc/blackboard_setup.png)
+![Blackboard setup](../../alica_turtlesim/doc/blackboard_setup.png)
 
 4. Select the `WaitForTrigger` behaviour attached to the `WaitForTrigger` state by clicking on it & setup the blackboard for the behaviour in the same way
 5. Add a single key called `topic` with type std::string & access type as input. Close the window
