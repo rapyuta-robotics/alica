@@ -43,7 +43,7 @@ public:
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
     void reload(const YAML::Node& config);
-    void init(const Blackboard* globalBlackboard);
+    void init(std::shared_ptr<const Blackboard> globalBlackboard);
 
 private:
     static constexpr const char* LOGNAME = "Rulebook";
@@ -56,7 +56,7 @@ private:
     int _maxConsecutiveChanges;
     bool _autoFailureHandlingEnabled;
     bool _changeOccurred;
-    const Blackboard* _globalBlackboard;
+    std::shared_ptr<const Blackboard> _globalBlackboard;
 
     PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);

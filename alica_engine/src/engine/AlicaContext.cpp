@@ -3,8 +3,13 @@
 #include "engine/Types.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/logging/AlicaDefaultLogger.h"
+#include "engine/modelmanagement/factories/BlackboardBlueprintFactory.h"
 
 #include <engine/FileSystem.h>
+#include <engine/modelmanagement/Strings.h>
+#include <memory>
+#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/node/parse.h>
 
 namespace alica
 {
@@ -25,9 +30,34 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         , _configRootNode(initConfig(alicaContextParams.configPaths, alicaContextParams.agentName))
         , _validTag(ALICA_CTX_GOOD)
         , _clock(std::make_unique<AlicaClock>())
+        , _globalBlackboard(std::make_shared<Blackboard>(loadGlobalBlackboardBlueprint().get()))
 {
     // reset the logger but this time the config is read
     setLogger<AlicaDefaultLogger>();
+}
+
+std::unique_ptr<BlackboardBlueprint> AlicaContext::loadGlobalBlackboardBlueprint()
+{
+    std::string filePath;
+    for (const auto& folder : _alicaContextParams.configPaths) {
+        if (essentials::FileSystem::findFile(folder, _alicaContextParams.masterPlanName + alica::Strings::plan_extension, filePath)) {
+            break;
+        }
+    }
+    if (filePath.empty()) {
+        AlicaEngine::abort(LOGNAME, "Master file not found, aborting");
+    }
+    YAML::Node masterPlanNode;
+    try {
+        masterPlanNode = YAML::LoadFile(filePath);
+    } catch (YAML::BadFile& badFile) {
+        AlicaEngine::abort(LOGNAME, "Could not load master file: ", filePath, ", error details- ", badFile.msg, ", aborting");
+    }
+    auto inheritBlackboard = Factory::getValue<bool>(masterPlanNode, alica::Strings::inheritBlackboard, false);
+    if (inheritBlackboard && Factory::isValid(masterPlanNode[alica::Strings::blackboard])) {
+        return BlackboardBlueprintFactory::create(masterPlanNode[alica::Strings::blackboard]);
+    }
+    return BlackboardBlueprintFactory::createEmpty();
 }
 
 AlicaContext::~AlicaContext()
@@ -65,7 +95,7 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     _communicator->startCommunication();
 
     if (_engine->init(std::move(creatorCtx))) {
-        LockedBlackboardRW gbb(_globalBlackboard);
+        LockedBlackboardRW gbb(*_globalBlackboard);
         gbb.set("agentName", _engine->getLocalAgentName());
         gbb.set("agentId", _engine->getTeamManager().getLocalAgentID());
         if (!delayStart) {
@@ -225,10 +255,15 @@ ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
 
 const Blackboard& AlicaContext::getGlobalBlackboard() const
 {
-    return _globalBlackboard;
+    return *_globalBlackboard;
 }
 
 Blackboard& AlicaContext::editGlobalBlackboard()
+{
+    return *_globalBlackboard;
+}
+
+const std::shared_ptr<Blackboard> AlicaContext::getGlobalBlackboardShared()
 {
     return _globalBlackboard;
 }

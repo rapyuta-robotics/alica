@@ -85,7 +85,7 @@ class RunnableObject
 protected:
     using TracingType = TraceRunnableObject::TracingType;
 
-    RunnableObject(Blackboard& globalBlackboard, const IAlicaTraceFactory* tf, const std::string& name = "");
+    RunnableObject(std::shared_ptr<Blackboard> globalBlackboard, const IAlicaTraceFactory* tf, const std::string& name = "");
     virtual ~RunnableObject() = default;
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
@@ -108,7 +108,7 @@ protected:
     RunningPlan* getPlanContext() const { return _runningplanContext; }
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint; }
-    Blackboard* getGlobalBlackboard() { return &_globalBlackboard; };
+    const std::shared_ptr<Blackboard> getGlobalBlackboard() { return _globalBlackboard; };
 
     void start(RunningPlan* rp);
     void stop();
@@ -149,7 +149,7 @@ private:
     std::unique_ptr<IAlicaTimer> _activeRunTimer;
     const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
-    Blackboard& _globalBlackboard;
+    std::shared_ptr<Blackboard> _globalBlackboard;
 
     // Map from ConfAbstractPlanWrapper id to associated attachment
     // Only plan will have these

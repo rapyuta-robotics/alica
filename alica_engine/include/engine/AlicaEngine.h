@@ -80,8 +80,7 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const Blackboard& getGlobalBlackboard() const { return _ctx.getGlobalBlackboard(); }
-    Blackboard& editGlobalBlackboard() { return _ctx.editGlobalBlackboard(); }
+    const std::shared_ptr<Blackboard> getGlobalBlackboard() { return _ctx.getGlobalBlackboardShared(); }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }

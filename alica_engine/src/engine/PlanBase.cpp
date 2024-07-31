@@ -31,7 +31,7 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
+        const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, std::shared_ptr<Blackboard> globalBlackboard,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
         const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
@@ -117,7 +117,7 @@ void PlanBase::reload(const YAML::Node& config)
  */
 void PlanBase::start(const Plan* masterPlan)
 {
-    _ruleBook.init(&_globalBlackboard);
+    _ruleBook.init(_globalBlackboard);
     if (!_running) {
         _running = true;
         if (_statusMessage) {

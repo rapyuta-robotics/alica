@@ -41,7 +41,7 @@ public:
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
 
-    bool evaluate(const RunningPlan& rp, const Blackboard* globalBlackboard) const;
+    bool evaluate(const RunningPlan& rp, std::shared_ptr<const Blackboard> globalBlackboard) const;
 
     std::string getLibraryName() const;
 

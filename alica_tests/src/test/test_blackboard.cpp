@@ -170,7 +170,7 @@ TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
 
     std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["behaviorInputKey"], 5);       // Value set in first behavior call
     EXPECT_EQ(wm->passedParameters["behaviorSecondInputKey"], 7); // Value set in second behavior call
 }
@@ -181,7 +181,7 @@ TEST_F(TestBlackboard, testJsonPlanKeyMapping)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
     std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["planInputFromMaster"], 8);
 }
 
@@ -191,7 +191,7 @@ TEST_F(TestBlackboard, testJsonBehaviorKeyMapping)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
     std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["behaviorInputKey"], 5); // Value set in plan init -> read in behavior
     EXPECT_EQ(wm->passedParameters["planInputKey"], 6);     // Value set in behavior -> read in plan termination
 }
@@ -202,7 +202,7 @@ TEST_F(TestBlackboard, testJsonBlackboardPlan)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["planKey"], 1);
 }
 
@@ -212,7 +212,7 @@ TEST_F(TestBlackboard, testJsonBlackboardBehavior)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     std::shared_ptr<alicaTests::TestWorldModel> wm =
-            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["behaviorKey"], 2);
 }
 

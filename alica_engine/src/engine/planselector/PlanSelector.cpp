@@ -165,8 +165,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         const EntryPoint* ep = rp->getAssignment().getEntryPointOfAgent(localAgentID);
 
         if (ep == nullptr) {
-            Logging::logDebug(LOGNAME) << "The agent "
-                                       << "(Id: " << localAgentID << ") is not assigned to enter the plan " << rp->getActivePlan()->getName()
+            Logging::logDebug(LOGNAME) << "The agent " << "(Id: " << localAgentID << ") is not assigned to enter the plan " << rp->getActivePlan()->getName()
                                        << " and will IDLE!";
 
             rp->useState(nullptr);
@@ -231,9 +230,9 @@ bool PlanSelector::getPlansForStateInternal(
     return true;
 }
 
-void PlanSelector::setGlobalBlackboard(const Blackboard* globalBlackboard)
+void PlanSelector::setGlobalBlackboard(std::shared_ptr<const Blackboard> globalBlackboard)
 {
-    _globalBlackboard = globalBlackboard;
+    _globalBlackboard = globalBlackboard.get();
 }
 
 } /* namespace alica */

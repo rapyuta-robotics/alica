@@ -11,8 +11,8 @@
 namespace alica
 {
 
-RuntimePlanFactory::RuntimePlanFactory(
-        Blackboard& globalBlackboard, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+RuntimePlanFactory::RuntimePlanFactory(std::shared_ptr<Blackboard> globalBlackboard, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager,
+        const IAlicaTimerFactory& timerFactory)
         : _traceFactory(traceFactory)
         , _teamManager(teamManager)
         , _timerFactory(timerFactory)

@@ -50,7 +50,7 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, std::shared_ptr<const Blackboard> globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers)
         : _clock(clock)
@@ -75,8 +75,8 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard, TeamObserver& teamObserver,
-        TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, std::shared_ptr<const Blackboard> globalBlackboard,
+        TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const RuntimePlanFactory& runTimePlanFactory,
         const RuntimeBehaviourFactory& runTimeBehaviourFactory, const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper)
         : _clock(clock)
@@ -186,7 +186,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return preCondition->evaluate(*this, &_globalBlackboard);
+        return preCondition->evaluate(*this, _globalBlackboard);
     } catch (const std::exception& e) {
         Logging::logError(LOGNAME) << "Exception in precondition: " << e.what();
         return false;
@@ -215,7 +215,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        bool ret = runtimeCondition->evaluate(*this, &_globalBlackboard);
+        bool ret = runtimeCondition->evaluate(*this, _globalBlackboard);
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {

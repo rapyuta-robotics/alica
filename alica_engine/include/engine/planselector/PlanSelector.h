@@ -29,7 +29,7 @@ public:
 
     RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp,
             const PlanType* relevantPlanType, double& o_oldUtility, const ConfAbstractPlanWrapper* wrapper);
-    void setGlobalBlackboard(const Blackboard* globalBlackboard);
+    void setGlobalBlackboard(std::shared_ptr<const Blackboard> globalBlackboard);
 
 private:
     static constexpr const char* LOGNAME = "PlanSelector";

@@ -102,11 +102,11 @@ public:
         bool allocationNeeded;
         mutable std::atomic<EvalStatus> runTimeConditionStatus;
     };
-    explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
+    explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, std::shared_ptr<const Blackboard> globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
             VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard, TeamObserver& teamObserver,
-            TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, std::shared_ptr<const Blackboard> globalBlackboard,
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
             const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const RuntimePlanFactory& runTimePlanFactory,
             const RuntimeBehaviourFactory& runTimeBehaviourFactory, const AbstractPlan* abstractPlan, const ConfAbstractPlanWrapper* wrapper);
     static void init(const YAML::Node& config);
@@ -262,7 +262,7 @@ private:
 
     // engine Pointer
     const AlicaClock& _clock;
-    const Blackboard& _globalBlackboard;
+    std::shared_ptr<const Blackboard> _globalBlackboard;
     const RuntimePlanFactory& _runTimePlanFactory;
     TeamObserver& _teamObserver;
     TeamManager& _teamManager;

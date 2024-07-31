@@ -9,7 +9,7 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(Blackboard& globalBlackboard, TeamManager& teamManager, PlanBase& planBase,
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::shared_ptr<Blackboard> globalBlackboard, TeamManager& teamManager, PlanBase& planBase,
         const IAlicaCommunication& communication, const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
         : _globalBlackboard(globalBlackboard)
         , _teamManager(teamManager)

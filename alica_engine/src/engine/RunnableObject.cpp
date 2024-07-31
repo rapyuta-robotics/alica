@@ -3,6 +3,7 @@
 #include "engine/BasicPlan.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/RunningPlan.h"
+#include "engine/blackboard/Blackboard.h"
 #include "engine/blackboard/BlackboardUtil.h"
 #include "engine/logging/Logging.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
@@ -13,7 +14,7 @@
 
 namespace alica
 {
-RunnableObject::RunnableObject(Blackboard& globalBlackboard, const IAlicaTraceFactory* tf, const std::string& name)
+RunnableObject::RunnableObject(std::shared_ptr<Blackboard> globalBlackboard, const IAlicaTraceFactory* tf, const std::string& name)
         : _name(name)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
@@ -83,13 +84,7 @@ void RunnableObject::stopRunCalls()
 void RunnableObject::setupBlackboard()
 {
     if (!_runningplanContext->getParent() || !_runningplanContext->getParent()->getBasicPlan()) {
-        if (!_blackboard) {
-            if (_blackboardBlueprint) {
-                _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
-            } else {
-                _blackboard = std::make_shared<Blackboard>();
-            }
-        }
+        _blackboard = _blackboardBlueprint ? std::make_shared<Blackboard>(_blackboardBlueprint) : _globalBlackboard;
     } else if (!getInheritBlackboard()) {
         auto parentPlan = _runningplanContext->getParent();
         auto keyMapping = _runningplanContext->getKeyMapping();

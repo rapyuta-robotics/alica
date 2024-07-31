@@ -16,7 +16,7 @@ class Transition;
 
 struct PlanContext
 {
-    Blackboard& globalBlackboard;
+    std::shared_ptr<Blackboard> globalBlackboard;
     const std::string name;
     const Plan* planModel;
     const IAlicaTraceFactory* traceFactory;
@@ -71,9 +71,9 @@ protected:
         });
     }
 
-    virtual void onInit(){};
-    virtual void run(){};
-    virtual void onTerminate(){};
+    virtual void onInit() {};
+    virtual void run() {};
+    virtual void onTerminate() {};
 
 private:
     void doInit() override;

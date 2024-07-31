@@ -23,6 +23,7 @@
 
 #include <atomic>
 #include <cassert>
+#include <engine/blackboard/BlackboardBlueprint.h>
 #include <memory>
 #include <optional>
 #include <string>
@@ -302,8 +303,10 @@ public:
      *
      * @return A reference to the global blackboard
      */
-    const Blackboard& getGlobalBlackboard() const;
-    Blackboard& editGlobalBlackboard();
+    [[deprecated("call std::shared_ptr<Blackboard> getGlobalBlackboard() instead")]] const Blackboard& getGlobalBlackboard() const;
+    [[deprecated("call std::shared_ptr<Blackboard> getGlobalBlackboard() instead")]] Blackboard& editGlobalBlackboard();
+
+    const std::shared_ptr<Blackboard> getGlobalBlackboardShared();
 
     /**
      * Add a solver to be used by this alica instance.
@@ -474,6 +477,7 @@ private:
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 
     bool _initialized = false;
+    std::shared_ptr<Blackboard> _globalBlackboard;
 
     /**
      * Initializes yaml configuration.
@@ -503,7 +507,10 @@ private:
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
 
-    Blackboard _globalBlackboard;
+    /*
+     * Load the global blackoard blueprint
+     */
+    std::unique_ptr<BlackboardBlueprint> loadGlobalBlackboardBlueprint();
 };
 
 template <class ClockType, class... Args>
