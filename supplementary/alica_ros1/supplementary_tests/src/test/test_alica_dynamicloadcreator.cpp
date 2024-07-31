@@ -56,10 +56,10 @@ public:
         return path;
     }
 
-    Blackboard& getGlobalBlackboard() { return _globalBlackboard; }
+    std::shared_ptr<Blackboard> getGlobalBlackboard() { return std::make_shared<Blackboard>(); }
 
 private:
-    Blackboard _globalBlackboard;
+    std::shared_ptr<Blackboard> _globalBlackboard;
 };
 
 TEST_F(AlicaDynamicLoading, simple_behaviour_load)
