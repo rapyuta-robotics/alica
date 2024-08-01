@@ -71,9 +71,9 @@ protected:
         });
     }
 
-    virtual void onInit() {};
-    virtual void run() {};
-    virtual void onTerminate() {};
+    virtual void onInit(){};
+    virtual void run(){};
+    virtual void onTerminate(){};
 
 private:
     void doInit() override;

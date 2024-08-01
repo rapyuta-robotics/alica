@@ -181,8 +181,9 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
             r.setAllocationNeeded(true);
         }
 
-        Logging::logInfo(LOGNAME) << "B4 dynChange: Util is " << curUtil << " | " << " suggested is " << possibleUtil << " | " << " threshold "
-                                  << p->getUtilityThreshold() << "\n"
+        Logging::logInfo(LOGNAME) << "B4 dynChange: Util is " << curUtil << " | "
+                                  << " suggested is " << possibleUtil << " | "
+                                  << " threshold " << p->getUtilityThreshold() << "\n"
                                   << "DynAlloc in " << p->getName();
 
         return PlanChange::InternalChange;

@@ -165,7 +165,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         const EntryPoint* ep = rp->getAssignment().getEntryPointOfAgent(localAgentID);
 
         if (ep == nullptr) {
-            Logging::logDebug(LOGNAME) << "The agent " << "(Id: " << localAgentID << ") is not assigned to enter the plan " << rp->getActivePlan()->getName()
+            Logging::logDebug(LOGNAME) << "The agent "
+                                       << "(Id: " << localAgentID << ") is not assigned to enter the plan " << rp->getActivePlan()->getName()
                                        << " and will IDLE!";
 
             rp->useState(nullptr);
