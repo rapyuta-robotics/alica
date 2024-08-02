@@ -14,14 +14,15 @@ class BlackboardBlueprint
     {
         std::string type;
         std::string access;
+        std::string defaultValue;
     };
 
 public:
     using const_iterator = std::unordered_map<std::string, KeyInfo>::const_iterator;
 
-    void addKey(const std::string& key, const std::string& type, const std::string& access)
+    void addKey(const std::string& key, const std::string& type, const std::string& access, const std::string& defaultValue = std::string{})
     {
-        _keyInfo.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(KeyInfo{type, access}));
+        _keyInfo.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(KeyInfo{type, access, defaultValue}));
     }
     const_iterator begin() const { return _keyInfo.begin(); }
     const_iterator end() const { return _keyInfo.end(); }

@@ -63,8 +63,14 @@ public:
                 typeIndex = BB_VALUE_TYPE_ANY_INDEX;
             }
             try {
-                // insert a default constructed value
-                _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
+                // insert a default constructed value or construct from the specified default value for the key
+                if (keyInfo.defaultValue.empty()) {
+                    _vals.emplace(
+                            std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
+                } else {
+                    _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
+                            std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue)));
+                }
             } catch (const std::exception& ex) {
                 throw BlackboardException(stringify("Could not initialize key: ", key, " with value of type: ", keyInfo.type, ", details: ", ex.what()));
             }

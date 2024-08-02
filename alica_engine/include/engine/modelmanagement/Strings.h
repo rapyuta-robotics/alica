@@ -96,6 +96,7 @@ static const std::string normalStateType = "State";
 static const std::string isSuccessState = "success";
 static const std::string inheritBlackboard = "inheritBlackboard";
 static const std::string key = "key";
+static const std::string defaultValue = "defaultValue";
 static const std::string transitionCondition = "transitionCondition";
 static const std::string transitionConditionRepository = "transitionConditionRepository";
 static const std::string libraryName = "libraryName";
