@@ -27,7 +27,7 @@
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
-  "frequency": 0,
+  "frequency": 30,
   "id": 1179066429431332056,
   "implementationName": "",
   "inheritBlackboard": false,

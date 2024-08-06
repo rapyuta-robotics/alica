@@ -350,7 +350,7 @@ public:
         path = THIS_PACKAGE_DIR;
 #endif
         std::cerr << "create with " << path + "/config/" + getPlaceholderMappingFileName() << std::endl;
-        _tc = std::make_unique<TestContext>(agentName(), std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1,
+        _tc = std::make_unique<TestContext>(agentName(), std::vector<std::string>{path + "/etc/"}, "Roleset", getMasterPlanName(), true, 1,
                 readPlaceholderMapping(path + "/config/" + getPlaceholderMappingFileName()));
         ASSERT_TRUE(_tc->isValid());
     }
@@ -366,7 +366,7 @@ public:
         _tc->init(std::move(creators));
         _tc->startEngine();
 
-        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
+        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan(getMasterPlanName())) << _tc->getLastFailure();
     }
 
     virtual void TearDown() override {}
@@ -390,6 +390,8 @@ protected:
         return maybeMapping;
     }
 
+    virtual const char* getMasterPlanName() const { return "TestMasterPlan"; }
+
     std::unique_ptr<TestContext> _tc;
 };
 
@@ -405,6 +407,9 @@ public:
     }
 
     virtual void TearDown() override { Base::TearDown(); }
+
+protected:
+    virtual const char* getMasterPlanName() const override { return "TestMasterPlan"; }
 };
 
 } // namespace alica::test
