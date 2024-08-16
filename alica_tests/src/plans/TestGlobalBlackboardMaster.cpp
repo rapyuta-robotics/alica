@@ -7,11 +7,7 @@ TestGlobalBlackboardMaster::TestGlobalBlackboardMaster(PlanContext& context)
 {
 }
 
-void TestGlobalBlackboardMaster::onInit()
-{
-    LockedBlackboardRW bb(*getBlackboard());
-    bb.set<int64_t>("masterKey", 123);
-}
+void TestGlobalBlackboardMaster::onInit() {}
 
 void TestGlobalBlackboardMaster::run()
 {
