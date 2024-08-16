@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 598868303244083964,
       "key": "x",
       "type": "double"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 2712475924298828232,
       "key": "y",
       "type": "double"

@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 489836023935790753,
       "key": "goal_x",
       "type": "double"
@@ -10,6 +11,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 827646288361861518,
       "key": "goal_y",
       "type": "double"

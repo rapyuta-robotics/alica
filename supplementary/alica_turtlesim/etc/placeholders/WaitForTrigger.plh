@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "subscriber topic on which to listen for trigger msgs",
+      "defaultValue": null,
       "id": 2590992428289220704,
       "key": "topic",
       "type": "std::string"

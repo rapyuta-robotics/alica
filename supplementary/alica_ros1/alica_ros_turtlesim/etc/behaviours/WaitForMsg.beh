@@ -3,6 +3,7 @@
     {
       "access": "output",
       "comment": "The contents of the msg that was received on the topic",
+      "defaultValue": null,
       "id": 1670287826314001481,
       "key": "msg",
       "type": "std::string"
@@ -10,6 +11,7 @@
     {
       "access": "input",
       "comment": "The topic name on which to wait for the msg",
+      "defaultValue": null,
       "id": 3377017469681391113,
       "key": "topic",
       "type": "std::string"

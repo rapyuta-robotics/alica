@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 2065859497513016259,
       "key": "y",
       "type": "double"
@@ -10,6 +11,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 2249915898478593688,
       "key": "x",
       "type": "double"

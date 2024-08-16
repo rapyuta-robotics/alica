@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3275358505487787998,
       "key": "task_msg",
       "type": "std::string"

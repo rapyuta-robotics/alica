@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "Time to idle in seconds",
+      "defaultValue": null,
       "id": 2537936451223247195,
       "key": "time",
       "type": "double"

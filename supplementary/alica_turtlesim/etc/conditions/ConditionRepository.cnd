@@ -38,6 +38,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 1522671554895393021,
           "key": "left",
           "type": "std::string"
@@ -45,6 +46,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 3837414941606102992,
           "key": "right",
           "type": "std::string"

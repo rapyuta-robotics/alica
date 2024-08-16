@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 610196170392400041,
       "key": "data",
       "type": "std::string"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1293324462022421085,
       "key": "target_x",
       "type": "double"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1302855491540810679,
       "key": "target_y",
       "type": "double"

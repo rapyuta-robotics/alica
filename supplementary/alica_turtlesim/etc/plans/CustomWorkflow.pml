@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1373883389746082897,
       "key": "workflow",
       "type": "std::string"
@@ -10,6 +11,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 4268930889364842881,
       "key": "data",
       "type": "std::string"

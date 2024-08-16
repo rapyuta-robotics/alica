@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 117244649116123551,
       "key": "min",
       "type": "double"
@@ -10,6 +11,7 @@
     {
       "access": "output",
       "comment": "",
+      "defaultValue": null,
       "id": 3318528501727248057,
       "key": "value",
       "type": "double"
@@ -17,6 +19,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 3464965572218487330,
       "key": "max",
       "type": "double"
