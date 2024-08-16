@@ -303,8 +303,8 @@ public:
      *
      * @return A reference to the global blackboard
      */
-    [[deprecated("call std::shared_ptr<Blackboard> getGlobalBlackboard() instead")]] const Blackboard& getGlobalBlackboard() const;
-    [[deprecated("call std::shared_ptr<Blackboard> getGlobalBlackboard() instead")]] Blackboard& editGlobalBlackboard();
+    [[deprecated("call std::shared_ptr<Blackboard> getGlobalBlackboardShared() instead")]] const Blackboard& getGlobalBlackboard() const;
+    [[deprecated("call std::shared_ptr<Blackboard> getGlobalBlackboardShared() instead")]] Blackboard& editGlobalBlackboard();
 
     const std::shared_ptr<Blackboard> getGlobalBlackboardShared();
 
