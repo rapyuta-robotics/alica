@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3196801973742034307,
       "key": "targetChildStatus",
       "type": "std::any"

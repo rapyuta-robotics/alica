@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 525979646733597400,
       "key": "ChooseTestState2TransitionAfterInitTestState",
       "type": "bool"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1344107288428655911,
       "key": "ChooseTestState2RepeatedRunCallsTestState",
       "type": "bool"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1375412086750652826,
       "key": "ChooseTestState2ExecOrderTestState",
       "type": "bool"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3103901468860392175,
       "key": "ChooseTestState2SchedulingPlanTestState",
       "type": "bool"

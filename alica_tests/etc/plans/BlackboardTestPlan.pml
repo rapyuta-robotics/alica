@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1604125167842760918,
       "key": "ChooseBlackboardTestState2ValueMappingPlanTestState",
       "type": "bool"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 2499503172139630260,
       "key": "ChooseBlackboardTestState2ValueMappingBehaviourTestState",
       "type": "bool"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3790159344295070800,
       "key": "ChooseBlackboardTestState2ValueMappingConditionTestState",
       "type": "bool"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3928341634460937152,
       "key": "ChooseBlackboardTestState2PopulateBlackboardTestState",
       "type": "bool"

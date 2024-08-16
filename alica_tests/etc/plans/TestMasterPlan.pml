@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 295638103823734752,
       "key": "ChooseTestState2AdjacentSuccessTestState",
       "type": "bool"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 330153981060768900,
       "key": "ChooseTestState2BehSuccessTestState",
       "type": "bool"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 754979557833243222,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
       "type": "bool"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 805305087691207519,
       "key": "ChooseTestState2SchedulingTestState",
       "type": "bool"
@@ -31,6 +35,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1487451634780526767,
       "key": "ChooseTestState2PlanSuccessTestState",
       "type": "bool"
@@ -38,6 +43,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 2172263233610170275,
       "key": "ChooseTestState2SamePlanInParallelTestState",
       "type": "bool"
@@ -45,6 +51,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 2253124628702855079,
       "key": "ChooseTestState2PlaceholderTestState",
       "type": "bool"
@@ -52,6 +59,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 2321498751406550734,
       "key": "ChooseTestState2BlackboardTestState",
       "type": "bool"
@@ -59,6 +67,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3151624094246832948,
       "key": "ChooseTestState2StandardLibraryCompareConditionsState",
       "type": "bool"
@@ -66,6 +75,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3421733107371844672,
       "key": "ChooseTestState2IsChildSuccessTestState",
       "type": "bool"
@@ -73,6 +83,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 4056440268292823384,
       "key": "ChooseTestState2SameInParallelTestState",
       "type": "bool"

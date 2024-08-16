@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 4452024279743045210,
       "key": "beh_key",
       "type": "std::string"

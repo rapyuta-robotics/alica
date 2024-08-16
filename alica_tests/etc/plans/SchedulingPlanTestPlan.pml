@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3771375519284262837,
       "key": "EntryState2CheckState",
       "type": "bool"

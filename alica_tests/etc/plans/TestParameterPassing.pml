@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 785752561217999359,
       "key": "planInputFromMaster",
       "type": "int64"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1610853554686361041,
       "key": "targetChildStatus",
       "type": "std::any"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 1779079550934584473,
       "key": "planSecondOutputKey",
       "type": "int64"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 1907383426694952412,
       "key": "planKey",
       "type": "int64"
@@ -31,6 +35,7 @@
     {
       "access": "protected",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 3008593874445613740,
       "key": "planOutputKey",
       "type": "int64"
@@ -38,6 +43,7 @@
     {
       "access": "protected",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 4362502621284224779,
       "key": "planInputKey",
       "type": "int64"

@@ -46,6 +46,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2632001281501051324,
           "key": "left",
           "type": "bool"
@@ -53,6 +54,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 4023745187844894171,
           "key": "right",
           "type": "bool"
@@ -85,6 +87,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 384076574199377370,
           "key": "right",
           "type": "uint64"
@@ -92,6 +95,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 1982942297730573553,
           "key": "left",
           "type": "uint64"
@@ -108,6 +112,7 @@
         {
           "access": "input",
           "comment": "If set to true the transition will evaluate to true",
+          "defaultValue": null,
           "id": 2436156389323048245,
           "key": "trigger",
           "type": "std::any"
@@ -132,6 +137,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2966214154645332430,
           "key": "childStatus",
           "type": "std::any"
@@ -148,6 +154,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 3439523896613891265,
           "key": "expected",
           "type": "int64"
@@ -164,6 +171,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2553683918549651059,
           "key": "right",
           "type": "int64"
@@ -171,6 +179,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 3834485219782018596,
           "key": "left",
           "type": "int64"
@@ -219,6 +228,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 3152208062592581092,
           "key": "left",
           "type": "std::string"
@@ -226,6 +236,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 3312826821967663639,
           "key": "right",
           "type": "std::string"
@@ -258,6 +269,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2892375842724022590,
           "key": "right",
           "type": "double"
@@ -265,6 +277,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 3156302528056517151,
           "key": "left",
           "type": "double"
@@ -297,6 +310,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 723141806662039321,
           "key": "right",
           "type": "double"
@@ -304,6 +318,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2191492142132193552,
           "key": "left",
           "type": "double"
@@ -336,6 +351,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 1067986686726517015,
           "key": "mappedStringValue",
           "type": "std::string"
@@ -343,6 +359,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 1072536082461203314,
           "key": "mappedIntValue",
           "type": "int64"
@@ -350,6 +367,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 1923116393503068456,
           "key": "mappedBoolValue",
           "type": "bool"
@@ -357,6 +375,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2058698019148031741,
           "key": "mappedUintValue",
           "type": "uint64"
@@ -364,6 +383,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2476010310420018929,
           "key": "mappedDoubleValue",
           "type": "double"
@@ -380,6 +400,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 4032224399589857774,
           "key": "numberOfCalls",
           "type": "int64"
@@ -412,6 +433,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 381679899215291123,
           "key": "right",
           "type": "int64"
@@ -419,6 +441,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2135783783816304417,
           "key": "left",
           "type": "int64"
@@ -443,6 +466,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2902028793069019089,
           "key": "numberOfCalls",
           "type": "int64"
@@ -459,6 +483,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 3389293809385623999,
           "key": "expected",
           "type": "int64"
@@ -483,6 +508,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 1590410157820316490,
           "key": "left",
           "type": "uint64"
@@ -490,6 +516,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 4482746889389936092,
           "key": "right",
           "type": "uint64"
@@ -506,6 +533,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2610737155421779161,
           "key": "childName",
           "type": "std::string"
@@ -530,6 +558,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 924760096646037639,
           "key": "result",
           "type": "bool"
@@ -554,6 +583,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 2423941618748335792,
           "key": "expected",
           "type": "int64"
@@ -570,6 +600,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 4313717753229417761,
           "key": "idx",
           "type": "int64"
@@ -602,6 +633,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 297103765735860664,
           "key": "right",
           "type": "std::string"
@@ -609,6 +641,7 @@
         {
           "access": "input",
           "comment": "",
+          "defaultValue": null,
           "id": 423497022241155678,
           "key": "left",
           "type": "std::string"

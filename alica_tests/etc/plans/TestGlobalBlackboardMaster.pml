@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": "123",
       "id": 1202182562814773905,
       "key": "masterKey",
       "type": "int64"

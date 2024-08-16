@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1051145281711502661,
       "key": "SuccessOnCondState2WrapperASuccessState",
       "type": "bool"

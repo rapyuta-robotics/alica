@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 762584330532259947,
       "key": "planResultTwo",
       "type": "int64"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 772996229802355990,
       "key": "behResultOne",
       "type": "int64"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 845172727750198208,
       "key": "behResultTwo",
       "type": "int64"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 4501937621687609404,
       "key": "planResultOne",
       "type": "int64"
@@ -31,6 +35,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 4576317543403705127,
       "key": "EntryState2FirstCheckState",
       "type": "bool"

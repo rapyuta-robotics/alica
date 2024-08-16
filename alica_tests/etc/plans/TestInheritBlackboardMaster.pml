@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 1944554894288661764,
       "key": "masterKey",
       "type": "int64"

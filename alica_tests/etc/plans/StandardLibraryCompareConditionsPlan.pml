@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 768854120689557866,
       "key": "CompareCondition2CompareLessThanString",
       "type": "bool"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 773855036706857873,
       "key": "valueBool",
       "type": "bool"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1323131406628204752,
       "key": "valueUint64",
       "type": "uint64"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1455619520226910856,
       "key": "valueInt64",
       "type": "int64"
@@ -31,6 +35,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1594166873455497029,
       "key": "valueDouble",
       "type": "double"
@@ -38,6 +43,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3758731991465578044,
       "key": "CompareCondition2CompareEqualString",
       "type": "bool"
@@ -45,6 +51,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 4339086657243043033,
       "key": "valueString",
       "type": "std::string"

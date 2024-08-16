@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1592696283737954035,
       "key": "EntryState2PlanAState",
       "type": "bool"

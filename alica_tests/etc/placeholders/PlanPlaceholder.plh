@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 1515319670549888806,
       "key": "plan_key",
       "type": "int64"

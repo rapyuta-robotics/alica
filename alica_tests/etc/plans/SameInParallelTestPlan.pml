@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1911668482379994475,
       "key": "ChooseTestState2SamePlanInParallelTestState",
       "type": "bool"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 2582201225876137224,
       "key": "ChooseTestState2SamePlanBehInParallelTestState",
       "type": "bool"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3573177713798947170,
       "key": "ChooseTestState2SameBehInParallelTestState",
       "type": "bool"

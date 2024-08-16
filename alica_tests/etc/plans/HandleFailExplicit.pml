@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 4227261568323854459,
       "key": "aToBSwitch",
       "type": "int64"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 4460455267274597988,
       "key": "cToDSwitch",
       "type": "int64"

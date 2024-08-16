@@ -3,6 +3,7 @@
     {
       "access": "output",
       "comment": "",
+      "defaultValue": null,
       "id": 466746386440200495,
       "key": "result",
       "type": "int64"
@@ -10,6 +11,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 472712871981904208,
       "key": "valueBase",
       "type": "int64"
@@ -17,6 +19,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 1801626755158684009,
       "key": "valueAddition",
       "type": "int64"

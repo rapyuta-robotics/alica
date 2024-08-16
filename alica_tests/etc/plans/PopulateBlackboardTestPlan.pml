@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 14128325898465596,
       "key": "not_in_data_key",
       "type": "std::string"
@@ -10,6 +11,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 37366997480187649,
       "key": "data",
       "type": "std::string"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 1830052697140273434,
       "key": "double_key",
       "type": "double"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3065125271564665902,
       "key": "bool_key",
       "type": "bool"
@@ -31,6 +35,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3141833006463785136,
       "key": "OtherChecksState2PopulatedState",
       "type": "bool"
@@ -38,6 +43,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3179113368759389835,
       "key": "int64_key",
       "type": "int64"
@@ -45,6 +51,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3542073533896409826,
       "key": "string_key",
       "type": "std::string"
@@ -52,6 +59,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 4501786985394765844,
       "key": "uint64_key",
       "type": "uint64"

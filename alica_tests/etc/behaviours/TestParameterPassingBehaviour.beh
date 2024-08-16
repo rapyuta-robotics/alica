@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 831672371947300202,
       "key": "behaviorInputKey",
       "type": "int64"
@@ -10,6 +11,7 @@
     {
       "access": "output",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 4355442070811434152,
       "key": "behaviorOutputKey",
       "type": "int64"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
       "id": 4595223845781635836,
       "key": "behaviorKey",
       "type": "int64"

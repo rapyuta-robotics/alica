@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 438575867201420768,
       "key": "beh_key",
       "type": "int64"

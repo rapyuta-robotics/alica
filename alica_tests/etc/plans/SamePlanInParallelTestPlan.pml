@@ -3,6 +3,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 462984650222620929,
       "key": "resultOne",
       "type": "int64"
@@ -10,6 +11,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 2682650488249660408,
       "key": "resultTwo",
       "type": "int64"
@@ -17,6 +19,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3145297303645115724,
       "key": "EntryState2FirstCheckState",
       "type": "bool"
@@ -24,6 +27,7 @@
     {
       "access": "protected",
       "comment": "",
+      "defaultValue": null,
       "id": 3615653659634051508,
       "key": "resultThree",
       "type": "int64"

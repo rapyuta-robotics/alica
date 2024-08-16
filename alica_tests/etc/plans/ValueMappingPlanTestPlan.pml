@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 54989083355939699,
       "key": "mappedBoolValue",
       "type": "bool"
@@ -10,6 +11,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 1234313196608957375,
       "key": "mappedDoubleValue",
       "type": "double"
@@ -17,6 +19,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 1535353035896902577,
       "key": "mappedIntValue",
       "type": "int64"
@@ -24,6 +27,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 2933912270549461002,
       "key": "mappedUintValue",
       "type": "uint64"
@@ -31,6 +35,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 4434332895838233306,
       "key": "mappedStringValue",
       "type": "std::string"

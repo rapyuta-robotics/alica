@@ -3,6 +3,7 @@
     {
       "access": "input",
       "comment": "",
+      "defaultValue": null,
       "id": 3732747204235607490,
       "key": "plan_key",
       "type": "std::string"
