@@ -1,3 +1,4 @@
+#include "engine/AlicaClock.h"
 #include "ros/time.h"
 #include <clock/AlicaROSClock.h>
 
@@ -18,7 +19,7 @@ alica::AlicaTime AlicaROSClock::now() const
 
 void AlicaROSClock::sleep(const alica::AlicaTime& time) const
 {
-    ros::Duration(time.inSeconds()).sleep();
+    ros::Duration((double) time.inNanoseconds() / alica::AlicaTime::seconds(1).inNanoseconds()).sleep();
 }
 
 } // namespace alicaRosProxy
