@@ -1,6 +1,6 @@
 # Variables
 
-Variables belong to plans, plantypes, or behaviours that provide a context to the variables. There are two kind of variables available in ALICA: Agent variables that are bound to a quantified group of agents, e. g., there is a variable X for each agent A in state S, and free variables that are not bound by any quantification. The only way to assign values to the variables is through a [problem solver](./solvers.md).
+Variables belong to plans, plantypes, or behaviours that provide a context to the variables. There are two kind of variables available in ALICA: Agent variables that are bound to a quantified group of agents, e. g., there is a variable X for each agent A in state S, and free variables that are not bound by any quantification. The only way to assign values to the variables is through a [problem solver](./constraints.md#solvers).
 
 ## Quantified and Free Variables
 
