@@ -7,6 +7,7 @@
 #include "engine/model/PlaceholderMapping.h"
 #include "engine/model/Plan.h"
 #include "engine/modelmanagement/Strings.h"
+#include <engine/blackboard/BlackboardBlueprint.h>
 
 namespace alica
 {
@@ -43,12 +44,14 @@ void PlaceholderMappingFactory::attachReferences()
 
         // for behaviors / plans which replace placeholders, the blackboard blueprints have to be equal
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(abstractPlan)) {
-            if (*placeholder->getBlackboardBlueprint() != *beh->getBlackboardBlueprint()) {
-                AlicaEngine::abort(LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "'");
+            if (!BlackboardBlueprint::compare(*placeholder->getBlackboardBlueprint(), *beh->getBlackboardBlueprint(), true)) {
+                AlicaEngine::abort(
+                        LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "', blackboard blueprints do not match");
             }
         } else if (const Plan* plan = dynamic_cast<const Plan*>(abstractPlan)) {
-            if (*placeholder->getBlackboardBlueprint() != *plan->getBlackboardBlueprint()) {
-                AlicaEngine::abort(LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "'");
+            if (!BlackboardBlueprint::compare(*placeholder->getBlackboardBlueprint(), *plan->getBlackboardBlueprint(), true)) {
+                AlicaEngine::abort(
+                        LOGNAME, "Invalid implementation found for the placeholder '", placeholder->getName(), "', blackboard blueprints do not match");
             }
         }
         mapping->_mapping.emplace(placeholderIt->second, abstractPlan);

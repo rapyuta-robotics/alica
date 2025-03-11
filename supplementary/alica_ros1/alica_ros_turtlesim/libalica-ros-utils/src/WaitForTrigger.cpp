@@ -1,4 +1,5 @@
 #include "WaitForTrigger.h"
+#include "ros/console.h"
 
 namespace ros_utils
 {
@@ -14,8 +15,10 @@ void WaitForTrigger::initialiseParameters()
     _triggered = false;
     alica::LockedBlackboardRO bb{*getBlackboard()};
     _topic = bb.get<std::string>("topic");
+    _warning_timeout = ros::Duration{bb.get<double>("warning_timeout")};
     ROS_INFO_STREAM_NAMED(__func__, "Waiting for trigger on " << _topic);
     _triggerSub = ros::NodeHandle("~").subscribe(_topic, 1, &WaitForTrigger::onTrigger, this);
+    _start_time = ros::Time::now();
 }
 
 void WaitForTrigger::run()
@@ -26,6 +29,8 @@ void WaitForTrigger::run()
 
     if (_triggered) {
         setSuccess();
+    } else if (ros::Time::now() - _start_time > _warning_timeout) {
+        ROS_WARN_STREAM_THROTTLE_NAMED(5, __func__, "Still waiting to receive trigger on " << _topic);
     }
 }
 

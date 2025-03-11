@@ -41,23 +41,30 @@ public:
         return out;
     }
 
-    bool operator==(const BlackboardBlueprint& other) const
+    bool operator==(const BlackboardBlueprint& other) const { return compare(*this, other, false); }
+
+    bool operator!=(const BlackboardBlueprint& other) const { return !(*this == other); }
+
+    static bool compare(const BlackboardBlueprint& lhs, const BlackboardBlueprint& rhs, bool excludeProtectedKeys)
     {
-        for (auto& [key, info] : _keyInfo) {
-            auto it = other._keyInfo.find(key);
-            if (it == other._keyInfo.end() || it->second.type != info.type || it->second.access != info.access) {
+        for (auto& [key, info] : lhs._keyInfo) {
+            if (excludeProtectedKeys && info.access == "protected") {
+                continue;
+            }
+            if (auto it = rhs._keyInfo.find(key); it == rhs._keyInfo.end() || it->second.type != info.type || it->second.access != info.access) {
                 return false;
             }
         }
-        for (auto& [key, info] : other._keyInfo) {
-            if (auto it = _keyInfo.find(key); it == _keyInfo.end()) {
+        for (auto& [key, info] : rhs._keyInfo) {
+            if (excludeProtectedKeys && info.access == "protected") {
+                continue;
+            }
+            if (auto it = lhs._keyInfo.find(key); it == lhs._keyInfo.end() || it->second.type != info.type || it->second.access != info.access) {
                 return false;
             }
         }
         return true;
     }
-
-    bool operator!=(const BlackboardBlueprint& other) const { return !(*this == other); }
 
 private:
     std::unordered_map<std::string, KeyInfo> _keyInfo;
