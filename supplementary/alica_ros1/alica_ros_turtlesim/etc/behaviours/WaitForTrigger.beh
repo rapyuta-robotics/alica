@@ -7,6 +7,14 @@
       "id": 2590992428289220704,
       "key": "topic",
       "type": "std::string"
+    },
+    {
+      "access": "protected",
+      "comment": "Max time to wait for the trigger msg before printing warning msgs",
+      "defaultValue": "10.0",
+      "id": 2446855961781186783,
+      "key": "warning_timeout",
+      "type": "double"
     }
   ],
   "comment": "Given the topic name as input, waits until an empty msg is published on that topic",

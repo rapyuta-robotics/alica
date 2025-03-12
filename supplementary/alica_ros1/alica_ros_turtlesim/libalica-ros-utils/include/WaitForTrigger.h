@@ -26,6 +26,8 @@ private:
     std::string _topic;
     std::atomic<bool> _triggered;
     ros::Subscriber _triggerSub;
+    ros::Duration _warning_timeout;
+    ros::Time _start_time;
 };
 BOOST_DLL_ALIAS(ros_utils::WaitForTrigger::create, WaitForTrigger)
 
