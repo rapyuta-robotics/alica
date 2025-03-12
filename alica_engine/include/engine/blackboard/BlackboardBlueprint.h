@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/logging/Logging.h"
 #include <iostream>
 #include <optional>
 #include <string>
@@ -52,6 +53,7 @@ public:
                 continue;
             }
             if (auto it = rhs._keyInfo.find(key); it == rhs._keyInfo.end() || it->second.type != info.type || it->second.access != info.access) {
+                Logging::logError("BlackboardBlueprint") << "Key: " << key << " , access: " << info.access << " , type: " << info.type << " mismatch";
                 return false;
             }
         }
@@ -60,6 +62,7 @@ public:
                 continue;
             }
             if (auto it = lhs._keyInfo.find(key); it == lhs._keyInfo.end() || it->second.type != info.type || it->second.access != info.access) {
+                Logging::logError("BlackboardBlueprint") << "Key: " << key << " , access: " << info.access << " , type: " << info.type << " mismatch";
                 return false;
             }
         }
