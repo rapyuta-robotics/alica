@@ -3,7 +3,6 @@ DIR=$(dirname $(realpath $0))
 
 action=${1:-start}
 
-
 set -a
 source $HOME/.bashrc
 source $DIR/config.env
