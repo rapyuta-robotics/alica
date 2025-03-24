@@ -66,6 +66,6 @@ export SOCIAL_APP_CLIENT_ID=<client_id>
 export SOCIAL_APP_SECRET=<client_secret>
 ```
 
-4.Set the client ID in the web-plan-designer [settings](./usage-guide.md) after launch
+4.Set the client ID in the web-plan-designer [settings](#1-settings) after launch
 
 ![oauth_settings](../images/oauth_settings.png)
