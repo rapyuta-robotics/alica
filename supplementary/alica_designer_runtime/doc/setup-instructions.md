@@ -4,7 +4,7 @@
 
 In the top left corner of the plan designer, you can see a plus symbol. Clicking on that symbol shows the Settings menu.
 
-- **GitHub Application ID**: See [GitHub workflow setup](./setup.md) for more info.
+- **GitHub Application ID**: See [GitHub workflow setup](#4-github-workflow-setup) for more info.
 - **Backend URL**: The URL where the backend web server is running.
 - **Live Debugging WebSocket URL**: The URL where the backend WebSocket is running.
 
@@ -28,7 +28,7 @@ Clicking on that symbol opens the import and export menu of the plan designer.
 - Logout: Log out from your GitHub account.
 
 A more detailed description of how the import and export process works can be found in
-[How to import and export plans?](#3import-and-export.md)
+[How to import and export plans?](./import-export-plans.md)
 
 ![import_export](../images/import_export.png)
 
