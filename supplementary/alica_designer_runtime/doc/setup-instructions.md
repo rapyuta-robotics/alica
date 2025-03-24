@@ -58,14 +58,13 @@ To be able to login to github and use the Git-workflow to import and export plan
 
 ![oauth_creds](../images/oauth_creds.png)
 
-3.Set the client ID and client secret as environment variables before launching the web-plan-designer
+3.Set the client ID and client secret as environment variables before launching the web-plan-designer. 
+You can set these values in the [config.env](../config.env) file or export them directly in your terminal:
 
+```sh
+export SOCIAL_APP_CLIENT_ID=<client_id>
+export SOCIAL_APP_SECRET=<client_secret>
 ```
-    export SOCIAL_APP_CLIENT_ID=<client_id>
-    export SOCIAL_APP_SECRET=<client_secret
-```
-
-This can also be set in `config.env`
 
 4.Set the client ID in the web-plan-designer [settings](./usage-guide.md) after launch
 
