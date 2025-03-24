@@ -18,7 +18,7 @@ You can create the following elements:
 - Role & Role Repository
 - Conditions
 
-### 3.1 Plan
+#### 3.1 Plan
 
 ![create_plan](../images/create_plan.png)
 
@@ -27,7 +27,7 @@ You can create the following elements:
 - Frequency: Sets the number of executions of the plan's run method per second.
 - Master Plan: Check that box if you want to use the plan as a Master Plan for your agent.
 
-### 3.2 Behaviour
+#### 3.2 Behaviour
 
 ![create_behaviour](../images/create_behaviour.png)
 
@@ -36,7 +36,7 @@ You can create the following elements:
 - Frequency: Sets the number of executions of the behaviour's run method per second.
 - Deferring: Initial delay in ms before executing the behaviours run method the first time.
 
-### 3.3 Task & TaskRepository
+#### 3.3 Task & TaskRepository
 
 ![create_task](../images/create_task.png)
 
@@ -44,7 +44,7 @@ You can create the following elements:
 
 You can create a TaskRepository by switching the tab from "Task" to "Task Repository".
 
-### 3.4 Role & RoleSet
+#### 3.4 Role & RoleSet
 
 ![create_role](../images/create_role.png)
 
@@ -58,7 +58,7 @@ You can create a RoleSet by switching the tab from "Role" to "Role Set".
   will be used as its priority.
 - Default Role Set: Check this box to use this RoleSet as your default one.
 
-### 3.5 Plan Type, Configuration, TaskRepository & Conditions
+#### 3.5 Plan Type, Configuration, TaskRepository & Conditions
 
 For the remaining elements of plans you only need to provide a name.
 
@@ -180,7 +180,7 @@ From top to bottom these tools are:
 - Synchronization Tool
 - Transition Synchronization Tool
 
-### 6.1 Entry Points
+#### 6.1 Entry Points
 
 Select the entry point tool symbol and click somewhere in the plan space. This will open a
 window for creating your entry point.
@@ -195,7 +195,7 @@ with the selection tool and adjust its properties in the properties tab.
 To learn more about entry points have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/entrypoints.html).
 
-### 6.2 States
+#### 6.2 States
 
 You can place states by selecting either the state, failure state or success state tool.
 Then click somewhere in the plan space to place your state. Select the state with the
@@ -204,7 +204,7 @@ selection tool to open the properties tab of the state.
 To learn more about states have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/finite-state_machines.html).
 
-### 6.3 Transitions
+#### 6.3 Transitions
 
 Choose the selection tool and hover with your cursor on the source state / entry point.
 Move your cursor to the circle appearing at the top of the state / entry point. Drag and
@@ -225,7 +225,7 @@ If a transition condition has a red grid, it means that the blackboard items of 
 To learn more about transitions have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/finite-state_machines.html).
 
-### 6.4 Synchronization
+#### 6.4 Synchronization
 
 Select the synchronization tool and place a synchronization node in the plan space.
 Select the transition synchronization tool and place it in the plan space.
@@ -241,12 +241,12 @@ To learn more about synchronization, have a look at the
 
 ![synchronization](../images/synchronization.png)
 
-### 6.5 Add behaviours, configurations, plan types and plans
+#### 6.5 Add behaviours, configurations, plan types and plans
 
 To add a behaviour / configuration / plan type / plan to a state, drag and drop it from
 the selection menu to a state of your choice.
 
-### 6.6 Delete parts of your plan
+#### 6.6 Delete parts of your plan
 
 You can delete parts of your plan by selecting the node / transition with the selection
 tool and hitting the delete key on your keyboard.
