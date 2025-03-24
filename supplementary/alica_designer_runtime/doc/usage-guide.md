@@ -1,6 +1,6 @@
 # Usage
 
-## 3. alica elements menu
+## 3. Alica elements menu
 
 In the top right corner of the plan designer sits a menu for creating plans and other elements.
 Selecting an element (for example Plan) will open up a menu for creating that element. Pressing "More"
