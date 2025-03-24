@@ -6,12 +6,6 @@ The ALICA Designer is a web-based tool for creating and managing autonomous robo
 
 ## 2. Starting the Plan Designer
 
-either do
-
-docker compose up 
-
-or
-
 To run the designer, use the provided shell script:
 
 ```sh
@@ -32,6 +26,6 @@ http://localhost:3030/
 
 When started for the first time, it should appear as follows:
 
-![overview](./imagesempty_pd.png)
+![overview](./images/empty_pd.png)
 
 ---
