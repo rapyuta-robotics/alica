@@ -2,6 +2,8 @@
 
 The ALICA Designer is a web-based tool for creating and managing autonomous robot behaviors using the ALICA framework. This document provides a structured guide on using the ALICA Designer, including starting the application, configuring settings, importing and exporting plans, and working with various plan elements.
 
+for more info about what are the components involved check this [docker compose file](../docker-compose.yml)
+
 ---
 
 ## 2. Starting the Plan Designer
