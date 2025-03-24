@@ -26,6 +26,6 @@ http://localhost:3030/
 
 When started for the first time, it should appear as follows:
 
-![overview](./images/empty_pd.png)
+![overview](../images/empty_pd.png)
 
 ---
