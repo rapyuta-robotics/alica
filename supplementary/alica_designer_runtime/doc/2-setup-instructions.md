@@ -10,7 +10,6 @@ In the top left corner of the plan designer, you can see a plus symbol. Clicking
 
   ![settings](../images/settings.png)
 
-
 ## 2. Import and export menu
 
 In the top left corner of the plan designer you can see a plus symbol.
@@ -44,7 +43,6 @@ access your repositories. This is necessary for the GitHub import and export fea
 
 After logging in, the login button will be replaced with your GitHub username.
 
-
 ## 4. Github workflow setup
 
 To be able to login to github and use the Git-workflow to import and export plan, it is necessary to register the web-plan-designer application as an oauth2 client with github before launching the web-plan-designer.
@@ -53,12 +51,11 @@ To be able to login to github and use the Git-workflow to import and export plan
 
 ![oauth_register](../images/oauth_register.png)
 
-
 2.Note down the client ID and client secret after registering the application in the previous step.
 
 ![oauth_creds](../images/oauth_creds.png)
 
-3.Set the client ID and client secret as environment variables before launching the web-plan-designer. 
+3.Set the client ID and client secret as environment variables before launching the web-plan-designer.
 You can set these values in the [config.env](../config.env) file or export them directly in your terminal:
 
 ```sh

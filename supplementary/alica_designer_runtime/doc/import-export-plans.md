@@ -96,5 +96,5 @@ Click on ‘+’ -> GitHub -> Git Export. The following form will pop up:
 - **Base Branch Name**: The base branch on which the new commit is made. Specify if exporting to a new branch. If left blank, the default branch of the repository will be used unless 'Target Branch' exists.
 - **Commit Message**: Optional commit message.
 - **Plans Path**: The exact path (relative to repo root) where you want the plans to be available in the newly created branch after export. If kept empty, there are two possibilities for Plans Path:
-    - Same as the Plans Path in the previous import operation.
-    - If there was no previous import operation, the plans will be available inside the ‘plan_elems’ folder in the repo root.
+  - Same as the Plans Path in the previous import operation.
+  - If there was no previous import operation, the plans will be available inside the ‘plan_elems’ folder in the repo root.

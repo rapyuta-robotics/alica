@@ -253,4 +253,3 @@ tool and hitting the delete key on your keyboard.
 
 You can remove behaviours / configurations / plan types / plans from a state by hovering
 over the element you want to remove and clicking on the "X".
-
