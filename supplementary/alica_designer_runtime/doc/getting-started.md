@@ -6,7 +6,7 @@ The ALICA Designer is a web-based tool for creating and managing autonomous robo
 
 ## 2. Starting the Plan Designer
 
-To run the designer, use the provided shell script:
+To run the designer, use the provided shell script(make sure it is executable i.e it has enough permissions):
 
 ```sh
 ./run_designer.sh [start|reset|update]
@@ -16,7 +16,7 @@ To run the designer, use the provided shell script:
 - **reset** - Clears the database.
 - **update** - Pulls newer images.
 
-> **Note:** Launch-time configurations can be modified in `config.env`.
+> **Note:** Launch-time configurations can be modified in [config.env](../config.env).
 
 The designer runs in the browser. After executing the script, navigate to:
 
