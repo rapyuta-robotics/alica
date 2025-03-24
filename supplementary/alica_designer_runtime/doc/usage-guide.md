@@ -64,7 +64,7 @@ For the remaining elements of plans you only need to provide a name.
 
 ![create_plantype](../images/create_plantype.png)
 
-### 5.Selection menu
+## 4.Selection menu
 
 In the selection menu you can select one of your previously created elements.
 
@@ -76,7 +76,7 @@ visible elements.
 
 At the top of the selection menu you can search for an element of any type by name.
 
-### 6. Element settings menu
+## 5. Element settings menu
 
 Selecting an element in the selection menu (see 2.4) will open its settings menu right below the
 selection menu. Here you can adjust settings for each element of your plan.
@@ -84,14 +84,14 @@ selection menu. Here you can adjust settings for each element of your plan.
 For all elements you will see the id at the top of the settings menu. To the right of the id
 is a button for copying the id to your clipboard.
 
-#### 6.1 Properties
+#### 5.1 Properties
 
 In the properties tab you can adjust general properties of an element. The selection of properties
 you can change differ between the element types.
 
 ![behaviours_properties](../images/properties_tab.png)
 
-#### 6.2 Conditions
+#### 5.2 Conditions
 
 ![conditions_tab](../images/conditions_tab.png)
 
@@ -106,19 +106,19 @@ window for creating a condition at the center of the plan designer.
 To learn more about conditions, have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/conditions.html).
 
-#### 6.3 Variables
+#### 5.3 Variables
 
 In the variables tab you can add variables to your element's conditions.
 
 To learn more about variables, have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/variables.html).
 
-#### 6.4 Usage
+#### 5.4 Usage
 
 The usage tab shows you in which plans your selected element is used. Clicking on an entry in the
 list of usages will open the plan.
 
-#### 6.5 Plans
+#### 5.5 Plans
 
 You can apply plans to a PlanType in the "Plans" tab. Click on "Apply Plan" and select a plan from
 the list. You can click on the switch in the column "Active" to deactivate an active plan
@@ -126,7 +126,7 @@ or activate a deactivated one in the PlanType without deleting it.
 
 ![plans_tab](../images/plans_tab.png)
 
-#### 6.6 Variable Bindings
+#### 5.6 Variable Bindings
 
 You can create variable bindings for PlanTypes by clicking on "Add Variable Binding".
 
@@ -137,7 +137,7 @@ To learn more about variable bindings, have a look at the
 
 ![create_variable_binding](../images/create_variable_binding.png)
 
-#### 6.7 Parameters
+#### 5.7 Parameters
 
 You can set parameters for configurations. Click on "Apply Configuration Parameter" to create
 a parameter with name and value.
@@ -145,23 +145,23 @@ a parameter with name and value.
 To learn more about configurations and parameters, have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/configurations.html).
 
-#### 6.8 Roles
+#### 5.8 Roles
 
 In the roles tab of a RoleSet you can add new roles to the roleset and remove existing ones.
 Clicking on the edit button of a role will open its properties tab.
 
-#### 6.9 Task Priorities
+#### 5.9 Task Priorities
 
 You can set task priorities for a role by clicking on "Apply Task Priority", selecting a task
 and setting a value for priority.
 
-#### 6.10 Blackboard
+#### 5.10 Blackboard
 
 In the blackboard tab you can setup the blackboard of an element. By clicking on "Setup Blackboard", you can
 add items to the blackboard and set their keys.
 ![setup_blackboard](../images/setup_blackboard.png)
 
-### 7 Create Plan Space
+## 6 Create Plan Space
 
 The plan designer has an empty space in which you can create your plans. Selecting a plan in the
 selection menu will show the structure of the plan in the plan space.
@@ -180,7 +180,7 @@ From top to bottom these tools are:
 - Synchronization Tool
 - Transition Synchronization Tool
 
-### 7.1 Entry Points
+### 6.1 Entry Points
 
 Select the entry point tool symbol and click somewhere in the plan space. This will open a
 window for creating your entry point.
@@ -195,7 +195,7 @@ with the selection tool and adjust its properties in the properties tab.
 To learn more about entry points have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/entrypoints.html).
 
-### 7.2 States
+### 6.2 States
 
 You can place states by selecting either the state, failure state or success state tool.
 Then click somewhere in the plan space to place your state. Select the state with the
@@ -204,7 +204,7 @@ selection tool to open the properties tab of the state.
 To learn more about states have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/finite-state_machines.html).
 
-### 7.3 Transitions
+### 6.3 Transitions
 
 Choose the selection tool and hover with your cursor on the source state / entry point.
 Move your cursor to the circle appearing at the top of the state / entry point. Drag and
@@ -225,7 +225,7 @@ If a transition condition has a red grid, it means that the blackboard items of 
 To learn more about transitions have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/finite-state_machines.html).
 
-### 7.4 Synchronization
+### 6.4 Synchronization
 
 Select the synchronization tool and place a synchronization node in the plan space.
 Select the transition synchronization tool and place it in the plan space.
@@ -241,12 +241,12 @@ To learn more about synchronization, have a look at the
 
 ![synchronization](../images/synchronization.png)
 
-### 7.5 Add behaviours, configurations, plan types and plans
+### 6.5 Add behaviours, configurations, plan types and plans
 
 To add a behaviour / configuration / plan type / plan to a state, drag and drop it from
 the selection menu to a state of your choice.
 
-### 7.6 Delete parts of your plan
+### 6.6 Delete parts of your plan
 
 You can delete parts of your plan by selecting the node / transition with the selection
 tool and hitting the delete key on your keyboard.
