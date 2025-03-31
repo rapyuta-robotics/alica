@@ -33,6 +33,8 @@ include_directories(
 add_library(alica_ros_proxy
 	src/clock/AlicaROSClock.cpp
 	src/communication/AlicaRosCommunication.cpp
+	src/communication/AlicaRosCommunicationCommon.cpp
+	src/communication/AlicaRosEdgeBroadcastCommunication.cpp
   src/logger/AlicaRosLogger.cpp
 )
 
