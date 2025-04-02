@@ -32,8 +32,6 @@ private:
     void handleSyncTalk(const alica_msgs::SyncTalkList& st);
     void handleAgentQuery(const alica_msgs::AgentQueryList& pq);
 
-    ros::NodeHandle _nh;
-
     ros::Subscriber _syncReadySubscriber;
     ros::Subscriber _planTreeInfoSubscriber;
     ros::Subscriber _solverResultSubscriber;

@@ -51,6 +51,8 @@ protected:
     AlicaRosCommunicationCommon(const AlicaCommunicationHandlers& callbacks, ros::CallbackQueue& cb_queue = *ros::getGlobalCallbackQueue());
     virtual ~AlicaRosCommunicationCommon();
 
+    ros::NodeHandle _nh;
+
 private:
     ros::CallbackQueue& _callbackQueue;
 
@@ -64,7 +66,6 @@ private:
     ros::Publisher _presenceQueryPublisher;
     ros::Publisher _presenceAnnouncementPublisher;
 
-    ros::NodeHandle _nh;
     bool _isRunning;
 };
 

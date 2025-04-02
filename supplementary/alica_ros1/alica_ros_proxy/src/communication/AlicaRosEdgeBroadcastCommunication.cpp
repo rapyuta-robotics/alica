@@ -25,7 +25,6 @@ const std::string presenceQueryTopic = "/edge_broadcaster/AgentQueries";
 
 AlicaRosEdgeBroadcastCommunication::AlicaRosEdgeBroadcastCommunication(const AlicaCommunicationHandlers& callbacks, ros::CallbackQueue& cb_queue)
         : AlicaRosCommunicationCommon(callbacks, cb_queue)
-        , _nh()
 {
     _planTreeInfoSubscriber =
             _nh.subscribe(planTreeInfoTopic, 5, &AlicaRosEdgeBroadcastCommunication::handlePlanTreeInfoRos, (AlicaRosEdgeBroadcastCommunication*) this);

@@ -17,8 +17,6 @@ public:
     virtual ~AlicaRosCommunication();
 
 private:
-    ros::NodeHandle _nh;
-
     ros::Subscriber _syncReadySubscriber;
     ros::Subscriber _planTreeInfoSubscriber;
     ros::Subscriber _solverResultSubscriber;
