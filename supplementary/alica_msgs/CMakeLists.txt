@@ -14,7 +14,7 @@ if (ament_cmake_FOUND)
     msg/RoleSwitch.msg
     msg/SolverVar.msg
     msg/SyncReady.msg
-    msg/SycReadyList.msg
+    msg/SyncReadyList.msg
     msg/AlicaEngineInfo.msg
     msg/PlanTreeInfo.msg
     msg/PlanTreeInfoList.msg
