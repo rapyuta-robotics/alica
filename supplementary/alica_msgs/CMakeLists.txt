@@ -9,18 +9,25 @@ if (ament_cmake_FOUND)
 
   rosidl_generate_interfaces(${PROJECT_NAME}
     msg/AllocationAuthorityInfo.msg
+    msg/AllocationAuthorityInfoList.msg
     msg/EntryPointRobots.msg
     msg/RoleSwitch.msg
     msg/SolverVar.msg
     msg/SyncReady.msg
+    msg/SyncReadyList.msg
     msg/AlicaEngineInfo.msg
     msg/PlanTreeInfo.msg
+    msg/PlanTreeInfoList.msg
     msg/SolverResult.msg
+    msg/SolverResultList.msg
     msg/SyncData.msg
     msg/SyncTalk.msg
+    msg/SyncTalkList.msg
     msg/StringTuple.msg
     msg/AgentQuery.msg
+    msg/AgentQueryList.msg
     msg/AgentAnnouncement.msg
+    msg/AgentAnnouncementList.msg
   )
 
   ament_export_dependencies(rosidl_default_runtime)
@@ -32,18 +39,25 @@ else (ament_cmake_FOUND)
   add_message_files(
     DIRECTORY msg FILES
     AllocationAuthorityInfo.msg
+    AllocationAuthorityInfoList.msg
     EntryPointRobots.msg
     RoleSwitch.msg
     SolverVar.msg
     SyncReady.msg
+    SyncReadyList.msg
     AlicaEngineInfo.msg
     PlanTreeInfo.msg
+    PlanTreeInfoList.msg
     SolverResult.msg
+    SolverResultList.msg
     SyncData.msg
     SyncTalk.msg
+    SyncTalkList.msg
     StringTuple.msg
     AgentQuery.msg
+    AgentQueryList.msg
     AgentAnnouncement.msg
+    AgentAnnouncementList.msg
   )
 
   generate_messages(

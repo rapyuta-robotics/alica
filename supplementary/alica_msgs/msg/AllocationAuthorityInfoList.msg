@@ -1,0 +1,1 @@
+AllocationAuthorityInfo[] allocation_authority_infos
