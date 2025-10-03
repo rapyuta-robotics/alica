@@ -106,10 +106,10 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     return true;
 }
 
-void AlicaEngine::start()
+void AlicaEngine::start(bool spawnThread)
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan);
+    _planBase.start(_masterPlan, spawnThread);
     Logging::logInfo(LOGNAME) << "Engine started!";
 }
 /**
@@ -192,6 +192,11 @@ const YAML::Node& AlicaEngine::getConfig() const
 void AlicaEngine::stepNotify()
 {
     _planBase.stepNotify();
+}
+
+void AlicaEngine::step()
+{
+    _planBase.tick(_masterPlan, getAlicaClock().now());
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

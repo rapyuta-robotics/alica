@@ -12,6 +12,7 @@
 #include <math.h>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <stdio.h>
 #include <thread>
@@ -57,7 +58,8 @@ public:
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
-    void start(const Plan* masterPlan);
+    void start(const Plan* masterPlan, bool spawnThread = true);
+    void tick(const Plan* masterPlan, AlicaTime beginTime = AlicaTime::zero());
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
 

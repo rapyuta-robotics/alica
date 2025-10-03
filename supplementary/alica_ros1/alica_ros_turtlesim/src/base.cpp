@@ -20,8 +20,9 @@ namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping)
+        const std::string& master_plan, const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping, bool spawnThread)
         : spinner(0)
+        , _spawnThread(spawnThread)
 {
     // Initialize Alica
     ac = std::make_unique<alica::AlicaContext>(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id, placeholderMapping));
@@ -42,8 +43,13 @@ void Base::start()
             std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
-    ac->init(std::move(creators), false);
+    ac->init(std::move(creators), false, _spawnThread);
     ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
+}
+
+void Base::step()
+{
+    ac->stepEngineSync();
 }
 
 Base::~Base()

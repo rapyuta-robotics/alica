@@ -115,7 +115,7 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan)
+void PlanBase::start(const Plan* masterPlan, bool spawnThread)
 {
     _ruleBook.init(_globalBlackboard);
     if (!_running) {
@@ -124,7 +124,167 @@ void PlanBase::start(const Plan* masterPlan)
             _statusMessage->senderID = _teamManager.getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
         }
+        if (!spawnThread) {
+            return;
+        }
         _mainThread = std::make_unique<std::thread>(&PlanBase::run, this, masterPlan);
+    }
+}
+
+/**
+ * Tick method to be called from outside the engine main loop
+ */
+void PlanBase::tick(const Plan* masterPlan, AlicaTime beginTime)
+{
+    if (beginTime == AlicaTime::zero()) {
+        beginTime = _clock.now();
+    }
+    // Send tick to other modules
+    //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
+    _teamObserver.tick(_rootNode);
+    _roleAssignment.tick();
+    _syncModule.tick();
+    _authorityManager.tick(_rootNode);
+    _teamManager.tick();
+
+    if (_rootNode == nullptr) {
+        _rootNode = _ruleBook.initialisationRule(masterPlan);
+    }
+    _rootNode->preTick();
+    if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
+        Logging::logInfo(LOGNAME) << "MasterPlan Failed";
+    }
+    // clear deepest node pointer before deleting plans:
+    if (_deepestNode && _deepestNode->isRetired()) {
+        _deepestNode = nullptr;
+    }
+    // remove deletable plans:
+    // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
+#ifdef ALICA_DEBUG_ENABLED
+    int retiredCount = 0;
+    int inActiveCount = 0;
+    int deleteCount = 0;
+    int totalCount = static_cast<int>(_runningPlans.size());
+#endif
+    for (int i = static_cast<int>(_runningPlans.size()) - 1; i >= 0; --i) {
+#ifdef ALICA_DEBUG_ENABLED
+        if (_runningPlans[i]->isRetired()) {
+            ++retiredCount;
+        } else if (!_runningPlans[i]->isActive()) {
+            ++inActiveCount;
+        }
+#endif
+        if (_runningPlans[i]->isDeleteable()) {
+            assert(_runningPlans[i].use_count() == 1);
+            _runningPlans.erase(_runningPlans.begin() + i);
+#ifdef ALICA_DEBUG_ENABLED
+            ++deleteCount;
+#endif
+        }
+    }
+#ifdef ALICA_DEBUG_ENABLED
+    Logging::logDebug(LOGNAME) << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
+                               << " inactive deleted: " << deleteCount;
+#endif
+    // lock for fpEvents
+    {
+        std::lock_guard<std::mutex> lock(_lomutex);
+        _fpEvents = std::queue<RunningPlan*>();
+    }
+
+    AlicaTime now = _clock.now();
+
+    if (now < _lastSendTime) {
+        Logging::logWarn(LOGNAME) << "lastSendTime is in the future of the current system time, did the system time change?";
+        _lastSendTime = now;
+    }
+
+    if ((_ruleBook.hasChangeOccurred() && _lastSendTime + _minSendInterval < now) || _lastSendTime + _maxSendInterval < now) {
+        IdGrp msg;
+        _deepestNode = _rootNode;
+        _treeDepth = 0;
+        _rootNode->toMessage(msg, _deepestNode, _treeDepth, 0);
+        _teamObserver.doBroadCast(msg);
+        _lastSendTime = now;
+        _ruleBook.resetChangeOccurred();
+    }
+
+    if (_sendStatusMessages && _lastSentStatusTime + _sendStatusInterval < _clock.now()) {
+        if (_deepestNode != nullptr) {
+            _statusMessage->robotIDsWithMe.clear();
+            _statusMessage->currentPlan = _deepestNode->getActivePlan()->getName();
+            if (_deepestNode->getActiveEntryPoint() != nullptr) {
+                _statusMessage->currentTask = _deepestNode->getActiveEntryPoint()->getTask()->getName();
+            } else {
+                _statusMessage->currentTask = "IDLE";
+            }
+            if (_deepestNode->getActiveState() != nullptr) {
+                _statusMessage->currentState = _deepestNode->getActiveState()->getName();
+                _deepestNode->getAssignment().getAgentsInState(_deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
+            } else {
+                _statusMessage->currentState = "NONE";
+            }
+            auto tmpRole = _roleAssignment.getOwnRole();
+            if (tmpRole) {
+                _statusMessage->currentRole = _roleAssignment.getOwnRole()->getName();
+            } else {
+                _statusMessage->currentRole = "No Role";
+            }
+            _communicator.sendAlicaEngineInfo(*_statusMessage);
+            _lastSentStatusTime = _clock.now();
+        }
+    }
+
+    //_ae->iterationComplete(); TODO modify when AlicaEngine::iterationComplete will be written
+
+    now = _clock.now();
+
+    AlicaTime availTime = _loopTime - (now - beginTime);
+    bool checkFp = false;
+    if (availTime > AlicaTime::milliseconds(1)) {
+        std::unique_lock<std::mutex> lock(_lomutex);
+        checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::nanoseconds(availTime.inNanoseconds()));
+    }
+
+    if (checkFp) {
+        std::queue<RunningPlan*> nextFpEvents;
+        {
+            // move fast path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking
+            // _loMutex
+            std::lock_guard<std::mutex> lock(_lomutex);
+            nextFpEvents.swap(_fpEvents);
+        }
+
+        while (_running && availTime > AlicaTime::milliseconds(1) && !nextFpEvents.empty()) {
+            RunningPlan* rp = nextFpEvents.front();
+            nextFpEvents.pop();
+
+            if (rp->isActive()) {
+                bool first = true;
+                while (rp != nullptr) {
+                    PlanChange change = _ruleBook.visit(*rp);
+                    if (!first && change == PlanChange::NoChange) {
+                        break;
+                    }
+                    rp = rp->getParent();
+                    first = false;
+                }
+            }
+            now = _clock.now();
+            availTime = _loopTime - (now - beginTime);
+        }
+
+        {
+            // if all fast path events could not be processed, prepend them back to _fpEvents
+            if (!nextFpEvents.empty()) {
+                std::lock_guard<std::mutex> lock(_lomutex);
+                _fpEvents.swap(nextFpEvents);
+                while (!nextFpEvents.empty()) {
+                    _fpEvents.push(nextFpEvents.front());
+                    nextFpEvents.pop();
+                }
+            }
+        }
     }
 }
 
@@ -161,156 +321,10 @@ void PlanBase::run(const Plan* masterPlan)
             beginTime = _clock.now();
         }
 
-        // Send tick to other modules
-        //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
-        _teamObserver.tick(_rootNode);
-        _roleAssignment.tick();
-        _syncModule.tick();
-        _authorityManager.tick(_rootNode);
-        _teamManager.tick();
-
-        if (_rootNode == nullptr) {
-            _rootNode = _ruleBook.initialisationRule(masterPlan);
-        }
-        _rootNode->preTick();
-        if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            Logging::logInfo(LOGNAME) << "MasterPlan Failed";
-        }
-        // clear deepest node pointer before deleting plans:
-        if (_deepestNode && _deepestNode->isRetired()) {
-            _deepestNode = nullptr;
-        }
-        // remove deletable plans:
-        // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
-#ifdef ALICA_DEBUG_ENABLED
-        int retiredCount = 0;
-        int inActiveCount = 0;
-        int deleteCount = 0;
-        int totalCount = static_cast<int>(_runningPlans.size());
-#endif
-        for (int i = static_cast<int>(_runningPlans.size()) - 1; i >= 0; --i) {
-#ifdef ALICA_DEBUG_ENABLED
-            if (_runningPlans[i]->isRetired()) {
-                ++retiredCount;
-            } else if (!_runningPlans[i]->isActive()) {
-                ++inActiveCount;
-            }
-#endif
-            if (_runningPlans[i]->isDeleteable()) {
-                assert(_runningPlans[i].use_count() == 1);
-                _runningPlans.erase(_runningPlans.begin() + i);
-#ifdef ALICA_DEBUG_ENABLED
-                ++deleteCount;
-#endif
-            }
-        }
-#ifdef ALICA_DEBUG_ENABLED
-        Logging::logDebug(LOGNAME) << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
-                                   << " inactive deleted: " << deleteCount;
-#endif
-        // lock for fpEvents
-        {
-            std::lock_guard<std::mutex> lock(_lomutex);
-            _fpEvents = std::queue<RunningPlan*>();
-        }
+        tick(masterPlan, beginTime);
 
         AlicaTime now = _clock.now();
-
-        if (now < _lastSendTime) {
-            Logging::logWarn(LOGNAME) << "lastSendTime is in the future of the current system time, did the system time change?";
-            _lastSendTime = now;
-        }
-
-        if ((_ruleBook.hasChangeOccurred() && _lastSendTime + _minSendInterval < now) || _lastSendTime + _maxSendInterval < now) {
-            IdGrp msg;
-            _deepestNode = _rootNode;
-            _treeDepth = 0;
-            _rootNode->toMessage(msg, _deepestNode, _treeDepth, 0);
-            _teamObserver.doBroadCast(msg);
-            _lastSendTime = now;
-            _ruleBook.resetChangeOccurred();
-        }
-
-        if (_sendStatusMessages && _lastSentStatusTime + _sendStatusInterval < _clock.now()) {
-            if (_deepestNode != nullptr) {
-                _statusMessage->robotIDsWithMe.clear();
-                _statusMessage->currentPlan = _deepestNode->getActivePlan()->getName();
-                if (_deepestNode->getActiveEntryPoint() != nullptr) {
-                    _statusMessage->currentTask = _deepestNode->getActiveEntryPoint()->getTask()->getName();
-                } else {
-                    _statusMessage->currentTask = "IDLE";
-                }
-                if (_deepestNode->getActiveState() != nullptr) {
-                    _statusMessage->currentState = _deepestNode->getActiveState()->getName();
-                    _deepestNode->getAssignment().getAgentsInState(_deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
-                } else {
-                    _statusMessage->currentState = "NONE";
-                }
-                auto tmpRole = _roleAssignment.getOwnRole();
-                if (tmpRole) {
-                    _statusMessage->currentRole = _roleAssignment.getOwnRole()->getName();
-                } else {
-                    _statusMessage->currentRole = "No Role";
-                }
-                _communicator.sendAlicaEngineInfo(*_statusMessage);
-                _lastSentStatusTime = _clock.now();
-            }
-        }
-
-        //_ae->iterationComplete(); TODO modify when AlicaEngine::iterationComplete will be written
-
-        now = _clock.now();
-
         AlicaTime availTime = _loopTime - (now - beginTime);
-        bool checkFp = false;
-        if (availTime > AlicaTime::milliseconds(1)) {
-            std::unique_lock<std::mutex> lock(_lomutex);
-            checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::nanoseconds(availTime.inNanoseconds()));
-        }
-
-        if (checkFp) {
-            std::queue<RunningPlan*> nextFpEvents;
-            {
-                // move fast path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking
-                // _loMutex
-                std::lock_guard<std::mutex> lock(_lomutex);
-                nextFpEvents.swap(_fpEvents);
-            }
-
-            while (_running && availTime > AlicaTime::milliseconds(1) && !nextFpEvents.empty()) {
-                RunningPlan* rp = nextFpEvents.front();
-                nextFpEvents.pop();
-
-                if (rp->isActive()) {
-                    bool first = true;
-                    while (rp != nullptr) {
-                        PlanChange change = _ruleBook.visit(*rp);
-                        if (!first && change == PlanChange::NoChange) {
-                            break;
-                        }
-                        rp = rp->getParent();
-                        first = false;
-                    }
-                }
-                now = _clock.now();
-                availTime = _loopTime - (now - beginTime);
-            }
-
-            {
-                // if all fast path events could not be processed, prepend them back to _fpEvents
-                if (!nextFpEvents.empty()) {
-                    std::lock_guard<std::mutex> lock(_lomutex);
-                    _fpEvents.swap(nextFpEvents);
-                    while (!nextFpEvents.empty()) {
-                        _fpEvents.push(nextFpEvents.front());
-                        nextFpEvents.pop();
-                    }
-                }
-            }
-        }
-
-        now = _clock.now();
-        availTime = _loopTime - (now - beginTime);
 
         if (_running && availTime > AlicaTime::microseconds(100) && !_stepEngine) {
             _clock.sleep(availTime);

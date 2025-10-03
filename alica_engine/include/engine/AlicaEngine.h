@@ -44,9 +44,10 @@ public:
 
     // State modifiers:
     bool init(AlicaCreators&& creatorCtx);
-    void start();
+    void start(bool spawnThread = true);
     void terminate();
     void stepNotify();
+    void step();
 
     // Parameter Access:
     // bool getStepEngine() const;

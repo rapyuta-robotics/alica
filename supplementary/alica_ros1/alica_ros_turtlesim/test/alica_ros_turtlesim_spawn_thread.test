@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <include file="$(dirname)/alica_ros_turtlesim.test">
+        <arg name="spawn_thread"        value="false" />
+    </include>
+</launch>

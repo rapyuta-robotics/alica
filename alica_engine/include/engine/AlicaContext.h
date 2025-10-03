@@ -245,7 +245,7 @@ public:
      *
      * @see AlicaCreators
      */
-    int init(AlicaCreators&& creatorCtx, bool delayStart = false);
+    int init(AlicaCreators&& creatorCtx, bool delayStart = false, bool spawnThread = true);
 
     /**
      * Terminate alica framework and related modules. This function must be called for safe termination before
@@ -397,9 +397,14 @@ public:
     AgentId getLocalAgentId() const;
 
     /**
-     * Execute one step of engine synchronously
+     * Signal to execute one step of engine.
      */
     void stepEngine();
+
+    /**
+     * Execute one step of engine.
+     */
+    void stepEngineSync();
 
     /**
      * Getter for the agents configuration.
