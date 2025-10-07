@@ -43,8 +43,8 @@ public:
     ~AlicaEngine();
 
     // State modifiers:
-    bool init(AlicaCreators&& creatorCtx);
-    void start(bool spawnThread = true);
+    bool init(AlicaCreators&& creatorCtx, const std::shared_ptr<IExecutor>& executor);
+    void start();
     void terminate();
     void stepNotify();
     void step();
@@ -135,6 +135,7 @@ private:
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
     DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
+    std::shared_ptr<IExecutor> _executor;
 
     /**
      * TODO: Make VariableSyncModule a stack variable.

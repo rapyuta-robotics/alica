@@ -73,7 +73,7 @@ add_subdirectory(libalica-ros-utils)
 if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_ros_turtlesim.test test/test_main.cpp)
-    add_rostest(test/alica_ros_turtlesim_spawn_thread.test)
+    add_rostest(test/alica_ros_turtlesim_driven.test)
     target_link_libraries(${PROJECT_NAME}-test
         Boost::system
         Boost::filesystem

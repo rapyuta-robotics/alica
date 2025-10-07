@@ -37,9 +37,11 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/BasicUtilityFunction.cpp
   src/engine/ConfigChangeListener.cpp
   src/engine/DefaultUtilityFunction.cpp
+  src/engine/Executor.cpp
   src/engine/FileSystem.cpp
   src/engine/IAlicaCommunication.cpp
   src/engine/IRoleAssignment.cpp
+  src/engine/IExecutor.cpp
   src/engine/PlanBase.cpp
   src/engine/PlanRepository.cpp
   src/engine/RuleBook.cpp

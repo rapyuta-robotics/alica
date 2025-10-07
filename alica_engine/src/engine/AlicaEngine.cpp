@@ -1,5 +1,6 @@
 #include "engine/AlicaEngine.h"
 
+#include "engine/Executor.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/StaticRoleAssignment.h"
 #include "engine/Types.h"
@@ -81,14 +82,17 @@ void AlicaEngine::reload(const YAML::Node& config)
  * Initialise the engine
  * @return bool true if everything worked false otherwise
  */
-bool AlicaEngine::init(AlicaCreators&& creatorCtx)
+bool AlicaEngine::init(AlicaCreators&& creatorCtx, const std::shared_ptr<IExecutor>& executor)
 {
     if (_initialized) {
         Logging::logWarn(LOGNAME) << "Already initialized.";
         return true; // todo false?
     }
 
+    _executor = executor ? executor : std::make_shared<AsyncExecutor>();
+
     _planBase.init(std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+    _executor->attachRunCb(std::bind(&PlanBase::run, &_planBase, _masterPlan));
 
     _roleAssignment->init();
 
@@ -106,10 +110,11 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     return true;
 }
 
-void AlicaEngine::start(bool spawnThread)
+void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan, spawnThread);
+    _planBase.start(_masterPlan);
+    _executor->start();
     Logging::logInfo(LOGNAME) << "Engine started!";
 }
 /**
@@ -192,11 +197,6 @@ const YAML::Node& AlicaEngine::getConfig() const
 void AlicaEngine::stepNotify()
 {
     _planBase.stepNotify();
-}
-
-void AlicaEngine::step()
-{
-    _planBase.tick(_masterPlan, getAlicaClock().now());
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

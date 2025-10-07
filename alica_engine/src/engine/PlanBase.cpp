@@ -115,7 +115,7 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan, bool spawnThread)
+void PlanBase::start(const Plan* masterPlan)
 {
     _ruleBook.init(_globalBlackboard);
     if (!_running) {
@@ -124,21 +124,39 @@ void PlanBase::start(const Plan* masterPlan, bool spawnThread)
             _statusMessage->senderID = _teamManager.getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
         }
-        if (!spawnThread) {
-            return;
-        }
-        _mainThread = std::make_unique<std::thread>(&PlanBase::run, this, masterPlan);
     }
 }
 
 /**
- * Tick method to be called from outside the engine main loop
+ * The Engine's main loop
  */
-void PlanBase::tick(const Plan* masterPlan, AlicaTime beginTime)
+void PlanBase::run(const Plan* masterPlan)
 {
-    if (beginTime == AlicaTime::zero()) {
+    AlicaTime beginTime = _clock.now();
+
+    if (_stepEngine) {
+#ifdef ALICA_DEBUG_ENABLED
+        Logging::logDebug(LOGNAME) << "===CUR TREE===";
+        if (_rootNode == nullptr) {
+            Logging::logDebug(LOGNAME) << "NULL";
+        } else {
+            _rootNode->printRecursive();
+        }
+        Logging::logDebug(LOGNAME) << "===END CUR TREE===";
+#endif
+        {
+            std::unique_lock<std::mutex> lckStep(_stepMutex);
+            _isWaiting = true;
+            _stepModeCV.wait(lckStep, [&] { return _stepCalled.load(); });
+            _stepCalled = false;
+            _isWaiting = false;
+            if (!_running) {
+                return;
+            }
+        }
         beginTime = _clock.now();
     }
+
     // Send tick to other modules
     //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
     _teamObserver.tick(_rootNode);
@@ -286,49 +304,12 @@ void PlanBase::tick(const Plan* masterPlan, AlicaTime beginTime)
             }
         }
     }
-}
 
-/**
- * The Engine's main loop
- */
-void PlanBase::run(const Plan* masterPlan)
-{
-    Logging::logDebug(LOGNAME) << "Run-Method of PlanBase started.";
+    now = _clock.now();
+    availTime = _loopTime - (now - beginTime);
 
-    while (_running) {
-        AlicaTime beginTime = _clock.now();
-
-        if (_stepEngine) {
-#ifdef ALICA_DEBUG_ENABLED
-            Logging::logDebug(LOGNAME) << "===CUR TREE===";
-            if (_rootNode == nullptr) {
-                Logging::logDebug(LOGNAME) << "NULL";
-            } else {
-                _rootNode->printRecursive();
-            }
-            Logging::logDebug(LOGNAME) << "===END CUR TREE===";
-#endif
-            {
-                std::unique_lock<std::mutex> lckStep(_stepMutex);
-                _isWaiting = true;
-                _stepModeCV.wait(lckStep, [&] { return _stepCalled.load(); });
-                _stepCalled = false;
-                _isWaiting = false;
-                if (!_running) {
-                    return;
-                }
-            }
-            beginTime = _clock.now();
-        }
-
-        tick(masterPlan, beginTime);
-
-        AlicaTime now = _clock.now();
-        AlicaTime availTime = _loopTime - (now - beginTime);
-
-        if (_running && availTime > AlicaTime::microseconds(100) && !_stepEngine) {
-            _clock.sleep(availTime);
-        }
+    if (_running && availTime > AlicaTime::microseconds(100) && !_stepEngine) {
+        _clock.sleep(availTime);
     }
 }
 
@@ -344,11 +325,6 @@ void PlanBase::stop()
     if (_stepEngine) {
         _stepCalled = true;
         _stepModeCV.notify_one();
-    }
-
-    if (_mainThread != nullptr) {
-        _mainThread->join();
-        _mainThread.reset();
     }
 
     if (_rootNode) {

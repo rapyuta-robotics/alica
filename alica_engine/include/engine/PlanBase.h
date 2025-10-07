@@ -58,8 +58,8 @@ public:
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
-    void start(const Plan* masterPlan, bool spawnThread = true);
-    void tick(const Plan* masterPlan, AlicaTime beginTime = AlicaTime::zero());
+    void start(const Plan* masterPlan);
+    void run(const Plan* masterPlan);
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
 
@@ -76,8 +76,6 @@ public:
 
 private:
     static constexpr const char* LOGNAME = "PlanBase";
-
-    void run(const Plan* masterPlan);
 
     // Owning container of running plans (replace with uniqueptrs once possible)
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;

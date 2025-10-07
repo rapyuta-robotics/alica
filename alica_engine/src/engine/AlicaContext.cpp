@@ -76,7 +76,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
     return init(std::move(creators));
 }
 
-int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart, bool spawnThread)
+int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart, const std::shared_ptr<IExecutor>& executor)
 {
     if (_initialized) {
         Logging::logWarn(LOGNAME) << "Context already initialized.";
@@ -94,12 +94,12 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart, bool spawnTh
 
     _communicator->startCommunication();
 
-    if (_engine->init(std::move(creatorCtx))) {
+    if (_engine->init(std::move(creatorCtx), executor)) {
         LockedBlackboardRW gbb(*_globalBlackboard);
         gbb.set("agentName", _engine->getLocalAgentName());
         gbb.set("agentId", _engine->getTeamManager().getLocalAgentID());
         if (!delayStart) {
-            _engine->start(spawnThread);
+            _engine->start();
         } else {
             Logging::logInfo(LOGNAME) << "engine start delayed";
         }
@@ -148,11 +148,6 @@ void AlicaContext::stepEngine()
             stuck = true;
         }
     } while (!_engine->editPlanBase().isWaiting());
-}
-
-void AlicaContext::stepEngineSync()
-{
-    _engine->step();
 }
 
 AgentId AlicaContext::getLocalAgentId() const

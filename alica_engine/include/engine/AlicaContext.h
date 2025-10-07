@@ -11,6 +11,7 @@
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
+#include "engine/IExecutor.h"
 #include "engine/IPlanCreator.h"
 #include "engine/ITransitionConditionCreator.h"
 #include "engine/IUtilityCreator.h"
@@ -245,7 +246,7 @@ public:
      *
      * @see AlicaCreators
      */
-    int init(AlicaCreators&& creatorCtx, bool delayStart = false, bool spawnThread = true);
+    int init(AlicaCreators&& creatorCtx, bool delayStart = false, const std::shared_ptr<IExecutor>& executor = nullptr);
 
     /**
      * Terminate alica framework and related modules. This function must be called for safe termination before
@@ -397,14 +398,9 @@ public:
     AgentId getLocalAgentId() const;
 
     /**
-     * Signal to execute one step of engine.
+     * Execute one step of engine synchronously
      */
     void stepEngine();
-
-    /**
-     * Execute one step of engine.
-     */
-    void stepEngineSync();
 
     /**
      * Getter for the agents configuration.
