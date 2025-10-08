@@ -1,11 +1,11 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
+#include "engine/IExecutor.h"
 #include "engine/RuleBook.h"
 #include "engine/RunningPlan.h"
 #include "engine/RuntimeBehaviourFactory.h"
 #include "engine/RuntimePlanFactory.h"
-#include "engine/IExecutor.h"
 #include "engine/containers/AlicaEngineInfo.h"
 #include <algorithm>
 #include <atomic>
