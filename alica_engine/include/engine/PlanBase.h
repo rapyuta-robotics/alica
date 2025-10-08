@@ -5,6 +5,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/RuntimeBehaviourFactory.h"
 #include "engine/RuntimePlanFactory.h"
+#include "engine/IExecutor.h"
 #include "engine/containers/AlicaEngineInfo.h"
 #include <algorithm>
 #include <atomic>
@@ -58,7 +59,7 @@ public:
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
-    void start(const Plan* masterPlan);
+    void start(const Plan* masterPlan, const std::shared_ptr<IExecutor>& executor);
     void run(const Plan* masterPlan);
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
@@ -104,8 +105,8 @@ private:
 
     const RunningPlan* _deepestNode;
 
-    std::unique_ptr<std::thread> _mainThread;
     std::unique_ptr<AlicaEngineInfo> _statusMessage;
+    std::shared_ptr<IExecutor> _executor;
 
     AlicaTime _loopTime;
     AlicaTime _lastSendTime;

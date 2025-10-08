@@ -52,7 +52,6 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _solvers(solvers)
         , _rootNode(nullptr)
         , _deepestNode(nullptr)
-        , _mainThread(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
         , _ruleBook(configChangeListener, syncModule, teamObserver, teamManager, planRepository, this)
@@ -115,11 +114,14 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan)
+void PlanBase::start(const Plan* masterPlan, const std::shared_ptr<IExecutor>& executor)
 {
+    assert(executor);
+    _executor = executor;
     _ruleBook.init(_globalBlackboard);
     if (!_running) {
         _running = true;
+        _executor->start();
         if (_statusMessage) {
             _statusMessage->senderID = _teamManager.getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
@@ -325,6 +327,10 @@ void PlanBase::stop()
     if (_stepEngine) {
         _stepCalled = true;
         _stepModeCV.notify_one();
+    }
+
+    if (_executor) {
+        _executor->stop();
     }
 
     if (_rootNode) {

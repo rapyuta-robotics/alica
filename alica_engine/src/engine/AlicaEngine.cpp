@@ -113,8 +113,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx, const std::shared_ptr<IExecut
 void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan);
-    _executor->start();
+    _planBase.start(_masterPlan, _executor);
     Logging::logInfo(LOGNAME) << "Engine started!";
 }
 /**

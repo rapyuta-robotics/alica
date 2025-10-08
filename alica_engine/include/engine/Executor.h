@@ -2,6 +2,7 @@
 #include "engine/IExecutor.h"
 #include <memory>
 #include <thread>
+#include <atomic>
 
 namespace alica
 {
@@ -19,6 +20,7 @@ public:
 
 private:
     std::unique_ptr<std::thread> _thread;
+    std::atomic<bool> _running{false};
 };
 
 class DrivenExecutor : public IExecutor
