@@ -30,7 +30,7 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 
     ae->start();
 
-    STEP_UNTIL(ae->getPlanBase().getDeepestNode() == nullptr);
+    STEP_UNTIL(ac, ae->getPlanBase().getDeepestNode() == nullptr);
 
     const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 
