@@ -139,29 +139,6 @@ const TeamManager& RunnableObject::getTeamManager() const
     return *_teamManager;
 }
 
-void TraceRunnableObject::traceException(const std::string& exceptionOriginMethod, const std::string& details)
-{
-    std::string msg = "Exception thrown from: " + getName() + "'s " + exceptionOriginMethod + " method";
-    if (!details.empty()) {
-        msg.append(", details: " + std::move(details));
-    }
-    Logging::logFatal(LOGNAME) << msg;
-}
-
-void RunnableObject::handleException(const std::string& exceptionOriginMethod, std::exception_ptr eptr)
-{
-    std::string details;
-    try {
-        std::rethrow_exception(eptr);
-    } catch (const std::exception& e) {
-        details = e.what();
-    } catch (...) {
-    }
-    _runnableObjectTracer.traceException(exceptionOriginMethod, details);
-    _runnableObjectTracer.finishTrace();
-    std::rethrow_exception(eptr);
-}
-
 // Tracing methods
 void TraceRunnableObject::setTracing(TracingType type, std::function<tracing::SpanStartOptions()> customTraceContextGetter)
 {
