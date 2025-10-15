@@ -50,20 +50,12 @@ AgentId BasicBehaviour::getOwnId() const
 
 void BasicBehaviour::doInit()
 {
-    try {
-        initialiseParameters();
-    } catch (...) {
-        handleException("initialise", std::current_exception());
-    }
+    initialiseParameters();
 }
 
 void BasicBehaviour::doRun()
 {
-    try {
-        run();
-    } catch (...) {
-        handleException("run", std::current_exception());
-    }
+    run();
 }
 
 std::string BasicBehaviour::resultToString(BehResult result)
@@ -86,11 +78,9 @@ void BasicBehaviour::doTerminate()
         Logging::logInfo(LOGNAME) << "Behaviour: " << getName() << ", result: " << resultStr;
         getTrace()->setTag("Result", resultStr);
     }
-    try {
-        onTermination();
-    } catch (...) {
-        handleException("terminate", std::current_exception());
-    }
+
+    onTermination();
+
     _behResult.store(BehResult::UNKNOWN);
 }
 
