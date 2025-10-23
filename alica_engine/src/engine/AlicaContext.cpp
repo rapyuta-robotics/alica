@@ -100,9 +100,11 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     _communicator->startCommunication();
 
     if (_engine->init(std::move(creatorCtx))) {
-        LockedBlackboardRW gbb(*_globalBlackboard);
-        gbb.set("agentName", _engine->getLocalAgentName());
-        gbb.set("agentId", _engine->getTeamManager().getLocalAgentID());
+        {
+            LockedBlackboardRW gbb(*_globalBlackboard);
+            gbb.set("agentName", _engine->getLocalAgentName());
+            gbb.set("agentId", _engine->getTeamManager().getLocalAgentID());
+        }
         if (!delayStart) {
             _engine->start();
         } else {
