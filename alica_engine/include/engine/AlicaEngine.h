@@ -43,11 +43,10 @@ public:
     ~AlicaEngine();
 
     // State modifiers:
-    bool init(AlicaCreators&& creatorCtx, const std::shared_ptr<IExecutor>& executor);
+    bool init(AlicaCreators&& creatorCtx);
     void start();
     void terminate();
     void stepNotify();
-    void step();
 
     // Parameter Access:
     // bool getStepEngine() const;
@@ -102,6 +101,7 @@ public:
     SolverType& getSolver() const;
     template <class SolverType>
     bool existSolver() const;
+    IAlicaTimerFactory& getEngineTimerFactory() const;
 
     void reload(const YAML::Node& config);
     //[[deprecated("temporary method tobe removed in last PR")]]
@@ -135,7 +135,6 @@ private:
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
     DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
-    std::shared_ptr<IExecutor> _executor;
 
     /**
      * TODO: Make VariableSyncModule a stack variable.

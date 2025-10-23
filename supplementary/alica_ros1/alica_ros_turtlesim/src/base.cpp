@@ -12,6 +12,7 @@
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaContext.h>
+#include <engine/AlicaTimer.h>
 #include <engine/logging/Logging.h>
 #include <logger/AlicaRosLogger.h>
 #include <ros/ros.h>
@@ -26,14 +27,17 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name
 {
     // Initialize Alica
     ac = std::make_unique<alica::AlicaContext>(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id, placeholderMapping));
-    if (drivenExecutor)
-        executor = std::make_shared<alica::DrivenExecutor>();
-    else {
-        executor = std::make_shared<alica::AsyncExecutor>();
-    }
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+
+    if (_drivenExecutor) {
+        callback_queue.emplace();
+        ac->setEngineTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*callback_queue);
+    } else {
+        ac->setEngineTimerFactory<alica::AlicaSystemTimerFactory>();
+    }
+
     ac->setLogger<alicaRosLogger::AlicaRosLogger>();
 
     LockedBlackboardRW bb(ac->editGlobalBlackboard());
@@ -48,13 +52,15 @@ void Base::start()
             std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
-    ac->init(std::move(creators), false, executor);
+    ac->init(std::move(creators), false);
     ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
 }
 
-void Base::run()
+void Base::tick()
 {
-    executor->run();
+    if (_drivenExecutor && callback_queue.has_value()) {
+        callback_queue->callAvailable(ros::WallDuration(0));
+    }
 }
 
 Base::~Base()

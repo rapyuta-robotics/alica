@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
-#include "engine/IExecutor.h"
+#include "engine/IAlicaTimer.h"
 #include "engine/RuleBook.h"
 #include "engine/RunningPlan.h"
 #include "engine/RuntimeBehaviourFactory.h"
@@ -50,7 +50,7 @@ public:
             SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
             const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, std::shared_ptr<Blackboard> globalBlackboard,
             VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
-            const IAlicaTraceFactory* traceFactory);
+            const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& engineTimerFactory);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
     PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
@@ -59,7 +59,7 @@ public:
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
-    void start(const Plan* masterPlan, const std::shared_ptr<IExecutor>& executor);
+    void start(const Plan* masterPlan);
     void run(const Plan* masterPlan);
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
@@ -102,11 +102,12 @@ private:
     VariableSyncModule& _resultStore;
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& _solvers;
     RunningPlan* _rootNode;
+    const IAlicaTimerFactory& _engineTimerFactory;
 
     const RunningPlan* _deepestNode;
 
+    std::unique_ptr<IAlicaTimer> _engineTimer;
     std::unique_ptr<AlicaEngineInfo> _statusMessage;
-    std::shared_ptr<IExecutor> _executor;
 
     AlicaTime _loopTime;
     AlicaTime _lastSendTime;

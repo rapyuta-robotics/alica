@@ -1,8 +1,10 @@
 #pragma once
 
 #include <engine/AlicaContext.h>
-#include <engine/Executor.h>
+#include <engine/IAlicaTimer.h>
 
+#include <ros/callback_queue.h>
+#include <ros/callback_queue_interface.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -20,12 +22,13 @@ public:
             const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping = std::nullopt, bool drivenExecutor = false);
     ~Base();
     void start();
-    void run();
+    void tick();
 
 private:
     ros::AsyncSpinner spinner;
     std::unique_ptr<alica::AlicaContext> ac;
-    std::shared_ptr<alica::IExecutor> executor;
+    std::shared_ptr<alica::IAlicaTimerFactory> timer_factory;
+    std::optional<ros::CallbackQueue> callback_queue;
     bool _drivenExecutor = false;
 };
 

@@ -33,7 +33,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
         const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, std::shared_ptr<Blackboard> globalBlackboard,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
-        const IAlicaTraceFactory* traceFactory)
+        const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& engineTimerFactory)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
         , _communicator(communicator)
@@ -51,6 +51,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _resultStore(resultStore)
         , _solvers(solvers)
         , _rootNode(nullptr)
+        , _engineTimerFactory(engineTimerFactory)
         , _deepestNode(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
@@ -114,18 +115,16 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan, const std::shared_ptr<IExecutor>& executor)
+void PlanBase::start(const Plan* masterPlan)
 {
-    assert(executor);
-    _executor = executor;
     _ruleBook.init(_globalBlackboard);
     if (!_running) {
         _running = true;
-        _executor->start();
         if (_statusMessage) {
             _statusMessage->senderID = _teamManager.getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
         }
+        _engineTimer = _engineTimerFactory.createTimer([this, masterPlan]() { this->run(masterPlan); }, _loopTime);
     }
 }
 
@@ -329,8 +328,8 @@ void PlanBase::stop()
         _stepModeCV.notify_one();
     }
 
-    if (_executor) {
-        _executor->stop();
+    if (_engineTimer) {
+        _engineTimer.reset();
     }
 
     if (_rootNode) {

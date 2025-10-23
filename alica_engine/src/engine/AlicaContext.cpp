@@ -1,5 +1,6 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
+#include "engine/AlicaTimer.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/logging/AlicaDefaultLogger.h"
@@ -76,7 +77,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
     return init(std::move(creators));
 }
 
-int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart, const std::shared_ptr<IExecutor>& executor)
+int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
         Logging::logWarn(LOGNAME) << "Context already initialized.";
@@ -89,12 +90,16 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart, const std::s
     if (!_timerFactory) {
         AlicaEngine::abort(LOGNAME, "TimerFactory not set");
     }
+    if (!_engineTimerFactory) {
+        Logging::logWarn(LOGNAME) << "Engine TimerFactory not set, defaulting to AlicaSystemTimerFactory";
+        _engineTimerFactory = std::make_unique<alica::AlicaSystemTimerFactory>();
+    }
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
 
     _communicator->startCommunication();
 
-    if (_engine->init(std::move(creatorCtx), executor)) {
+    if (_engine->init(std::move(creatorCtx))) {
         LockedBlackboardRW gbb(*_globalBlackboard);
         gbb.set("agentName", _engine->getLocalAgentName());
         gbb.set("agentId", _engine->getTeamManager().getLocalAgentID());

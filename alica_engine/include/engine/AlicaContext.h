@@ -11,7 +11,6 @@
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
-#include "engine/IExecutor.h"
 #include "engine/IPlanCreator.h"
 #include "engine/ITransitionConditionCreator.h"
 #include "engine/IUtilityCreator.h"
@@ -246,7 +245,7 @@ public:
      *
      * @see AlicaCreators
      */
-    int init(AlicaCreators&& creatorCtx, bool delayStart = false, const std::shared_ptr<IExecutor>& executor = nullptr);
+    int init(AlicaCreators&& creatorCtx, bool delayStart = false);
 
     /**
      * Terminate alica framework and related modules. This function must be called for safe termination before
@@ -354,6 +353,18 @@ public:
     void setTimerFactory(Args&&... args);
 
     /**
+     * Set the timer factory to be used by the main engine loop.
+     * Example usage: setEngineTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+     *
+     * @note TimerFactoryType must be a derived class of IAlicaTimerFactory
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of timer factory. Might be empty.
+     */
+    template <class TimerFactoryType, class... Args>
+    void setEngineTimerFactory(Args&&... args);
+
+    /**
      * Get timer factory being used by this alica instance.
      *
      * @return A reference to timer factory object being used by context
@@ -362,6 +373,17 @@ public:
     {
         assert(_timerFactory.get());
         return *_timerFactory;
+    }
+
+    /**
+     * Get timer factory being used by the main engine loop.
+     *
+     * @return A reference to timer factory object being used by context
+     */
+    IAlicaTimerFactory& getEngineTimerFactory() const
+    {
+        assert(_engineTimerFactory.get());
+        return *_engineTimerFactory;
     }
 
     /**
@@ -475,6 +497,7 @@ private:
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
+    std::unique_ptr<IAlicaTimerFactory> _engineTimerFactory;
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 
     bool _initialized = false;
@@ -571,6 +594,18 @@ void AlicaContext::setTimerFactory(Args&&... args)
 
     static_assert(std::is_base_of<IAlicaTimerFactory, TimerFactoryType>::value, "Must be derived from IAlicaTimerFactory");
     _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
+}
+
+template <class TimerFactoryType, class... Args>
+void AlicaContext::setEngineTimerFactory(Args&&... args)
+{
+    if (_initialized) {
+        Logging::logWarn(LOGNAME) << "Context already initialized. Can not set new engine timer factory";
+        return;
+    }
+
+    static_assert(std::is_base_of<IAlicaTimerFactory, TimerFactoryType>::value, "Must be derived from IAlicaTimerFactory");
+    _engineTimerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
 }
 
 template <class TraceFactoryType, class... Args>

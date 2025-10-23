@@ -1,6 +1,5 @@
 #include "engine/AlicaEngine.h"
 
-#include "engine/Executor.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/StaticRoleAssignment.h"
 #include "engine/Types.h"
@@ -46,7 +45,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(), editTeamObserver(),
                   editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getGlobalBlackboard(), editResultStore(), _ctx.getSolvers(),
-                  getTimerFactory(), getTraceFactory())
+                  getTimerFactory(), getTraceFactory(), getEngineTimerFactory())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     _configChangeListener.subscribe(reloadFunctionPtr);
@@ -82,17 +81,14 @@ void AlicaEngine::reload(const YAML::Node& config)
  * Initialise the engine
  * @return bool true if everything worked false otherwise
  */
-bool AlicaEngine::init(AlicaCreators&& creatorCtx, const std::shared_ptr<IExecutor>& executor)
+bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     if (_initialized) {
         Logging::logWarn(LOGNAME) << "Already initialized.";
         return true; // todo false?
     }
 
-    _executor = executor ? executor : std::make_shared<AsyncExecutor>();
-
     _planBase.init(std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
-    _executor->attachRunCb(std::bind(&PlanBase::run, &_planBase, _masterPlan));
 
     _roleAssignment->init();
 
@@ -113,7 +109,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx, const std::shared_ptr<IExecut
 void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan, _executor);
+    _planBase.start(_masterPlan);
     Logging::logInfo(LOGNAME) << "Engine started!";
 }
 /**
@@ -167,6 +163,11 @@ std::string AlicaEngine::getLocalAgentName() const
 IAlicaTimerFactory& AlicaEngine::getTimerFactory() const
 {
     return _ctx.getTimerFactory();
+}
+
+IAlicaTimerFactory& AlicaEngine::getEngineTimerFactory() const
+{
+    return _ctx.getEngineTimerFactory();
 }
 
 /**

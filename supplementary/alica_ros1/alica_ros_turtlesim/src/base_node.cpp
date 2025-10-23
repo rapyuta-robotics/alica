@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 
     while (ros::ok()) {
         if (drivenExecutor) {
-            base.run();
+            base.tick();
         }
         ros::Rate(10).sleep();
     }
