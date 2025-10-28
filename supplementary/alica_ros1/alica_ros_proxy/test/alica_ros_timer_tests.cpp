@@ -101,6 +101,7 @@ TEST(SyncStopTimerRosTest, StopChecks)
     alicaRosTimer::AlicaRosTimerFactory timerFactory;
     ros::Time beforeStopTime = ros::Time::now();
     auto timer = timerFactory.createTimer([]() { ros::Duration(1).sleep(); }, alica::AlicaTime::milliseconds(10));
+    ros::Duration(0.15).sleep();
     timer.reset();
     ASSERT_TRUE(ros::Time::now() - beforeStopTime > ros::Duration(0.7));
 

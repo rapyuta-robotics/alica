@@ -38,17 +38,16 @@ public:
 
     void start()
     {
-        // Call the userCb once immediately. Required since ROS timers don't fire immediately. This means the first callback
-        // will be called from the scheduler thread which is fine since stop() anyway blocks on userCb()
-        _userCb();
-
         // Grab a weak ptr to this object (grabbing a shared_ptr will result in a cycle)
-        _timer = _nh.createTimer(_period, [weak_ptr_self = Base::weak_from_this()](auto&&...) {
-            // Ensure impl object for this timer is not destroyed
-            if (auto self = weak_ptr_self.lock()) {
-                self->timerCb();
-            }
-        });
+        _timer = _nh.createTimer(
+                ros::Duration(0),
+                [weak_ptr_self = Base::weak_from_this()](auto&&...) {
+                    // Ensure impl object for this timer is not destroyed
+                    if (auto self = weak_ptr_self.lock()) {
+                        self->timerCb();
+                    }
+                },
+                /* oneshot */ false, /* autostart */ true);
     }
 
     void stop()
@@ -69,6 +68,11 @@ public:
                 return;
             }
             _userCbInProgress = true;
+        }
+
+        if (!_timer.isValid()) {
+            // need to set the proper period after the first immediate call
+            _timer.setPeriod(_period, /* reset */ false);
         }
 
         _userCb();
