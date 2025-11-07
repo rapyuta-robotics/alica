@@ -13,7 +13,6 @@
 #include <math.h>
 #include <memory>
 #include <mutex>
-#include <optional>
 #include <queue>
 #include <stdio.h>
 #include <thread>
@@ -60,7 +59,6 @@ public:
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
     void start(const Plan* masterPlan);
-    void run(const Plan* masterPlan);
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
 
@@ -77,6 +75,7 @@ public:
 
 private:
     static constexpr const char* LOGNAME = "PlanBase";
+    void run(const Plan* masterPlan);
 
     // Owning container of running plans (replace with uniqueptrs once possible)
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;

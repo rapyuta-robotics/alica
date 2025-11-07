@@ -101,7 +101,6 @@ public:
     SolverType& getSolver() const;
     template <class SolverType>
     bool existSolver() const;
-    IAlicaTimerFactory& getEngineTimerFactory() const;
 
     void reload(const YAML::Node& config);
     //[[deprecated("temporary method tobe removed in last PR")]]

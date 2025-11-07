@@ -45,7 +45,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(), editTeamObserver(),
                   editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getGlobalBlackboard(), editResultStore(), _ctx.getSolvers(),
-                  getTimerFactory(), getTraceFactory(), getEngineTimerFactory())
+                  getTimerFactory(), getTraceFactory(), _ctx.getEngineTimerFactory())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     _configChangeListener.subscribe(reloadFunctionPtr);
@@ -163,11 +163,6 @@ std::string AlicaEngine::getLocalAgentName() const
 IAlicaTimerFactory& AlicaEngine::getTimerFactory() const
 {
     return _ctx.getTimerFactory();
-}
-
-IAlicaTimerFactory& AlicaEngine::getEngineTimerFactory() const
-{
-    return _ctx.getEngineTimerFactory();
 }
 
 /**

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <engine/AlicaContext.h>
-#include <engine/IAlicaTimer.h>
 
 #include <ros/callback_queue.h>
 #include <ros/callback_queue_interface.h>
@@ -15,6 +14,7 @@
 namespace turtlesim
 {
 class AlicaContext;
+class IAlicaTimerFactory;
 class Base
 {
 public:
