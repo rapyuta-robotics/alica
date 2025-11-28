@@ -69,7 +69,6 @@ protected:
         spinner = std::make_unique<ros::AsyncSpinner>(4);
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        ac->setEngineTimerFactory<alica::AlicaSystemTimerFactory>();
         creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
                 std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
                 std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};

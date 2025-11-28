@@ -360,6 +360,7 @@ public:
      * @note This must be called before initializing context
      *
      * @param args Arguments to be forwarded to constructor of timer factory. Might be empty.
+     *             Defaults to AlicaSystemTimerFactory if not set.
      */
     template <class TimerFactoryType, class... Args>
     void setEngineTimerFactory(Args&&... args);
