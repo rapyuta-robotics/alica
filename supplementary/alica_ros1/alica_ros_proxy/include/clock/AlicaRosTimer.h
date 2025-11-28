@@ -70,8 +70,10 @@ public:
             _userCbInProgress = true;
         }
 
-        // check whether is the first timer event
+        // check whether it is the first timer event
         // as we set the period to 0 for the first immediate call, needed to reset the proper period here
+        // note: using isValid() as it is implemented as checking whether the period is non-zero in ROS
+        //       reference: https://docs.ros.org/en/noetic/api/roscpp/html/timer_8cpp_source.html#l00050
         if (!_timer.isValid()) {
             // need to set the proper period after the first immediate call
             _timer.setPeriod(_period, /* reset */ false);
