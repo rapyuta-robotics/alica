@@ -15,6 +15,30 @@
 namespace alicaRosTimer
 {
 
+class UserCallback : public ros::CallbackInterface
+{
+public:
+    using FuncCb = std::function<void()>;
+
+    UserCallback(FuncCb&& userCb)
+            : _userCb(std::move(userCb))
+    {
+    }
+
+    virtual CallResult call() override
+    {
+        _called = true;
+        _userCb();
+        return Success;
+    }
+
+    virtual bool ready() override { return !_called; }
+
+private:
+    FuncCb _userCb;
+    bool _called = false;
+};
+
 template <class CallbackQ>
 class SyncStopTimerRosImpl : public std::enable_shared_from_this<SyncStopTimerRosImpl<CallbackQ>>
 {
@@ -40,7 +64,7 @@ public:
     {
         // Grab a weak ptr to this object (grabbing a shared_ptr will result in a cycle)
         _timer = _nh.createTimer(
-                ros::Duration(0),
+                _period,
                 [weak_ptr_self = Base::weak_from_this()](auto&&...) {
                     // Ensure impl object for this timer is not destroyed
                     if (auto self = weak_ptr_self.lock()) {
@@ -48,6 +72,14 @@ public:
                     }
                 },
                 /* oneshot */ false, /* autostart */ true);
+        // schedule the first callback immediately
+        auto cbq_ptr = _nh.getCallbackQueue();
+        assert(cbq_ptr != nullptr && "CallbackQueue is null!");
+        cbq_ptr->addCallback(boost::make_shared<UserCallback>([weak_ptr_self = Base::weak_from_this()](auto&&...) {
+            if (auto self = weak_ptr_self.lock()) {
+                self->timerCb();
+            }
+        }));
     }
 
     void stop()
@@ -68,15 +100,6 @@ public:
                 return;
             }
             _userCbInProgress = true;
-        }
-
-        // check whether it is the first timer event
-        // as we set the period to 0 for the first immediate call, needed to reset the proper period here
-        // note: using isValid() as it is implemented as checking whether the period is non-zero in ROS
-        //       reference: https://docs.ros.org/en/noetic/api/roscpp/html/timer_8cpp_source.html#l00050
-        if (!_timer.isValid()) {
-            // need to set the proper period after the first immediate call
-            _timer.setPeriod(_period, /* reset */ false);
         }
 
         _userCb();
