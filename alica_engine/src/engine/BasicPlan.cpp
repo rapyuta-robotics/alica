@@ -27,29 +27,17 @@ BasicPlan::BasicPlan(PlanContext& context)
 
 void BasicPlan::doInit()
 {
-    try {
-        onInit();
-    } catch (const std::exception& e) {
-        handleException("initialise", std::current_exception());
-    }
+    onInit();
 }
 
 void BasicPlan::doRun()
 {
-    try {
-        run();
-    } catch (const std::exception& e) {
-        handleException("run", std::current_exception());
-    }
+    run();
 }
 
 void BasicPlan::doTerminate()
 {
-    try {
-        onTerminate();
-    } catch (const std::exception& e) {
-        handleException("terminate", std::current_exception());
-    }
+    onTerminate();
 }
 
 void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)

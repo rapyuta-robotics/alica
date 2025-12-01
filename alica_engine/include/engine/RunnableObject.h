@@ -64,7 +64,6 @@ public:
     void traceInitCall();
     void traceRunCall();
     void traceTerminateCall();
-    void traceException(const std::string& exceptionOriginMethod, const std::string& details);
     void finishTrace() { _trace.reset(); }
     const std::string& getName() const { return _name; }
 
@@ -126,8 +125,6 @@ protected:
     void setPlanBase(PlanBase* planBase);
     void setAlicaCommunication(const IAlicaCommunication* communication);
     void setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory);
-
-    void handleException(const std::string& exceptionOriginMethod, std::exception_ptr eptr);
 
     TraceRunnableObject _runnableObjectTracer;
     const TeamManager* _teamManager{nullptr};
