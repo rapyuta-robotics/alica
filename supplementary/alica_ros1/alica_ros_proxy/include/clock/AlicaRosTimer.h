@@ -17,9 +17,9 @@ namespace alicaRosTimer
 
 class UserCallback : public ros::CallbackInterface
 {
-public:
     using FuncCb = std::function<void()>;
 
+public:
     UserCallback(FuncCb&& userCb)
             : _userCb(std::move(userCb))
     {
