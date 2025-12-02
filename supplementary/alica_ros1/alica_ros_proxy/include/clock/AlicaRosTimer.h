@@ -15,30 +15,6 @@
 namespace alicaRosTimer
 {
 
-class UserCallback : public ros::CallbackInterface
-{
-    using FuncCb = std::function<void()>;
-
-public:
-    UserCallback(FuncCb&& userCb)
-            : _userCb(std::move(userCb))
-    {
-    }
-
-    virtual CallResult call() override
-    {
-        _called = true;
-        _userCb();
-        return Success;
-    }
-
-    virtual bool ready() override { return !_called; }
-
-private:
-    FuncCb _userCb;
-    bool _called = false;
-};
-
 template <class CallbackQ>
 class SyncStopTimerRosImpl : public std::enable_shared_from_this<SyncStopTimerRosImpl<CallbackQ>>
 {
@@ -62,24 +38,17 @@ public:
 
     void start()
     {
+        // Call the userCb once immediately. Required since ROS timers don't fire immediately. This means the first callback
+        // will be called from the scheduler thread which is fine since stop() anyway blocks on userCb()
+        _userCb();
+
         // Grab a weak ptr to this object (grabbing a shared_ptr will result in a cycle)
-        _timer = _nh.createTimer(
-                _period,
-                [weak_ptr_self = Base::weak_from_this()](auto&&...) {
-                    // Ensure impl object for this timer is not destroyed
-                    if (auto self = weak_ptr_self.lock()) {
-                        self->timerCb();
-                    }
-                },
-                /* oneshot */ false, /* autostart */ true);
-        // schedule the first callback immediately
-        auto cbq_ptr = _nh.getCallbackQueue();
-        assert(cbq_ptr != nullptr && "CallbackQueue is null!");
-        cbq_ptr->addCallback(boost::make_shared<UserCallback>([weak_ptr_self = Base::weak_from_this()](auto&&...) {
+        _timer = _nh.createTimer(_period, [weak_ptr_self = Base::weak_from_this()](auto&&...) {
+            // Ensure impl object for this timer is not destroyed
             if (auto self = weak_ptr_self.lock()) {
                 self->timerCb();
             }
-        }));
+        });
     }
 
     void stop()
