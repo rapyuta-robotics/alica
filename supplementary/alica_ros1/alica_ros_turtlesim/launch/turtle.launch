@@ -12,6 +12,8 @@
     <arg name="turtles"        default="1"/>
 
     <arg name="agent_name"     value="$(eval 'turtle'+str(turtles))"/>
+    <arg name="driven_executor" default="false"/>
+
     <node name="$(arg agent_name)" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
         <param name="name"         value="$(arg agent_name)" />
         <param name="agent_id"     value="$(arg turtles)" />
@@ -20,6 +22,7 @@
         <param name="roleset"      value="$(arg roleset)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
+        <param name="driven_executor"   value="$(arg driven_executor)" />
     </node>
 
     <include file="$(dirname)/turtle.launch"   if="$(eval turtles > 1)">
@@ -28,6 +31,7 @@
         <arg name="master_plan"     value="$(arg master_plan)" />
         <arg name="placeholder_mapping" value = "$(arg placeholder_mapping)" />
         <arg name="roleset"         value="$(arg roleset)" />
+        <arg name="driven_executor"   value="$(arg driven_executor)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </include>

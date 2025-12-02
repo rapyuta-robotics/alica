@@ -6,6 +6,7 @@
     <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="placeholder_mapping"        default="$(find alica_ros_turtlesim)/config/placeholder_mapping.json" />
     <arg name="roleset"        default="Roleset" />
+    <arg name="driven_executor"        default="false" />
     <arg name="turtlesim_lib_path"     default="$(find alica_turtlesim)/etc/" />
     <arg name="turtlesim_ros_path"     default="$(find alica_ros_turtlesim)/etc/" />
 
@@ -17,6 +18,7 @@
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="placeholder_mapping" value = "$(arg placeholder_mapping)" />
         <param name="roleset"      value="$(arg roleset)" />
+        <param name="driven_executor"   value="$(arg driven_executor)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
@@ -27,6 +29,7 @@
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="placeholder_mapping" value = "$(arg placeholder_mapping)" />
         <param name="roleset"      value="$(arg roleset)" />
+        <param name="driven_executor"   value="$(arg driven_executor)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
@@ -37,6 +40,7 @@
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="placeholder_mapping" value = "$(arg placeholder_mapping)" />
         <param name="roleset"      value="$(arg roleset)" />
+        <param name="driven_executor"   value="$(arg driven_executor)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>
@@ -47,6 +51,7 @@
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="placeholder_mapping" value = "$(arg placeholder_mapping)" />
         <param name="roleset"      value="$(arg roleset)" />
+        <param name="driven_executor"   value="$(arg driven_executor)" />
         <param name="turtlesim_lib_path"   value="$(arg turtlesim_lib_path)" />
         <param name="turtlesim_ros_path"   value="$(arg turtlesim_ros_path)" />
     </node>

@@ -13,6 +13,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
+#include <engine/AlicaTimer.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -140,6 +141,7 @@ protected:
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>(*cbQueues.back());
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            ac->setEngineTimerFactory<alica::AlicaSystemTimerFactory>();
             EXPECT_EQ(0, ac->init(std::move(creators), true));
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();

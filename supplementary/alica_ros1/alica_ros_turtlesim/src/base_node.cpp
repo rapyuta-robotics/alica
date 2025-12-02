@@ -27,6 +27,7 @@ int main(int argc, char** argv)
     ROS_INFO("Started Turtle Base Node.");
     std::string name, roleset, masterPlan, turtlesimRosPath, turtlesimLibPath, placeholderMappingFilePath;
     int agentId;
+    bool drivenExecutor = false;
 
     ros::NodeHandle nh, privNh("~");
     privNh.getParam("name", name);
@@ -36,6 +37,7 @@ int main(int argc, char** argv)
     privNh.getParam("turtlesim_ros_path", turtlesimRosPath);
     privNh.getParam("turtlesim_lib_path", turtlesimLibPath);
     privNh.getParam("agent_id", agentId);
+    privNh.getParam("driven_executor", drivenExecutor);
 
     ROS_INFO_STREAM("HostName    : " << name);
     ROS_INFO_STREAM("Roleset     : " << (roleset.empty() ? "Default" : roleset));
@@ -44,6 +46,7 @@ int main(int argc, char** argv)
     ROS_INFO_STREAM("ROS Turtlesim lib path  : " << turtlesimRosPath);
     ROS_INFO_STREAM("Base Turtlesim lib path  : " << turtlesimLibPath);
     ROS_INFO_STREAM("Agent ID    : " << agentId);
+    ROS_INFO_STREAM("Driven Executor : " << (drivenExecutor ? "true" : "false"));
 
     if (masterPlan.size() == 0) {
         ROS_ERROR_STREAM("Master plan or roleset location is not available");
@@ -65,12 +68,15 @@ int main(int argc, char** argv)
             return 1;
         }
     }
-    turtlesim::Base base(nh, privNh, name, agentId, roleset, masterPlan, {turtlesimRosPath, turtlesimLibPath}, maybeMapping);
+    turtlesim::Base base(nh, privNh, name, agentId, roleset, masterPlan, {turtlesimRosPath, turtlesimLibPath}, maybeMapping, drivenExecutor);
 
     ROS_INFO("Starting ALICA turtle Base.......");
     base.start();
 
     while (ros::ok()) {
+        if (drivenExecutor) {
+            base.tick();
+        }
         ros::Rate(10).sleep();
     }
 
