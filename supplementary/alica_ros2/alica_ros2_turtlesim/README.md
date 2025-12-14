@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-This tutorial is a ROS 2 version of the Alica ROS Turtlesim, with support for ROS Galactic and Humble. See the ROS 1 Turtlesim package for details on how the turtlesim and Alica interact.
+This tutorial is a ROS 2 version of the Alica ROS Turtlesim, with support for ROS2 Humble. See the ROS 1 Turtlesim package for details on how the turtlesim and Alica interact.
 
 ## 2. Setup of the Colcon Workspace
 
