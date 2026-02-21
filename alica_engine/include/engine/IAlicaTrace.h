@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <utility>
 #include <variant>
+#include <vector>
 
 namespace alica
 {
@@ -23,18 +24,15 @@ class IAlicaTrace
 public:
     class TraceValue
     {
-        friend IAlicaTrace;
-
+    public:
         using Variant = std::variant<bool, long long int, unsigned long long int, double, std::string_view>;
 
-    public:
         template <typename T, typename = std::enable_if_t<std::is_constructible_v<Variant, PromotedType<T&&>>>>
         TraceValue(T&& val)
                 : variant(static_cast<PromotedType<decltype(val)>>(std::forward<T>(val)))
         {
         }
 
-    private:
         Variant variant;
     };
 
@@ -57,10 +55,32 @@ protected:
     }
 };
 
+namespace tracing
+{
+struct SpanLink
+{
+    std::string context;
+    // Warning:  Ensure string_views in attributes are valid for the lifetime of the span link
+    std::unordered_map<std::string, IAlicaTrace::TraceValue> attributes;
+};
+
+struct SpanStartOptions
+{
+    std::optional<std::string> parentContext;
+    std::vector<SpanLink> links;
+};
+} // namespace tracing
+
 class IAlicaTraceFactory
 {
 public:
-    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const = 0;
+    // Two argument version of create.  Deprecated.
+    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const { return nullptr; }
+    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, const tracing::SpanStartOptions& options) const
+    {
+        // Concrete implementation provided for backwards compatibility
+        return create(opName, options.parentContext);
+    }
     virtual void setGlobalContext(const std::string& globalContext) = 0;
     virtual void unsetGlobalContext() = 0;
     virtual ~IAlicaTraceFactory() = default;
