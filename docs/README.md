@@ -1,5 +1,10 @@
 # Documentation
 
+> **New here?** [ALICA_GUIDE.md](./ALICA_GUIDE.md) is a single-page practical guide:
+> building on Ubuntu 22.04 with plain CMake, running the tests and samples, a minimal
+> non-ROS example, the full feature set, what the Plan Designer is, and how ALICA
+> compares to the alternatives.
+
 The documentation of the ALICA Framework is organised in small articles that are readable in 5-10 minutes. Therefore, you can use it as a lookup dictionary. However, we also tried to arrange the articles in an order that allows you to read the documentation as a whole, from start to end.
 
 The ALICA Framework is further divided into three parts, the language, the engine, and the plan designer. We recommend to understand the language first, since the documentation of the engine and plan designer requires you to understand the semantics of the core concepts of the language.

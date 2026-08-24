@@ -1,0 +1,17 @@
+{
+  "comment": "Transition conditions available to this ALICA program.",
+  "conditions": [
+    {
+      "blackboard": [],
+      "comment": "True once the CountUp behaviour has counted far enough.",
+      "conditionRepository": 3001,
+      "id": 3002,
+      "libraryName": "minimal-alica",
+      "name": "CountReached",
+      "relativeDirectory": "conditions"
+    }
+  ],
+  "id": 3001,
+  "name": "ConditionRepository",
+  "relativeDirectory": ""
+}
