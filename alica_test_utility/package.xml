@@ -12,7 +12,9 @@
 
   <depend>alica_engine</depend>
   <depend>alica_dummy_proxy</depend>
+  <depend>alica_solver_interface</depend>
   <depend>yaml-cpp</depend>
+  <depend>gtest</depend>
 
   <buildtool_depend>cmake</buildtool_depend>
 

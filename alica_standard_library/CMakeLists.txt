@@ -38,6 +38,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC
   alica_engine
   alica_solver_interface
+  Boost::boost
 )
 
 # Install

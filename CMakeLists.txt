@@ -194,6 +194,102 @@ if(ALICA_WITH_ROS1 OR ALICA_WITH_ROS2)
     "generation. The core, non-ROS packages are unaffected.")
 endif()
 
+# Packages gate their own suites on BUILD_TESTING, which the CTest module
+# defaults to ON inside each of them. Setting the cache entry here makes
+# ALICA_BUILD_TESTS the single switch for the whole tree -- their later
+# option(BUILD_TESTING ...) then finds it already set and leaves it alone.
+# Without this, -DALICA_BUILD_TESTS=OFF still built (and still required GTest
+# for) alica_solver_interface, autodiff and constraintsolver.
+set(BUILD_TESTING ${ALICA_BUILD_TESTS} CACHE BOOL "Build the test suites" FORCE)
+
+# ---------------------------------------------------------------------------
+# Dependency preflight
+# ---------------------------------------------------------------------------
+#
+# Each of these is found by a package well down the tree, where a miss surfaces
+# as a FindPackageHandleStandardArgs backtrace naming a CMake module rather
+# than something installable -- and only the first miss is ever reported, so a
+# host lacking all three takes three configure attempts to find that out.
+# Probe them here instead and name the whole set at once.
+
+set(_alica_missing "")   # one "<what>  <apt package>" line each, for the report
+set(_alica_apt "")       # just the apt package names, for the copy-paste line
+set(_alica_test_hint "")
+
+find_package(yaml-cpp QUIET)
+if(NOT yaml-cpp_FOUND AND NOT YAML_CPP_FOUND)
+  list(APPEND _alica_missing "yaml-cpp                 libyaml-cpp-dev")
+  list(APPEND _alica_apt libyaml-cpp-dev)
+endif()
+
+find_package(Boost QUIET COMPONENTS system filesystem)
+if(NOT Boost_FOUND)
+  list(APPEND _alica_missing "Boost system,filesystem  libboost-all-dev")
+  list(APPEND _alica_apt libboost-all-dev)
+endif()
+
+if(BUILD_TESTING)
+  find_package(GTest QUIET)
+  if(NOT GTest_FOUND AND NOT GTEST_FOUND)
+    list(APPEND _alica_missing "GTest                    libgtest-dev")
+    list(APPEND _alica_apt libgtest-dev)
+    set(_alica_test_hint
+        "\n\nGTest is needed only by the test suites -- configure with "
+        "-DALICA_BUILD_TESTS=OFF to build without them.")
+  endif()
+endif()
+
+if(_alica_missing)
+  string(REPLACE ";" "\n    " _alica_missing_lines "${_alica_missing}")
+  string(REPLACE ";" " "      _alica_apt_line      "${_alica_apt}")
+  message(FATAL_ERROR
+    "Missing build dependencies -- what is missing, then the Debian/Ubuntu "
+    "package that provides it:\n"
+    "    ${_alica_missing_lines}\n\n"
+    "    sudo apt install ${_alica_apt_line}"
+    ${_alica_test_hint})
+endif()
+
+# ---------------------------------------------------------------------------
+# Dependency variable compatibility
+# ---------------------------------------------------------------------------
+#
+# The packages link yaml-cpp and GTest through the all-caps variables that
+# Ubuntu's yaml-cpp-config.cmake and CMake's own FindGTest module define:
+# ${YAML_CPP_LIBRARIES}, ${GTEST_LIBRARIES}, ${GTEST_INCLUDE_DIRS}. A Conan
+# CMakeDeps package carries the same information under the package's own
+# casing instead -- yaml-cpp_LIBRARIES, GTest_LIBRARIES -- so with
+# dependencies from Conan the all-caps names expand to nothing and the
+# libraries drop off the link line. That does not fail the link: ELF shared
+# libraries take undefined symbols without complaint, so the first symptom is
+# an unresolved reference in an executable much later on.
+#
+# Backfill the all-caps spellings here, in the top-level scope that every
+# package inherits. Each is guarded on already being empty, so a host whose
+# system packages define them is left alone; and the per-package
+# find_package() calls cannot clobber them afterwards, because the Conan
+# config files only ever set their own casing.
+
+if(NOT YAML_CPP_LIBRARIES)
+  if(TARGET yaml-cpp::yaml-cpp)
+    set(YAML_CPP_LIBRARIES yaml-cpp::yaml-cpp)
+  elseif(TARGET yaml-cpp)
+    set(YAML_CPP_LIBRARIES yaml-cpp)
+  endif()
+endif()
+
+if(BUILD_TESTING)
+  # Every suite in this repository supplies its own main(), so gtest_main is
+  # deliberately left out -- which is also what FindGTest puts in
+  # GTEST_LIBRARIES, as against GTEST_MAIN_LIBRARIES.
+  if(NOT GTEST_LIBRARIES AND TARGET GTest::gtest)
+    set(GTEST_LIBRARIES GTest::gtest)
+  endif()
+  if(NOT GTEST_INCLUDE_DIRS AND GTest_INCLUDE_DIRS)
+    set(GTEST_INCLUDE_DIRS ${GTest_INCLUDE_DIRS})
+  endif()
+endif()
+
 # ---------------------------------------------------------------------------
 # Package declaration
 # ---------------------------------------------------------------------------
@@ -264,7 +360,6 @@ alica_add_package(alica_dummy_proxy)
 alica_add_package(alica_simple_solver)
 alica_add_package(alica_dynamic_loading)
 alica_add_package(alica_standard_library)
-alica_add_package(alica_test_utility)
 alica_add_package(alica_dummy_tracing PATH supplementary/alica_dummy_tracing)
 
 # ---------------------------------------------------------------------------
@@ -281,6 +376,7 @@ endif()
 # ---------------------------------------------------------------------------
 
 if(ALICA_BUILD_TESTS)
+  alica_add_package(alica_test_utility)
   alica_add_package(alica_tests)
 endif()
 

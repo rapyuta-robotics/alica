@@ -30,3 +30,10 @@ _*.pyc
 
 # java
 target/
+CMakeFiles
+CMakeCache.txt
+
+# conan
+# CMakeUserPresets.json is written into the source tree by `conan install` and
+# holds absolute paths into this machine's build and package folders.
+CMakeUserPresets.json

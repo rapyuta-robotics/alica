@@ -16,6 +16,14 @@ find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
+find_package(GTest REQUIRED)
+
+if(TARGET GTest::gtest)
+  set(alica_test_utility_GTEST GTest::gtest)
+else()
+  set(alica_test_utility_GTEST ${GTEST_LIBRARIES})
+endif()
+
 # Build
 include_directories(include)
 
@@ -39,11 +47,16 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME} PUBLIC
   alica_engine
   alica_dummy_proxy
   alica_solver_interface
+  ${alica_test_utility_GTEST}
 )
+
+if(GTEST_INCLUDE_DIRS)
+  target_include_directories(${PROJECT_NAME} PUBLIC ${GTEST_INCLUDE_DIRS})
+endif()
 
 # Install
 install(TARGETS ${PROJECT_NAME}
