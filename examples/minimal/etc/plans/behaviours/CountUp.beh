@@ -1,0 +1,17 @@
+{
+  "blackboard": [],
+  "comment": "Increments a counter on the global blackboard, 2x per second.",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 2,
+  "id": 4001,
+  "implementationName": "CountUp",
+  "inheritBlackboard": false,
+  "libraryName": "minimal-alica",
+  "name": "CountUp",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "behaviours",
+  "runtimeCondition": null,
+  "variables": []
+}
