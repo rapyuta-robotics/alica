@@ -1,0 +1,14 @@
+{
+  "comment": "",
+  "id": 1001,
+  "name": "TaskRepository",
+  "relativeDirectory": "",
+  "tasks": [
+    {
+      "comment": "The only task in this example.",
+      "id": 1002,
+      "name": "DefaultTask",
+      "taskRepository": 1001
+    }
+  ]
+}

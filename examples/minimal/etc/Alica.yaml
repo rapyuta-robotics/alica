@@ -1,0 +1,66 @@
+Local:
+  DefaultRole: Worker
+
+Alica:
+  # milliseconds
+  TeamTimeOut: 2000
+  AssignmentProtectionTime: 500
+
+  AutoFailureHandling: true
+
+  # Hz
+  MinBroadcastFrequency: 10
+  MaxBroadcastFrequency: 15
+  EngineFrequency: 30
+
+  MaxRuleApplications: 20
+
+  # Let agents discover each other over the communicator.
+  AutoDiscovery: true
+  AgentAnnouncementTimeInterval: 30
+  AnnouncementRetries: 3
+
+  SilentStart: false
+  AllowIdling: true
+  UseStaticRoles: true
+
+  # Kept for backwards compatibility; the engine discovers model files
+  # by recursively scanning the config folders passed to AlicaContext.
+  PlanDir: plans
+  RoleDir: roles
+  TaskDir: tasks
+
+  TeamBlackList:
+    InitiallyFull: false
+
+  StatusMessages:
+    Enabled: false
+    Frequency: 10
+
+  EventLogging:
+    Enabled: false
+    LogFolder: log/temp
+
+  Logging:
+    Verbosity: INFO
+
+  CycleDetection:
+    Enabled: true
+    CycleCount: 5
+    MinimalAuthorityTimeInterval: 800
+    MaximalAuthorityTimeInterval: 5000
+    IntervalIncreaseFactor: 1.5
+    IntervalDecreaseFactor: 0.999
+    MessageTimeInterval: 60
+    MessageWaitTimeInterval: 200
+    HistorySize: 45
+
+  CSPSolving:
+    EnableCommunication: false
+    CommunicationFrequency: 10
+    SeedMergingThreshold: 0.0015
+    ConflictThreshold: 1000
+    SeedTTL4Communication: 250
+    SeedTTL4Usage: 5000
+    MaxSolveTime: 10
+    MaxFunctionEvaluations: 100000000
