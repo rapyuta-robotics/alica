@@ -82,8 +82,10 @@ want ROS, that means ROS 2 Humble — which is exactly what upstream CI tests
 
 ### 1.3 Build order
 
-`find_package()` calls impose a strict order. Each package must be **installed**
-before its dependents configure:
+`find_package()` calls impose a strict order. Building a package on its own means
+**installing** each of its dependencies first; inside the top-level tree the
+redirect configs described in [1.4](#14-building-with-the-top-level-cmakelists-verified-working)
+remove the install step, but the order below still holds:
 
 ```
 alica_solver_interface
@@ -99,9 +101,9 @@ alica_solver_interface
 
 ### 1.4 Building with the top-level CMakeLists (verified working)
 
-The repository root carries a **superbuild** `CMakeLists.txt`. Two commands
-build everything, in dependency order, with the right ROS components selected
-for your platform:
+The repository root carries a top-level `CMakeLists.txt`. Two commands build
+everything, in dependency order, with the right ROS components selected for
+your platform:
 
 ```bash
 cmake -S . -B build
@@ -111,21 +113,44 @@ cmake --build build -j"$(nproc)"
 That is the whole thing. It replaces the hand-sequenced shell script this guide
 used to carry.
 
-The superbuild compiles nothing itself. Each ALICA package remains an
-independent CMake project — they find one another with `find_package()` and
-derive their install/export paths from `${CMAKE_PROJECT_NAME}` — so they cannot
-be `add_subdirectory()`'d into one tree without colliding. Instead each is
-configured, built and installed via `ExternalProject_Add`, which keeps every
-package byte-for-byte compatible with a standalone `cmake`, `catkin` or `colcon`
-build.
+Every package is pulled in with `add_subdirectory()`, so the result is a
+**single build tree**: `ctest` at the top level sees all 123 tests at once, one
+`compile_commands.json` covers the whole repository, and a parallel build
+schedules across package boundaries rather than stopping at each one. All
+shared libraries land in `build/lib` and all executables in `build/bin`, so the
+runtime load path is one directory instead of one per package.
 
-By default the install prefix is `build/install`, so nothing needs root. Point
-it elsewhere with `-DCMAKE_INSTALL_PREFIX=...`.
+Two upstream idioms had to be adapted to make that legal. Both patches live in
+the package `CMakeLists.txt` files, and both are no-ops when a package is built
+standalone or under `catkin`/`colcon`:
+
+- Packages derived their install and export paths from `${CMAKE_PROJECT_NAME}`,
+  which names the **top-level** project. Nested, every package would look for
+  the same `<parent>Config.cmake.in` and declare the same `<parent>Targets`
+  export set. They now use `${PROJECT_NAME}`, which is the same string when a
+  package is built on its own.
+- `alica_engine` and `alica_tests` pinned `CMAKE_BUILD_TYPE` to `Debug`
+  unconditionally, overriding the caller for their subtree. They now do so only
+  when the caller left it empty, so `-DCMAKE_BUILD_TYPE=Release` finally applies
+  to the whole tree.
+
+Packages still locate each other with `find_package()`, which ordinarily
+requires them to be installed. Rather than edit 57 call sites, the top-level
+file writes a small redirect config per package into `build/alica-find-redirects`
+and points `<pkg>_DIR` at it, so `find_package()` resolves against the targets
+already in the tree. That is what CMake ≥ 3.24 does for `FetchContent` via
+`CMAKE_FIND_PACKAGE_REDIRECTS_DIR`; doing it by hand keeps CMake 3.16 working.
+
+`cmake --install build` still works and writes a correctly-named config per
+package (`lib/alica_engine/cmake/alica_engineConfig.cmake`, and so on), so
+downstream projects consume the install tree exactly as before. The default
+prefix is `build/install`, so nothing needs root; point it elsewhere with
+`-DCMAKE_INSTALL_PREFIX=...`.
 
 At configure time it prints exactly what it decided:
 
 ```
---   ALICA superbuild 1.1.0
+--   ALICA 1.1.0
 --   ----------------------------------------------------------
 --   Host              : Linux / ubuntu 22.04
 --   Platform decision : Ubuntu 22.04 -> ROS 2 components
@@ -133,10 +158,11 @@ At configure time it prints exactly what it decided:
 --   Supplementary     : ON
 --   Tests             : ON
 --   Examples          : ON
---   Install prefix    : /home/you/alica/build/install
+--   Packages          : 12
+--   Build type        : Debug
+--   Libraries         : /home/you/alica/build/lib
+--   Executables       : /home/you/alica/build/bin
 --   ----------------------------------------------------------
---   Test suites       : alica_solver_interface, autodiff, constraintsolver, alica_tests
---   Run them with     : cmake --build <dir> --target check
 ```
 
 #### Platform selection
@@ -182,7 +208,7 @@ cmake -S . -B build -DALICA_BUILD_SUPPLEMENTARY=OFF \
 Then, so that runtime dynamic loading and the shared libraries resolve:
 
 ```bash
-export LD_LIBRARY_PATH=$PWD/build/install/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$PWD/build/lib:$LD_LIBRARY_PATH
 ```
 
 #### Building one package on its own
@@ -203,12 +229,20 @@ cmake --install /tmp/b/alica_engine
 
 These are all things this guide hit in practice.
 
-**`CMAKE_BUILD_TYPE` is overridden.** `alica_engine/CMakeLists.txt:5` and
-`alica_tests/CMakeLists.txt:6` both hard-code `set(CMAKE_BUILD_TYPE Debug)`.
-Passing `-DCMAKE_BUILD_TYPE=Release` to those two packages has no effect — they
-always build Debug, which is why the installed export file is named
-`alica_engineTargets-debug.cmake`. To get an optimised engine you have to edit
-that line or override the flags directly.
+**`CMAKE_BUILD_TYPE` used to be overridden — now fixed.** `alica_engine` and
+`alica_tests` hard-coded `set(CMAKE_BUILD_TYPE Debug)`, so passing
+`-DCMAKE_BUILD_TYPE=Release` to those two packages had no effect. Both now only
+apply that default when the caller left the build type empty (see
+[1.4](#14-building-with-the-top-level-cmakelists-verified-working)), so the whole
+tree honours one configuration.
+
+That was not merely cosmetic. `install(EXPORT)` writes its per-configuration
+file — the one carrying `IMPORTED_LOCATION` — from the **top-level** build type.
+With the type set only inside two subdirectories, that file was never written at
+all, and a downstream `find_package(alica_engine)` failed with
+`IMPORTED_LOCATION not set for imported target "alica_engine"`. The top-level
+`CMakeLists.txt` therefore settles the configuration once, defaulting to `Debug`
+to match the historical behaviour.
 
 **Do not build yaml-cpp from source unless you patch it.** ALICA links yaml-cpp
 through the `${YAML_CPP_LIBRARIES}` *variable*. Upstream yaml-cpp 0.7.0's own
@@ -259,42 +293,54 @@ excluded there. For ROS 1 Noetic (on Ubuntu 20.04) CI uses `catkin build` with
 
 Tests are gated on `BUILD_TESTING` (default ON via `include(CTest)`) and
 registered with `gtest_discover_tests`, so plain `ctest` works. Four packages
-ship tests. The superbuild wires all of them up behind one target:
+ship tests. Because everything is one build tree, a single `ctest` covers all
+of them, and the `check` target wraps it with the right environment:
 
 ```bash
 cmake --build build --target check
 ```
 
-That runs each suite in its own build directory with `LD_LIBRARY_PATH` already
-set, and prints a per-package summary.
+Verified result on Ubuntu 22.04 with no ROS: **123/123 pass** (92 + 2 + 20 + 9),
+with the retry behaviour described below — see the warning, the raw suite is not
+reliably green in a single serial pass.
 
-Verified result on Ubuntu 22.04 with no ROS: **123/123 pass** (92 + 2 + 20 + 9).
-
-To drive a single suite by hand:
+To drive ctest by hand:
 
 ```bash
-cd build/packages/alica_tests
-LD_LIBRARY_PATH=$PWD:../../install/lib ctest --output-on-failure
+cd build
+LD_LIBRARY_PATH=$PWD/lib ctest --output-on-failure
+LD_LIBRARY_PATH=$PWD/lib ctest --output-on-failure -R 'TestBlackboard'
 ```
 
-The `LD_LIBRARY_PATH` on the main suite is not optional — `alica_tests` builds
-its behaviours into `libalica-tests.so` and loads them dynamically, exactly like
-a real application.
+The `LD_LIBRARY_PATH` is not optional — `alica_tests` builds its behaviours into
+`libalica-tests.so` and loads them dynamically, exactly like a real application.
 
-> **Do not run `alica_tests` with `ctest -j`.** Several multi-agent tests wait on
-> real wall-clock deadlines (`TeamTimeOut` is 2000 ms in `Alica.yaml`), so
-> running them concurrently — or on a busy machine — starves them and they time
-> out spuriously. Which test fails varies between runs, and every one of them
-> passes on `ctest --rerun-failed`. Serial takes ~43 s versus ~11 s parallel and
-> is far more reliable, so the `check` target runs serially and additionally
-> retries a timed-out test once (`--repeat until-pass:2`). This flakiness is a
-> pre-existing property of the suite, not of any particular build method.
+> **The suite hangs intermittently. Do not run it with `ctest -j`, and expect
+> to need retries.** Several multi-agent tests wait on real wall-clock deadlines
+> (`TeamTimeOut` is 2000 ms in `Alica.yaml`). Running them concurrently starves
+> them, and even *serially* a test occasionally never gets its deadline and sits
+> until the timeout. Which test varies between runs, and every affected test
+> passes in 2–3 s when run on its own.
+>
+> Measured over six serial runs on an otherwise idle 20-core Ubuntu 22.04 box:
+> one run had no stall at all (~45 s), four stalled on exactly one test, and one
+> run — taken while the machine was also compiling — stalled on five tests, one
+> of which did not recover within a single retry and failed the run outright.
+>
+> The `check` target therefore runs serially, caps each test at 60 s and allows
+> three attempts (`--repeat until-pass:3`). That is what turns this into a green
+> run; **a single retry is not always sufficient on a loaded machine.** Give the
+> box some headroom if you want a reliable result.
+>
+> This is pre-existing and has nothing to do with how the tree is built: it
+> reproduces identically on an unpatched checkout built package-by-package
+> (`AlicaSyncTransition.syncTransitionTest`, 120 s timeout, 91/92).
 
 You can also drive the gtest binary directly, which is handy for filtering:
 
 ```bash
-$BUILD/alica_tests/alica_tests-test --gtest_list_tests
-$BUILD/alica_tests/alica_tests-test --gtest_filter='TestBlackboard.*'
+LD_LIBRARY_PATH=build/lib build/bin/alica_tests-test --gtest_list_tests
+LD_LIBRARY_PATH=build/lib build/bin/alica_tests-test --gtest_filter='TestBlackboard.*'
 ```
 
 What the 92 tests cover is a good map of the engine's features:
@@ -319,13 +365,13 @@ CI excludes `AlicaTurtlesimTest.*` because those need a running turtlesim.
 **The minimal non-ROS sample** — `examples/minimal/`, added by this guide. No
 ROS, no Boost, no dynamic loading. See [section 3](#3-a-bare-minimum-example).
 
-The superbuild builds it by default (`ALICA_BUILD_EXAMPLES=ON`). Run it from
+The top-level build includes it by default (`ALICA_BUILD_EXAMPLES=ON`). Run it from
 its own directory, where the `etc/` model files live:
 
 ```bash
 cd examples/minimal
 LD_LIBRARY_PATH=../../build/install/lib \
-  ../../build/packages/minimal_alica/minimal_alica etc 2
+  ../../build/bin/minimal_alica etc 2
 ```
 
 Or build it standalone against an existing install prefix:
@@ -883,14 +929,15 @@ backend and OAuth config. Compare a BT XML file you can edit in any text editor.
 Diffing and code-reviewing generated plan JSON is unpleasant, and ids make merge
 conflicts nasty.
 
-**Rough packaging.** Documented in section 1.5: two packages silently override
-`CMAKE_BUILD_TYPE` to Debug so you cannot get an optimised engine without
-editing CMake; the yaml-cpp linkage depends on a Debian patch and breaks
-confusingly against upstream yaml-cpp; upstream ships no top-level
-`CMakeLists.txt`, so you sequence nine packages yourself (the superbuild added
-in section 1.4 fixes this one); `LD_LIBRARY_PATH` is read directly at
-runtime and throws if unset. None is fatal — all are friction, and they signal a
-project built around one organisation's CI rather than for outside consumption.
+**Rough packaging.** Documented in section 1.5: the yaml-cpp linkage depends on a
+Debian patch and breaks confusingly against upstream yaml-cpp; `LD_LIBRARY_PATH`
+is read directly at runtime and throws if unset; and one multi-agent test
+intermittently hangs until its timeout. Two more are fixed by the top-level
+`CMakeLists.txt` added in section 1.4: upstream ships no top-level build, so you
+otherwise sequence nine packages yourself, and two packages silently overrode
+`CMAKE_BUILD_TYPE` to Debug so you could not get an optimised engine without
+editing CMake. None is fatal — all are friction, and they signal a project built
+around one organisation's CI rather than for outside consumption.
 
 **No planning, and postconditions are dead weight.** If you want goal-directed
 synthesis, ALICA is the wrong layer; you would pair it with PlanSys2 or similar.
@@ -958,7 +1005,7 @@ problem, the cost is hard to justify.
 | `supplementary/alica_designer_runtime/` | the Plan Designer stack |
 | `supplementary/alica_tracing/`, `alica_dummy_tracing/` | tracing backends |
 | `docs/articles/` | the language documentation, ~5-10 min per article |
-| `CMakeLists.txt` | top-level superbuild: dependency order + ROS platform selection |
+| `CMakeLists.txt` | top-level build: single tree, dependency order + ROS platform selection |
 | `cmake_flags/cflags.cmake` | shared compile flags |
 
 ### Useful links

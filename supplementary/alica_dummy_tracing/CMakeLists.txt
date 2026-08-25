@@ -8,7 +8,7 @@ alica_compile_flags()
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake)
 
 
 # Imports
@@ -30,7 +30,7 @@ install(DIRECTORY include/
 
 # Installing files to make a find_package()-able package
 write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   VERSION 1.0.0
   COMPATIBILITY SameMajorVersion
 )
@@ -38,14 +38,14 @@ write_basic_package_version_file(
 set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 configure_package_config_file(
-  ${CMAKE_PROJECT_NAME}Config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  ${PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION ${ConfigPackageLocation}
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}
 )

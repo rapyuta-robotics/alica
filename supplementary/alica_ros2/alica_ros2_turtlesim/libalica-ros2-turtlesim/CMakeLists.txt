@@ -25,7 +25,7 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 install(TARGETS ${PROJECT_NAME}
-  EXPORT ${CMAKE_PROJECT_NAME}Targets
+  EXPORT alica_ros2_turtlesimTargets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )

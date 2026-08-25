@@ -1,16 +1,36 @@
 #
-# Top-level superbuild for the ALICA framework.
+# Top-level build for the ALICA framework.
 #
 #   cmake -S . -B build
 #   cmake --build build -j"$(nproc)"
+#   cmake --build build --target check
 #
-# This file compiles nothing itself. Each ALICA package stays an independent
-# CMake project -- they locate one another with find_package() and derive their
-# install/export paths from ${CMAKE_PROJECT_NAME} -- so they cannot simply be
-# add_subdirectory()'d into one tree without colliding. Instead each is
-# configured, built and installed in dependency order via ExternalProject_Add,
-# which keeps every package byte-for-byte compatible with a standalone cmake,
-# catkin or colcon build.
+# Every package is add_subdirectory()'d into a single CMake project, so there
+# is one build tree: `ctest` at the top level sees every suite, a single
+# compile_commands.json covers the whole repository, and a parallel build
+# schedules across package boundaries instead of stopping at each one.
+#
+# Two upstream idioms had to be adapted to make that legal. Both patches live
+# in the package CMakeLists.txt files and are no-ops for a standalone cmake,
+# catkin or colcon build:
+#
+#   1. Packages derived their install and export paths from
+#      ${CMAKE_PROJECT_NAME}, which names the *top-level* project. Nested,
+#      every package would look for the same <parent>Config.cmake.in and
+#      declare the same <parent>Targets export set -- a guaranteed collision.
+#      They now use ${PROJECT_NAME}, which is the same string when a package
+#      is built on its own.
+#
+#   2. alica_engine and alica_tests pinned CMAKE_BUILD_TYPE to Debug
+#      unconditionally, overriding the caller for their subtree. They now do
+#      so only when the caller left it empty.
+#
+# Packages still find each other with find_package(), which ordinarily
+# requires them to be installed. Rather than edit 57 call sites, this file
+# writes a small redirect config per package into the build tree and points
+# <pkg>_DIR at it, so find_package() resolves against the targets already in
+# this tree. That is what CMake >= 3.24 does for FetchContent via
+# CMAKE_FIND_PACKAGE_REDIRECTS_DIR; doing it by hand keeps CMake 3.16 working.
 #
 # ROS components are selected from the host platform: ROS 1 on Ubuntu 20.04,
 # ROS 2 on Ubuntu 22.04 and later, and neither on non-Linux hosts. See
@@ -19,21 +39,38 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(alica_superbuild
+project(alica
   VERSION 1.1.0
-  DESCRIPTION "Superbuild for the ALICA multi-agent coordination framework"
+  DESCRIPTION "ALICA multi-agent coordination framework"
   HOMEPAGE_URL "https://github.com/rapyuta-robotics/alica"
   LANGUAGES C CXX)
 
-include(ExternalProject)
+# ---------------------------------------------------------------------------
+# Output layout
+# ---------------------------------------------------------------------------
+# One directory for every shared library and one for every executable. The
+# engine loads behaviour libraries through LD_LIBRARY_PATH at runtime, so
+# collecting them in a single place means one entry rather than one per
+# package.
 
-# ---------------------------------------------------------------------------
-# Install prefix
-# ---------------------------------------------------------------------------
-# Packages must be installed before their dependents can configure, so the
-# build always installs. Default to a prefix inside the build tree so that a
-# plain `cmake --build` never needs root; pass -DCMAKE_INSTALL_PREFIX=... to
-# stage somewhere else.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# One configuration for the whole tree.
+#
+# This is not cosmetic. install(EXPORT) writes its per-configuration file --
+# the one carrying IMPORTED_LOCATION -- from the *top-level* build type. When
+# only a subdirectory sets one, that file is never written, and a downstream
+# find_package() fails with "IMPORTED_LOCATION not set for imported target".
+# alica_engine and alica_tests default to Debug when built on their own, so
+# keep Debug as the default here; -DCMAKE_BUILD_TYPE=Release now applies to
+# every package instead of being overridden by those two.
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build configuration" FORCE)
+endif()
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install"
@@ -99,7 +136,7 @@ else()
 endif()
 
 # Being on the right distro is not enough -- ROS must also be present, or the
-# sub-builds fail at configure time. Detect a sourced workspace.
+# packages fail at configure time. Detect a sourced workspace.
 set(ALICA_ROS_DETECTED FALSE)
 set(ALICA_ROS_DISTRO "none")
 if(DEFINED ENV{ROS_DISTRO} AND NOT "$ENV{ROS_DISTRO}" STREQUAL "")
@@ -126,9 +163,6 @@ option(ALICA_BUILD_EXAMPLES      "Build examples/minimal"                       
 option(ALICA_WITH_ROS1 "Build the ROS 1 components" ${_alica_ros1_default})
 option(ALICA_WITH_ROS2 "Build the ROS 2 components" ${_alica_ros2_default})
 
-set(ALICA_EXTRA_CMAKE_ARGS "" CACHE STRING
-    "Extra -D arguments forwarded verbatim to every ALICA package")
-
 # Guard against combinations that cannot work.
 if(ALICA_WITH_ROS1 AND ALICA_WITH_ROS2)
   message(FATAL_ERROR
@@ -143,148 +177,103 @@ if((ALICA_WITH_ROS1 OR ALICA_WITH_ROS2) AND NOT ALICA_ROS_DETECTED)
   message(WARNING
     "ROS components are enabled but no ROS environment is sourced (ROS_DISTRO is "
     "unset). Source /opt/ros/<distro>/setup.bash before building, or the "
-    "sub-builds will fail to find catkin/ament_cmake.")
+    "packages will fail to find catkin/ament_cmake.")
 endif()
 if(ALICA_WITH_ROS1 AND ALICA_ROS2_ELIGIBLE)
   message(WARNING
     "ALICA_WITH_ROS1 is ON but this host looks like a ROS 2 platform "
     "(Ubuntu ${ALICA_DISTRO_VERSION}). ROS 1 Noetic is not available past Ubuntu 20.04.")
 endif()
-
-# ---------------------------------------------------------------------------
-# Arguments forwarded to every package
-# ---------------------------------------------------------------------------
-# The install prefix goes on the front of CMAKE_PREFIX_PATH so each package
-# finds the ones built before it, while still honouring the caller's own
-# CMAKE_PREFIX_PATH for third-party dependencies (yaml-cpp, Boost, GTest, ROS).
-
-set(_alica_prefix_path "${CMAKE_INSTALL_PREFIX}")
-if(CMAKE_PREFIX_PATH)
-  list(APPEND _alica_prefix_path ${CMAKE_PREFIX_PATH})
-endif()
-if(DEFINED ENV{CMAKE_PREFIX_PATH} AND NOT "$ENV{CMAKE_PREFIX_PATH}" STREQUAL "")
-  string(REPLACE ":" ";" _alica_env_prefix "$ENV{CMAKE_PREFIX_PATH}")
-  list(APPEND _alica_prefix_path ${_alica_env_prefix})
-endif()
-list(REMOVE_DUPLICATES _alica_prefix_path)
-# ExternalProject splits CMAKE_ARGS on ';', so lists travel with a stand-in
-# separator declared per-project via LIST_SEPARATOR.
-string(REPLACE ";" "|" _alica_prefix_path_arg "${_alica_prefix_path}")
-
-set(_alica_common_args
-  "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}"
-  "-DCMAKE_PREFIX_PATH:STRING=${_alica_prefix_path_arg}"
-  "-DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}"
-  "-DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}"
-  "-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON"
-)
-
-# Forward these only when the caller actually set them, so an empty string
-# never clobbers a package's own default.
-foreach(_var
-    CMAKE_BUILD_TYPE
-    CMAKE_C_FLAGS CMAKE_CXX_FLAGS
-    CMAKE_EXE_LINKER_FLAGS CMAKE_SHARED_LINKER_FLAGS CMAKE_MODULE_LINKER_FLAGS
-    CMAKE_TOOLCHAIN_FILE
-    CMAKE_EXPORT_COMPILE_COMMANDS
-    BOOST_ROOT)
-  if(DEFINED ${_var} AND NOT "${${_var}}" STREQUAL "")
-    list(APPEND _alica_common_args "-D${_var}=${${_var}}")
-  endif()
-endforeach()
-
-if(ALICA_BUILD_TESTS)
-  list(APPEND _alica_common_args "-DBUILD_TESTING:BOOL=ON")
-else()
-  list(APPEND _alica_common_args "-DBUILD_TESTING:BOOL=OFF")
-endif()
-
-if(ALICA_EXTRA_CMAKE_ARGS)
-  list(APPEND _alica_common_args ${ALICA_EXTRA_CMAKE_ARGS})
+if(ALICA_WITH_ROS1 OR ALICA_WITH_ROS2)
+  # catkin_package() and ament_package() both expect to own the top of the
+  # tree. Nesting them under this project is not something upstream tests.
+  message(WARNING
+    "The ROS components are being built from this top-level tree. catkin "
+    "(ROS 1) and colcon (ROS 2) remain the workflows upstream supports for "
+    "them; if this build fails, fall back to the tooling for your ROS "
+    "generation. The core, non-ROS packages are unaffected.")
 endif()
 
 # ---------------------------------------------------------------------------
-# alica_add_package(<name> PATH <dir> [NO_INSTALL] [DEPENDS ...] [CMAKE_ARGS ...])
+# Package declaration
 # ---------------------------------------------------------------------------
+
+enable_testing()
+
+set(ALICA_REDIRECT_DIR "${CMAKE_BINARY_DIR}/alica-find-redirects")
+file(MAKE_DIRECTORY "${ALICA_REDIRECT_DIR}")
+
+set_property(GLOBAL PROPERTY ALICA_PACKAGES "")
+
+# alica_add_package(<name> [PATH <dir>] [LIBRARIES <lib>...])
 #
-# NO_INSTALL is for leaf packages that define no install() rules -- executables
-# meant to be run from the build tree, such as examples/minimal. Without it
-# ExternalProject would invoke a non-existent `install` target and fail.
-
+# Writes a redirect config for <name> so that a later package's
+# find_package(<name>) resolves against this build tree, then pulls the
+# package in with add_subdirectory(). Declare packages in dependency order:
+# the redirect must exist before the first consumer is added.
+#
+# The redirect only reproduces the variables the real <name>Config.cmake sets
+# -- <name>_FOUND, _INCLUDE_DIRS and _LIBRARIES. It deliberately does not
+# create imported targets, because add_subdirectory() has already defined the
+# real ones under the same names, and consumers link against those directly.
 function(alica_add_package name)
-  cmake_parse_arguments(AAP "NO_INSTALL;HAS_TESTS" "PATH" "DEPENDS;CMAKE_ARGS" ${ARGN})
+  cmake_parse_arguments(AAP "" "PATH" "LIBRARIES" ${ARGN})
 
-  if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${AAP_PATH}/CMakeLists.txt")
-    message(FATAL_ERROR "No CMakeLists.txt under '${AAP_PATH}' for package '${name}'")
+  if(NOT AAP_PATH)
+    set(AAP_PATH "${name}")
+  endif()
+  set(_src "${CMAKE_CURRENT_SOURCE_DIR}/${AAP_PATH}")
+  if(NOT EXISTS "${_src}/CMakeLists.txt")
+    message(FATAL_ERROR "alica_add_package(${name}): no CMakeLists.txt in ${_src}")
   endif()
 
-  if(AAP_HAS_TESTS AND ALICA_BUILD_TESTS)
-    set_property(GLOBAL APPEND PROPERTY ALICA_TEST_PACKAGES "${name}")
+  if(NOT AAP_LIBRARIES)
+    set(AAP_LIBRARIES "${name}")
   endif()
 
-  # A literal empty INSTALL_COMMAND cannot be forwarded through a variable --
-  # CMake drops empty elements on list expansion, leaving a valueless keyword.
-  # Substitute an explicit no-op command instead.
-  set(_install_args "")
-  if(AAP_NO_INSTALL)
-    set(_install_args INSTALL_COMMAND "${CMAKE_COMMAND}" -E true)
+  set(_inc "")
+  if(IS_DIRECTORY "${_src}/include")
+    set(_inc "${_src}/include")
   endif()
 
-  ExternalProject_Add(${name}
-    SOURCE_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/${AAP_PATH}"
-    BINARY_DIR     "${CMAKE_BINARY_DIR}/packages/${name}"
-    PREFIX         "${CMAKE_BINARY_DIR}/stamps/${name}"
-    LIST_SEPARATOR "|"
-    CMAKE_ARGS     ${_alica_common_args} ${AAP_CMAKE_ARGS}
-    DEPENDS        ${AAP_DEPENDS}
-    # Re-run the sub-build every time so source edits are picked up. The
-    # underlying build is incremental, so this stays cheap.
-    BUILD_ALWAYS     ON
-    DOWNLOAD_COMMAND ""
-    UPDATE_COMMAND   ""
-    ${_install_args}
-  )
+  file(WRITE "${ALICA_REDIRECT_DIR}/${name}Config.cmake"
+"# Generated by the ALICA top-level build -- do not edit.
+# Resolves find_package(${name}) against the targets in this build tree,
+# which add_subdirectory() has already defined, so no install is needed.
+set(${name}_FOUND TRUE)
+set(${name}_INCLUDE_DIRS \"${_inc}\")
+set(${name}_LIBRARIES ${AAP_LIBRARIES})
+")
 
-  set_property(TARGET ${name} PROPERTY FOLDER "alica")
+  set(${name}_DIR "${ALICA_REDIRECT_DIR}"
+      CACHE PATH "In-tree config for ${name}" FORCE)
+  mark_as_advanced(${name}_DIR)
+
+  add_subdirectory("${AAP_PATH}")
+
+  set_property(GLOBAL APPEND PROPERTY ALICA_PACKAGES "${name}")
 endfunction()
 
 # ---------------------------------------------------------------------------
 # Core packages -- no ROS, no platform assumptions
 # ---------------------------------------------------------------------------
 
-alica_add_package(alica_solver_interface PATH alica_solver_interface HAS_TESTS)
-
-alica_add_package(alica_engine           PATH alica_engine
-                                         DEPENDS alica_solver_interface)
-
-alica_add_package(alica_dummy_proxy      PATH alica_dummy_proxy
-                                         DEPENDS alica_engine)
-
-alica_add_package(alica_simple_solver    PATH alica_simple_solver
-                                         DEPENDS alica_engine)
-
-alica_add_package(alica_dynamic_loading  PATH alica_dynamic_loading
-                                         DEPENDS alica_engine)
-
-alica_add_package(alica_standard_library PATH alica_standard_library
-                                         DEPENDS alica_engine)
-
-alica_add_package(alica_test_utility     PATH alica_test_utility
-                                         DEPENDS alica_dummy_proxy)
-
-alica_add_package(alica_dummy_tracing    PATH supplementary/alica_dummy_tracing
-                                         DEPENDS alica_engine)
+alica_add_package(alica_solver_interface)
+alica_add_package(alica_engine)
+alica_add_package(alica_dummy_proxy)
+alica_add_package(alica_simple_solver)
+alica_add_package(alica_dynamic_loading)
+alica_add_package(alica_standard_library)
+alica_add_package(alica_test_utility)
+alica_add_package(alica_dummy_tracing PATH supplementary/alica_dummy_tracing)
 
 # ---------------------------------------------------------------------------
 # Supplementary, ROS-free -- automatic differentiation and the CGSolver
 # ---------------------------------------------------------------------------
 
 if(ALICA_BUILD_SUPPLEMENTARY)
-  alica_add_package(autodiff         PATH supplementary/autodiff HAS_TESTS
-                                     DEPENDS alica_solver_interface)
-
-  alica_add_package(constraintsolver PATH supplementary/constraintsolver HAS_TESTS
-                                     DEPENDS autodiff alica_engine)
+  alica_add_package(autodiff         PATH supplementary/autodiff)
+  alica_add_package(constraintsolver PATH supplementary/constraintsolver)
 endif()
 
 # ---------------------------------------------------------------------------
@@ -292,9 +281,7 @@ endif()
 # ---------------------------------------------------------------------------
 
 if(ALICA_BUILD_TESTS)
-  alica_add_package(alica_tests PATH alica_tests HAS_TESTS
-    DEPENDS alica_test_utility alica_simple_solver alica_dynamic_loading
-            alica_standard_library alica_dummy_proxy)
+  alica_add_package(alica_tests)
 endif()
 
 # ---------------------------------------------------------------------------
@@ -302,39 +289,27 @@ endif()
 # ---------------------------------------------------------------------------
 
 if(ALICA_BUILD_EXAMPLES AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/minimal/CMakeLists.txt")
-  # Run it from its own directory, where the etc/ model files live:
-  #   ./build/packages/minimal_alica/minimal_alica examples/minimal/etc 2
-  alica_add_package(minimal_alica PATH examples/minimal NO_INSTALL
-                                  DEPENDS alica_dummy_proxy)
+  # Run it from the example directory, where the etc/ model files live:
+  #   ./build/bin/minimal_alica examples/minimal/etc 2
+  alica_add_package(minimal_alica PATH examples/minimal)
 endif()
 
 # ---------------------------------------------------------------------------
 # ROS 1 components (Ubuntu 20.04)
 # ---------------------------------------------------------------------------
-# These are catkin packages. Building them here works when a ROS 1 environment
-# is sourced, but `catkin build` remains the workflow upstream supports.
 
 if(ALICA_WITH_ROS1)
   alica_add_package(alica_msgs      PATH supplementary/alica_msgs)
-
-  alica_add_package(alica_ros_proxy PATH supplementary/alica_ros1/alica_ros_proxy
-                                    DEPENDS alica_engine alica_msgs)
-
-  alica_add_package(alica_tracing   PATH supplementary/alica_tracing
-                                    DEPENDS alica_engine)
+  alica_add_package(alica_ros_proxy PATH supplementary/alica_ros1/alica_ros_proxy)
+  alica_add_package(alica_tracing   PATH supplementary/alica_tracing)
 
   if(ALICA_BUILD_SUPPLEMENTARY)
     alica_add_package(alica_turtlesim PATH supplementary/alica_turtlesim
-      DEPENDS alica_engine autodiff constraintsolver alica_standard_library)
-
-    alica_add_package(alica_ros_turtlesim PATH supplementary/alica_ros1/alica_ros_turtlesim
-      DEPENDS alica_ros_proxy alica_turtlesim alica_dynamic_loading
-              alica_standard_library constraintsolver)
+                                      LIBRARIES libalica-turtlesim)
+    alica_add_package(alica_ros_turtlesim PATH supplementary/alica_ros1/alica_ros_turtlesim)
 
     if(ALICA_BUILD_TESTS)
-      alica_add_package(supplementary_tests PATH supplementary/alica_ros1/supplementary_tests HAS_TESTS
-        DEPENDS alica_ros_proxy alica_test_utility alica_simple_solver
-                alica_dynamic_loading constraintsolver autodiff)
+      alica_add_package(supplementary_tests PATH supplementary/alica_ros1/supplementary_tests)
     endif()
   endif()
 endif()
@@ -345,13 +320,10 @@ endif()
 
 if(ALICA_WITH_ROS2)
   alica_add_package(alica_msgs       PATH supplementary/alica_msgs)
-
-  alica_add_package(alica_ros2_proxy PATH supplementary/alica_ros2/alica_ros2_proxy
-                                     DEPENDS alica_engine alica_msgs)
+  alica_add_package(alica_ros2_proxy PATH supplementary/alica_ros2/alica_ros2_proxy)
 
   if(ALICA_BUILD_SUPPLEMENTARY)
-    alica_add_package(alica_ros2_turtlesim PATH supplementary/alica_ros2/alica_ros2_turtlesim
-      DEPENDS alica_ros2_proxy alica_dynamic_loading constraintsolver)
+    alica_add_package(alica_ros2_turtlesim PATH supplementary/alica_ros2/alica_ros2_turtlesim)
   endif()
 endif()
 
@@ -361,47 +333,45 @@ endif()
 #
 #   cmake --build build --target check
 #
+# One ctest invocation covers every package, because there is one build tree.
+#
 # Deliberately serial. Several multi-agent tests wait on real wall-clock
 # deadlines (Alica.yaml TeamTimeOut is 2000 ms), so running them concurrently
-# starves them and they time out spuriously. Serial is ~43 s versus ~11 s for
-# `ctest -j4`, and it is reliable. Pass -j yourself in a package build
-# directory if you want the faster, flakier run.
+# on a loaded machine starves them and they time out spuriously -- a different
+# test each run, all passing on --rerun-failed. Run `ctest -j` in the build
+# directory yourself if you want the faster, flakier version.
 
-get_property(_alica_test_packages GLOBAL PROPERTY ALICA_TEST_PACKAGES)
-
-if(ALICA_BUILD_TESTS AND _alica_test_packages)
-  # alica_tests dynamically loads libalica-tests.so from its own build tree.
-  set(_alica_ld_path "${CMAKE_BINARY_DIR}/packages/alica_tests:${CMAKE_INSTALL_PREFIX}/lib")
+if(ALICA_BUILD_TESTS)
+  set(_alica_ld_path "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
   if(DEFINED ENV{LD_LIBRARY_PATH} AND NOT "$ENV{LD_LIBRARY_PATH}" STREQUAL "")
     set(_alica_ld_path "${_alica_ld_path}:$ENV{LD_LIBRARY_PATH}")
   endif()
 
-  # Retry a timed-out test once before calling it a failure. Several
-  # multi-agent tests are wall-clock sensitive and flake on a busy machine;
-  # re-running them passes in well under a second. Requires CTest 3.17+.
-  set(_alica_ctest_flags --output-on-failure --timeout 120)
+  # A stuck test is stuck forever, so the timeout only decides how much time is
+  # burned before the retry. The slowest legitimate test is about 3 s, so 60 s
+  # is ~20x headroom while capping the cost of a hang, and three attempts
+  # survive a run that stalls more than once (observed on a loaded machine --
+  # a single retry is not always enough). Requires CTest 3.17+; on older CTest
+  # the run is simply strict.
+  set(_alica_ctest_flags --output-on-failure --timeout 60)
   if(NOT CMAKE_VERSION VERSION_LESS 3.17)
-    list(APPEND _alica_ctest_flags --repeat until-pass:2)
+    list(APPEND _alica_ctest_flags --repeat until-pass:3)
   endif()
 
-  set(_alica_check_cmds "")
-  foreach(_pkg IN LISTS _alica_test_packages)
-    list(APPEND _alica_check_cmds
-      COMMAND "${CMAKE_COMMAND}" -E echo "-- ctest: ${_pkg}"
-      COMMAND "${CMAKE_COMMAND}" -E env "LD_LIBRARY_PATH=${_alica_ld_path}"
-              "${CMAKE_COMMAND}" -E chdir "${CMAKE_BINARY_DIR}/packages/${_pkg}"
-              "${CMAKE_CTEST_COMMAND}" ${_alica_ctest_flags})
-  endforeach()
-
-  add_custom_target(check ${_alica_check_cmds}
+  add_custom_target(check
+    COMMAND "${CMAKE_COMMAND}" -E env "LD_LIBRARY_PATH=${_alica_ld_path}"
+            "${CMAKE_CTEST_COMMAND}" ${_alica_ctest_flags}
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
     COMMENT "Running all ALICA test suites"
     USES_TERMINAL VERBATIM)
-  add_dependencies(check ${_alica_test_packages})
 endif()
 
 # ---------------------------------------------------------------------------
 # Configuration summary
 # ---------------------------------------------------------------------------
+
+get_property(_alica_packages GLOBAL PROPERTY ALICA_PACKAGES)
+list(LENGTH _alica_packages _alica_package_count)
 
 if(ALICA_WITH_ROS1 OR ALICA_WITH_ROS2)
   if(ALICA_WITH_ROS1)
@@ -419,7 +389,7 @@ else()
 endif()
 
 message(STATUS "")
-message(STATUS "  ALICA superbuild ${PROJECT_VERSION}")
+message(STATUS "  ALICA ${PROJECT_VERSION}")
 message(STATUS "  ----------------------------------------------------------")
 message(STATUS "  Host              : ${CMAKE_HOST_SYSTEM_NAME} / ${ALICA_DISTRO_ID} ${ALICA_DISTRO_VERSION}")
 message(STATUS "  Platform decision : ${ALICA_PLATFORM_REASON}")
@@ -427,7 +397,10 @@ message(STATUS "  ROS components    : ${_alica_ros_line}")
 message(STATUS "  Supplementary     : ${ALICA_BUILD_SUPPLEMENTARY}")
 message(STATUS "  Tests             : ${ALICA_BUILD_TESTS}")
 message(STATUS "  Examples          : ${ALICA_BUILD_EXAMPLES}")
-message(STATUS "  Install prefix    : ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "  Packages          : ${_alica_package_count}")
+message(STATUS "  Build type        : ${CMAKE_BUILD_TYPE}")
+message(STATUS "  Libraries         : ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+message(STATUS "  Executables       : ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 message(STATUS "  ----------------------------------------------------------")
 if(NOT ALICA_WITH_ROS1 AND NOT ALICA_WITH_ROS2 AND ALICA_HOST_IS_LINUX AND NOT ALICA_ROS_DETECTED)
   message(STATUS "  Source /opt/ros/<distro>/setup.bash and re-run cmake to enable")
@@ -435,15 +408,11 @@ if(NOT ALICA_WITH_ROS1 AND NOT ALICA_WITH_ROS2 AND ALICA_HOST_IS_LINUX AND NOT A
   message(STATUS "  -DALICA_WITH_ROS2=ON.")
   message(STATUS "  ----------------------------------------------------------")
 endif()
-message(STATUS "  Note: alica_engine and alica_tests pin CMAKE_BUILD_TYPE to Debug")
-message(STATUS "  internally, so -DCMAKE_BUILD_TYPE has no effect on those two.")
 message(STATUS "")
-if(ALICA_BUILD_TESTS AND _alica_test_packages)
-  string(REPLACE ";" ", " _alica_test_list "${_alica_test_packages}")
-  message(STATUS "  Test suites       : ${_alica_test_list}")
-  message(STATUS "  Run them with     : cmake --build <dir> --target check")
+if(ALICA_BUILD_TESTS)
+  message(STATUS "  Run the tests with : cmake --build <dir> --target check")
   message(STATUS "")
 endif()
-message(STATUS "  After building, add the install tree to the runtime path:")
-message(STATUS "    export LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib:\$LD_LIBRARY_PATH")
+message(STATUS "  To run binaries directly, put the libraries on the load path:")
+message(STATUS "    export LD_LIBRARY_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}:\$LD_LIBRARY_PATH")
 message(STATUS "")

@@ -18,7 +18,7 @@ communicator and share the entrypoint.
 
 ## Build
 
-The top-level superbuild builds this automatically:
+The top-level build includes this automatically:
 
 ```bash
 cmake -S ../.. -B ../../build     # from examples/minimal
@@ -39,9 +39,9 @@ cmake --build build -j"$(nproc)"
 Run it from this directory, so the relative `etc` path resolves:
 
 ```bash
-# built by the superbuild
-LD_LIBRARY_PATH=../../build/install/lib \
-  ../../build/packages/minimal_alica/minimal_alica etc 2
+# built by the top-level CMakeLists
+LD_LIBRARY_PATH=../../build/lib \
+  ../../build/bin/minimal_alica etc 2
 
 # built standalone
 ./build/minimal_alica etc 2      # config folder, number of agents
