@@ -6,7 +6,7 @@ alica_compile_flags()
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake)
 
 find_package(ament_cmake REQUIRED)
 find_package(alica_msgs REQUIRED)
@@ -32,7 +32,7 @@ target_include_directories(alica_ros2_proxy PUBLIC
 )
 
 install(TARGETS ${PROJECT_NAME}
-  EXPORT ${CMAKE_PROJECT_NAME}Targets
+  EXPORT ${PROJECT_NAME}Targets
   DESTINATION lib/${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -53,17 +53,17 @@ ament_export_libraries(alica_ros2_proxy)
 
 ament_package()
 
-export(EXPORT ${CMAKE_PROJECT_NAME}Targets
-  FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
+export(EXPORT ${PROJECT_NAME}Targets
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
 )
 
-install(EXPORT ${CMAKE_PROJECT_NAME}Targets
-  FILE ${CMAKE_PROJECT_NAME}Targets.cmake
+install(EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
   DESTINATION ${ConfigPackageLocation}
 )
 
 write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   VERSION 1.0.0
   COMPATIBILITY SameMajorVersion
 )
@@ -71,14 +71,14 @@ write_basic_package_version_file(
 set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 configure_package_config_file(
-  ${CMAKE_PROJECT_NAME}Config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  ${PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION ${ConfigPackageLocation}
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}
 )
