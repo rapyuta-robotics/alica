@@ -18,8 +18,16 @@ communicator and share the entrypoint.
 
 ## Build
 
-Requires the ALICA packages to be built and installed first (see the guide in
-`docs/`). Then:
+The top-level superbuild builds this automatically:
+
+```bash
+cmake -S ../.. -B ../../build     # from examples/minimal
+cmake --build ../../build -j"$(nproc)"
+```
+
+Disable it with `-DALICA_BUILD_EXAMPLES=OFF`.
+
+To build it standalone instead, against an already-installed ALICA:
 
 ```bash
 cmake -S . -B build -DCMAKE_PREFIX_PATH=<alica-install-prefix>
@@ -28,7 +36,14 @@ cmake --build build -j"$(nproc)"
 
 ## Run
 
+Run it from this directory, so the relative `etc` path resolves:
+
 ```bash
+# built by the superbuild
+LD_LIBRARY_PATH=../../build/install/lib \
+  ../../build/packages/minimal_alica/minimal_alica etc 2
+
+# built standalone
 ./build/minimal_alica etc 2      # config folder, number of agents
 ```
 

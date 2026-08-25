@@ -29,7 +29,8 @@ built and run on **Ubuntu 22.04.5** with GCC 11.4 and CMake 3.22, **without ROS*
 
 ### 1.1 The key fact: the core is not a ROS project
 
-This repository is a **multi-package workspace with no top-level `CMakeLists.txt`**.
+Upstream this is a **multi-package workspace with no top-level `CMakeLists.txt`**
+(this guide adds one -- see [1.4](#14-building-with-the-top-level-cmakelists-verified-working)).
 Every package has its own `CMakeLists.txt` and its own `package.xml`, and the
 core packages declare `<build_type>cmake</build_type>` — they are plain CMake
 projects that merely *tolerate* being built by catkin/colcon.
@@ -96,41 +97,106 @@ alica_solver_interface
               └── alica_tests          (needs all of the above)
 ```
 
-### 1.4 Build script (verified working)
+### 1.4 Building with the top-level CMakeLists (verified working)
+
+The repository root carries a **superbuild** `CMakeLists.txt`. Two commands
+build everything, in dependency order, with the right ROS components selected
+for your platform:
 
 ```bash
-#!/bin/bash
-set -e
-REPO=$PWD                 # run from the repository root
-PREFIX=$HOME/alica-install
-BUILD=$HOME/alica-build
+cmake -S . -B build
+cmake --build build -j"$(nproc)"
+```
 
-build() {  # build() <source-dir>
-  local name=$(basename "$1")
-  cmake -S "$REPO/$1" -B "$BUILD/$name" \
-        -DCMAKE_INSTALL_PREFIX="$PREFIX" \
-        -DCMAKE_PREFIX_PATH="$PREFIX" \
-        -DCMAKE_BUILD_TYPE=Release
-  cmake --build "$BUILD/$name" -j"$(nproc)"
-  cmake --install "$BUILD/$name"
-}
+That is the whole thing. It replaces the hand-sequenced shell script this guide
+used to carry.
 
-build alica_solver_interface
-build alica_engine
-build alica_dummy_proxy
-build alica_simple_solver
-build alica_dynamic_loading
-build alica_standard_library
-build alica_test_utility
-build supplementary/autodiff
-build supplementary/constraintsolver
-build alica_tests
+The superbuild compiles nothing itself. Each ALICA package remains an
+independent CMake project — they find one another with `find_package()` and
+derive their install/export paths from `${CMAKE_PROJECT_NAME}` — so they cannot
+be `add_subdirectory()`'d into one tree without colliding. Instead each is
+configured, built and installed via `ExternalProject_Add`, which keeps every
+package byte-for-byte compatible with a standalone `cmake`, `catkin` or `colcon`
+build.
+
+By default the install prefix is `build/install`, so nothing needs root. Point
+it elsewhere with `-DCMAKE_INSTALL_PREFIX=...`.
+
+At configure time it prints exactly what it decided:
+
+```
+--   ALICA superbuild 1.1.0
+--   ----------------------------------------------------------
+--   Host              : Linux / ubuntu 22.04
+--   Platform decision : Ubuntu 22.04 -> ROS 2 components
+--   ROS components    : none
+--   Supplementary     : ON
+--   Tests             : ON
+--   Examples          : ON
+--   Install prefix    : /home/you/alica/build/install
+--   ----------------------------------------------------------
+--   Test suites       : alica_solver_interface, autodiff, constraintsolver, alica_tests
+--   Run them with     : cmake --build <dir> --target check
+```
+
+#### Platform selection
+
+ROS components are chosen from the host, never assumed:
+
+| Host | ROS components |
+| --- | --- |
+| Ubuntu < 22.04 | **ROS 1** (Noetic is the last ROS 1 LTS and stops at 20.04) |
+| Ubuntu 22.04 or later | **ROS 2** (Humble and later) |
+| Other Linux | follows a sourced `ROS_VERSION`, otherwise none |
+| macOS, Windows, any non-Linux | **none** — the ROS packages are never added |
+
+Being on the right distro is necessary but not sufficient: the ROS components
+also stay off unless a ROS environment is actually sourced (`ROS_DISTRO` set),
+because otherwise the sub-builds would fail at configure time hunting for
+`catkin` or `ament_cmake`. Source `/opt/ros/<distro>/setup.bash` and re-run
+`cmake` to pick them up.
+
+#### Options
+
+| Option | Default | Effect |
+| --- | --- | --- |
+| `ALICA_BUILD_SUPPLEMENTARY` | `ON` | `autodiff` and the CGSolver |
+| `ALICA_BUILD_TESTS` | `ON` | test suites and the `check` target |
+| `ALICA_BUILD_EXAMPLES` | `ON` | `examples/minimal` |
+| `ALICA_WITH_ROS1` | auto | force the ROS 1 components on or off |
+| `ALICA_WITH_ROS2` | auto | force the ROS 2 components on or off |
+| `ALICA_EXTRA_CMAKE_ARGS` | empty | extra `-D` flags forwarded to every package |
+
+`ALICA_WITH_ROS1` and `ALICA_WITH_ROS2` are mutually exclusive — `alica_msgs`
+generates either catkin or ament interfaces, not both — and enabling either on
+a non-Linux host is a hard error.
+
+A core-only build, no solver, no tests, no examples:
+
+```bash
+cmake -S . -B build -DALICA_BUILD_SUPPLEMENTARY=OFF \
+                    -DALICA_BUILD_TESTS=OFF \
+                    -DALICA_BUILD_EXAMPLES=OFF
 ```
 
 Then, so that runtime dynamic loading and the shared libraries resolve:
 
 ```bash
-export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$PWD/build/install/lib:$LD_LIBRARY_PATH
+```
+
+#### Building one package on its own
+
+The packages are still independent projects, so the manual route remains
+available when you only want to rebuild one — just install its dependencies
+first and point `CMAKE_PREFIX_PATH` at them:
+
+```bash
+cmake -S alica_engine -B /tmp/b/alica_engine \
+      -DCMAKE_INSTALL_PREFIX="$PWD/build/install" \
+      -DCMAKE_PREFIX_PATH="$PWD/build/install"
+cmake --build /tmp/b/alica_engine -j"$(nproc)"
+cmake --install /tmp/b/alica_engine
 ```
 
 ### 1.5 Gotchas worth knowing before you start
@@ -193,24 +259,36 @@ excluded there. For ROS 1 Noetic (on Ubuntu 20.04) CI uses `catkin build` with
 
 Tests are gated on `BUILD_TESTING` (default ON via `include(CTest)`) and
 registered with `gtest_discover_tests`, so plain `ctest` works. Four packages
-ship tests:
+ship tests. The superbuild wires all of them up behind one target:
 
 ```bash
-# The main suite — 92 tests covering the engine end to end
-cd $BUILD/alica_tests
-LD_LIBRARY_PATH=$BUILD/alica_tests:$PREFIX/lib ctest -j4 --output-on-failure
-
-# The others
-cd $BUILD/alica_solver_interface && ctest          #  2 tests
-cd $BUILD/autodiff              && ctest          # 20 tests
-cd $BUILD/constraintsolver      && LD_LIBRARY_PATH=$PREFIX/lib ctest   # 9 tests
+cmake --build build --target check
 ```
 
-Verified result on Ubuntu 22.04, no ROS: **123/123 pass** (92 + 2 + 20 + 9).
+That runs each suite in its own build directory with `LD_LIBRARY_PATH` already
+set, and prints a per-package summary.
+
+Verified result on Ubuntu 22.04 with no ROS: **123/123 pass** (92 + 2 + 20 + 9).
+
+To drive a single suite by hand:
+
+```bash
+cd build/packages/alica_tests
+LD_LIBRARY_PATH=$PWD:../../install/lib ctest --output-on-failure
+```
 
 The `LD_LIBRARY_PATH` on the main suite is not optional — `alica_tests` builds
 its behaviours into `libalica-tests.so` and loads them dynamically, exactly like
 a real application.
+
+> **Do not run `alica_tests` with `ctest -j`.** Several multi-agent tests wait on
+> real wall-clock deadlines (`TeamTimeOut` is 2000 ms in `Alica.yaml`), so
+> running them concurrently — or on a busy machine — starves them and they time
+> out spuriously. Which test fails varies between runs, and every one of them
+> passes on `ctest --rerun-failed`. Serial takes ~43 s versus ~11 s parallel and
+> is far more reliable, so the `check` target runs serially and additionally
+> retries a timed-out test once (`--repeat until-pass:2`). This flakiness is a
+> pre-existing property of the suite, not of any particular build method.
 
 You can also drive the gtest binary directly, which is handy for filtering:
 
@@ -241,9 +319,20 @@ CI excludes `AlicaTurtlesimTest.*` because those need a running turtlesim.
 **The minimal non-ROS sample** — `examples/minimal/`, added by this guide. No
 ROS, no Boost, no dynamic loading. See [section 3](#3-a-bare-minimum-example).
 
+The superbuild builds it by default (`ALICA_BUILD_EXAMPLES=ON`). Run it from
+its own directory, where the `etc/` model files live:
+
 ```bash
 cd examples/minimal
-cmake -S . -B build -DCMAKE_PREFIX_PATH=$PREFIX
+LD_LIBRARY_PATH=../../build/install/lib \
+  ../../build/packages/minimal_alica/minimal_alica etc 2
+```
+
+Or build it standalone against an existing install prefix:
+
+```bash
+cd examples/minimal
+cmake -S . -B build -DCMAKE_PREFIX_PATH=<alica-install-prefix>
 cmake --build build -j"$(nproc)"
 ./build/minimal_alica etc 2
 ```
@@ -797,8 +886,9 @@ conflicts nasty.
 **Rough packaging.** Documented in section 1.5: two packages silently override
 `CMAKE_BUILD_TYPE` to Debug so you cannot get an optimised engine without
 editing CMake; the yaml-cpp linkage depends on a Debian patch and breaks
-confusingly against upstream yaml-cpp; there is no top-level `CMakeLists.txt`,
-so you sequence nine packages yourself; `LD_LIBRARY_PATH` is read directly at
+confusingly against upstream yaml-cpp; upstream ships no top-level
+`CMakeLists.txt`, so you sequence nine packages yourself (the superbuild added
+in section 1.4 fixes this one); `LD_LIBRARY_PATH` is read directly at
 runtime and throws if unset. None is fatal — all are friction, and they signal a
 project built around one organisation's CI rather than for outside consumption.
 
@@ -868,6 +958,7 @@ problem, the cost is hard to justify.
 | `supplementary/alica_designer_runtime/` | the Plan Designer stack |
 | `supplementary/alica_tracing/`, `alica_dummy_tracing/` | tracing backends |
 | `docs/articles/` | the language documentation, ~5-10 min per article |
+| `CMakeLists.txt` | top-level superbuild: dependency order + ROS platform selection |
 | `cmake_flags/cflags.cmake` | shared compile flags |
 
 ### Useful links
