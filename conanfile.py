@@ -60,7 +60,7 @@ class AlicaConan(ConanFile):
         # its binary directory alone, so the two coexist.
         cmake_layout(self, build_folder="build")
         self.folders.build = "build"
-        self.folders.generators = "build/conan"
+        self.folders.generators = "build"
 
     def requirements(self):
         # See the note on versions at the top of this file.

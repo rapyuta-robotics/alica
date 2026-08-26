@@ -43,12 +43,25 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_002)
 
 TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
 {
-    EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", false));
-    EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
+    // PartialAssignment::s_allowIdling is a PROCESS-WIDE static that AlicaEngine::reload() writes from
+    // config (AlicaEngine.cpp). Its value on entry is therefore whatever the last engine constructed in
+    // this process left behind - not the compiled-in default - and the test configs under
+    // alica_tests/etc/{nase,hairy}/Alica.yaml all set AllowIdling: false. So capture it instead of
+    // assuming: asserting a hardcoded true here passes when this test runs alone and fails as soon as
+    // any earlier test in the same binary has built an engine.
+    const bool idlingBeforeInit = PartialAssignment::isIdlingAllowed();
+
+    // The invariant under test: setOption before init does NOT take effect, because setOption only
+    // reloads the config when the context is already initialized. So the value must be UNCHANGED.
+    // Set it twice, ending on the OPPOSITE of the value we started with, so that an erroneous
+    // pre-init apply is detectable whatever that starting value happened to be - asserting against a
+    // fixed constant would silently pass whenever the leaked value already matched it.
+    EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", idlingBeforeInit));
+    EXPECT_EQ(idlingBeforeInit, PartialAssignment::isIdlingAllowed());
 
     // Some options can be set but become available only after init
-    EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));
-    EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
+    EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", !idlingBeforeInit));
+    EXPECT_EQ(idlingBeforeInit, PartialAssignment::isIdlingAllowed());
 
     alica::AlicaCreators creators(std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
             std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
@@ -56,7 +69,8 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
     EXPECT_EQ(0, ac->init(std::move(creators), true));
     ae = AlicaTestsEngineGetter::getEngine(ac.get());
 
-    EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
+    // ...and init DOES apply it: the value must now be the flipped one the second setOption left.
+    EXPECT_EQ(!idlingBeforeInit, PartialAssignment::isIdlingAllowed());
 }
 
 TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)

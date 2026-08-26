@@ -23,18 +23,32 @@ constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
 constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
 constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
+std::atomic<int> AlicaContext::_processLoggerRefCount{0};
+
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
-        : /* set the default logger using the comma operator before anything else. Note: the vebosity is set to INFO initially because the config file has not
-             been parsed yet. The logger is initialized here so that logs during construction are reported, specifically the logs while reading the config */
-        _alicaContextParams((AlicaLogger::set<AlicaDefaultLogger>(Verbosity::INFO, alicaContextParams.agentName), alicaContextParams))
+        /* Install a default logger before anything else, so that logs emitted during construction are
+           reported - specifically the logs while reading the config. The verbosity is INFO initially
+           because the config file has not been parsed yet; the ctor body upgrades it once it has.
+
+           setIfUnset, not set: the logger is process-wide, so a second AlicaContext must not take it
+           away from a context that is already running. Only the context that installs it re-configures
+           it below, which means that in a multi-context process the logger's verbosity comes from the
+           FIRST context's config. */
+        : _ownsProcessLogger(AlicaLogger::setIfUnset<AlicaDefaultLogger>(Verbosity::INFO, alicaContextParams.agentName))
+        , _alicaContextParams(alicaContextParams)
         , _localAgentName(alicaContextParams.agentName)
         , _configRootNode(initConfig(alicaContextParams.configPaths, alicaContextParams.agentName))
         , _validTag(ALICA_CTX_GOOD)
         , _clock(std::make_unique<AlicaClock>())
         , _globalBlackboard(std::make_shared<Blackboard>(loadGlobalBlackboardBlueprint().get()))
 {
-    // reset the logger but this time the config is read
-    setLogger<AlicaDefaultLogger>();
+    // Counted here rather than in the member-init list so that a throwing member initializer leaves
+    // the count balanced: no increment happened, and the destructor will not run.
+    ++_processLoggerRefCount;
+    if (_ownsProcessLogger) {
+        // reset the logger but this time the config is read
+        setLogger<AlicaDefaultLogger>();
+    }
 }
 
 std::unique_ptr<BlackboardBlueprint> AlicaContext::loadGlobalBlackboardBlueprint()
@@ -67,7 +81,12 @@ AlicaContext::~AlicaContext()
         terminate();
     }
     _validTag = ALICA_CTX_BAD;
-    AlicaLogger::destroy();
+    // The logger is process-wide, so it must outlive every context that is still using it. Only the
+    // last context to go tears it down; destroying it here unconditionally would leave any surviving
+    // context logging into a null logger for the rest of its life.
+    if (--_processLoggerRefCount == 0) {
+        AlicaLogger::destroy();
+    }
 }
 
 int AlicaContext::init(AlicaCreators& creatorCtx)

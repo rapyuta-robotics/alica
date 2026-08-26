@@ -93,7 +93,19 @@ if(BUILD_TESTING)
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
     target_compile_definitions(${PROJECT_NAME}-test PUBLIC "THIS_PACKAGE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
     target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads alica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
-    gtest_discover_tests(${PROJECT_NAME}-test)
+    # The engine dlopen()s behaviour libraries off LD_LIBRARY_PATH at runtime, so a test that builds
+    # an engine throws "could not load LD_LIBRARY_PATH" without it. The `check` target injects it, but
+    # a bare `ctest` in the build directory does not - so set it on the tests themselves too, and
+    # plain `ctest` works as expected. Keep in sync with _alica_ld_path in the top-level CMakeLists.
+    if(DEFINED ENV{LD_LIBRARY_PATH} AND NOT "$ENV{LD_LIBRARY_PATH}" STREQUAL "")
+        set(_alica_tests_ld_path "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}:$ENV{LD_LIBRARY_PATH}")
+    else()
+        set(_alica_tests_ld_path "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+    endif()
+    gtest_discover_tests(${PROJECT_NAME}-test
+        PROPERTIES 
+        ENVIRONMENT "LD_LIBRARY_PATH=${_alica_tests_ld_path}"
+        TIMEOUT 10)
 endif()
 
 # Install

@@ -108,5 +108,99 @@ TEST_F(SingleAgentUninitializedTestFixture, loggerSet)
     ASSERT_GE(numLogsAfterInit, numLogsBeforeInit);
 }
 
+/**
+ * Regression tests for the process-wide logger under MORE THAN ONE AlicaContext.
+ *
+ * The logger is a single static (AlicaLogger::_logger) shared by every context in the process, while
+ * AlicaContext's ctor installs one and its dtor used to destroy one. That combination meant a second
+ * context silently took the logger away from the first, and destroying any one context de-logged all
+ * the survivors. Both are asserted against here.
+ *
+ * This fixture deliberately does NOT derive from the single-context fixtures: it needs to control
+ * context lifetime itself.
+ */
+class TwoContextLoggerFixture : public ::testing::Test
+{
+protected:
+    std::vector<std::string> testFolderPaths() const
+    {
+        std::string path;
+#if defined(THIS_PACKAGE_DIR)
+        path = THIS_PACKAGE_DIR;
+#endif
+        return {path + "/etc/"};
+    }
+
+    std::unique_ptr<AlicaContext> makeContext(const std::string& agentName, AgentId agentId) const
+    {
+        return std::make_unique<AlicaContext>(
+                AlicaContextParams(agentName, testFolderPaths(), "Roleset", "TestMasterPlan", true, agentId));
+    }
+};
+
+TEST_F(TwoContextLoggerFixture, secondContextDoesNotStealTheLogger)
+{
+    auto alpha = makeContext("alpha", 1);
+    alpha->setLogger<CustomLogger>("alpha_param");
+
+    auto* installed = dynamic_cast<CustomLogger*>(AlicaLogger::instance());
+    ASSERT_TRUE(installed) << "alpha's logger should be installed to begin with";
+
+    // Merely CONSTRUCTING a second context must not disturb it. This is the sharp edge of the bug:
+    // no setLogger call is involved, the ctor's own default install used to be unconditional.
+    auto bravo = makeContext("bravo", 2);
+
+    ASSERT_TRUE(AlicaLogger::isInitialized());
+    EXPECT_EQ(installed, dynamic_cast<CustomLogger*>(AlicaLogger::instance()))
+            << "constructing a second context replaced the first context's logger";
+
+    // ...and alpha's logging must still reach alpha's logger.
+    Logging::logError("space_after_second_ctor") << "msg_after_second_ctor";
+    EXPECT_TRUE(installed->verifyLog("msg_after_second_ctor", Verbosity::ERROR, "space_after_second_ctor"));
+}
+
+TEST_F(TwoContextLoggerFixture, destroyingOneContextLeavesTheOtherAbleToLog)
+{
+    auto alpha = makeContext("alpha", 1);
+    alpha->setLogger<CustomLogger>("alpha_param");
+    auto* installed = dynamic_cast<CustomLogger*>(AlicaLogger::instance());
+    ASSERT_TRUE(installed);
+
+    auto bravo = makeContext("bravo", 2);
+    const std::size_t logsBeforeDestruction = installed->numLogs();
+
+    // Destroy the second context while the first is still alive. The dtor used to call
+    // AlicaLogger::destroy() unconditionally, which left alpha with no logger at all.
+    bravo.reset();
+
+    ASSERT_TRUE(AlicaLogger::isInitialized()) << "destroying one context de-logged the surviving context";
+    EXPECT_EQ(installed, dynamic_cast<CustomLogger*>(AlicaLogger::instance()));
+
+    Logging::logWarn("space_after_destroy") << "msg_after_destroy";
+    EXPECT_TRUE(installed->verifyLog("msg_after_destroy", Verbosity::WARNING, "space_after_destroy"));
+    EXPECT_GT(installed->numLogs(), logsBeforeDestruction) << "the surviving context's logs went nowhere";
+}
+
+TEST_F(TwoContextLoggerFixture, loggerIsTornDownOnlyAfterTheLastContextGoes)
+{
+    {
+        auto alpha = makeContext("alpha", 1);
+        auto bravo = makeContext("bravo", 2);
+        ASSERT_TRUE(AlicaLogger::isInitialized());
+
+        alpha.reset();
+        EXPECT_TRUE(AlicaLogger::isInitialized()) << "logger died with the first context rather than the last";
+
+        bravo.reset();
+        EXPECT_FALSE(AlicaLogger::isInitialized()) << "logger outlived the last context";
+    }
+
+    // A fresh context after the count has returned to zero must install a default logger again, which
+    // is what the single-context fixtures rely on.
+    auto solo = makeContext("solo", 3);
+    ASSERT_TRUE(AlicaLogger::isInitialized());
+    EXPECT_TRUE(dynamic_cast<AlicaDefaultLogger*>(AlicaLogger::instance()));
+}
+
 } // namespace
 } // namespace alica::test

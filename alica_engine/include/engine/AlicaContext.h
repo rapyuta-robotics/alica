@@ -466,7 +466,17 @@ public:
     /**
      * Set logger to be used by this alica framework instance.
      * Example usage: setLogger<alica::AlicaDefaultLogger>();
-     * The logger is static and limited to 1 instance per process.
+     *
+     * The logger is static and limited to 1 instance per process. It is therefore NOT per-context:
+     * calling this replaces the logger for every AlicaContext in the process, and the verbosity and
+     * agent name baked into it are those of the calling context. In a process with more than one
+     * context this means log lines from all agents are stamped with whichever agent name was
+     * installed last. If you need per-agent log attribution, run one agent per process.
+     *
+     * Constructing an AlicaContext installs an AlicaDefaultLogger only if no logger is present yet,
+     * so a second context can never silently take the logger away from a context that is already
+     * running. An explicit call to this method always wins, by design. The logger is destroyed when
+     * the last AlicaContext in the process is destroyed, not the first.
      *
      * @note LoggerType must be a derived class of IAlicaLogger
      * @note This must be called before initializing context
@@ -488,6 +498,11 @@ private:
 
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
+
+    // True if this context is the one that installed the process-wide logger. Must stay the first
+    // member: the logger has to exist before any other member initializer can log. Only the owning
+    // context re-configures the logger once the config has been parsed.
+    const bool _ownsProcessLogger;
     const AlicaContextParams _alicaContextParams;
     std::string _localAgentName;
     YAML::Node _configRootNode;
@@ -500,6 +515,10 @@ private:
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaTimerFactory> _engineTimerFactory;
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
+
+    // Number of live AlicaContexts in this process. The process-wide logger is torn down only when
+    // this reaches zero, so that destroying one context cannot de-log the ones still running.
+    static std::atomic<int> _processLoggerRefCount;
 
     bool _initialized = false;
     std::shared_ptr<Blackboard> _globalBlackboard;

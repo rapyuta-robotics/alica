@@ -43,7 +43,10 @@ std::unique_ptr<alica::AlicaContext> makeAgent(const std::string& configPath, co
     ac->setTimerFactory<alica::AlicaSystemTimerFactory>();       // drives behaviours/plans
     ac->setEngineTimerFactory<alica::AlicaSystemTimerFactory>(); // drives the engine loop
     if (installLogger) {
-        // The logger is static: exactly one instance per process.
+        // The logger is static: exactly one instance per process, shared by every
+        // AlicaContext. This call is process-wide and last-one-wins, so in a process
+        // with several contexts all agents' logs carry one agent's name. Run one
+        // agent per process if you want per-agent log attribution.
         ac->setLogger<alica::AlicaDefaultLogger>();
     }
 

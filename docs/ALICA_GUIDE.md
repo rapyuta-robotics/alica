@@ -589,7 +589,7 @@ auto ac = std::make_unique<alica::AlicaContext>(params);
 // 2. platform pieces — swap for the ROS proxies to go distributed
 ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
 ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
-ac->setLogger<alica::AlicaDefaultLogger>();   // static: once per process
+ac->setLogger<alica::AlicaDefaultLogger>();   // process-wide, not per-context — see below
 
 // 3. seed the global blackboard before init
 alica::LockedBlackboardRW(*ac->getGlobalBlackboardShared())
@@ -613,6 +613,40 @@ ac->terminate();
 clock, communicator, solvers, timers, tracing and the global blackboard.
 `stepEngine=true` instead gives you a manually-stepped engine, which is how the
 test suite gets deterministic behaviour.
+
+#### One agent per process
+
+Prefer **one agent per process**. Almost everything an agent owns lives in its
+`AlicaContext`, but a few things are process-wide statics shared by every context,
+and the logger is the one you will notice:
+
+- **The logger** (`AlicaLogger::_logger`) is a single static. Constructing an
+  `AlicaContext` installs an `AlicaDefaultLogger` only if none is present yet, so a
+  second context cannot take the logger away from a context that is already running,
+  and the logger is torn down when the *last* context goes rather than the first. But
+  `setLogger` is still process-wide and last-call-wins: the verbosity and agent name
+  baked into the logger are those of whichever context installed it. So with two
+  contexts in one process, **every agent's log lines carry one agent's name**. There
+  is no per-agent log attribution — that is the main reason to keep agents in separate
+  processes. In a multi-context process the logger's verbosity comes from the *first*
+  context's config.
+- **`RunningPlan`'s assignment protection time** is a file-static set from config
+  during `AlicaEngine::init`, so the last context to initialise decides it for every
+  agent in the process.
+- **`Factory`'s model manager and reference lists** are statics used while parsing the
+  plan tree. Sequential construction is fine — each new `ModelManager` resets them —
+  but constructing two contexts *concurrently* (from two threads) will corrupt both
+  plan trees.
+- **`PartialAssignment::s_allowIdling`** is another config-driven static, written by
+  `AlicaEngine::reload` from `Alica.AllowIdling`. The last engine constructed in the
+  process decides it for every agent, and the value outlives the context that set it —
+  so within one test binary it carries over from test to test. Tests must therefore
+  never assume it holds its compiled-in default; read it and compare, as
+  `AlicaNotInitialized.TestUpdatingComponents_003` does.
+
+Running several contexts in one process is what `AlicaTestMultiAgentFixture` does, and
+it works for tests that assert on engine state rather than on log output. Production
+agents should get a process each.
 
 ### 3.6 CMake
 
@@ -723,7 +757,7 @@ without either hard-coding it or hiding it inside behaviour internals.
 | **Pluggable clock** | System clock or ROS clock (`AlicaClock`), so simulation time works. |
 | **Pluggable communication** | `IAlicaCommunication`: in-process dummy, ROS 1, ROS 2 — or your own transport. |
 | **Pluggable timers** | `IAlicaTimerFactory`, separately settable for the engine loop and for behaviours; a custom executor can be supplied (added in `dfc62ec7`). |
-| **Pluggable logging** | `IAlicaLogger` with verbosity levels; default and ROS implementations. One logger per process (it is static). |
+| **Pluggable logging** | `IAlicaLogger` with verbosity levels; default and ROS implementations. One logger per process (it is static), shared by every `AlicaContext` — so log lines carry one agent's name regardless of how many agents run in the process. See [One agent per process](#one-agent-per-process). |
 | **Tracing** | `IAlicaTrace`/`IAlicaTraceFactory` spans for behaviours and plans, with parent-context propagation — Jaeger-style distributed tracing of plan execution. Dummy and real backends. |
 | **Event logging** | Optional structured event log to disk (`EventLogging` in `Alica.yaml`). |
 | **Step mode** | `stepEngine=true` makes the engine advance only when told, which is what makes the test suite deterministic. |
