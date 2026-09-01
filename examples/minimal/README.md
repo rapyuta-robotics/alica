@@ -62,6 +62,76 @@ agentA final counter = 6
 agentB final counter = 6
 ```
 
+## Profiling with Tracy
+
+The example carries optional [Tracy](https://github.com/wolfpld/tracy)
+instrumentation: zones around agent construction and around each `CountUp`
+tick, plus the counter as a plotted value. It is off by default and compiles to
+nothing when off (see `src/Profiling.h`).
+
+Tracy has two halves. Conan supplies the **client** -- the library that is
+linked into the profiled process. It does not package the **server** -- the
+`tracy-profiler` GUI or the `tracy-capture` CLI that records a trace -- so that
+has to be built from Tracy's own sources once.
+
+### 1. Build the example with instrumentation
+
+```bash
+conan install . --build=missing -o with_profile=True   # from the repo root
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
+cmake --build build --target minimal_alica -j"$(nproc)"
+```
+
+`conan install` passes `with_profile` through as `ALICA_BUILD_PROFILE`; the
+configuration summary prints `Tracy profiling : ON` when it took. To build
+without instrumentation, pass `-o with_profile=False` (or configure with
+`-DALICA_BUILD_PROFILE=OFF`).
+
+Linking the Tracy client is not free of side effects: it starts a profiler
+thread and listens on TCP port 8086 from process start.
+
+### 2. Build a server
+
+Follow tracy official documentation for the guide on how to build and run tracy capture and tracy profiler tools
+
+### 3. Record a trace
+
+The client streams to a server over TCP; nothing is written to disk by the
+profiled process itself. The example only runs for six seconds and would
+normally exit before a server ever connected, so start it with
+`TRACY_NO_EXIT=1`, which makes it block at exit until the trace has been
+drained:
+
+```bash
+cd examples/minimal
+LD_LIBRARY_PATH=../../build/lib TRACY_NO_EXIT=1 ../../build/bin/minimal_alica etc 2 &
+/tmp/tracy-capture/build/tracy-capture -o minimal.tracy -f
+```
+
+```
+Connecting to 127.0.0.1:8086...
+Frames: 2
+Time span: 6.26 s
+Zones: 35
+Saving trace... done!
+```
+
+Open `minimal.tracy` in the GUI. `TRACY_PORT` overrides 8086 on both sides if
+it is taken; `tracy-capture -a <host>` records from another machine.
+
+### Profiling the engine, not just the example
+
+The zones here are all in the example's own sources. Instrumenting
+`alica_engine` -- `PlanBase::run()` is the interesting one, it is the engine's
+tick -- means the zones live in a shared library while `main` lives in the
+executable. Tracy's client is a static library by default, which would give
+each of them its own profiler instance and its own listening socket. Request a
+shared one:
+
+```bash
+conan install . --build=missing -o with_profile=True -o "tracy/*:shared=True"
+```
+
 ## Layout
 
 | Path | Role |

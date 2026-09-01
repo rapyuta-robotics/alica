@@ -589,7 +589,8 @@ auto ac = std::make_unique<alica::AlicaContext>(params);
 // 2. platform pieces — swap for the ROS proxies to go distributed
 ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
 ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
-ac->setLogger<alica::AlicaDefaultLogger>();   // process-wide, not per-context — see below
+// no setLogger call needed: the AlicaContext ctor installs an AlicaDefaultLogger if the
+// process has none. Call setLogger only to override it — it is process-wide, see below
 
 // 3. seed the global blackboard before init
 alica::LockedBlackboardRW(*ac->getGlobalBlackboardShared())

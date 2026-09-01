@@ -160,6 +160,7 @@ endif()
 option(ALICA_BUILD_SUPPLEMENTARY "Build autodiff and the CGSolver constraint solver" ON)
 option(ALICA_BUILD_TESTS         "Build the test suites (ctest)"                     ON)
 option(ALICA_BUILD_EXAMPLES      "Build examples/minimal"                            ON)
+option(ALICA_BUILD_PROFILE       "Instrument for the Tracy profiler"                 OFF)
 option(ALICA_WITH_ROS1 "Build the ROS 1 components" ${_alica_ros1_default})
 option(ALICA_WITH_ROS2 "Build the ROS 2 components" ${_alica_ros2_default})
 
@@ -236,6 +237,20 @@ if(BUILD_TESTING)
     set(_alica_test_hint
         "\n\nGTest is needed only by the test suites -- configure with "
         "-DALICA_BUILD_TESTS=OFF to build without them.")
+  endif()
+endif()
+
+# Tracy is deliberately outside the block above: it has no Debian package, so
+# the "sudo apt install" line that block prints cannot name it.
+if(ALICA_BUILD_PROFILE)
+  find_package(Tracy QUIET)
+  if(NOT Tracy_FOUND)
+    message(FATAL_ERROR
+      "ALICA_BUILD_PROFILE=ON but the Tracy client library was not found. It "
+      "is not packaged by Debian/Ubuntu; the supported source is Conan:\n\n"
+      "    conan install . --build=missing -o with_profile=True\n\n"
+      "Then re-run cmake with the generated toolchain. Configure with "
+      "-DALICA_BUILD_PROFILE=OFF to build without instrumentation.")
   endif()
 endif()
 
@@ -493,6 +508,7 @@ message(STATUS "  ROS components    : ${_alica_ros_line}")
 message(STATUS "  Supplementary     : ${ALICA_BUILD_SUPPLEMENTARY}")
 message(STATUS "  Tests             : ${ALICA_BUILD_TESTS}")
 message(STATUS "  Examples          : ${ALICA_BUILD_EXAMPLES}")
+message(STATUS "  Tracy profiling   : ${ALICA_BUILD_PROFILE}")
 message(STATUS "  Packages          : ${_alica_package_count}")
 message(STATUS "  Build type        : ${CMAKE_BUILD_TYPE}")
 message(STATUS "  Libraries         : ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")

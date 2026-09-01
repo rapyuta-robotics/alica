@@ -44,11 +44,13 @@ class AlicaConan(ConanFile):
         "with_supplementary": [True, False],
         "with_tests": [True, False],
         "with_examples": [True, False],
+        "with_profile": [True, False],
     }
     default_options = {
         "with_supplementary": True,
         "with_tests": True,
         "with_examples": True,
+        "with_profile": True,
     }
 
     def layout(self):
@@ -70,6 +72,21 @@ class AlicaConan(ConanFile):
         if self.options.with_tests:
             self.requires("gtest/1.14.0")
 
+        if self.options.with_profile:
+            # Client library only -- the recipe does not package the server
+            # (the tracy-profiler GUI or tracy-capture), which has to be built
+            # from Tracy's own sources. See examples/minimal/README.md.
+            #
+            # Note for instrumenting ALICA itself rather than just an example:
+            # TracyClient defaults to a static library, which would give the
+            # engine .so and the executable a profiler instance each. Add
+            # `-o "tracy/*:shared=True"` so they share one.
+            self.requires("tracy/0.13.1")
+
+    def configure(self):
+        self.options["tracy"].shared = True
+        self.options["tracy/*"].enable = True
+
     def generate(self):
         deps = CMakeDeps(self)
         deps.generate()
@@ -88,6 +105,7 @@ class AlicaConan(ConanFile):
         tc.variables["ALICA_BUILD_SUPPLEMENTARY"] = bool(self.options.with_supplementary)
         tc.variables["ALICA_BUILD_TESTS"] = bool(self.options.with_tests)
         tc.variables["ALICA_BUILD_EXAMPLES"] = bool(self.options.with_examples)
+        tc.variables["ALICA_BUILD_PROFILE"] = bool(self.options.with_profile)
 
         tc.generate()
 
