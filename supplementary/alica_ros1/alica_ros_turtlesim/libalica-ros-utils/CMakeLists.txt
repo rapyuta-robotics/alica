@@ -12,7 +12,7 @@ target_link_libraries(${PROJECT_NAME} alica_engine)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 install(TARGETS ${PROJECT_NAME}
-  EXPORT ${CMAKE_PROJECT_NAME}Targets
+  EXPORT alica_ros_turtlesimTargets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )
