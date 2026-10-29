@@ -37,5 +37,11 @@ CMakeCache.txt
 # CMakeUserPresets.json is written into the source tree by `conan install` and
 # holds absolute paths into this machine's build and package folders.
 CMakeUserPresets.json
+# Environment scripts `conan install` writes into its output folder. The
+# documented flow puts them in build/, but `conan install --requires ...` run
+# from the repository root drops them here.
+conanbuild*.sh
+conanrun*.sh
+deactivate_conan*.sh
 Testing/Temporary/LastTest.log
 Testing/Temporary/CTestCostData.txt
