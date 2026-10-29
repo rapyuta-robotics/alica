@@ -31,6 +31,12 @@ target_include_directories(alica_ros2_proxy PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
+# The engine's headers include yaml-cpp's, so the proxy needs the engine's
+# usage requirements, not just its include directory -- a yaml-cpp outside the
+# default include path (e.g. from Conan) is otherwise not found. Keyword-less,
+# because ament_target_dependencies() below is, and CMake rejects mixing the two.
+target_link_libraries(alica_ros2_proxy ${alica_engine_LIBRARIES})
+
 install(TARGETS ${PROJECT_NAME}
   EXPORT ${PROJECT_NAME}Targets
   DESTINATION lib/${PROJECT_NAME}
@@ -53,9 +59,14 @@ ament_export_libraries(alica_ros2_proxy)
 
 ament_package()
 
-export(EXPORT ${PROJECT_NAME}Targets
-  FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
-)
+# Build-tree export, for standalone (colcon) builds only. Inside the ALICA
+# top-level tree, alica_msgs' targets are real targets in rosidl's install-only
+# export sets rather than imported ones, which export() cannot reference.
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+  export(EXPORT ${PROJECT_NAME}Targets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
+  )
+endif()
 
 install(EXPORT ${PROJECT_NAME}Targets
   FILE ${PROJECT_NAME}Targets.cmake

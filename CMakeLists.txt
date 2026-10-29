@@ -10,7 +10,7 @@
 # compile_commands.json covers the whole repository, and a parallel build
 # schedules across package boundaries instead of stopping at each one.
 #
-# Two upstream idioms had to be adapted to make that legal. Both patches live
+# Three upstream idioms had to be adapted to make that legal. The patches live
 # in the package CMakeLists.txt files and are no-ops for a standalone cmake,
 # catkin or colcon build:
 #
@@ -24,6 +24,11 @@
 #   2. alica_engine and alica_tests pinned CMAKE_BUILD_TYPE to Debug
 #      unconditionally, overriding the caller for their subtree. They now do
 #      so only when the caller left it empty.
+#
+#   3. alica_ros2_proxy wrote a build-tree export() that references
+#      alica_msgs' targets. Nested, those are rosidl's own targets in
+#      install-only export sets, which export() rejects. It now writes that
+#      file only when it is the top-level project.
 #
 # Packages still find each other with find_package(), which ordinarily
 # requires them to be installed. Rather than edit 57 call sites, this file
@@ -404,11 +409,24 @@ endif()
 # ---------------------------------------------------------------------------
 
 if(ALICA_WITH_ROS2)
-  alica_add_package(alica_msgs       PATH supplementary/alica_msgs)
+  # rosidl_generate_interfaces() names its driver target after the package, but
+  # that is a UTILITY target, which cannot be linked. The libraries a C++
+  # consumer needs are the generated headers and the C++ typesupport.
+  alica_add_package(alica_msgs       PATH supplementary/alica_msgs
+                                     LIBRARIES alica_msgs__rosidl_generator_cpp
+                                               alica_msgs__rosidl_typesupport_cpp)
   alica_add_package(alica_ros2_proxy PATH supplementary/alica_ros2/alica_ros2_proxy)
 
+  # turtlesim is a desktop package, missing from minimal ROS installs such as
+  # ros-base images or ros-conan's default "core" variant. Only the demo needs
+  # it, so skip the demo rather than fail the whole tree.
   if(ALICA_BUILD_SUPPLEMENTARY)
-    alica_add_package(alica_ros2_turtlesim PATH supplementary/alica_ros2/alica_ros2_turtlesim)
+    find_package(turtlesim QUIET)
+    if(turtlesim_FOUND)
+      alica_add_package(alica_ros2_turtlesim PATH supplementary/alica_ros2/alica_ros2_turtlesim)
+    else()
+      message(STATUS "turtlesim not found -- skipping alica_ros2_turtlesim")
+    endif()
   endif()
 endif()
 
