@@ -7,6 +7,7 @@
 #include <DynamicUtilityFunctionCreator.h>
 #include <alica_ros2_turtlesim/base.hpp>
 #include <boost/dll/import.hpp> // for import_alias
+#include <clock/AlicaROSClock.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
@@ -23,7 +24,7 @@ namespace turtlesim
 
 Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
         const std::string& path)
-        : spinner(rclcpp::executors::MultiThreadedExecutor(rclcpp::ExecutorOptions(), 1))
+        : spinner()
         , _nh(nh)
         , _name(name)
 {
@@ -33,9 +34,11 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, {path + "/etc/"}, roleset, master_plan, false, agent_id));
 
-    ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-    ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-    ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
+    // ALICA uses the node of this turtle, so the spinner below runs the communication and the timers
+    ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>(nh);
+    ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(nh);
+    ac->setClock<alicaRosProxy::AlicaROSClock>(nh);
+    ac->setLogger<alicaRosLogger::AlicaRosLogger>();
 
     spinThread = std::thread([this]() { spinner.spin(); });
 }
