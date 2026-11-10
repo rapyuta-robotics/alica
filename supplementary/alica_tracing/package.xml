@@ -9,7 +9,6 @@
   <buildtool_depend>cmake</buildtool_depend>
   <depend>yaml-cpp</depend>
   <depend>alica_engine</depend>
-  <depend>roscpp</depend>
   <export>
     <build_type>cmake</build_type>
   </export>
