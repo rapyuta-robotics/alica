@@ -1,33 +1,31 @@
 #include "logger/AlicaRosLogger.h"
-#include <iostream>
+
 #include <rclcpp/logging.hpp>
-#include <sstream>
 
 using namespace alica;
 
 namespace alicaRosLogger
 {
-AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId)
+AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName)
         : _localAgentName(localAgentName)
-        , _localAgentId(localAgentId)
+        , _logger(rclcpp::get_logger(localAgentName))
 {
+    _logger.set_level(_verbosityRosLevelMap.at(verbosity));
+    RCLCPP_INFO(_logger, "Instantiated ROS logging for ALICA");
 }
 
 void AlicaRosLogger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)
 {
-    std::stringstream streamName;
-    streamName << "[ALICA] "
-               << "[" << _localAgentId << "/" << _localAgentName << "]";
     if (verbosity == alica::Verbosity::DEBUG) {
-        RCLCPP_DEBUG(rclcpp::get_logger(streamName.str()), msg.c_str());
+        RCLCPP_DEBUG_STREAM(_logger, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::INFO) {
-        RCLCPP_INFO(rclcpp::get_logger(streamName.str()), msg.c_str());
+        RCLCPP_INFO_STREAM(_logger, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::WARNING) {
-        RCLCPP_WARN(rclcpp::get_logger(streamName.str()), msg.c_str());
+        RCLCPP_WARN_STREAM(_logger, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::ERROR) {
-        RCLCPP_ERROR(rclcpp::get_logger(streamName.str()), msg.c_str());
+        RCLCPP_ERROR_STREAM(_logger, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::FATAL) {
-        RCLCPP_FATAL(rclcpp::get_logger(streamName.str()), msg.c_str());
+        RCLCPP_FATAL_STREAM(_logger, "[" << logSpace << "] " << msg);
     }
 }
 
