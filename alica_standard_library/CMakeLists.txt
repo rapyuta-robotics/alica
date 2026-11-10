@@ -13,7 +13,7 @@ alica_compile_flags()
 # Imports
 find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
-find_package(Boost COMPONENTS system filesystem REQUIRED)
+find_package(Boost COMPONENTS filesystem REQUIRED)
 if (NOT Boost_FOUND)
       message(FATAL_ERROR "Fatal error: Boost required.\n")
 endif (NOT Boost_FOUND)
