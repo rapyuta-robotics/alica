@@ -3,9 +3,12 @@ on:
   push:
     branches:
       - devel
+      - ros2_lyrical
   pull_request:
     branches:
       - devel
+      - ros2_lyrical
+      - lyrical/**
   workflow_dispatch:
 jobs:
   ROS1_build_test:
