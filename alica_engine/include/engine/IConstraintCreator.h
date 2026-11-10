@@ -8,6 +8,7 @@
 #pragma once
 
 #include "engine/BasicConstraint.h"
+#include <cstdint>
 #include <memory>
 
 using std::make_shared;
