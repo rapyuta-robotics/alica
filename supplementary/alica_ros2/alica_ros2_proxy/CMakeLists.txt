@@ -51,6 +51,7 @@ if(BUILD_TESTING)
 
   set(ALICA_ROS2_PROXY_TESTS
     alica_ros_timer_tests
+    alica_ros_communication_tests
   )
   foreach(test_name ${ALICA_ROS2_PROXY_TESTS})
     # Each test gets its own ROS domain, so that tests that run in parallel do not receive each other's messages
