@@ -14,6 +14,8 @@ find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(alica_ros2_proxy REQUIRED)
 find_package(turtlesim REQUIRED)
+# The interfaces moved to turtlesim_msgs after Humble
+find_package(turtlesim_msgs QUIET)
 find_package(alica_engine REQUIRED)
 find_package(constraintsolver)
 find_package(autodiff REQUIRED)
@@ -32,7 +34,7 @@ endif (NOT Boost_FOUND)
 
 include_directories(
     include
-    ${turtlesim_INCLUDE_DIRS}
+    libalica-ros2-turtlesim/include
 )
 
 add_executable(${PROJECT_NAME}
@@ -50,6 +52,7 @@ target_link_libraries(${PROJECT_NAME}
     Boost::filesystem
     rclcpp::rclcpp
     ${turtlesim_TARGETS}
+    ${turtlesim_msgs_TARGETS}
     ${geometry_msgs_TARGETS}
 )
 

@@ -5,8 +5,7 @@
 #include <functional>
 #include <geometry_msgs/msg/twist.hpp>
 #include <std_msgs/msg/empty.hpp>
-#include <turtlesim/msg/pose.hpp>
-#include <turtlesim/srv/teleport_absolute.hpp>
+#include <turtlesim_interfaces.hpp>
 
 namespace turtlesim
 {

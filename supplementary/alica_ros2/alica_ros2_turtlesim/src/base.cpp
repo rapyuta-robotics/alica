@@ -15,8 +15,7 @@
 #include <ros2_clock/AlicaRosTimer.h>
 #include <ros2_communication/AlicaRosCommunication.h>
 #include <ros2_logger/AlicaRosLogger.h>
-#include <turtlesim/srv/kill.hpp>
-#include <turtlesim/srv/spawn.hpp>
+#include <turtlesim_interfaces.hpp>
 
 namespace turtlesim
 {
@@ -43,8 +42,7 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
 void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 {
     rclcpp::CallbackGroup::SharedPtr killCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::Client<turtlesim::srv::Kill>::SharedPtr kill_client =
-            nh->create_client<turtlesim::srv::Kill>("/kill", rmw_qos_profile_services_default, killCallback);
+    rclcpp::Client<turtlesim::srv::Kill>::SharedPtr kill_client = nh->create_client<turtlesim::srv::Kill>("/kill", servicesQos(), killCallback);
     auto request = std::make_shared<turtlesim::srv::Kill::Request>();
     request->name = name;
     auto result = kill_client->async_send_request(request);
@@ -56,8 +54,7 @@ void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 {
     rclcpp::CallbackGroup::SharedPtr spawnCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client =
-            nh->create_client<turtlesim::srv::Spawn>("/spawn", rmw_qos_profile_services_default, spawnCallback);
+    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client = nh->create_client<turtlesim::srv::Spawn>("/spawn", servicesQos(), spawnCallback);
     auto request = std::make_shared<turtlesim::srv::Spawn_Request>();
     request->x = 1;
     request->y = 1;
