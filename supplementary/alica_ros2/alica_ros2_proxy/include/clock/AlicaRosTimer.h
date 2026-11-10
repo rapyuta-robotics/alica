@@ -3,15 +3,21 @@
 #include "engine/AlicaClock.h"
 #include "engine/IAlicaTimer.h"
 
+#include <atomic>
 #include <condition_variable>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <stdexcept>
+#include <string>
+#include <thread>
 
+#include <rclcpp/create_timer.hpp>
 #include <rclcpp/duration.hpp>
 #include <rclcpp/executors.hpp>
 #include <rclcpp/node.hpp>
+
+#include <unistd.h>
 
 namespace alicaRosTimer
 {
@@ -23,25 +29,22 @@ class SyncStopTimerRosImpl : public std::enable_shared_from_this<SyncStopTimerRo
 public:
     using TimerCb = std::function<void()>;
 
-    SyncStopTimerRosImpl(TimerCb&& userCb, alica::AlicaTime period)
+    SyncStopTimerRosImpl(rclcpp::Node::SharedPtr node, rclcpp::CallbackGroup::SharedPtr callbackGroup, TimerCb&& userCb, const alica::AlicaTime& period)
             : _userCb(std::move(userCb))
             , _period(toRosDuration(period))
-            , _nh(rclcpp::Node::make_shared("AlicaROS2Timer"))
+            , _node(std::move(node))
+            , _callbackGroup(std::move(callbackGroup))
             , _timer()
             , _stopMutex()
             , _stopCv()
-            , _userCbInProgress(false)
             , _stop(false)
+            , _userCbInProgress(false)
     {
-
-        _myexec.add_node(_nh);
-        _clock = std::thread([this]() { _myexec.spin(); });
-    }
-
-    ~SyncStopTimerRosImpl()
-    {
-        _myexec.cancel();
-        _clock.join();
+        if (!_callbackGroup) {
+            // A mutually exclusive group for each timer: the callbacks of one timer never overlap, as with a ROS1 timer,
+            // but the callbacks of different timers can run in parallel on a multi threaded executor
+            _callbackGroup = _node->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+        }
     }
 
     void start()
@@ -50,7 +53,16 @@ public:
         // will be called from the scheduler thread which is fine since stop() anyway blocks on userCb()
         _userCb();
 
-        _timer = rclcpp::create_timer(_nh, _nh->get_clock(), _period, std::bind(&SyncStopTimerRosImpl::timerCb, this));
+        // Grab a weak ptr to this object (grabbing a shared_ptr will result in a cycle)
+        _timer = rclcpp::create_timer(
+                _node, _node->get_clock(), _period,
+                [weak_ptr_self = Base::weak_from_this()]() {
+                    // Ensure impl object for this timer is not destroyed
+                    if (auto self = weak_ptr_self.lock()) {
+                        self->timerCb();
+                    }
+                },
+                _callbackGroup);
     }
 
     void stop()
@@ -78,11 +90,12 @@ public:
         std::unique_lock<std::mutex> lock(_stopMutex);
         _userCbInProgress = false;
         if (_stop) {
-            _stopCv.notify_one();
+            lock.unlock();
+            _stopCv.notify_all();
         }
     }
 
-    static rclcpp::Duration toRosDuration(alica::AlicaTime period)
+    static rclcpp::Duration toRosDuration(const alica::AlicaTime& period)
     {
         auto sec = period.inSeconds();
         auto nanosec = period.inNanoseconds();
@@ -92,14 +105,13 @@ public:
 
     TimerCb _userCb;
     rclcpp::Duration _period;
-    rclcpp::Node::SharedPtr _nh;
-    std::shared_ptr<rclcpp::TimerBase> _timer;
+    rclcpp::Node::SharedPtr _node;
+    rclcpp::CallbackGroup::SharedPtr _callbackGroup;
+    rclcpp::TimerBase::SharedPtr _timer;
     std::mutex _stopMutex;
     std::condition_variable _stopCv;
     bool _stop;
     bool _userCbInProgress;
-    std::thread _clock;
-    rclcpp::executors::MultiThreadedExecutor _myexec;
 };
 
 class SyncStopTimerRos : public alica::IAlicaTimer
@@ -109,8 +121,8 @@ class SyncStopTimerRos : public alica::IAlicaTimer
 public:
     using TimerCb = std::function<void()>;
 
-    SyncStopTimerRos(TimerCb&& userCb, alica::AlicaTime period)
-            : _impl(std::make_shared<Impl>(std::move(userCb), period))
+    SyncStopTimerRos(rclcpp::Node::SharedPtr node, rclcpp::CallbackGroup::SharedPtr callbackGroup, TimerCb&& userCb, alica::AlicaTime period)
+            : _impl(std::make_shared<Impl>(std::move(node), std::move(callbackGroup), std::move(userCb), period))
     {
         _impl->start();
     }
@@ -123,6 +135,14 @@ private:
     std::shared_ptr<Impl> _impl;
 };
 
+/**
+ * Creates timers on one node.
+ *
+ * If a node is given, the caller owns the executor that spins it. Use a multi threaded executor, so that a long timer
+ * callback does not block the others. If a callback group is given, all timers use it; else each timer gets its own
+ * mutually exclusive group. If no node is given, the factory creates one node and spins it on an internal multi
+ * threaded executor.
+ */
 template <class Timer>
 class TimerFactory : public alica::IAlicaTimerFactory
 {
@@ -131,21 +151,46 @@ class TimerFactory : public alica::IAlicaTimerFactory
 public:
     using TimerType = Timer;
 
-    TimerFactory() {}
+    TimerFactory(rclcpp::Node::SharedPtr node = nullptr, rclcpp::CallbackGroup::SharedPtr callbackGroup = nullptr)
+            : _node(std::move(node))
+            , _callbackGroup(std::move(callbackGroup))
+    {
+        if (!_node) {
+            static std::atomic<int> instanceCount(0);
+            _node = rclcpp::Node::make_shared("alica_timer_" + std::to_string(getpid()) + "_" + std::to_string(instanceCount++));
+            _executor = std::make_unique<rclcpp::executors::MultiThreadedExecutor>();
+            _executor->add_node(_node);
+            _spinThread = std::thread([this]() { _executor->spin(); });
+        }
+    }
 
     TimerFactory(const TimerFactory&) = delete;
+    TimerFactory(TimerFactory&&) = delete;
     TimerFactory& operator=(const TimerFactory&) = delete;
-    ~TimerFactory() = default;
+    TimerFactory&& operator=(TimerFactory&&) = delete;
+
+    ~TimerFactory()
+    {
+        if (_spinThread.joinable()) {
+            _executor->cancel();
+            _spinThread.join();
+        }
+    }
 
     std::unique_ptr<alica::IAlicaTimer> createTimer(TimerCb timerCb, alica::AlicaTime period) const override
     {
         if (!timerCb) {
             throw std::invalid_argument("no timerCb specified!");
         }
-        return std::make_unique<TimerType>(std::move(timerCb), period);
+        return std::make_unique<TimerType>(_node, _callbackGroup, std::move(timerCb), period);
     }
 
 private:
+    rclcpp::Node::SharedPtr _node;
+    rclcpp::CallbackGroup::SharedPtr _callbackGroup;
+    // Only used if no node is given
+    std::unique_ptr<rclcpp::executors::MultiThreadedExecutor> _executor;
+    std::thread _spinThread;
 };
 
 using AlicaRosTimerFactory = TimerFactory<SyncStopTimerRos>;
