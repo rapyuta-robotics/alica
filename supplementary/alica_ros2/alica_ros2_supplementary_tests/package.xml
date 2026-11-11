@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>alica_ros2_supplementary_tests</name>
+  <version>1.1.0</version>
+  <description>The supplementary_tests of ALICA on alica_ros2_proxy. The tests, the plans and the test library are the sources of the supplementary_tests package.</description>
+
+  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>alica_engine</depend>
+  <depend>alica_dummy_proxy</depend>
+  <depend>alica_simple_solver</depend>
+  <depend>alica_dynamic_loading</depend>
+  <depend>alica_solver_interface</depend>
+  <depend>alica_test_utility</depend>
+  <depend>constraintsolver</depend>
+  <depend>autodiff</depend>
+  <depend>alica_ros2_proxy</depend>
+  <depend>rclcpp</depend>
+
+  <test_depend condition="$ROS_VERSION == 2">ament_cmake_gtest</test_depend>
+  <test_depend condition="$ROS_VERSION == 2">ament_cmake_ros</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
