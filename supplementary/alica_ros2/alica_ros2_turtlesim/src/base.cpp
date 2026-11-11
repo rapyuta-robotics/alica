@@ -45,6 +45,8 @@ void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
     rclcpp::Client<turtlesim::srv::Kill>::SharedPtr kill_client = nh->create_client<turtlesim::srv::Kill>("/kill", servicesQos(), killCallback);
     auto request = std::make_shared<turtlesim::srv::Kill::Request>();
     request->name = name;
+    // A request that is sent before the service is discovered gets no response
+    kill_client->wait_for_service();
     auto result = kill_client->async_send_request(request);
     RCLCPP_INFO(nh->get_logger(), "Requested to Kill: %s", name.c_str());
     result.wait();
@@ -60,6 +62,7 @@ void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
     request->y = 1;
     request->theta = 0;
     request->name = name;
+    spawn_client->wait_for_service();
     auto result = spawn_client->async_send_request(request);
     RCLCPP_INFO(nh->get_logger(), "Request to spawn %s", name.c_str());
     result.wait();
