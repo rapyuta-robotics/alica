@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <engine/BasicUtilityFunction.h>
 #include <memory>
 

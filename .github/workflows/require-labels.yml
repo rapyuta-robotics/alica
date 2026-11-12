@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened, labeled, unlabeled]
     branches:
       - devel
+      - ros2_lyrical
       - release/**
 jobs:
   label:

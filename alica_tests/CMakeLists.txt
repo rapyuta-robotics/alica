@@ -9,7 +9,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
-find_package(Boost COMPONENTS system filesystem REQUIRED)
+find_package(Boost COMPONENTS filesystem REQUIRED)
 if (NOT Boost_FOUND)
       message(FATAL_ERROR "Fatal error: Boost required.\n")
 endif (NOT Boost_FOUND)

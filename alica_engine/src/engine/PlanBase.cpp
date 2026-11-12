@@ -147,8 +147,9 @@ void PlanBase::run(const Plan* masterPlan)
 #endif
         {
             std::unique_lock<std::mutex> lckStep(_stepMutex);
-            _isWaiting = true;
-            _stepModeCV.wait(lckStep, [&] { return _stepCalled.load(); });
+            // Waiting only if no step is pending. Else a caller of stepEngine() could see the flag before this step runs
+            _isWaiting = !_stepCalled;
+            _stepModeCV.wait(lckStep, [&] { return _stepCalled.load() || !_running.load(); });
             _stepCalled = false;
             _isWaiting = false;
             if (!_running) {
@@ -319,14 +320,13 @@ void PlanBase::run(const Plan* masterPlan)
  */
 void PlanBase::stop()
 {
-    _stepCalled = true;
-    _running = false;
-    _stepModeCV.notify_one();
-
-    if (_stepEngine) {
+    {
+        // With the mutex, so that run() cannot miss the change between its check and its wait
+        std::lock_guard<std::mutex> lckStep(_stepMutex);
         _stepCalled = true;
-        _stepModeCV.notify_one();
+        _running = false;
     }
+    _stepModeCV.notify_all();
 
     if (_engineTimer) {
         _engineTimer.reset();
@@ -391,7 +391,12 @@ const RunningPlan* PlanBase::getDeepestNode() const
 
 void PlanBase::stepNotify()
 {
-    _stepCalled = true;
+    {
+        std::lock_guard<std::mutex> lckStep(_stepMutex);
+        _stepCalled = true;
+        // Not waiting from now until the requested step is done
+        _isWaiting = false;
+    }
     if (!_stepEngine) {
         return;
     }
