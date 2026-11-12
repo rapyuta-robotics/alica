@@ -15,7 +15,8 @@
 #include <ros2_clock/AlicaRosTimer.h>
 #include <ros2_communication/AlicaRosCommunication.h>
 #include <ros2_logger/AlicaRosLogger.h>
-#include <turtlesim_interfaces.hpp>
+#include <turtlesim_msgs/srv/kill.hpp>
+#include <turtlesim_msgs/srv/spawn.hpp>
 
 namespace turtlesim
 {
@@ -42,8 +43,9 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
 void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 {
     rclcpp::CallbackGroup::SharedPtr killCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::Client<turtlesim::srv::Kill>::SharedPtr kill_client = nh->create_client<turtlesim::srv::Kill>("/kill", servicesQos(), killCallback);
-    auto request = std::make_shared<turtlesim::srv::Kill::Request>();
+    rclcpp::Client<turtlesim_msgs::srv::Kill>::SharedPtr kill_client =
+            nh->create_client<turtlesim_msgs::srv::Kill>("/kill", rclcpp::ServicesQoS(), killCallback);
+    auto request = std::make_shared<turtlesim_msgs::srv::Kill::Request>();
     request->name = name;
     // A request that is sent before the service is discovered gets no response
     kill_client->wait_for_service();
@@ -56,8 +58,9 @@ void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 {
     rclcpp::CallbackGroup::SharedPtr spawnCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client = nh->create_client<turtlesim::srv::Spawn>("/spawn", servicesQos(), spawnCallback);
-    auto request = std::make_shared<turtlesim::srv::Spawn_Request>();
+    rclcpp::Client<turtlesim_msgs::srv::Spawn>::SharedPtr spawn_client =
+            nh->create_client<turtlesim_msgs::srv::Spawn>("/spawn", rclcpp::ServicesQoS(), spawnCallback);
+    auto request = std::make_shared<turtlesim_msgs::srv::Spawn_Request>();
     request->x = 1;
     request->y = 1;
     request->theta = 0;

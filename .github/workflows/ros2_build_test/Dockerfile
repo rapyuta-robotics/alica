@@ -20,5 +20,5 @@ deps
 
 RUN <<build
   source /opt/ros/humble/setup.bash
-  colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim supplementary_tests
+  colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_ros2_turtlesim supplementary_tests
 build

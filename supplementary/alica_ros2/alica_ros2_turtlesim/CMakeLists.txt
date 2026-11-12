@@ -13,9 +13,7 @@ find_package(yaml-cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(alica_ros2_proxy REQUIRED)
-find_package(turtlesim REQUIRED)
-# The interfaces moved to turtlesim_msgs after Humble
-find_package(turtlesim_msgs QUIET)
+find_package(turtlesim_msgs REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(constraintsolver)
 find_package(autodiff REQUIRED)
@@ -51,13 +49,12 @@ target_link_libraries(${PROJECT_NAME}
     alica_dynamic_loading
     Boost::filesystem
     rclcpp::rclcpp
-    ${turtlesim_TARGETS}
     ${turtlesim_msgs_TARGETS}
     ${geometry_msgs_TARGETS}
 )
 
 ament_export_dependencies(
-    turtlesim
+    turtlesim_msgs
     geometry_msgs
     rclcpp
     alica_ros2_proxy

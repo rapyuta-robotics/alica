@@ -14,8 +14,8 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>turtlesim</depend>
-  <depend condition="$ROS_VERSION == 2 and $ROS_DISTRO != humble">turtlesim_msgs</depend>
+  <exec_depend>turtlesim</exec_depend>
+  <depend>turtlesim_msgs</depend>
   <depend>geometry_msgs</depend>
 
   <depend>alica_engine</depend>
