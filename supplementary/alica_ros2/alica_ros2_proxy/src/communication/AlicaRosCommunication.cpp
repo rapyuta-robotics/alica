@@ -1,4 +1,4 @@
-#include "ros2_communication/AlicaRosCommunication.h"
+#include "communication/AlicaRosCommunication.h"
 
 #include <engine/AlicaEngine.h>
 #include <engine/containers/AgentQuery.h>

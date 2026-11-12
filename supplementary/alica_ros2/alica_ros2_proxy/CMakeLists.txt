@@ -15,9 +15,9 @@ find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 add_library(alica_ros2_proxy SHARED
-	src/ros2_clock/AlicaROSClock.cpp
-	src/ros2_communication/AlicaRosCommunication.cpp
-  src/ros2_logger/AlicaRosLogger.cpp
+	src/clock/AlicaROSClock.cpp
+	src/communication/AlicaRosCommunication.cpp
+  src/logger/AlicaRosLogger.cpp
 )
 
 target_include_directories(alica_ros2_proxy PUBLIC
