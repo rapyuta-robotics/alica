@@ -2,11 +2,11 @@
 
 ## 1. Overview
 
-This tutorial is a ROS 2 version of the Alica ROS Turtlesim, with support for ROS Galactic and Humble. See the ROS 1 Turtlesim package for details on how the turtlesim and Alica interact.
+This tutorial is a ROS 2 version of the Alica ROS Turtlesim, for ROS 2 Lyrical. See the ROS 1 Turtlesim package for details on how the turtlesim and Alica interact.
 
 ## 2. Setup of the Colcon Workspace
 
-Use the appropriate version of Ubuntu for your ROS Distro (20.04 for Galactic, 22.05 for Humble) and run the following.
+Use Ubuntu 26.04 with ROS 2 Lyrical and run the following.
 
 1. Check out the required repositories:
 
@@ -25,7 +25,7 @@ The repository may be cloned into a different directory if you wish, but this is
 Build the ROS 2 packages using Colcon.
 
 ```
-source /opt/ros/[YOUR DISTRO HERE]/setup.bash
+source /opt/ros/lyrical/setup.bash
 colcon build --packages-skip alica_ros_proxy alica_ros_turtlesim alica_tests supplementary_tests
 source install/setup.bash
 ```
