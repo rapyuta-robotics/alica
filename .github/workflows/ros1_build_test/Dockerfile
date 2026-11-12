@@ -18,7 +18,7 @@ deps
 RUN <<build
   source /opt/ros/noetic/setup.bash
   catkin init || exit 1
-  catkin config --install --skiplist alica_tracing alica_ros2_proxy alica_ros2_turtlesim alica_ros2_supplementary_tests || exit 1
+  catkin config --install --skiplist alica_ros2_proxy alica_ros2_turtlesim alica_ros2_supplementary_tests || exit 1
   catkin build --no-status
 build
 

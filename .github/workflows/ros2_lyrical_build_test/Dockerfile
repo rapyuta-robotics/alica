@@ -17,12 +17,12 @@ deps
 
 RUN <<build
   source /opt/ros/lyrical/setup.bash
-  colcon build --event-handlers console_direct- --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim supplementary_tests || exit 1
+  colcon build --event-handlers console_direct- --packages-skip alica_ros_proxy alica_ros_turtlesim supplementary_tests || exit 1
 build
 
 RUN <<runtests
   source install/setup.bash
-  colcon test --event-handlers console_direct- --return-code-on-test-failure --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim supplementary_tests --ctest-args --output-on-failure --timeout 600
+  colcon test --event-handlers console_direct- --return-code-on-test-failure --packages-skip alica_ros_proxy alica_ros_turtlesim supplementary_tests --ctest-args --output-on-failure --timeout 600
   status=$?
   colcon test-result --verbose
   exit $status
