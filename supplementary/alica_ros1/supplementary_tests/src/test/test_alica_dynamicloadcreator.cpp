@@ -5,7 +5,6 @@
 #include <DynamicTransitionConditionCreator.h>
 #include <test_supplementary.h>
 
-#include "communication/AlicaRosCommunication.h"
 #include "engine/DefaultUtilityFunction.h"
 #include <engine/BasicBehaviour.h>
 #include <engine/BasicPlan.h>
@@ -40,21 +39,8 @@ class AlicaDynamicLoading : public ::testing::Test
 public:
     AlicaDynamicLoading() { AlicaLogger::set<alica::AlicaDefaultLogger>(Verbosity::DEBUG, "TEST"); }
 
-    std::string getRootPath() const
-    {
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        return path;
-    }
-
-    std::string getLibRootPath() const
-    {
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/dynamicLibRootPath", path, ".");
-        return path;
-    }
+    // From the fixture header, so that this file has no ROS code and builds for ROS1 and ROS2
+    std::string getRootPath() const { return supplementary::getTestRootPath(); }
 
     std::shared_ptr<Blackboard> getGlobalBlackboard() { return std::make_shared<Blackboard>(); }
 

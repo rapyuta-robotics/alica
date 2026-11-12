@@ -42,6 +42,15 @@ struct AlicaTestsEngineGetter
 namespace supplementary
 {
 
+// The directory that holds etc/ with the plans
+inline std::string getTestRootPath()
+{
+    ros::NodeHandle nh;
+    std::string path;
+    nh.param<std::string>("/rootPath", path, ".");
+    return path;
+}
+
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
