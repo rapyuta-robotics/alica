@@ -4,7 +4,7 @@
 #include <rclcpp/logging.hpp>
 
 #include <geometry_msgs/msg/twist.hpp>
-#include <turtlesim/srv/teleport_absolute.hpp>
+#include <turtlesim_msgs/srv/teleport_absolute.hpp>
 
 #include <chrono>
 
@@ -29,15 +29,16 @@ ALICATurtle::ALICATurtle(ALICATurtleWorldModel* wm)
     // initialize publisher, subscriber and service client.
     _velPub = _nh->create_publisher<geometry_msgs::msg::Twist>("/" + _name + "/cmd_vel", 1);
     _initTriggerSub = _nh->create_subscription<std_msgs::msg::Empty>("/init", 1, [&](const std_msgs::msg::Empty& msg) { _initTrigger = true; });
-    _poseSub = _nh->create_subscription<turtlesim::msg::Pose>("/" + _name + "/pose", 1, [&](const msg::Pose::ConstSharedPtr msg) { _current = *msg; });
-    _teleportClient = _nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
+    _poseSub = _nh->create_subscription<turtlesim_msgs::msg::Pose>(
+            "/" + _name + "/pose", 1, [&](const turtlesim_msgs::msg::Pose::ConstSharedPtr msg) { _current = *msg; });
+    _teleportClient = _nh->create_client<turtlesim_msgs::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rclcpp::ServicesQoS(), teleportCallback);
 
     _spinThread = std::thread([this]() { _spinner.spin(); });
 }
 
 void ALICATurtle::teleport(float x, float y)
 {
-    auto request = std::make_shared<srv::TeleportAbsolute::Request>();
+    auto request = std::make_shared<turtlesim_msgs::srv::TeleportAbsolute::Request>();
     request->x = x;
     request->y = y;
 

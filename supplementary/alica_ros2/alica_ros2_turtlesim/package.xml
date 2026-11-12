@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>alica_ros2_turtlesim</name>
   <version>1.1.0</version>
   <description>
@@ -14,7 +14,8 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>turtlesim</depend>
+  <exec_depend>turtlesim</exec_depend>
+  <depend>turtlesim_msgs</depend>
   <depend>geometry_msgs</depend>
 
   <depend>alica_engine</depend>

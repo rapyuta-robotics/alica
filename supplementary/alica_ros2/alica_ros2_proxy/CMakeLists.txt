@@ -14,12 +14,6 @@ find_package(rclcpp REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
-include_directories(
-  include/${PROJECT_NAME}
-  ${alica_solver_interface_INCLUDE_DIRS}
-  ${alica_engine_INCLUDE_DIRS}
-)
-
 add_library(alica_ros2_proxy SHARED
 	src/ros2_clock/AlicaROSClock.cpp
 	src/ros2_communication/AlicaRosCommunication.cpp
@@ -29,6 +23,12 @@ add_library(alica_ros2_proxy SHARED
 target_include_directories(alica_ros2_proxy PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(alica_ros2_proxy PUBLIC
+  alica_engine
+  rclcpp::rclcpp
+  ${alica_msgs_TARGETS}
 )
 
 install(TARGETS ${PROJECT_NAME}
@@ -43,13 +43,9 @@ install(DIRECTORY include/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
 
-ament_target_dependencies(alica_ros2_proxy
-  rclcpp
-  alica_msgs
-)
-
 ament_export_include_directories(include)
 ament_export_libraries(alica_ros2_proxy)
+ament_export_dependencies(rclcpp alica_msgs alica_engine)
 
 ament_package()
 

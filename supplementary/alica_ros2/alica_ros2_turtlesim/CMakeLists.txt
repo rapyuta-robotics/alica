@@ -13,7 +13,7 @@ find_package(yaml-cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(alica_ros2_proxy REQUIRED)
-find_package(turtlesim REQUIRED)
+find_package(turtlesim_msgs REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(constraintsolver)
 find_package(autodiff REQUIRED)
@@ -21,7 +21,7 @@ find_package(alica_solver_interface)
 find_package(ament_cmake REQUIRED)
 find_package(alica_msgs REQUIRED)
 find_package(alica_dynamic_loading REQUIRED)
-find_package(Boost COMPONENTS system filesystem REQUIRED)
+find_package(Boost COMPONENTS filesystem REQUIRED)
 if (NOT Boost_FOUND)
       message(FATAL_ERROR "Fatal error: Boost required.\n")
 endif (NOT Boost_FOUND)
@@ -32,7 +32,7 @@ endif (NOT Boost_FOUND)
 
 include_directories(
     include
-    ${turtlesim_INCLUDE_DIRS}
+    libalica-ros2-turtlesim/include
 )
 
 add_executable(${PROJECT_NAME}
@@ -47,20 +47,14 @@ target_link_libraries(${PROJECT_NAME}
     alica_solver_interface
     alica_ros2_proxy
     alica_dynamic_loading
-    Boost::system
     Boost::filesystem
-    ${turtlesim_LIBRARIES}
-    ${geometry_msgs_LIBRARIES}
+    rclcpp::rclcpp
+    ${turtlesim_msgs_TARGETS}
+    ${geometry_msgs_TARGETS}
 )
 
-ament_target_dependencies(alica_ros2_turtlesim
-  rclcpp
-  geometry_msgs
-  alica_ros2_proxy
-)
-
-ament_export_dependencies(alica_ros2_turtlesim
-    turtlesim
+ament_export_dependencies(
+    turtlesim_msgs
     geometry_msgs
     rclcpp
     alica_ros2_proxy

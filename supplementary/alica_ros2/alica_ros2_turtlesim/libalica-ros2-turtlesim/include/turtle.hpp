@@ -5,8 +5,8 @@
 #include <functional>
 #include <geometry_msgs/msg/twist.hpp>
 #include <std_msgs/msg/empty.hpp>
-#include <turtlesim/msg/pose.hpp>
-#include <turtlesim/srv/teleport_absolute.hpp>
+#include <turtlesim_msgs/msg/pose.hpp>
+#include <turtlesim_msgs/srv/teleport_absolute.hpp>
 
 namespace turtlesim
 {
@@ -35,12 +35,12 @@ public:
     void setInit(const bool input) { _initTrigger = input; };
 
 private:
-    std::string _name;                                                // name of turtle
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _velPub;  // publish cmd_vel to the turtlesim
-    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr _poseSub;   // subscribe turtleX/pose from the turtlesim
-    rclcpp::Client<srv::TeleportAbsolute>::SharedPtr _teleportClient; // client of teleportAbsolute service
-    msg::Pose _current;                                               // current position
-    msg::Pose _goal;                                                  // goal position
+    std::string _name;                                                                // name of turtle
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _velPub;                  // publish cmd_vel to the turtlesim
+    rclcpp::Subscription<turtlesim_msgs::msg::Pose>::SharedPtr _poseSub;              // subscribe turtleX/pose from the turtlesim
+    rclcpp::Client<turtlesim_msgs::srv::TeleportAbsolute>::SharedPtr _teleportClient; // client of teleportAbsolute service
+    turtlesim_msgs::msg::Pose _current;                                               // current position
+    turtlesim_msgs::msg::Pose _goal;                                                  // goal position
     rclcpp::executors::MultiThreadedExecutor _spinner;
     std::thread _spinThread;
     rclcpp::Node::SharedPtr _nh;
