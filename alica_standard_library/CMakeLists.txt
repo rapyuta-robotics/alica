@@ -47,6 +47,10 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION lib
 )
 
+install(DIRECTORY include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
 
 # Export targets to make package libraries
 export(EXPORT ${CMAKE_PROJECT_NAME}Targets
@@ -66,10 +70,13 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion
 )
 
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+
 configure_package_config_file(
   ${CMAKE_PROJECT_NAME}Config.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION ${ConfigPackageLocation}
+  PATH_VARS INCLUDE_INSTALL_DIR
 )
 
 install(FILES
