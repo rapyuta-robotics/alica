@@ -45,6 +45,25 @@ install(DIRECTORY include/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_cmake_ros QUIET)
+
+  set(ALICA_ROS2_PROXY_TESTS
+    alica_ros_timer_tests
+    alica_ros_communication_tests
+  )
+  foreach(test_name ${ALICA_ROS2_PROXY_TESTS})
+    # Each test gets its own ROS domain, so that tests that run in parallel do not receive each other's messages
+    if(COMMAND ament_add_ros_isolated_gtest)
+      ament_add_ros_isolated_gtest(${test_name} test/${test_name}.cpp TIMEOUT 300)
+    else()
+      ament_add_gtest(${test_name} test/${test_name}.cpp TIMEOUT 300)
+    endif()
+    target_link_libraries(${test_name} alica_ros2_proxy)
+  endforeach()
+endif()
+
 ament_export_include_directories(include)
 ament_export_libraries(alica_ros2_proxy)
 ament_export_dependencies(rclcpp alica_msgs alica_engine)
