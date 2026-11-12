@@ -1,26 +1,33 @@
 #include <clock/AlicaROSClock.h>
 
-#include <rclcpp/logging.hpp>
+#include <algorithm>
+#include <chrono>
+#include <cstdint>
+#include <stdexcept>
+#include <thread>
 
 namespace alicaRosProxy
 {
 
-AlicaROSClock::AlicaROSClock()
+AlicaROSClock::AlicaROSClock(rclcpp::Node::SharedPtr node)
+        : _clock(node ? node->get_clock() : std::make_shared<rclcpp::Clock>(RCL_ROS_TIME))
 {
-    _rosTime = std::make_shared<rclcpp::Node>("rosTime");
-    rclcpp::Parameter simTime("use_sim_time", rclcpp::ParameterValue(true));
-    _rosTime->set_parameter(simTime);
 }
 
 alica::AlicaTime AlicaROSClock::now() const
 {
-    return alica::AlicaTime::nanoseconds((_rosTime->now()).nanoseconds());
+    return alica::AlicaTime::nanoseconds(_clock->now().nanoseconds());
 }
 
 void AlicaROSClock::sleep(const alica::AlicaTime& time) const
 {
-    // This will only work in Humble and beyond
-    //_rosTime->get_clock()->sleep_for(rclcpp::Duration(time.inNanoseconds()));
+    try {
+        _clock->sleep_for(rclcpp::Duration::from_nanoseconds(time.inNanoseconds()));
+    } catch (const std::runtime_error&) {
+        // The rclcpp context is not valid, for example after SIGINT. A short sleep, so that a caller that polls with
+        // sleep() does not use a full core, and shutdown is not delayed.
+        std::this_thread::sleep_for(std::chrono::nanoseconds(std::min<int64_t>(time.inNanoseconds(), 100000000)));
+    }
 }
 
 } // namespace alicaRosProxy
