@@ -10,6 +10,7 @@
 
   <depend>alica_engine</depend>
   <depend>yaml-cpp</depend>
+  <depend>boost</depend>
 
   <buildtool_depend>cmake</buildtool_depend>
 

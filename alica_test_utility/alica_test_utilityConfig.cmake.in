@@ -3,6 +3,13 @@
 @PACKAGE_INIT@
 
 
+# the exported target links to these targets
+include(CMakeFindDependencyMacro)
+find_dependency(alica_engine)
+find_dependency(alica_dummy_proxy)
+find_dependency(alica_solver_interface)
+
+
 # forward the targets
 include(${CMAKE_CURRENT_LIST_DIR}/alica_test_utilityTargets.cmake)
 

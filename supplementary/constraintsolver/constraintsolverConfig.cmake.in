@@ -2,6 +2,13 @@
 # https://cmake.org/cmake/help/latest/module/CMakePackageConfigHelpers.html
 @PACKAGE_INIT@
 
+
+# the exported target links to these targets
+include(CMakeFindDependencyMacro)
+find_dependency(yaml-cpp)
+find_dependency(autodiff)
+find_dependency(alica_engine)
+
 # forward the targets
 include(${CMAKE_CURRENT_LIST_DIR}/constraintsolverTargets.cmake)
 
