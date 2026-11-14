@@ -20,7 +20,7 @@ You need to be familiar with following topics and tools:
 
 ## 3. The ALICA Language - Basics and Core Concepts
 
-We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the [documentation](https://rapyuta-robotics.github.io/alica/) of the ALICA framework for more detailed information.
+We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the [documentation](https://anurag2293.github.io/alica/) of the ALICA framework for more detailed information.
 
 ### Plan
 
@@ -59,7 +59,7 @@ We need to create a catkin workspace by executing the following steps in a termi
 ```
 mkdir -p catkin_ws/src
 cd catkin_ws/src
-git clone https://github.com/rapyuta-robotics/alica.git
+git clone https://github.com/Anurag2293/alica.git
 ```
 
 2. Remove existing turtlesim files. You will reproduce these files (You can jump to step 8. "Build and Run" for testing application before deleting the files):
@@ -75,17 +75,7 @@ The ALICA plan designer is a user interface to design applications with the ALIC
 
 ### 5.1 Start the ALICA plan designer by following steps
 
-The Plan Designer is a web application and can be started by using docker-compose.
-
-For starting the Plan Designer, use the docker-compose file placed in alica/supplementary/alica_designer_runtime/
-by navigating into the folder and executing the following command:
-
-```
-docker-compose up
-```
-
-You can open the Plan Designer with a browser of your choice by visiting the url
-http://localhost:3030.
+This fork does not include the Plan Designer. The remaining steps describe the designer workflow for reference; the resulting plan files are the JSON files in `alica_turtlesim/etc/`, which can also be written by hand.
 
 When you start the Plan Designer the first time, its main window should look like this:
 

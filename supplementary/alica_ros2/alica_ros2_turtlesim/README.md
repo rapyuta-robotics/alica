@@ -11,7 +11,7 @@ Use the appropriate version of Ubuntu for your ROS Distro (20.04 for Galactic, 2
 1. Check out the required repositories:
 
 ```
-git clone https://github.com/rapyuta-robotics/alica.git
+git clone https://github.com/Anurag2293/alica.git
 ```
 
 The repository may be cloned into a different directory if you wish, but this is not required.

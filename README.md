@@ -2,11 +2,11 @@
 
 ## A Language for Interactive Cooperative Agents
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT) [![Travis Build Status](https://app.travis-ci.com/rapyuta-robotics/alica.svg?branch=devel)](https://app.travis-ci.com/github/rapyuta-robotics/alica) [![Coverity Scan Build Status](https://scan.coverity.com/projects/rapyuta-robotics-alica/badge.svg)](https://scan.coverity.com/projects/rapyuta-robotics-alica)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
-**Note:** This page is under construction and will include links to further resources in future. In the meantime we advice you to have a look at the following resources:
+ALICA is a language and runtime engine for coordinating teams of autonomous agents. It was created by the Distributed Systems Group at the University of Kassel for the Carpe Noctem RoboCup team.
 
-- [ALICA ROSWorld 2021 Talk](https://vimeo.com/649645073)
-- [alica_turtlesim_tutorial](https://github.com/rapyuta-robotics/alica/tree/devel/supplementary/alica_ros1/alica_ros_turtlesim)
-- [ALICA Plan Designer](https://github.com/rapyuta-robotics/alica/tree/devel/supplementary/alica_designer_runtime)
-- [GitHUB Pages of the ALICA Framework](https://rapyuta-robotics.github.io/alica/)
+This repository is an independent fork of the open-source ALICA engine, distributed under the MIT License.
+
+- [Documentation](docs/README.md)
+- [alica_turtlesim tutorial](supplementary/alica_ros1/alica_ros_turtlesim)

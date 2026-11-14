@@ -37,6 +37,6 @@ To be done:
 - Implementation specific things, like AlicaContext, interfaces for clock, solvers, configs, communication, code structure of generated code, etc.
 - Maybe implementations in different languages in future (Java and Python are currently work-in-progress)
 
-## The ALICA Plan Designer
+## Plan Files
 
-The documentation of the ALICA Plan Designer is located in the [repository of the Plan Designer](https://github.com/rapyuta-robotics/alica-plan-designer-fx).
+This fork does not ship a graphical plan designer. Plans, behaviours, tasks and role sets are JSON files; see the `etc/` folders of `alica_tests` and `supplementary/alica_turtlesim` for examples.
