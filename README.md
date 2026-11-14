@@ -9,4 +9,4 @@ ALICA is a language and runtime engine for coordinating teams of autonomous agen
 This repository is an independent fork of the open-source ALICA engine, distributed under the MIT License.
 
 - [Documentation](docs/README.md)
-- [alica_turtlesim tutorial](supplementary/alica_ros1/alica_ros_turtlesim)
+- [alica_ros2_turtlesim example](supplementary/alica_ros2/alica_ros2_turtlesim)

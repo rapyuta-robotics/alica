@@ -16,7 +16,7 @@ git clone https://github.com/Anurag2293/alica.git
 
 The repository may be cloned into a different directory if you wish, but this is not required.
 
-2. If you wish to rebuild the plan from scratch, follow the steps 4.2 - 7 in the ROS1 turtlesim README. To quickly run the turtlesim, proceed to the next steps.
+2. If you wish to rebuild the plan from scratch, edit the plan JSON files in `supplementary/alica_turtlesim/etc/`; this fork does not include the Plan Designer. To quickly run the turtlesim, proceed to the next steps.
 
 ## 3. Build and Run
 
@@ -26,7 +26,7 @@ Build the ROS 2 packages using Colcon.
 
 ```
 source /opt/ros/[YOUR DISTRO HERE]/setup.bash
-colcon build --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests
+colcon build --packages-skip alica_tests
 source install/setup.bash
 ```
 
