@@ -473,7 +473,7 @@ TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
     targetBb.map("unknownTypeSrc", "unknownTypeTarget", srcBb);
     EXPECT_EQ(targetBb.get<alica::PlanStatus>("unknownTypeTarget"), alica::PlanStatus::Success);
 
-    srcBb.set<std::any>("anyTypeSrc", std::any{19L});
+    srcBb.set<std::any>("anyTypeSrc", std::any{int64_t{19}});
     targetBb.map("anyTypeSrc", "anyTypeTarget", srcBb);
     EXPECT_EQ(targetBb.get<int64_t>("anyTypeTarget"), 19L);
 }

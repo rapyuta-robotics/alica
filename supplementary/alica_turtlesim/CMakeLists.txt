@@ -38,7 +38,7 @@ add_library(libalica-turtlesim SHARED
   libalica-turtlesim/src/SpawnTurtle.cpp
   libalica-turtlesim/src/Teleport.cpp
 )
-target_link_libraries(libalica-turtlesim alica_engine)
+target_link_libraries(libalica-turtlesim alica_engine autodiff constraintsolver)
 
 target_include_directories(libalica-turtlesim PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libalica-turtlesim/include>

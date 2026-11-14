@@ -22,11 +22,21 @@ find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
 find_package(alica_test_utility REQUIRED)
 find_package(alica_dynamic_loading REQUIRED)
+find_package(alica_standard_library REQUIRED)
 include_directories(include)
 
 include_directories(include)
 file(GLOB_RECURSE AlicaTestLibSources "src/behaviours/*.cpp" "src/plans/*.cpp" "src/conditions/*.cpp")
-add_library(alica-tests SHARED ${AlicaTestLibSources})
+add_library(alica-tests SHARED ${AlicaTestLibSources}
+    src/ConstraintTestPlanDummySolver.cpp
+    src/DistBallRobot.cpp
+    src/DistXContourTest.cpp
+    src/DummyTestSummand.cpp
+    src/SimpleSwitches.cpp
+    src/SwitchEntryPointsSummand.cpp
+    src/TestConstantValueSummand.cpp
+    src/TestWorldModel.cpp
+)
 target_include_directories(alica-tests PUBLIC
 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 $<INSTALL_INTERFACE:include>
@@ -46,14 +56,6 @@ if(BUILD_TESTING)
     find_package(Threads REQUIRED)
 
     set(test_alica_SOURCES
-        src/ConstraintTestPlanDummySolver.cpp
-        src/DistBallRobot.cpp
-        src/DistXContourTest.cpp
-        src/DummyTestSummand.cpp
-        src/SimpleSwitches.cpp
-        src/SwitchEntryPointsSummand.cpp
-        src/TestConstantValueSummand.cpp
-        src/TestWorldModel.cpp
         src/test_alica.cpp
         src/test/test_main.cpp
         src/test/test_alica_authority.cpp
@@ -91,7 +93,9 @@ if(BUILD_TESTING)
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
     target_compile_definitions(${PROJECT_NAME}-test PUBLIC "THIS_PACKAGE_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
     target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads alica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
-    gtest_discover_tests(${PROJECT_NAME}-test)
+    gtest_discover_tests(${PROJECT_NAME}-test
+        PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:alica-tests>:$<TARGET_FILE_DIR:alica_standard_library>:$ENV{LD_LIBRARY_PATH}"
+    )
 endif()
 
 # Install

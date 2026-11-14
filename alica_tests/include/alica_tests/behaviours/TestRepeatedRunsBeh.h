@@ -17,6 +17,8 @@ private:
     int64_t _callCounter;
     AlicaTime _start;
     AlicaTime _end;
+    AlicaTime _last;
+    AlicaTime _maxGap;
     int _frequency;
 };
 BOOST_DLL_ALIAS(alica::TestRepeatedRunsBeh::create, TestRepeatedRunsBeh)

@@ -8,7 +8,7 @@ namespace alica
 
 AlicaTime AlicaClock::now() const
 {
-    return AlicaTime::nanoseconds(std::chrono::system_clock::now().time_since_epoch().count());
+    return AlicaTime::nanoseconds(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 }
 
 void AlicaClock::sleep(const AlicaTime& time) const

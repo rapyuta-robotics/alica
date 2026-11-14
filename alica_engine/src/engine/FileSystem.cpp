@@ -35,7 +35,7 @@ std::string FileSystem::getSelfPath()
 
         if (len < 0) {
             free(buff);
-            return NULL;
+            return {};
         }
 
         if (len == size) {
@@ -78,7 +78,7 @@ std::string FileSystem::getSelf()
 
         if (len < 0) {
             free(buff);
-            return NULL;
+            return {};
         }
 
         if (len == size) {

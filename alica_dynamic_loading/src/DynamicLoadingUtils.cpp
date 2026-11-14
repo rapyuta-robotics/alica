@@ -1,6 +1,8 @@
 #include "DynamicLoadingUtils.h"
 #include "engine/logging/Logging.h"
 
+#include <boost/dll/shared_library.hpp>
+
 namespace alica
 {
 
@@ -49,13 +51,14 @@ std::string calculateLibraryCompleteName(const std::vector<std::string>& library
         throw DynamicLoadingException{"library name is empty"};
     }
 
+    const std::string fileName = "lib" + libraryName + boost::dll::shared_library::suffix().string();
     for (const std::string& current : libraryPath) {
-        std::string completeName = current + "/lib" + libraryName + ".so";
+        std::string completeName = current + "/" + fileName;
         if (std::filesystem::exists(completeName)) {
             return completeName;
         }
     }
-    throw DynamicLoadingException{"could not find library: lib" + libraryName + ".so, in paths defined in LD_LIBRARY_PATH"};
+    throw DynamicLoadingException{"could not find library: " + fileName + ", in paths defined in LD_LIBRARY_PATH"};
 }
 
 } // namespace alica

@@ -12,14 +12,12 @@ TEST_F(SingleAgentTestFixture, runSameBehaviourInParallel)
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SameInParallelTestState")) << _tc->getLastFailure();
     STEP_UNTIL(_tc, _tc->getActivePlan("SameInParallelTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SameInParallelTestPlan", "ChooseTestState", "SameBehInParallelTestState")) << _tc->getLastFailure();
-    STEP_UNTIL(_tc, _tc->getActivePlan("SameBehInParallelTestPlan"));
-    auto plan = _tc->getActivePlan("SameBehInParallelTestPlan");
-    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SameBehInParallelTestPlan")) << _tc->getLastFailure();
 
     ASSERT_TRUE(_tc->setTransitionCond("SameBehInParallelTestPlan", "EntryState", "FirstCheckState")) << _tc->getLastFailure();
 
-    // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+    // The parent retires the plan as soon as it succeeds, so check the parent's success state
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("SameInParallelTestPlan", "SuccessState"));
 }
 
 TEST_F(SingleAgentTestFixture, runSamePlanInParallel)
@@ -30,14 +28,12 @@ TEST_F(SingleAgentTestFixture, runSamePlanInParallel)
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SameInParallelTestState")) << _tc->getLastFailure();
     STEP_UNTIL(_tc, _tc->getActivePlan("SameInParallelTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SameInParallelTestPlan", "ChooseTestState", "SamePlanInParallelTestState")) << _tc->getLastFailure();
-    STEP_UNTIL(_tc, _tc->getActivePlan("SamePlanInParallelTestPlan"));
-    auto plan = _tc->getActivePlan("SamePlanInParallelTestPlan");
-    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SamePlanInParallelTestPlan")) << _tc->getLastFailure();
 
     ASSERT_TRUE(_tc->setTransitionCond("SamePlanInParallelTestPlan", "EntryState", "FirstCheckState")) << _tc->getLastFailure();
 
-    // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+    // The parent retires the plan as soon as it succeeds, so check the parent's success state
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("SameInParallelTestPlan", "SuccessState"));
 }
 
 TEST_F(SingleAgentTestFixture, runSamePlanBehInParallel)
@@ -48,13 +44,11 @@ TEST_F(SingleAgentTestFixture, runSamePlanBehInParallel)
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SameInParallelTestState")) << _tc->getLastFailure();
     STEP_UNTIL(_tc, _tc->getActivePlan("SameInParallelTestPlan"));
     ASSERT_TRUE(_tc->setTransitionCond("SameInParallelTestPlan", "ChooseTestState", "SamePlanBehInParallelTestState")) << _tc->getLastFailure();
-    STEP_UNTIL(_tc, _tc->getActivePlan("SamePlanBehInParallelTestPlan"));
-    auto plan = _tc->getActivePlan("SamePlanBehInParallelTestPlan");
-    ASSERT_NE(plan, nullptr) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("SamePlanBehInParallelTestPlan")) << _tc->getLastFailure();
 
     ASSERT_TRUE(_tc->setTransitionCond("SamePlanBehInParallelTestPlan", "EntryState", "FirstCheckState")) << _tc->getLastFailure();
 
-    // Step until the plan succeeds
-    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(plan));
+    // The parent retires the plan as soon as it succeeds, so check the parent's success state
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("SameInParallelTestPlan", "SuccessState"));
 }
 } // namespace alica::test

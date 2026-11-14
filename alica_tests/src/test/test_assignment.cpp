@@ -44,8 +44,8 @@ TEST(Assignment, RobotsInserted)
             std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
             std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
-    EXPECT_EQ(0, ac->init(std::move(creators)));
     alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+    EXPECT_EQ(0, ac->init(std::move(creators)));
 
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac.get());

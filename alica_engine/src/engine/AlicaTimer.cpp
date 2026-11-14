@@ -1,5 +1,7 @@
 #include "engine/AlicaTimer.h"
 
+#include <algorithm>
+#include <chrono>
 #include <thread>
 
 namespace alica
@@ -30,23 +32,24 @@ public:
         _isActive = true;
         _thread = std::thread([this]() {
             using namespace std::chrono;
-            auto inner_loop_duration = milliseconds(std::min(int64_t(500), _period));
+            const auto period = milliseconds(_period);
+            const auto inner_loop_duration = milliseconds(std::min(int64_t(500), _period));
+            // Deadlines advance by exactly one period, so sleep overshoot does not accumulate and lower the rate.
+            auto end_time = steady_clock::now();
             while (_isActive) {
-                auto end_time = system_clock::now().time_since_epoch() + milliseconds(_period);
+                end_time += period;
 
                 _userCb();
 
-                auto now = system_clock::now().time_since_epoch();
-                // This second while is a trick to loop more than once, in 500ms intervals,
-                // while we wait for _period milliseconds. This allows us to exit this
-                // loop earlier without having to wait for the full duration when we Ctrl+C and kill this process.
+                auto now = steady_clock::now();
+                // A callback that overran its period runs again right away, and the schedule restarts from now.
+                if (end_time < now) {
+                    end_time = now;
+                }
+                // Sleep in slices of at most 500ms so that stop() does not wait for a long period to end.
                 while (now < end_time && _isActive) {
-                    if (now + inner_loop_duration < end_time) {
-                        std::this_thread::sleep_for(inner_loop_duration);
-                    } else {
-                        std::this_thread::sleep_for(end_time - now);
-                    }
-                    now = system_clock::now().time_since_epoch();
+                    std::this_thread::sleep_for(std::min<steady_clock::duration>(inner_loop_duration, end_time - now));
+                    now = steady_clock::now();
                 }
             }
         });
