@@ -15,6 +15,8 @@ using namespace std;
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/Quantifier.h"
+#include "engine/model/Role.h"
+#include "engine/model/RoleSet.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Synchronisation.h"
@@ -592,6 +594,18 @@ TEST_F(AlicaEngineTest, planParser)
 {
     ASSERT_NO_SIGNAL
     verifyParsing();
+}
+
+TEST_F(AlicaEngineTest, roleSetDefaultPriority)
+{
+    ASSERT_NO_SIGNAL
+    const RoleSet* roleSet = ae->getRoleSet();
+    ASSERT_NE(nullptr, roleSet);
+    EXPECT_DOUBLE_EQ(0.5, roleSet->getDefaultPriority());
+    const int64_t keeperTaskId = 1221754402444;
+    for (const Role* role : roleSet->getRoles()) {
+        EXPECT_DOUBLE_EQ(0.5, role->getPriority(keeperTaskId)) << role->getName();
+    }
 }
 
 TEST_F(MultiConfigFolderTest, multiFolderPlanParsingTest)

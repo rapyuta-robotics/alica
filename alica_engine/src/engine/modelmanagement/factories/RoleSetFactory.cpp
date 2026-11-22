@@ -13,8 +13,8 @@ RoleSet* RoleSetFactory::create(const YAML::Node& node)
     Factory::setAttributes(node, roleSet);
     Factory::storeElement(roleSet, alica::Strings::roleset);
 
-    if (Factory::isValid(node[alica::Strings::priorityDefault])) {
-        roleSet->_priorityDefault = Factory::getValue<double>(node, alica::Strings::priorityDefault);
+    if (Factory::isValid(node[alica::Strings::defaultPriority])) {
+        roleSet->_priorityDefault = Factory::getValue<double>(node, alica::Strings::defaultPriority);
     }
 
     if (Factory::isValid(node[alica::Strings::roles])) {
