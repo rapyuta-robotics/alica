@@ -12,7 +12,7 @@
       "name": "Turtle",
       "roleSet": 3075243963029859927,
       "taskPriorities": {
-        "taskRepository.tsk#3759439551323513525": 0.1
+        "TaskRepository.tsk#3759439551323513525": 0.1
       }
     }
   ]

@@ -165,6 +165,15 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 
+add_executable(alica_load_plans tools/alica_load_plans.cpp)
+target_link_libraries(alica_load_plans PRIVATE ${PROJECT_NAME})
+if(APPLE)
+  set(ALICA_TOOL_RPATH "@loader_path/../lib")
+else()
+  set(ALICA_TOOL_RPATH "$ORIGIN/../lib")
+endif()
+set_target_properties(alica_load_plans PROPERTIES INSTALL_RPATH "${ALICA_TOOL_RPATH}" INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 #############
 ## Install ##
 #############
@@ -173,6 +182,10 @@ install(TARGETS ${PROJECT_NAME}
   EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
+)
+
+install(TARGETS alica_load_plans
+  RUNTIME DESTINATION bin
 )
 
 install(DIRECTORY include/

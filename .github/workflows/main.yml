@@ -34,6 +34,13 @@ jobs:
           TEST_JOBS: 1
           # The macOS runner cannot hold a 30 Hz timer, which this test measures.
           TEST_EXCLUDE: ${{ runner.os == 'macOS' && 'testRepeatedRunSchedulingTest' || '' }}
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+      - name: Test alicaplan
+        working-directory: tools/alicaplan
+        run: uv run pytest
+        env:
+          ALICA_LOAD_PLANS_REQUIRED: "1"
   ROS2_build_test:
     runs-on: "${{ matrix.os }}"
     timeout-minutes: 15

@@ -1,0 +1,128 @@
+library: football_demo
+
+task_repository:
+  tasks: [Attack, Support, Defend, Keep]
+
+condition_repository:
+  conditions:
+    HasBall:
+      blackboard:
+        ball_owner: int64
+        me: int64
+    BallLost: {}
+    PassReady: {}
+    PassDone: {}
+    ShotDone:
+      blackboard:
+        scored: bool
+    AnyChildSuccess: { library: alica_standard_library }
+    AnyChildFailure: { library: alica_standard_library }
+
+behaviours:
+  Dribble:
+    blackboard:
+      target_x: double
+      target_y: double
+  Kick:
+    blackboard:
+      power: double
+      scored: { type: bool, access: output }
+  Receive: {}
+  Cover:
+    blackboard:
+      opponent: int64
+  Block: {}
+
+plans:
+  Shoot:
+    blackboard:
+      scored: bool
+    entryPoints:
+      - { task: Attack, state: Aim, min: 1, max: 1 }
+    states:
+      Aim:
+        - Kick:
+            in: { power: { value: 0.8 } }
+            out: { scored: scored }
+      success: null
+      failure: null
+    transitions:
+      - Aim -> success:
+          condition: ShotDone
+          in: { scored: scored }
+      - Aim -> failure: BallLost
+
+  Offense:
+    blackboard:
+      ball_owner: int64
+      me: int64
+      goal_x: double
+      goal_y: double
+    entryPoints:
+      - { task: Attack, state: GetBall, min: 1, max: 1 }
+      - { task: Support, state: GetOpen }
+    states:
+      GetBall:
+        - Dribble:
+            in: { target_x: goal_x, target_y: goal_y }
+      PassToMate: [Kick]
+      Finish: [Shoot]
+      GetOpen: [Receive]
+      Receiving: [Receive]
+      Scored: { terminal: success }
+      Lost: { terminal: failure }
+    transitions:
+      - GetBall -> PassToMate: PassReady
+      - GetOpen -> Receiving: PassReady
+      - PassToMate -> Lost: BallLost
+      - Receiving -> Finish:
+          condition: HasBall
+          in: { ball_owner: ball_owner, me: me }
+      - Finish -> Scored: AnyChildSuccess
+      - Finish -> Lost: AnyChildFailure
+    synchronisations:
+      pass:
+        transitions: [GetBall -> PassToMate, GetOpen -> Receiving]
+
+  Defense:
+    entryPoints:
+      - { task: Defend, state: Mark }
+    states:
+      Mark:
+        - Cover:
+            in: { opponent: { value: 7 } }
+      Won: { terminal: success }
+    transitions:
+      - Mark -> Won: HasBall
+
+  Keeper:
+    entryPoints:
+      - { task: Keep, state: Guard, min: 1, max: 1 }
+    states:
+      Guard: [Block]
+      Cleared: { terminal: success }
+    transitions:
+      - Guard -> Cleared: AnyChildSuccess
+
+  Match:
+    master: true
+    entryPoints:
+      - { task: Attack, state: Play }
+      - { task: Keep, state: Goal, max: 1 }
+    states:
+      Play: [Phase]
+      Goal: [Keeper]
+    transitions: []
+
+plantypes:
+  Phase:
+    plans: [Offense, Defense]
+
+roleset:
+  roles:
+    Striker:
+      priorities: { Attack: 0.9, Support: 0.6, Defend: 0.2 }
+    Defender:
+      priorities: { Defend: 0.9, Support: 0.4, Attack: 0.1 }
+    Goalie:
+      priorities: { Keep: 1.0 }
