@@ -6,6 +6,8 @@
     <arg name="alica_path"     default="$(find-pkg-share alica_ros2_turtlesim)" />
 
     <arg name="turtles"        default="1"/>
+    <!-- false: the node's main loop runs the ALICA engine instead of a thread of its own -->
+    <arg name="dedicated_engine_thread" default="true"/>
 
     <let name="agent_name"     value="$(eval '\'turtle\' + \'$(var turtles)\'')"/>
     <node name="$(var agent_name)" pkg="alica_ros2_turtlesim" exec="alica_ros2_turtlesim" output="screen" launch-prefix="$(var launch_prefix)">
@@ -14,6 +16,7 @@
         <param name="master_plan"  value="$(var master_plan)" />
         <param name="roleset"      value="$(var roleset)" />
         <param name="alica_path"   value="$(var alica_path)" />
+        <param name="dedicated_engine_thread" value="$(var dedicated_engine_thread)" />
     </node>
 
     <include file="$(dirname)/turtle.launch.xml"   if="$(eval '\'$(var turtles)\' > \'1\'')">

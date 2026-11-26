@@ -129,8 +129,14 @@ class TimerFactory : public alica::IAlicaTimerFactory
 public:
     using TimerType = Timer<CallbackQ>;
 
-    TimerFactory(CallbackQ& callback_queue = *ros::getGlobalCallbackQueue())
+    /**
+     * dedicatedThread: pass true only if callback_queue is served by a spinner of its own that nothing else uses, so that
+     * blocking inside a timer callback delays no other callback. The default, false, fits the usual setup: the global queue,
+     * or a queue served by ros::spin(), a shared AsyncSpinner or the application's main loop.
+     */
+    TimerFactory(CallbackQ& callback_queue = *ros::getGlobalCallbackQueue(), bool dedicatedThread = false)
             : _cbQ(callback_queue)
+            , _dedicatedThread(dedicatedThread)
     {
     }
 
@@ -148,8 +154,11 @@ public:
         return std::make_unique<TimerType>(_cbQ, std::move(timerCb), period);
     }
 
+    bool dedicatedThread() const override { return _dedicatedThread; }
+
 private:
     CallbackQ& _cbQ;
+    const bool _dedicatedThread;
 };
 
 using AlicaRosTimerFactory = TimerFactory<SyncStopTimerRos, ros::CallbackQueue>;

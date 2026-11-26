@@ -75,7 +75,12 @@ public:
 
 private:
     static constexpr const char* LOGNAME = "PlanBase";
+    // The engine timer's callback: one engine iteration, then the fast path for the rest of the period.
     void run(const Plan* masterPlan);
+    // One engine iteration: module ticks, the plan tree tick, status messages and running-plan cleanup. Never waits.
+    void tick(const Plan* masterPlan);
+    // Visits queued fast-path events while deadline - now > margin. Unvisited events go back to the front of the queue.
+    void processFastPathEvents(AlicaTime deadline, AlicaTime margin);
 
     // Owning container of running plans (replace with uniqueptrs once possible)
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;
@@ -128,6 +133,11 @@ private:
     std::atomic<bool> _running;
     bool _sendStatusMessages;
     std::atomic<bool> _isWaiting;
+
+    // _engineTimerFactory.dedicatedThread(), read in start()
+    bool _dedicatedEngineThread = true;
+    // Budget of the non-blocking fast-path pass at the end of a tick on a shared thread
+    static constexpr int64_t FAST_PATH_BUDGET_US = 1000;
 };
 
 } // namespace alica

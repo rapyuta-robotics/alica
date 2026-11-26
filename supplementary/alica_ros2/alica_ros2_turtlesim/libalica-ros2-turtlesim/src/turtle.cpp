@@ -35,6 +35,15 @@ ALICATurtle::ALICATurtle(ALICATurtleWorldModel* wm)
     _spinThread = std::thread([this]() { _spinner.spin(); });
 }
 
+ALICATurtle::~ALICATurtle()
+{
+    // Destroying a joinable std::thread calls std::terminate
+    _spinner.cancel();
+    if (_spinThread.joinable()) {
+        _spinThread.join();
+    }
+}
+
 void ALICATurtle::teleport(float x, float y)
 {
     auto request = std::make_shared<srv::TeleportAbsolute::Request>();

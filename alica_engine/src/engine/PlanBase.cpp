@@ -124,17 +124,24 @@ void PlanBase::start(const Plan* masterPlan)
             _statusMessage->senderID = _teamManager.getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
         }
+        _dedicatedEngineThread = _engineTimerFactory.dedicatedThread();
+        if (_stepEngine && !_dedicatedEngineThread) {
+            // Logged before createTimer(), because a timer may run the first callback on this thread, and in step mode that callback waits for a step
+            Logging::logWarn(LOGNAME) << "Step mode is on, but the engine timer factory runs the engine on a shared thread. In step mode the engine "
+                                         "callback waits for stepEngine(), so it holds that thread between steps, and a stepEngine() call from that "
+                                         "thread hangs. Use an engine timer factory with a dedicated thread, such as AlicaSystemTimerFactory.";
+        }
         _engineTimer = _engineTimerFactory.createTimer([this, masterPlan]() { this->run(masterPlan); }, _loopTime);
     }
 }
 
 /**
- * The Engine's main loop
+ * The engine timer's callback: one engine iteration, then fast-path events.
+ * The timer paces the calls, so nothing here sleeps. Before PR 534 this was the body of the engine thread's loop,
+ * which slept for the rest of the period.
  */
 void PlanBase::run(const Plan* masterPlan)
 {
-    AlicaTime beginTime = _clock.now();
-
     if (_stepEngine) {
 #ifdef ALICA_DEBUG_ENABLED
         Logging::logDebug(LOGNAME) << "===CUR TREE===";
@@ -155,9 +162,31 @@ void PlanBase::run(const Plan* masterPlan)
                 return;
             }
         }
-        beginTime = _clock.now();
     }
 
+    const AlicaTime beginTime = _clock.now();
+    tick(masterPlan);
+
+    if (_dedicatedEngineThread) {
+        // The timer owns this thread: wait for a fast-path event for the rest of the period, as before.
+        const AlicaTime availTime = _loopTime - (_clock.now() - beginTime);
+        bool checkFp = false;
+        if (availTime > AlicaTime::milliseconds(1)) {
+            std::unique_lock<std::mutex> lock(_lomutex);
+            checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::nanoseconds(availTime.inNanoseconds()));
+        }
+        if (checkFp) {
+            processFastPathEvents(beginTime + _loopTime, AlicaTime::milliseconds(1));
+        }
+    } else {
+        // The thread is shared, so no other thread can wake a wait here and blocking would hold up everything else
+        // on it. Visit what is queued, within a small budget, without waiting.
+        processFastPathEvents(_clock.now() + AlicaTime::microseconds(FAST_PATH_BUDGET_US), AlicaTime::zero());
+    }
+}
+
+void PlanBase::tick(const Plan* masterPlan)
+{
     // Send tick to other modules
     //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
     _teamObserver.tick(_rootNode);
@@ -255,62 +284,47 @@ void PlanBase::run(const Plan* masterPlan)
     }
 
     //_ae->iterationComplete(); TODO modify when AlicaEngine::iterationComplete will be written
+}
 
-    now = _clock.now();
-
-    AlicaTime availTime = _loopTime - (now - beginTime);
-    bool checkFp = false;
-    if (availTime > AlicaTime::milliseconds(1)) {
-        std::unique_lock<std::mutex> lock(_lomutex);
-        checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::nanoseconds(availTime.inNanoseconds()));
+void PlanBase::processFastPathEvents(AlicaTime deadline, AlicaTime margin)
+{
+    std::queue<RunningPlan*> nextFpEvents;
+    {
+        // move fast path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking
+        // _loMutex
+        std::lock_guard<std::mutex> lock(_lomutex);
+        nextFpEvents.swap(_fpEvents);
     }
 
-    if (checkFp) {
-        std::queue<RunningPlan*> nextFpEvents;
-        {
-            // move fast path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking
-            // _loMutex
+    AlicaTime now = _clock.now();
+    while (_running && deadline - now > margin && !nextFpEvents.empty()) {
+        RunningPlan* rp = nextFpEvents.front();
+        nextFpEvents.pop();
+
+        if (rp->isActive()) {
+            bool first = true;
+            while (rp != nullptr) {
+                PlanChange change = _ruleBook.visit(*rp);
+                if (!first && change == PlanChange::NoChange) {
+                    break;
+                }
+                rp = rp->getParent();
+                first = false;
+            }
+        }
+        now = _clock.now();
+    }
+
+    {
+        // if all fast path events could not be processed, prepend them back to _fpEvents
+        if (!nextFpEvents.empty()) {
             std::lock_guard<std::mutex> lock(_lomutex);
-            nextFpEvents.swap(_fpEvents);
-        }
-
-        while (_running && availTime > AlicaTime::milliseconds(1) && !nextFpEvents.empty()) {
-            RunningPlan* rp = nextFpEvents.front();
-            nextFpEvents.pop();
-
-            if (rp->isActive()) {
-                bool first = true;
-                while (rp != nullptr) {
-                    PlanChange change = _ruleBook.visit(*rp);
-                    if (!first && change == PlanChange::NoChange) {
-                        break;
-                    }
-                    rp = rp->getParent();
-                    first = false;
-                }
-            }
-            now = _clock.now();
-            availTime = _loopTime - (now - beginTime);
-        }
-
-        {
-            // if all fast path events could not be processed, prepend them back to _fpEvents
-            if (!nextFpEvents.empty()) {
-                std::lock_guard<std::mutex> lock(_lomutex);
-                _fpEvents.swap(nextFpEvents);
-                while (!nextFpEvents.empty()) {
-                    _fpEvents.push(nextFpEvents.front());
-                    nextFpEvents.pop();
-                }
+            _fpEvents.swap(nextFpEvents);
+            while (!nextFpEvents.empty()) {
+                _fpEvents.push(nextFpEvents.front());
+                nextFpEvents.pop();
             }
         }
-    }
-
-    now = _clock.now();
-    availTime = _loopTime - (now - beginTime);
-
-    if (_running && availTime > AlicaTime::microseconds(100) && !_stepEngine) {
-        _clock.sleep(availTime);
     }
 }
 
