@@ -7,8 +7,10 @@
 #include <DynamicUtilityFunctionCreator.h>
 #include <alica_ros2_turtlesim/base.hpp>
 #include <boost/dll/import.hpp> // for import_alias
+#include <chrono>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaContext.h>
+#include <future>
 #include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/executor.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -30,6 +32,12 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     // create world model
     spinner.add_node(nh);
 
+    // Create the service clients before spinner runs, and keep them. Creating and destroying them on nh while spinner waits on it
+    // crashes inside rmw_wait.
+    turtle_service_group = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+    kill_client = nh->create_client<turtlesim::srv::Kill>("/kill", rmw_qos_profile_services_default, turtle_service_group);
+    spawn_client = nh->create_client<turtlesim::srv::Spawn>("/spawn", rmw_qos_profile_services_default, turtle_service_group);
+
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, {path + "/etc/"}, roleset, master_plan, false, agent_id));
 
@@ -40,33 +48,48 @@ Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_
     spinThread = std::thread([this]() { spinner.spin(); });
 }
 
-void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
+namespace
 {
-    rclcpp::CallbackGroup::SharedPtr killCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::Client<turtlesim::srv::Kill>::SharedPtr kill_client =
-            nh->create_client<turtlesim::srv::Kill>("/kill", rmw_qos_profile_services_default, killCallback);
+// Bound the waits, so that a missing turtlesim cannot hang the node
+constexpr std::chrono::seconds SERVICE_TIMEOUT{10};
+} // namespace
+
+void Base::killMyTurtle()
+{
+    // A request sent before the client has found the service is lost, and its response never arrives
+    if (!kill_client->wait_for_service(SERVICE_TIMEOUT)) {
+        RCLCPP_ERROR(_nh->get_logger(), "Service %s is not available, did not kill %s", kill_client->get_service_name(), _name.c_str());
+        return;
+    }
     auto request = std::make_shared<turtlesim::srv::Kill::Request>();
-    request->name = name;
+    request->name = _name;
     auto result = kill_client->async_send_request(request);
-    RCLCPP_INFO(nh->get_logger(), "Requested to Kill: %s", name.c_str());
-    result.wait();
-    RCLCPP_INFO(nh->get_logger(), "Request to Kill: %s complete", name.c_str());
+    RCLCPP_INFO(_nh->get_logger(), "Requested to Kill: %s", _name.c_str());
+    if (result.wait_for(SERVICE_TIMEOUT) != std::future_status::ready) {
+        RCLCPP_ERROR(_nh->get_logger(), "No response to the request to kill %s", _name.c_str());
+        return;
+    }
+    RCLCPP_INFO(_nh->get_logger(), "Request to Kill: %s complete", _name.c_str());
 }
 
-void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
+void Base::spawnMyTurtle()
 {
-    rclcpp::CallbackGroup::SharedPtr spawnCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client =
-            nh->create_client<turtlesim::srv::Spawn>("/spawn", rmw_qos_profile_services_default, spawnCallback);
+    if (!spawn_client->wait_for_service(SERVICE_TIMEOUT)) {
+        RCLCPP_ERROR(_nh->get_logger(), "Service %s is not available, did not spawn %s", spawn_client->get_service_name(), _name.c_str());
+        return;
+    }
     auto request = std::make_shared<turtlesim::srv::Spawn_Request>();
     request->x = 1;
     request->y = 1;
     request->theta = 0;
-    request->name = name;
+    request->name = _name;
     auto result = spawn_client->async_send_request(request);
-    RCLCPP_INFO(nh->get_logger(), "Request to spawn %s", name.c_str());
-    result.wait();
-    RCLCPP_INFO(nh->get_logger(), "Spawned %s", name.c_str());
+    RCLCPP_INFO(_nh->get_logger(), "Request to spawn %s", _name.c_str());
+    if (result.wait_for(SERVICE_TIMEOUT) != std::future_status::ready) {
+        RCLCPP_ERROR(_nh->get_logger(), "No response to the request to spawn %s", _name.c_str());
+        return;
+    }
+    RCLCPP_INFO(_nh->get_logger(), "Spawned %s", _name.c_str());
 }
 
 void Base::start()
@@ -75,15 +98,15 @@ void Base::start()
             std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
             std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
-    killMyTurtle(_name, _nh);
-    spawnMyTurtle(_name, _nh);
+    killMyTurtle();
+    spawnMyTurtle();
     ac->init(std::move(creators));
     ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
 }
 
 Base::~Base()
 {
-    killMyTurtle(_name, _nh);
+    killMyTurtle();
     spinner.cancel();
     spinThread.join();
     ac->terminate();
