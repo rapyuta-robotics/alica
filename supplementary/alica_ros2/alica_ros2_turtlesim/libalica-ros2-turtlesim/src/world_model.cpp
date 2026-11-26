@@ -28,9 +28,7 @@ ALICATurtleWorldModel::ALICATurtleWorldModel()
     _turtle = std::make_unique<ALICATurtle>(this);
 }
 
-ALICATurtleWorldModel::~ALICATurtleWorldModel()
-{
-    ALICATurtleWorldModel::del();
-}
+// Must not call del(): del() deletes the instance, so calling it here recursed until the stack overflowed
+ALICATurtleWorldModel::~ALICATurtleWorldModel() = default;
 
 } // namespace turtlesim
