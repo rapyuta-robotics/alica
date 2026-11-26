@@ -125,6 +125,12 @@ void PlanBase::start(const Plan* masterPlan)
             _statusMessage->masterPlan = masterPlan->getName();
         }
         _dedicatedEngineThread = _engineTimerFactory.dedicatedThread();
+        if (_stepEngine && !_dedicatedEngineThread) {
+            // Logged before createTimer(), because a timer may run the first callback on this thread, and in step mode that callback waits for a step
+            Logging::logWarn(LOGNAME) << "Step mode is on, but the engine timer factory runs the engine on a shared thread. In step mode the engine "
+                                         "callback waits for stepEngine(), so it holds that thread between steps, and a stepEngine() call from that "
+                                         "thread hangs. Use an engine timer factory with a dedicated thread, such as AlicaSystemTimerFactory.";
+        }
         _engineTimer = _engineTimerFactory.createTimer([this, masterPlan]() { this->run(masterPlan); }, _loopTime);
     }
 }
