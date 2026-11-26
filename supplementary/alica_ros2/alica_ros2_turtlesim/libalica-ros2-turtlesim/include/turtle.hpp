@@ -2,6 +2,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 
+#include <atomic>
 #include <functional>
 #include <geometry_msgs/msg/twist.hpp>
 #include <std_msgs/msg/empty.hpp>
@@ -27,6 +28,7 @@ class ALICATurtle
 {
 public:
     ALICATurtle(ALICATurtleWorldModel* wm);
+    ~ALICATurtle();
     void teleport(const float x, const float y);       // teleport turtle to (x,y)
     bool moveTowardGoal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
     bool moveTowardGoal() const;                       // publish cmd_vel based on goal and current pose
@@ -43,6 +45,7 @@ private:
     msg::Pose _goal;                                                  // goal position
     rclcpp::executors::MultiThreadedExecutor _spinner;
     std::thread _spinThread;
+    std::atomic<bool> _spinReturned{false};
     rclcpp::Node::SharedPtr _nh;
     ALICATurtleWorldModel* _wm;
 

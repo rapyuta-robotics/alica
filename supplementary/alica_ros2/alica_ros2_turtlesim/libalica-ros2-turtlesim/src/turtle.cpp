@@ -32,7 +32,21 @@ ALICATurtle::ALICATurtle(ALICATurtleWorldModel* wm)
     _poseSub = _nh->create_subscription<turtlesim::msg::Pose>("/" + _name + "/pose", 1, [&](const msg::Pose::ConstSharedPtr msg) { _current = *msg; });
     _teleportClient = _nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
 
-    _spinThread = std::thread([this]() { _spinner.spin(); });
+    _spinThread = std::thread([this]() {
+        _spinner.spin();
+        _spinReturned = true;
+    });
+}
+
+ALICATurtle::~ALICATurtle()
+{
+    // Destroying a joinable std::thread calls std::terminate. Before spin() starts, cancel() has no effect, so repeat it until
+    // spin() returns.
+    while (!_spinReturned) {
+        _spinner.cancel();
+        std::this_thread::sleep_for(1ms);
+    }
+    _spinThread.join();
 }
 
 void ALICATurtle::teleport(float x, float y)

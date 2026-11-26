@@ -3,9 +3,13 @@
 #include <memory>
 #include <thread>
 
+#include <rclcpp/callback_group.hpp>
+#include <rclcpp/client.hpp>
 #include <rclcpp/executors.hpp>
 #include <rclcpp/node.hpp>
 #include <std_msgs/msg/empty.hpp>
+#include <turtlesim/srv/kill.hpp>
+#include <turtlesim/srv/spawn.hpp>
 
 namespace alica
 {
@@ -22,11 +26,15 @@ public:
             const std::string& path);
     ~Base();
     void start();
-    void killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr);
-    void spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr);
 
 private:
+    void killMyTurtle();
+    void spawnMyTurtle();
+
     rclcpp::executors::MultiThreadedExecutor spinner;
+    rclcpp::CallbackGroup::SharedPtr turtle_service_group;
+    rclcpp::Client<turtlesim::srv::Kill>::SharedPtr kill_client;
+    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client;
     alica::AlicaContext* ac;
     std::thread spinThread;
     std::string _name;

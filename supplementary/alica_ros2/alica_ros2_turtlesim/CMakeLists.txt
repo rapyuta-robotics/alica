@@ -69,6 +69,21 @@ ament_export_dependencies(alica_ros2_turtlesim
 add_subdirectory(libalica-ros2-turtlesim)
 
 #############
+## Testing ##
+#############
+
+if(BUILD_TESTING)
+    find_package(ament_cmake_gtest REQUIRED)
+
+    ament_add_gtest(${PROJECT_NAME}-world-model-test test/test_world_model.cpp TIMEOUT 60)
+    target_link_libraries(${PROJECT_NAME}-world-model-test alica-ros2-turtlesim)
+    ament_target_dependencies(${PROJECT_NAME}-world-model-test rclcpp turtlesim)
+
+    find_package(launch_testing_ament_cmake REQUIRED)
+    add_launch_test(test/test_turtle_launch.py TIMEOUT 120)
+endif()
+
+#############
 ## Install ##
 #############
 
