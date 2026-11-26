@@ -64,4 +64,15 @@ if (BUILD_TESTING)
     add_rostest_gtest(${PROJECT_NAME}-test test/supplementary_tests.test ${test_supplementary_SOURCES})
     target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} supplementary-tests alica_dynamic_loading)
 
+    # Separate from the main suite: these tests measure timing, so they should not share a process or a time limit with it
+    add_rostest_gtest(${PROJECT_NAME}-engine-timer-test test/engine_timer_factory.test
+        src/ConstraintTestPlanDummySolver.cpp
+        src/test_supplementary.cpp
+        src/test/test_main.cpp
+        src/test/test_engine_timer_factory.cpp
+    )
+    # No test code here uses supplementary-tests, so force the link to keep the plan library loaded until exit, as in the main
+    # suite. Otherwise ~AlicaEngine unloads it with the behaviour creator and then destroys the plan's constraints, which live in it.
+    target_link_libraries(${PROJECT_NAME}-engine-timer-test ${catkin_LIBRARIES} -Wl,--no-as-needed supplementary-tests -Wl,--as-needed alica_dynamic_loading)
+
 endif()
