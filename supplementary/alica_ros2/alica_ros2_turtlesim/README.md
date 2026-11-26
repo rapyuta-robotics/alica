@@ -38,6 +38,7 @@ Run application with ros2 launch.
   `ros2 launch alica_ros2_turtlesim env.launch.xml`
 - Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
   `ros2 launch alica_ros2_turtlesim turtle.launch.xml turtles:=2`
+  By default, the ALICA engine runs on a thread of its own. Add `dedicated_engine_thread:=false` to have the node's main loop run it instead.
 - Start moving.
   `ros2 topic pub /init std_msgs/msg/Empty`
 
