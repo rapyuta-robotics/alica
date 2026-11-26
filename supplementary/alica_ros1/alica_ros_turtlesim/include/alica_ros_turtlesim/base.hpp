@@ -3,7 +3,6 @@
 #include <engine/AlicaContext.h>
 
 #include <ros/callback_queue.h>
-#include <ros/callback_queue_interface.h>
 #include <ros/ros.h>
 
 #include <memory>
@@ -14,22 +13,27 @@
 namespace turtlesim
 {
 class AlicaContext;
-class IAlicaTimerFactory;
 class Base
 {
 public:
+    /**
+     * dedicatedEngineThread: true runs the ALICA engine on a thread of its own. False leaves it to the caller's loop,
+     * which must call spinEngineOnce() regularly.
+     */
     Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
-            const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping = std::nullopt, bool drivenExecutor = false);
+            const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping = std::nullopt, bool dedicatedEngineThread = true);
     ~Base();
     void start();
-    void tick();
+    // Runs the engine timer callbacks that are due. Only needed without a dedicated engine thread.
+    void spinEngineOnce();
 
 private:
+    // Declared before ac, so that the engine timer is gone before its queue and spinner are destroyed
     ros::AsyncSpinner spinner;
+    ros::CallbackQueue engine_queue;
+    std::optional<ros::AsyncSpinner> engine_spinner;
     std::unique_ptr<alica::AlicaContext> ac;
-    std::shared_ptr<alica::IAlicaTimerFactory> timer_factory;
-    std::optional<ros::CallbackQueue> callback_queue;
-    bool _drivenExecutor = false;
+    const bool _dedicatedEngineThread;
 };
 
 } // namespace turtlesim

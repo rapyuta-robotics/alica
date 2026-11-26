@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- The node's main loop runs the ALICA engine through Base::spinEngineOnce(), instead of a thread of its own -->
+    <include file="$(dirname)/alica_ros_turtlesim.test">
+        <arg name="dedicated_engine_thread" value="false" />
+    </include>
+</launch>

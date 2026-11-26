@@ -12,7 +12,6 @@
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaContext.h>
-#include <engine/AlicaTimer.h>
 #include <engine/logging/Logging.h>
 #include <logger/AlicaRosLogger.h>
 #include <ros/ros.h>
@@ -21,9 +20,9 @@ namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping, bool drivenExecutor)
+        const std::string& master_plan, const std::vector<std::string>& paths, std::optional<std::string> placeholderMapping, bool dedicatedEngineThread)
         : spinner(0)
-        , _drivenExecutor(drivenExecutor)
+        , _dedicatedEngineThread(dedicatedEngineThread)
 {
     // Initialize Alica
     ac = std::make_unique<alica::AlicaContext>(AlicaContextParams(name, paths, roleset, master_plan, false, agent_id, placeholderMapping));
@@ -31,12 +30,13 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
 
-    if (_drivenExecutor) {
-        callback_queue.emplace();
-        ac->setEngineTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*callback_queue);
-    } else {
-        ac->setEngineTimerFactory<alica::AlicaSystemTimerFactory>();
+    // The engine timer gets a queue of its own. With a dedicated thread, a single-threaded spinner serves that queue and nothing
+    // else, so the engine may wait inside its timer callback. Without one, the main loop serves the queue through spinEngineOnce(),
+    // so the engine must not block it.
+    if (_dedicatedEngineThread) {
+        engine_spinner.emplace(1, &engine_queue);
     }
+    ac->setEngineTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(engine_queue, _dedicatedEngineThread);
 
     ac->setLogger<alicaRosLogger::AlicaRosLogger>();
 
@@ -51,21 +51,28 @@ void Base::start()
             std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
             std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
-    spinner.start(); // start spinner before initializing engine, but after setting context
+    spinner.start(); // start spinners before initializing engine, but after setting context
+    if (engine_spinner) {
+        engine_spinner->start();
+    }
     ac->init(std::move(creators), false);
     ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
 }
 
-void Base::tick()
+void Base::spinEngineOnce()
 {
-    if (_drivenExecutor && callback_queue.has_value()) {
-        callback_queue->callAvailable(ros::WallDuration(0));
+    if (!_dedicatedEngineThread) {
+        engine_queue.callAvailable(ros::WallDuration(0));
     }
 }
 
 Base::~Base()
 {
-    spinner.stop(); // stop spinner before terminating engine
+    // stop spinners before terminating engine
+    spinner.stop();
+    if (engine_spinner) {
+        engine_spinner->stop();
+    }
     ac->terminate();
 }
 
